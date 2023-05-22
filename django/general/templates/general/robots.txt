@@ -1,0 +1,4 @@
+Sitemap: https://www.invisible-east.org/sitemap.xml
+User-agent: *
+Crawl-delay: 5
+Disallow:

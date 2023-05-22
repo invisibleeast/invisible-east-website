@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static settings_value %}
+
+{% block main %}
+
+<section class="container">
+    <h2>Website Accessibility</h2>
+    <p>
+        This website is designed to be used by as many people as possible.
+    </p>
+</section>
+
+<section class="container">
+
+    <p>The text should be clear and simple to understand. You should be able to:</p>
+
+    <ul>
+        <li>zoom in up to 300% without problems</li>
+        <li>navigate most of the website using just a keyboard</li>
+        <li>navigate most of the website using speech recognition software</li>
+        <li>use most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)</li>
+    </ul>
+
+    <h3 id="how-accessible-this-website-is">How accessible this website is</h3>
+
+    <p>We believe that this website is accessible. If you identify any accessibility issues then please <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a>.
+
+    </p><h3 id="how-to-request-content-in-an-accessible-format">How to request content in an accessible format</h3>
+
+    <p>If you need information on this website in a different format like accessible PDF, large print, easy read, audio recording or braille, please email <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">{% settings_value 'ADMIN_EMAIL' %}</a>.</p>
+
+    <p>We'll consider your request and get back to you within 10 working days.</p>
+
+
+    <h3 id="reporting-accessibility-problems-with-this-website">Reporting accessibility problems with this website</h3>
+
+    <p>If you find any problems that are not listed on this page or you think we're not meeting the accessibility requirements, <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a>.</p>
+
+    <h3 id="enforcement-procedure">Enforcement procedure</h3>
+
+    <p>The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the 'accessibility regulations'). If you're not happy with how we respond to your complaint, <a class="sys_16" href="https://www.equalityadvisoryservice.com/">contact the Equality Advisory and Support Service (EASS)</a>.</p>
+
+    <h3 id="technical-information-about-this-websites-accessibility">Technical information about this website's accessibility</h3>
+
+    <p>AHR Software is committed to making its websites accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
+
+    <p>This website is fully compliant with the <a rel="external" href="https://www.w3.org/TR/WCAG21/">Web Content Accessibility Guidelines version 2.1</a> AA standard.</p>
+
+    <h3 id="non-accessible-content">Non-accessible content</h3>
+
+    <p>We are not aware of any non-accessible content on this website.</p>
+
+    <h3 id="disproportionate-burden">Disproportionate burden</h3>
+
+    <p>There are no accessibility problems on this website that we wish to claim would be a disproportionate burden to fix.</p>
+
+    <h3 id="content-thats-not-within-the-scope-of-the-accessibility-regulations">Content that's not within the scope of the accessibility regulations</h3>
+
+    <p>We have not excluded any content from the scope of the accessibility regulations.</p>
+
+    <h3 id="pdfs-and-other-documents">PDFs and other documents</h3>
+
+    <p>Some documents may not be accessible in a number of ways including missing text alternatives and missing document structure.</p>
+
+    <p><a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">Contact us</a> to report any problems or request documents in an alternative format.</p>
+
+    <h3 id="how-we-test-this-website">How we test this website</h3>
+
+    <p>This website was tested for compliance with the Web Content Accessibility Guidelines V2.1 level A and level AA. These tests have been carried out internally.</p>
+
+    <p>We use popular tools for testing website accessibility, including <a href="https://pa11y.org">Pa11y</a> and <a href="https://wave.webaim.org">WAVE</a>.</p>
+
+    <h3 id="what-were-doing-to-improve-accessibility">What we're doing to improve accessibility</h3>
+
+    <p>We've tested this website and made any necessary fixes to improve its accessibility. We will continue to test this website, where required to do so, to ensure that it complies with current and future accessibility requirements.</p>
+
+    <p>If you know of any way that we can improve the accessibility of this website, please <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a>.</p>
+
+    <h3 id="preparation-of-this-accessibility-statement">Preparation of this accessibility statement</h3>
+
+    <p>This statement was first prepared on 11th January 2023. It was last updated on 11th January 2023.</p>
+
+</section>
+
+{% endblock %}

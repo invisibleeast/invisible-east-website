@@ -1,0 +1,108 @@
+@media (max-width: 991px) {
+    /* ---------- General ---------- */
+
+    table,
+    tbody,
+    tr,
+    td,
+    td.align-right {
+        display: block;
+        border: none;
+        text-align: left;
+        width: 100%;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tr {
+        margin: 2em 0;
+        border: 1px solid #AAA;
+        padding: 1em;
+    }
+
+    table label {
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    table label::after {
+        content: ': ';
+    }
+
+
+    /* ---------- Navigation ---------- */
+
+    .nav-item {
+        margin-top: 1em;
+    }
+
+    .nav-item:last-of-type {
+        margin-bottom: 1em;
+    }
+
+    button#navbar-toggler {
+        color: white;
+        font-size: 1.5em;
+        padding: 0.35em;
+        width: 100%;
+        text-align: right;
+        display: block;
+        user-select: none;
+    }
+
+    button#navbar-toggler:focus {
+        outline: none;
+    }
+
+    .nav-link {
+        padding: 0.5em;
+        font-size: 1.3rem;
+    }
+
+    .nav-link.active {
+        font-weight: bold;
+    }
+
+    .dropdown-menu.show {
+        background: #404040;
+    }
+
+    .dropdown-menu.show a {
+        color: #eeefe9;
+        padding: 1em;
+    }
+
+    /* ---------- Main ---------- */
+
+    main {
+        margin-top: 6.4rem;
+        min-height: calc(100vh - 3.3rem);
+    }
+
+    #popup-content {
+        height: 90vh;
+        width: 90%;
+        top: 5vh;
+        left: 5%;
+    }
+
+    #loading {
+        height: calc(100vh - 10rem);
+    }
+
+    /* ---------- Domesday ---------- */
+
+    #domesday-list-header-form div {
+        display: block;
+        width: 100%;
+    }
+
+    #domesday-list-header-form button {
+        width: 100%;
+        margin-top: 1em;
+        padding: 0.5em;
+    }
+
+}

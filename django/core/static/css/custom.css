@@ -1,0 +1,252 @@
+
+/* ---------- General ---------- */
+
+html, body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: #F8F8F8;
+    color: black;
+    margin: 0;
+    font-weight: 300;
+}
+
+a,
+.link:not(.brokenlink) {
+    color: #8c2624;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+a:hover,
+.link:not(.brokenlink):hover {
+    color: #6c1715;
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+    font-weight: 900;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+h2 {
+    font-size: 2em;
+    padding-bottom: 0.5em;
+    line-height: 1em;
+}
+
+h3 {
+    font-size: 1.7em;
+    padding-bottom: 0.5em;
+    line-height: 1em;
+}
+
+h4 {
+    line-height: 1em;
+    font-size: 1.2em;
+    padding: 0.8em 0 0.1em 0;
+}
+
+hr {
+    border-top: 0.4rem solid #121d29;
+    width: 9rem;
+    margin: 0.2em 0 1.3em 0;
+}
+
+table {
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid #AAA;
+    padding: 0.3em;
+    vertical-align: middle;
+}
+
+th {
+    background: #c7c8ba;
+    color: #454335;
+    border: 1px solid #878369;
+    font-weight: 400;
+    text-align: center;
+}
+
+th.sortable {
+    cursor: pointer;
+}
+
+tr.table-separator td,
+tr.table-separator th {
+    border: none;
+}
+
+tr:not(.table-separator):hover {
+    background: #e3e3dc
+}
+
+td.align-left {
+    text-align: left;
+}
+
+td.align-right {
+    text-align: right;
+}
+
+p {
+    margin: 0.5em 0;
+    line-height: 1.7em;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 0;
+    padding: 0.3em 1.3em 0.3em 0.3em;
+    margin: 0;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    display: block;
+    border: 1px solid #BBB;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 5px;
+    background-color: white;
+}
+
+select option,
+.list-options-filters-filter select option {
+    color: black;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+.clearfloat {
+    clear: both;
+}
+
+i.icon {
+    margin-right: 0.3em;
+    user-select: none;
+}
+
+/* ---------- Navigation ---------- */
+
+nav {
+    position: fixed;
+    top: 6.4rem;
+    left: 0;
+    z-index: 99;
+}
+
+nav.navbar {
+    background: #303030;
+    vertical-align: middle;
+    color: #eeefe9;
+}
+
+.nav-link,
+.nav-link:hover {
+    color: #eeefe9;
+}
+
+.nav-link:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#nav-languagelinks a:not(.active) img {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+#nav-languagelinks a:not(.active) img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-item.active {
+    background: rgba(0, 0, 0, 0.13);
+    color: inherit;
+}
+
+.dropdown-item:active {
+    background: inherit;
+    color: inherit;
+}
+
+/* ---------- Main ---------- */
+
+main {
+    overflow-x: hidden;
+    padding: 0;
+    position: relative;
+}
+
+main section {
+    padding: 3rem 0;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    background: #c7c8ba;
+    color: #454335;
+    padding: 3em 0;
+    text-align: center;
+}
+
+#footer-content-logos img {
+    height: 3em;
+    margin: 1em 2em;
+
+}
+
+#footer-content-text {
+    margin-top: 2em;
+}
+
+footer a {
+    color: #454335;
+    opacity: 1;
+    text-decoration: underline;
+}
+
+footer a:hover {
+    color: #76725f;
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* ---------- Error Pages ---------- */
+
+.errorpage-path {
+    font-weight: bold;
+}
+
+.errorpage-code {
+    margin-top: 3em;
+    font-size: 0.8em;
+}

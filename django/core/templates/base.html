@@ -1,0 +1,125 @@
+<!doctype html>
+
+{% load static settings_value %}
+
+<html lang="en">
+
+    <head>
+        <title>Invisible East</title>
+
+        <!--Meta-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Invisible East is a research programme on the 8th-13th century Islamicate world in Iran, Afghanistan and Central Asia.">
+        <meta name="author" content="Invisible East team">
+
+        <!-- CSS -->
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,200;0,400;0,700;0,900;1,200;1,400;1,700&display=swap" rel="stylesheet"> 
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" 
+            integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+            crossorigin="anonymous">
+
+        <!-- Custom -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom_small.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom_large.css' %}">
+
+        <!--Set the favicon-->
+        <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    </head>
+
+    <body>
+
+        <!-- jQuery (has to load at start of page, as some templates that extend from this base template include jQuery in them) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+        <!-- Header bar -->
+        <header id="header">
+            <a id="header-logo" href="{% url 'general:welcome' %}">
+                <img src="{% static 'images/logos/invisible-east-logo.png' %}" alt="Invisible East logo">
+            </a>
+        </header>
+
+        <!-- Navigation bar -->
+        <nav class="navbar navbar-expand-lg">
+            <!-- Nav toggle button (for small screens) -->
+            <button id="navbar-toggler" class="navbar-toggler" type="button" title="navbartoggle" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+            <!-- Nav list -->
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ml-auto">
+                    <!-- Welcome -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/" == request.path %} active{% endif %}" href="{% url 'general:welcome' %}">
+                            Welcome
+                        </a>
+                    </li>
+                    <!-- About -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/about/" in request.path %} active{% endif %}" href="{% url 'general:about' %}">
+                            About
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main -->
+        <main id="main">
+            {% block main %}
+            {% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer id="footer" class="container-fluid">
+            <!-- Content -->
+            <div id="footer-content" class="container-fluid">
+
+                <div id="footer-content-logos">
+                    <a href="https://www.ox.ac.uk/" target="_blank"><img src="{% static 'images/logos/oxford-logo.png' %}" alt="Oxford University logo"></a>
+                </div>
+
+                <div id="footer-content-text">
+                    <p>
+                        <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |
+                        <a href="https://www.ox.ac.uk/legal" target="_blank">Legal</a> |
+                        <a href="{% url 'general:cookies' %}">Cookies</a> |
+                        <a href="{% url 'general:accessibility' %}">Accessibility</a> |
+                        {% if user.is_staff %}
+                            |
+                            <a href="{% url 'admin:index' %}">Admin</a>
+                        {% endif %}
+                    </p>
+                    <p>
+                        © University of Oxford {% now "Y" %}
+                    </p>
+                </div>
+
+            </div>
+        </footer>
+
+        <!-- JavaScript (other JS references above, where appropriate. Remaining shown below.) -->
+
+        <!-- 3rd party JavaScript -->
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+
+        <!-- Custom JavaScript -->
+        <script src="{% static 'js/cookiesmsg.js' %}"></script>
+
+    </body>
+
+</html>

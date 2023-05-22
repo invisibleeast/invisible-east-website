@@ -1,0 +1,16 @@
+@media (min-width: 992px) {
+
+    /* ---------- Navigation ---------- */
+
+    nav.navbar {
+        height: 2.7rem;
+    }
+
+    .nav-link {
+        font-size: 1.13rem;
+        margin: 0;
+        padding: 0.7em 1.5em !important;
+        display: inline-block;
+    }
+
+}
