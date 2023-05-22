@@ -20,9 +20,9 @@ INTERNAL_IPS = ["127.0.0.1"]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'pase.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'invisible-east.sqlite3'),
         'TEST': {
-            'NAME': os.path.join(BASE_DIR, 'pase_TEST.sqlite3'),
+            'NAME': os.path.join(BASE_DIR, 'invisible-east_TEST.sqlite3'),
         },
     }
 }
