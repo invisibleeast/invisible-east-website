@@ -21,10 +21,11 @@ INSTALLED_APPS = [
     # 3rd Party
     'debug_toolbar',
     'rest_framework',
+    'django_admin_listfilter_dropdown',
     # Custom
     'account',
     'general',
-    # 'researchdata',
+    'researchdata',
     # 'help'
 ]
 
