@@ -11,7 +11,7 @@ html, body {
 
 a,
 .link:not(.brokenlink) {
-    color: #8c2624;
+    color: #007688;
     text-decoration: none;
     cursor: pointer;
     user-select: none;
@@ -19,24 +19,34 @@ a,
 
 a:hover,
 .link:not(.brokenlink):hover {
-    color: #6c1715;
+    color: #007688;
     text-decoration: underline;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 1.5em;
     margin: 0;
     padding: 0;
     line-height: 1em;
-    font-weight: 900;
     display: inline-block;
     vertical-align: middle;
+}
+
+h1 img {
+    height: 1.8em;
+}
+
+h1 div {
+    display: inline-block;
+    font-weight: 500;
 }
 
 h2 {
     font-size: 2em;
     padding-bottom: 0.5em;
     line-height: 1em;
+    font-weight: 500;
+    color: #007688;
 }
 
 h3 {
@@ -129,7 +139,7 @@ select option,
 }
 
 strong {
-    font-weight: bold;
+    font-weight: 500;
 }
 
 em {
@@ -147,54 +157,43 @@ i.icon {
 
 /* ---------- Navigation ---------- */
 
-nav {
-    position: fixed;
-    top: 6.4rem;
-    left: 0;
-    z-index: 99;
-}
-
 nav.navbar {
-    background: #303030;
+    background: #007688;
     vertical-align: middle;
-    color: #eeefe9;
+    color: white;
+    z-index: 950;
 }
 
-.nav-link,
+.navbar-brand {
+    display: inline-block;
+    font-size: 1rem;
+}
+
+.navbar-brand h1 {
+    color: white;
+    font-weight: 400;
+}
+
+.navbar-brand h1 strong {
+    color: white;
+    font-weight: 500;
+}
+
+.nav-link {
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: white;
+    padding: 0.3em;
+    opacity: 0.8;
+}
+
 .nav-link:hover {
-    color: #eeefe9;
+    color: white;
 }
 
-.nav-link:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.nav-link.active {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-#nav-languagelinks a:not(.active) img {
-    filter: grayscale(100%);
-    opacity: 0.5;
-}
-
-#nav-languagelinks a:not(.active) img:hover {
-    filter: grayscale(0%);
+.nav-link.active,
+.nav-link:hover {
     opacity: 1;
-}
-
-.dropdown-item:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.dropdown-item.active {
-    background: rgba(0, 0, 0, 0.13);
-    color: inherit;
-}
-
-.dropdown-item:active {
-    background: inherit;
-    color: inherit;
 }
 
 /* ---------- Main ---------- */
@@ -209,11 +208,71 @@ main section {
     padding: 3rem 0;
 }
 
+/* ---------- Welcome ---------- */
+
+#welcome-banner {
+    background: #007688;
+    background-image: linear-gradient(180deg, #007688, #41aebf); 
+    color: white;
+    text-align: center;
+    font-weight: 500;
+}
+
+#welcome-banner-icon {
+    height: 27vh;
+    display: block;
+    margin: 5vh auto;
+}
+
+#welcome-banner-title {
+    color: white;
+    margin: 1em 0;
+}
+
+#welcome-banner-tagline {
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+#welcome-banner-link {
+    background: white;
+    color: #007688;
+    font-size: 1.2em;
+    border-radius: 2em;
+    padding: 0.5em 1.3em;
+    display: block;
+    margin: 8vh auto 8vh auto;
+    width: fit-content;
+}
+
+#welcome-banner-link:hover {
+    text-decoration: none;
+    background: #c1b98a;
+    color: white;
+}
+
+#welcome-banner-more {
+    font-size: 2em;
+    opacity: 0.7;
+    display: block;
+    cursor: pointer;
+    animation: MoveUpDown 2s linear infinite;
+}
+
+@keyframes MoveUpDown {
+    0%, 100% {
+        padding-top: 0;
+    }
+    50% {
+        padding-top: 0.69em;
+    }
+}
+
 /* ---------- Footer ---------- */
 
 footer {
-    background: #c7c8ba;
-    color: #454335;
+    background: #EEE;
+    color: #404040;
     padding: 3em 0;
     text-align: center;
 }
@@ -229,13 +288,13 @@ footer {
 }
 
 footer a {
-    color: #454335;
+    color: #007688;
     opacity: 1;
     text-decoration: underline;
 }
 
 footer a:hover {
-    color: #76725f;
+    color: #007688;
     opacity: 1;
     text-decoration: underline;
 }
@@ -243,7 +302,7 @@ footer a:hover {
 /* ---------- Error Pages ---------- */
 
 .errorpage-path {
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .errorpage-code {

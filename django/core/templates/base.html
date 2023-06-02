@@ -21,7 +21,7 @@
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,200;0,400;0,700;0,900;1,200;1,400;1,700&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet"> 
 
         <!-- Font Awesome -->
         <link rel="stylesheet"
@@ -44,17 +44,17 @@
         <!-- jQuery (has to load at start of page, as some templates that extend from this base template include jQuery in them) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
-        <!-- Header bar -->
-        <header id="header">
-            <a id="header-logo" href="{% url 'general:welcome' %}">
-                <img src="{% static 'images/logos/invisible-east-logo.png' %}" alt="Invisible East logo">
-            </a>
-        </header>
-
         <!-- Navigation bar -->
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar fixed-top navbar-expand-lg">
+            <!-- Logo -->
+            <a class="navbar-brand" href="{% url 'general:welcome' %}">
+                <h1>
+                    <img src="{% static 'images/logos/ie-icon/ie-icon-xsmall.png' %}" alt="Invisible East project icon">
+                    <div>Invisible<br>East</div>
+                </h1>
+            </a>
             <!-- Nav toggle button (for small screens) -->
-            <button id="navbar-toggler" class="navbar-toggler" type="button" title="navbartoggle" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false">
+            <button class="navbar-toggler" type="button" title="navbartoggle" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false">
                 <i class="fas fa-bars"></i>
             </button>
             <!-- Nav list -->
@@ -62,14 +62,26 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Welcome -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/" == request.path %} active{% endif %}" href="{% url 'general:welcome' %}">
+                        <a class="nav-link{% if request.path == "/" %} active{% endif %}" href="{% url 'general:welcome' %}">
                             Welcome
+                        </a>
+                    </li>
+                    <!-- Database -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/database/" in request.path %} active{% endif %}" href="#">
+                            Database
                         </a>
                     </li>
                     <!-- About -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/about/" in request.path %} active{% endif %}" href="{% url 'general:about' %}">
+                        <a class="nav-link{% if "/about/" in request.path %} active{% endif %}" href="#">
                             About
+                        </a>
+                    </li>
+                    <!-- Help -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="#">
+                            Help
                         </a>
                     </li>
                 </ul>
@@ -96,7 +108,7 @@
                         <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |
                         <a href="https://www.ox.ac.uk/legal" target="_blank">Legal</a> |
                         <a href="{% url 'general:cookies' %}">Cookies</a> |
-                        <a href="{% url 'general:accessibility' %}">Accessibility</a> |
+                        <a href="{% url 'general:accessibility' %}">Accessibility</a>
                         {% if user.is_staff %}
                             |
                             <a href="{% url 'admin:index' %}">Admin</a>
