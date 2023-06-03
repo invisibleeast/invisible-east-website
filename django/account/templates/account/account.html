@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load settings_value %}
+{% load static %}
+
+{% block main %}
+
+<section class="container">
+    <h2>Account</h2>
+</section>
+
+{% if my_recent_documents %}
+    <section class="container" id="account-recentactivity">
+        <h3>My Recent Documents</h3>
+        {% include "researchdata/snippets/list-body.html" with object_list=my_recent_documents list_type='imagecompact' %}
+    </section>
+{% endif %}
+
+<section class="container" id="account-mydetails">
+    <h3>My Details</h3>
+    <form method="post" class="full-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <label>Role</label>
+            <strong>{{ user.role | title }}</strong>
+            <br>
+            <em>To request a change to your role please email us: <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East website: Role change request">{% settings_value 'MAIN_CONTACT_EMAIL' %}</a></em>
+        </div>
+        <button type="submit"><i class="fas fa-check"></i> Save changes</button>
+    </form>
+    <p>
+        <a href="{% url 'account:change-password' %}">Change password</a>
+    </p>
+</section>
+
+<section class="container" id="account-logout">
+    <h3>Logout</h3>
+    <p>
+        Thanks for using Invisible East - see you soon!
+    </p>
+    <p>
+        <a href="{% url 'admin:logout' %}">Logout</a>
+    </p>
+</section>
+
+{% endblock %}

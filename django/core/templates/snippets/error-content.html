@@ -16,7 +16,7 @@
     {# Requires a path to be known in order to email admin #}
     {% if request.path %}
         <p>
-            <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}?subject=Invisible East website (Error)&body=I'd like to report an error at the location: ' {{ request.path }} ' on the Invisible East website">{% settings_value 'ADMIN_EMAIL' %}</a>
+            <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East website (Error)&body=I'd like to report an error at the location: ' {{ request.path }} ' on the Invisible East website">{% settings_value 'MAIN_CONTACT_EMAIL' %}</a>
         </p>
     {% endif %}
 

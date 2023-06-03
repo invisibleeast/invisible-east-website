@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<section class="container">
+    <h2>Create Account</h2>
+    <p>
+        Accounts are restricted to project team members and our close collaborators. If you'd like to create an account please contact us first.
+    </p>
+</section>
+
+<section class="container">
+    <form method="post" class="full-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create your account</button>
+    </form>
+</section>
+
+{% endblock %}

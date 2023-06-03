@@ -8,13 +8,6 @@ class WelcomeTemplateView(TemplateView):
     template_name = 'general/welcome.html'
 
 
-class AboutTemplateView(TemplateView):
-    """
-    Class-based view to show the about template
-    """
-    template_name = 'general/about.html'
-
-
 class AccessibilityTemplateView(TemplateView):
     """
     Class-based view to show the accessibility template

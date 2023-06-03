@@ -2,18 +2,20 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 from .models import User
-from captcha.fields import ReCaptchaField, ReCaptchaV3
+from captcha.fields import ReCaptchaField
+from captcha.widgets import  ReCaptchaV3
 
 
 class PublicUserCreationForm(UserCreationForm):
     """
     Form to specify fields in the user creation form on the public website
+    Role is ommitted as this will be set in the view, as users shouldn't choose their own role
     It's used in views.py
     """
 
     # Account Create Code (prevents unwanted people from creating account)
     account_create_code = forms.CharField(label='Account creation code',
-                                          help_text="The code provided to you by the project team that's required to create an account. Contact us for help if you're unsure.")
+                                          help_text="The code provided to you by the Invisible East team that's required to create an account. Contact us for help if you're unsure.")
 
     # Google ReCaptcha v3
     captcha = ReCaptchaField(widget=ReCaptchaV3, label='')
@@ -52,6 +54,7 @@ class PublicUserCreationForm(UserCreationForm):
 class PublicUserChangeForm(UserChangeForm):
     """
     Form to specify fields in the user change form, which is accessible through the public website
+    As users of different roles can use this form, 'role' field is excluded so they can't change their role
     It's used in views.py
     """
 

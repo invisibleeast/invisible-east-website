@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% load settings_value %}
+
+{% block main %}
+
+<section class="container">
+    <h2>Login</h2>
+    <p>
+        Log into your account to unlock functionality and contribute new data to the database.
+    </p>
+</section>
+
+<section class="container">
+    <form method="post" class="full-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <p>
+            {{ form.username.errors }}
+            <label for="{{ form.username.id_for_label }}">Email:</label>
+            {{ form.username }}
+            <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East: User has forgotten email address&body=I have forgotten the email address that is associated with my Invisible East account. Please can you remind me. My name is:">Forgot?</a>
+        </p>
+        <p>
+            {{ form.password.errors }}
+            <label for="{{ form.password.id_for_label }}">Password:</label>
+            {{ form.password }}
+            <a href="{% url 'account:reset-password-request' %}">Forgot?</a>
+        </p>
+        <button type="submit">Login</button>
+    </form>
+    <a href="{% url 'account:create' %}" id="account-login-createlink">Create an account</a>
+</section>
+
+{% endblock %}

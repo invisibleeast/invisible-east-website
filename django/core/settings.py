@@ -19,6 +19,11 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     # 3rd Party
+    # captchanotimeout is a custom app to override "captcha" to prevent 2 minute timeouts
+    # See: https://github.com/praekelt/django-recaptcha/issues/183
+    'captchanotimeout',
+    'captcha',
+    'embed_video',
     'debug_toolbar',
     'rest_framework',
     'django_admin_listfilter_dropdown',
@@ -63,6 +68,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+
+
+# Redirects for login and logout
+
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/account/'
+LOGOUT_REDIRECT_URL = '/account/login/'
 
 
 # Custom user model

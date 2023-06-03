@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<section class="container">
+    <h2>Account Updated</h2>
+    <p>
+        Your account details have been updated successfully.
+    </p>
+    <p>
+        View your <a href="{% url 'account:account' %}">Account</a>
+    </p>
+</section>
+
+{% endblock %}

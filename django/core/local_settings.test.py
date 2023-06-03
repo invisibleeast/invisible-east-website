@@ -11,6 +11,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '!km=w2#26v=qbqjw@6$6xut*3&3jlfu&r-r-kns=uo(r1ae)md'
 
+# Create Google RECAPTCHA public and private keys: https://www.google.com/recaptcha/
+RECAPTCHA_PUBLIC_KEY = 'xxxxx'
+RECAPTCHA_PRIVATE_KEY = 'xxxxx'
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -27,9 +31,8 @@ DATABASES = {
     }
 }
 
-ADMIN_EMAIL = 'mikeallaway@ahrsoftware.co.uk'
+MAIN_CONTACT_EMAIL = 'mikeallaway@ahrsoftware.co.uk'
 
-# Email
 if DEBUG is True:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
@@ -41,3 +44,5 @@ else:
     EMAIL_HOST_USER = 'sender account email address'
     EMAIL_HOST_PASSWORD = 'sender account password'
     DEFAULT_FROM_EMAIL = 'from email address or Project Name (do not reply)'
+
+ADMINS = [('Admin name', 'adminname@gmail.com')]

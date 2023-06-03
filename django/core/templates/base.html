@@ -66,28 +66,28 @@
                             Welcome
                         </a>
                     </li>
-                    <!-- Database -->
+                    <!-- Corpus -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/database/" in request.path %} active{% endif %}" href="#">
-                            Database
-                        </a>
-                    </li>
-                    <!-- About -->
-                    <li class="nav-item">
-                        <a class="nav-link{% if "/about/" in request.path %} active{% endif %}" href="#">
-                            About
-                        </a>
-                    </li>
-                    <!-- About (Arabic) -->
-                    <li class="nav-item">
-                        <a class="nav-link{% if "/about/" in request.path %} active{% endif %}" href="#">
-                            فارسی
+                        <a class="nav-link{% if "/corpus/" in request.path %} active{% endif %}" href="#">
+                            Corpus
                         </a>
                     </li>
                     <!-- Help -->
                     <li class="nav-item">
                         <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="#">
                             Help
+                        </a>
+                    </li>
+                    <!-- Project -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://invisibleeast.web.ox.ac.uk/" target="_blank">
+                            Project
+                        </a>
+                    </li>
+                    <!-- About Project (Persian) -->
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-persian" href="https://invisibleeast.web.ox.ac.uk/about-persian" target="_blank">
+                            فارسی
                         </a>
                     </li>
                 </ul>
@@ -142,10 +142,12 @@
                         <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |
                         <a href="https://www.ox.ac.uk/legal" target="_blank">Legal</a> |
                         <a href="{% url 'general:cookies' %}">Cookies</a> |
-                        <a href="{% url 'general:accessibility' %}">Accessibility</a>
-                        {% if user.is_staff %}
-                            |
-                            <a href="{% url 'admin:index' %}">Admin</a>
+                        <a href="{% url 'general:accessibility' %}">Accessibility</a> |
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'admin:index' %}">Admin</a> |
+                            <a href="{% url 'account:account' %}">Account</a>
+                        {% else %}
+                            <a href="{% url 'account:login' %}">Login</a>
                         {% endif %}
                     </p>
                     <p>

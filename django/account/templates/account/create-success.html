@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+{% load settings_value %}
+
+{% block main %}
+
+<section class="container">
+    <h2>Account Created</h2>
+    <p>
+        Your account has been successfully created
+    </p>
+    <p>
+        You have been assigned the role of 'Collaborator'. This means that you can log into the admin dashboard and view data, but you can't create, edit, or delete any data.
+    </p>
+    <p>
+        If you require a different role, please <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East: request change to my user role&body=I have been assigned the user role of 'Collaborator' but I believe this needs to be changed">contact us</a>.
+    </p>
+    <p>
+        To get started using your account please <a href="{% url 'account:login' %}">Login</a>.
+    </p>
+</section>
+
+{% endblock %}

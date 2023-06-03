@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.functions import Upper
+from account.models import User
 
 
 # Three main sections:
@@ -216,13 +217,22 @@ class Document(models.Model):
     admin_commentary = models.TextField(blank=True, null=True)
     admin_notes = models.TextField(blank=True, null=True)
 
-    # Metadata - confirm exact fields, below just examples
-    # meta_created_date = ...
-    # meta_created_by = ...
-    # meta_lastupdated_date = ...
-    # meta_lastupdate_by = ...
-    # meta_firstpublic_date = ...
-    # meta_firstpublic_by = ...
+    # Metadata
+    meta_created_by = models.ForeignKey(User,
+                                        related_name="document_created_by",
+                                        on_delete=models.PROTECT,
+                                        blank=True,
+                                        null=True,
+                                        verbose_name="Created By")
+    meta_created_datetime = models.DateTimeField(auto_now_add=True, verbose_name="Created")
+    meta_lastupdated_by = models.ForeignKey(User,
+                                            related_name="document_lastupdated_by",
+                                            on_delete=models.PROTECT,
+                                            blank=True,
+                                            null=True,
+                                            verbose_name="Last Updated By")
+    meta_lastupdated_datetime = models.DateTimeField(auto_now=True, verbose_name="Last Updated")
+    meta_firstpublished_datetime = models.DateTimeField(blank=True, null=True, verbose_name="First Published")
 
 
     @property

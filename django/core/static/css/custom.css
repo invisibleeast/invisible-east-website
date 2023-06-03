@@ -43,16 +43,19 @@ h1 div {
 
 h2 {
     font-size: 2em;
-    padding-bottom: 0.5em;
+    margin: 1.5em 0 0.8em 0;
     line-height: 1em;
     font-weight: 500;
     color: #007688;
+    text-align: center;
 }
 
 h3 {
-    font-size: 1.7em;
-    padding-bottom: 0.5em;
+    font-size: 1.6em;
     line-height: 1em;
+    font-weight: 500;
+    margin: 1em 0 0.5em 0;
+    color: #007688;
 }
 
 h4 {
@@ -79,9 +82,9 @@ th {
 }
 
 th {
-    background: #c7c8ba;
-    color: #454335;
-    border: 1px solid #878369;
+    background: #007688;
+    color: white;
+    border: 1px solid #007688;
     font-weight: 400;
     text-align: center;
 }
@@ -93,10 +96,6 @@ th.sortable {
 tr.table-separator td,
 tr.table-separator th {
     border: none;
-}
-
-tr:not(.table-separator):hover {
-    background: #e3e3dc
 }
 
 td.align-left {
@@ -155,6 +154,103 @@ i.icon {
     user-select: none;
 }
 
+.image-circle {
+    border-radius: 100%;
+    width: 13em;
+    max-width: 90%;
+    display: block;
+    margin: 1em auto;
+}
+
+/* ---------- Forms ---------- */
+
+form.full-form p {
+    margin: 1em 0 2em 0;
+}
+
+form.full-form label,
+form.full-form textarea,
+form.full-form input[type=text],
+form.full-form input[type=url],
+form.full-form input[type=email],
+form.full-form input[type=password],
+form.full-form input[type=number] {
+    display: block;
+    width: 100%;
+}
+
+form.full-form textarea {
+    height: 4em;
+}
+
+form.full-form label {
+    margin-bottom: 0;
+}
+
+form.full-form ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+form.full-form .helptext {
+    color: #505050;
+    font-size: 0.85em;
+    font-style: italic;
+    margin: 0.2em;
+    display: block;
+}
+
+form.full-form .errorlist {
+    color: #C0392B;
+}
+
+button {
+    border-radius: 0.4em;
+}
+
+form.full-form button[type=submit] {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    padding: 0.7em;
+    margin: 1em auto;
+    background: #007688;
+    color: white;
+    width: 100%;
+}
+
+form.full-form button[type=submit]:hover {
+    opacity: 0.9;
+}
+
+.full-form-footer-links a {
+    display: block;
+    padding: 0.5em;
+    margin: 2em auto;
+    text-align: center;
+    background: #DDD;
+    border-radius: 0.4em;
+    color: #404040;
+}
+
+.full-form-footer-links a:hover {
+    opacity: 0.85;
+}
+
+form.full-form button[type=submit].button-danger {
+    background: #C23616;
+}
+
+.field-required.field-invalid {
+    border: 2px solid #E74C3C;
+}
+
+.validationmsg {
+    color: #E74C3C;
+    font-size: 0.9em;
+}
+
 /* ---------- Navigation ---------- */
 
 nav.navbar {
@@ -191,6 +287,11 @@ nav.navbar {
     color: white;
 }
 
+.nav-link.nav-link-persian {
+    font-size: 1.5em;
+    padding-top: 0.1em;
+}
+
 .nav-link.active,
 .nav-link:hover {
     opacity: 1;
@@ -200,12 +301,12 @@ nav.navbar {
 
 main {
     overflow-x: hidden;
-    padding: 0;
+    padding-bottom: 8em;
     position: relative;
 }
 
 main section {
-    padding: 3rem 0;
+    padding: 1rem 0;
 }
 
 /* ---------- Welcome ---------- */
@@ -267,6 +368,8 @@ main section {
         padding-top: 0.64em;
     }
 }
+
+
 
 /* ---------- Footer ---------- */
 

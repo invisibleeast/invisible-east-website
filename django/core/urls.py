@@ -14,6 +14,7 @@ sitemaps = {
 urlpatterns = [
     # Custom apps
     path('', include('general.urls')),
+    path('account/', include('account.urls')),
     # path('database/', include('researchdata.urls')),
     # path('help/', include('help.urls')),
 
