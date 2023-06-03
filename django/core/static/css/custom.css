@@ -264,7 +264,7 @@ main section {
         padding-top: 0;
     }
     50% {
-        padding-top: 0.69em;
+        padding-top: 0.64em;
     }
 }
 
@@ -273,18 +273,59 @@ main section {
 footer {
     background: #EEE;
     color: #404040;
-    padding: 3em 0;
+    padding: 4em 0;
     text-align: center;
 }
 
 #footer-content-logos img {
-    height: 3em;
+    height: 3.5em;
     margin: 1em 2em;
+    filter: grayscale(100%);
+}
 
+#footer-content-logos img:hover {
+    filter: grayscale(0%);
+}
+
+#footer-content-social {
+    margin: 1.3em 0;
+    font-size: 2em;
+}
+
+#footer-content-social a {
+    color: #606060;
+    padding: 0.2em;
+    margin: 0.4em;
+    display: inline-block;
+}
+
+#footer-content-social-instagram:hover {
+    color: #962fbf;
+}
+
+#footer-content-social-facebook:hover {
+    color: #4267B2;
+}
+
+#footer-content-social-twitter:hover {
+    color: #00acee;
+}
+
+#footer-content-social-youtube:hover {
+    color: #c4302b;
+}
+
+#footer-content-social-linkedin:hover {
+    color: #0072b1;
 }
 
 #footer-content-text {
     margin-top: 2em;
+}
+
+footer p {
+    margin-top: 2em;
+    display: block;
 }
 
 footer a {
