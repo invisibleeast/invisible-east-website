@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.db.models import ManyToManyField, ForeignKey
-from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from . import models
 
@@ -16,26 +14,6 @@ admin.site.site_header = 'Invisible East: Admin Dashboard'
 #
 # 1. Reusable code
 #
-
-ADMIN_VIEW_LIST_PER_PAGE_DEFAULT = 100
-
-
-def get_model_perms_dict(self, request):
-    """
-    This is the default get_model_perms permissions dictionary
-
-    The method `get_model_perms(): return {}` is used to hide select list models from admin side bar
-
-    However, some models need to be shown, so returning the following line to these ModelAdmins:
-    `get_model_perms(): return get_model_perms_dict(self, request)`
-    (which uses this function) will show these select list models in the sidebar
-    """
-    return {
-        'add': self.has_add_permission(request),
-        'change': self.has_change_permission(request),
-        'delete': self.has_delete_permission(request),
-        'view': self.has_view_permission(request)
-    }
 
 
 def get_manytomany_fields(model, exclude=[]):
@@ -66,7 +44,7 @@ class GenericAdminView(admin.ModelAdmin):
     """
     list_display = ('name',)
     list_display_links = ('name',)
-    list_per_page = ADMIN_VIEW_LIST_PER_PAGE_DEFAULT
+    list_per_page = 100
     search_fields = ('name',)
 
     def get_actions(self, request):
@@ -74,9 +52,6 @@ class GenericAdminView(admin.ModelAdmin):
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
-
-    def get_model_perms(self, request):
-        return get_model_perms_dict(self, request)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

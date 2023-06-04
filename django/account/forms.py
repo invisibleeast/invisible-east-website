@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Password
 from django import forms
 from .models import User
 from captcha.fields import ReCaptchaField
-from captcha.widgets import  ReCaptchaV3
+from captcha.widgets import ReCaptchaV3
 
 
 class PublicUserCreationForm(UserCreationForm):

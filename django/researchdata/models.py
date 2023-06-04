@@ -206,7 +206,7 @@ class Document(models.Model):
 
     physical_additional_details = models.TextField(blank=True, null=True)
 
-    # Correspondance 
+    # Correspondance
     place = models.CharField(max_length=1000, blank=True, null=True)
     # Persons data (see DocumentPerson model)
     # Dates data (see DocumentDate model)
@@ -233,7 +233,6 @@ class Document(models.Model):
                                             verbose_name="Last Updated By")
     meta_lastupdated_datetime = models.DateTimeField(auto_now=True, verbose_name="Last Updated")
     meta_firstpublished_datetime = models.DateTimeField(blank=True, null=True, verbose_name="First Published")
-
 
     @property
     def title_full(self):
@@ -306,7 +305,7 @@ class DocumentTrans(models.Model):
     related_name = 'document_trans'
 
     document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
-    type = models.ForeignKey('SlDocumentTransType', on_delete=models.RESTRICT) # e.g. transcription or translation
+    type = models.ForeignKey('SlDocumentTransType', on_delete=models.RESTRICT)  # e.g. transcription or translation
     # TODO
 
 
