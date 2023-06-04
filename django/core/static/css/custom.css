@@ -162,6 +162,49 @@ i.icon {
     margin: 1em auto;
 }
 
+.hidden {
+    display: none;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 0;
+    height: 0;
+    margin: 7em auto;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.pdf-viewer-full {
+    width: 95%;
+    height: calc(100vh - 4em);
+    display: block;
+    margin: 1em auto;
+    overflow: auto;
+}
+
+.pdf-viewer-download {
+    clear: both;
+    background: #007688;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.2em;
+    display: block;
+    width: fit-content;
+    margin: 1em auto 2em auto;
+}
+
+.pdf-viewer-download:hover {
+    color: white;
+}
+
 /* ---------- Forms ---------- */
 
 form.full-form p {
@@ -369,7 +412,318 @@ main section {
     }
 }
 
+/* ---------- List ---------- */
 
+#list {
+    width: calc(100% - 23em);
+    -webkit-transition: all 0.37s ease;
+    -moz-transition: all 0.37s ease;
+    -o-transition: all 0.37s ease;
+    transition: all 0.37s ease;
+}
+
+.quicksearch-input {
+    padding: 0.5em;
+    width: 21em;
+    max-width: 95%;
+    display: block;
+    margin: 2em 2em 3em 0;
+    border: 2px solid #CCC;
+    text-align: left;
+}
+
+.quicksearch-input:focus {
+    outline: none;
+    border: 2px solid #EBA82D;
+}
+
+/* List options */
+
+#list-options {
+    overflow-y: auto;
+    height: calc(100vh - 3.5rem);
+    padding-bottom: 3.5rem;
+}
+
+#list-options-search-fields .list-options-search-fields-instance input {
+    width: calc(100% - 3em);
+    margin: 0 0.5em 0 0;
+    padding: 0.35em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#list-options-search-fields .list-options-search-fields-instance:first-of-type input {
+    width: 100%;
+}
+
+.list-options-search-fields-instance span {
+    padding: 0.55em 0.8em 0.4em 0.8em;
+    text-align: center;
+    background: #DDD;
+    cursor: pointer;
+    font-size: 0.9em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.list-options-search-fields-instance span:hover {
+    background: #CCC;
+}
+
+.list-options-search-fields-instance-operator {
+    cursor: pointer;
+    width: fit-content;
+    padding: 0.13em 0.6em;
+    border-radius: 0.2em;
+    margin: 0.3em 0;
+}
+
+.list-options-search-fields-instance-operator:hover {
+    background: #DDD;
+}
+
+#list-options-search-fields-add {
+    padding: 0.4em 0.8em 0.3em 0.8em;
+    font-size: 0.9em;
+    margin: 0.5em auto 1em auto;
+    width: fit-content;
+    text-align: center;
+    background: #DDD;
+    cursor: pointer;
+}
+
+#list-options-search-fields-add:hover {
+    background: #CCC;
+}
+
+.list-options-filters-group {
+    margin: 1.8em 0;
+    padding-top: 0.2em;
+    border-top: 1px solid #DDD;
+}
+
+.list-options-filters-group:first-of-type {
+    margin: 0 0 1.8em;
+    padding-top: 0;
+    border-top: none;
+}
+
+/* List body (all types) */
+
+.list-body {
+    margin-top: 1.3em;
+}
+
+.list-body-item {
+    display: block;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    color: #131313;
+    display: block;
+}
+
+.list-body-item:hover {
+    color: #131313;
+}
+
+.list-body-item-text-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #007688;
+}
+
+.list-body-item-text-details {
+    font-size: 0.8em;
+    padding-top: 0.2em;
+    opacity: 0.8;
+}
+
+.list-body-empty {
+    margin-top: 7em;
+    text-align: center;
+}
+
+.list-body-empty-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 1em auto;
+}
+
+.list-body-empty-details strong {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* List body (Type: Text) */
+
+.list-body-type-text .list-body-item {
+    display: block;
+    width: 100%;
+    border-top: 1px solid #DDD;
+    padding: 0.7em 1em 0.6em 1em;
+}
+
+.list-body-type-text .list-body-item:last-child {
+    border-bottom: 1px solid #DDD;
+}
+
+.list-body-type-text .list-body-item:hover {
+    background: #F2F2F2;
+}
+
+/* List body (Type: Image and/or Imagecompact) */
+
+.list-body-type-image .list-body-item,
+.list-body-type-imagecompact .list-body-item {
+    vertical-align: top;
+    display: inline-block;
+    background: #F7F7F7;
+}
+
+.list-body-type-image .list-body-item {
+    width: 13em;
+    margin-right: 0.27em;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+}
+
+.list-body-type-imagecompact .list-body-item {
+    width: 6em;
+    margin-right: -5px;
+    margin-bottom: -1px;
+    position: relative;
+    padding: 0;
+}
+
+.list-body-type-image .list-body-item:hover,
+.list-body-type-imagecompact .list-body-item:hover {
+    background: #EEE;
+}
+
+.list-body-type-image .list-body-item-imagecontainer,
+.list-body-type-imagecompact .list-body-item-imagecontainer {
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+}
+
+.list-body-type-image .list-body-item-imagecontainer {
+    height: 12em;
+    padding: 0.5em;
+}
+
+.list-body-type-imagecompact .list-body-item-imagecontainer {
+    height: 6em;
+    padding: 0.5em;
+}
+
+.list-body-type-image .list-body-item img,
+.list-body-type-imagecompact .list-body-item img {
+    display: inline-block;
+}
+
+.list-body-item img.wider {
+    height: auto;
+    width: 100%;
+}
+
+.list-body-type-image .list-body-item img.taller {
+    height: 11em;
+    width: auto;
+}
+
+.list-body-type-imagecompact .list-body-item img.taller {
+    height: 5em;
+    width: auto;
+}
+
+.list-body-type-imagecompact .list-body-item-text {
+    font-size: 0.85em;
+    padding: 0.2em 0.4em 0.2em 0.4em;
+}
+
+.list-body-type-imagecompact .list-body-item-text-title {
+    font-size: 0.8rem;
+    font-weight: normal;
+}
+
+/* Pagination */
+
+#list-pagination {
+    text-align: center;
+    margin: 5em auto 2em auto;
+    width: 100%;
+}
+
+.list-pagination-section {
+    height: 4em;
+    margin: 1em 0;
+}
+
+.list-pagination-section.disabled {
+    visibility: hidden;
+}
+
+#list-pagination a {
+    color: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    font-size: 2em;
+    width: 2em;
+    height: 1.4em;
+    padding: 0.2em 0.2em 0.2em 0.2em;
+    border-radius: 0.2em;
+}
+
+#list-pagination a:hover {
+    text-decoration: none;
+    background: #007688;
+    color: white;
+}
+
+.list-pagination-action,
+.list-pagination-action-disabled {
+    display: inline-block;
+    margin: 0 0.4em;
+}
+
+.list-pagination-action label {
+    font-size: 0.7em;
+    padding-top: 0.3em;
+    display: block;
+}
+
+.list-pagination-current {
+    font-size: 1em;
+    font-weight: 600;
+    display: block;
+    padding-top: 1.3em;
+}
+
+/* ---------- Help ---------- */
+
+#help-list-head-search {
+    margin: 3em auto;
+    text-align: center;
+}
+
+#help-detail-link {
+    text-align: center;
+    font-size: 1.1em;
+    display: block;
+    margin: 3em 0;
+}
+
+#help-detail-link a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#help-detail-image {
+    max-width: 100%;
+    margin: 3em auto;
+}
 
 /* ---------- Footer ---------- */
 

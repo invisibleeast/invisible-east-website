@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'account',
     'general',
     'researchdata',
-    # 'help'
+    'help'
 ]
 
 MIDDLEWARE = [

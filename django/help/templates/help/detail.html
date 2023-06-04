@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+{% load embed_video_tags %}
+
+{% block main %}
+
+<section class="main-banner">
+    <div class="container">
+        <h2>Help: {{ object.name }}</h2>
+        {% if object.description %}
+            {{ object.description | safe | linebreaks }}
+        {% endif %}
+    </div>
+</section>
+
+<section id="help-detail-head" class="container">
+    {% if object.link %}
+        <!-- Link -->
+        <div id="help-detail-link">
+            <span>Please see: </span>
+            <a href="{{ object.link }}">{{ object.link }}</a>
+        </div>
+    {% endif %}
+
+    {% if object.image %}
+        <!-- Image -->
+        <img id="help-detail-image" src="{{ object.image.url }}">
+    {% endif %}
+
+    {% if object.video %}
+        <!-- Video -->
+        <div id="help-detail-video" class="video-container">
+            {% video object.video as my_video %}
+                {% video my_video %}
+            {% endvideo %}
+        </div>
+    {% endif %}
+
+    {% if object.pdf %}
+        <!-- PDF -->
+        <a class="pdf-viewer-download" href="{{ object.pdf.url }}">Download PDF</a>
+        <iframe src="{{ object.pdf.url }}" class="pdf-viewer-full"></iframe>
+    {% endif %}
+</section>
+
+{% endblock %}

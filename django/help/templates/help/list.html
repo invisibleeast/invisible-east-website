@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% load settings_value %}
+
+{% block main %}
+
+<section class="main-banner">
+    <div class="container">
+        <h2>Help</h2>
+        <p>
+            To assist you in using the Invisible East corpus, please see the list of help pages below. If you have any questions or require further help that isn't covered in the below materials then please contact us at <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East: help required">{% settings_value 'MAIN_CONTACT_EMAIL' %}</a>.
+        </p>
+    </div>
+</section>
+
+<section id="help-list-head" class="container">
+    {% if object_list %}
+        <input type="text" id="help-list-head-search" title="search" name="search" class="quicksearch-input" placeholder="Search help">
+    {% endif %}
+</section>
+
+<section id="help-list-items" class="list-body list-body-type-text container">
+    {% for object in object_list  %}
+        <a href="{{ object.url_detail }}" class="list-body-item">
+            <div class="list-body-item-text-title">{{ object.list_title }}</div>
+            <div class="list-body-item-text-details" data-description="{{ object.description }}">{{ object.list_details | safe }}</div>
+        </a>
+    {% empty %}
+        <div class="list-body-empty">
+            <div class="list-body-empty-title">No help items</div>
+            <div class="list-body-empty-details">
+                There are no help items to show yet. Please check back soon or <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a> if you have a question.
+            </div>
+        </div>
+    {% endfor %}
+</section>
+
+{% endblock %}

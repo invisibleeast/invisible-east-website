@@ -15,8 +15,8 @@ urlpatterns = [
     # Custom apps
     path('', include('general.urls')),
     path('account/', include('account.urls')),
-    # path('database/', include('researchdata.urls')),
-    # path('help/', include('help.urls')),
+    # path('corpus/', include('researchdata.urls')),
+    path('help/', include('help.urls')),
 
     # Django admin
     path('dashboard/', admin.site.urls),

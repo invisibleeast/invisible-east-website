@@ -80,4 +80,28 @@
         font-size: 1.2em;
     }
 
+    /* ---------- List ---------- */
+
+    #list {
+        width: 100%;
+    }
+
+    .list-body-type-image {
+        text-align: center;
+    }
+
+    .list-body-type-imagecompact .list-body-item {
+        margin: 0.5em;
+    }
+
+    .list-body-type-imagecompact .list-body-item-text {
+        width: 100%;
+        color: #007688;
+    }
+
+    .list-pagination-section {
+        width: 100%;
+        display: block;
+    }
+
 }

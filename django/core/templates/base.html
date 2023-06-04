@@ -74,7 +74,7 @@
                     </li>
                     <!-- Help -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="#">
+                        <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="{% url 'help:list' %}">
                             Help
                         </a>
                     </li>
@@ -167,6 +167,7 @@
 
         <!-- Custom JavaScript -->
         <script src="{% static 'js/cookiesmsg.js' %}"></script>
+        <script src="{% static 'js/quicksearch.js' %}"></script>
 
     </body>
 
