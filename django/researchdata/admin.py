@@ -38,43 +38,6 @@ def get_model_perms_dict(self, request):
     }
 
 
-def custom_permission(self, request):
-    """
-    If specific, custom permissions are needed (e.g. user can only change/delete their own object)
-    then call this function via the following methods on a ModelAdmin below:
-    - has_change_permission(self, request, obj=None)
-    - has_delete_permission(self, request, obj=None)
-
-    self = the ModelAdmin class (or inherited class), which calls this during a method
-    request = the request in the ModelAdmin, which contains info about user, path, etc.
-    """
-    path = request.path.split('/')  # e.g. '/dashboard/researchdata/item/1/change/'
-
-    # If an object is being changed or deleted, as specified in request path
-    if len(path) > 3 and path[-2] in ['change', 'delete']:
-
-        # Ensure it only checks for the current model, as specified in request path
-        if self.model._meta.model_name == path[3]:
-            # Admins can change/delete all
-            if request.user.role.name == 'admin':
-                return True
-            # Collaborators
-            elif request.user.role.name == 'collaborator':
-                try:
-                    # Collaborators can change/delete if it's their own (i.e. if they created it)
-                    if request.user.role.name == 'collaborator' and self.model.objects.get(id=int(path[-3])).meta_created_by == request.user:
-                        return True
-                except (AttributeError, ObjectDoesNotExist):
-                    pass
-
-        # Allow users to manage select list data if specified in local settings
-        elif request.user.role.name == 'admin' and request.user.email in settings.USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD:
-            return True
-
-    # Deny access if no above condition has been met
-    return False
-
-
 def get_manytomany_fields(model, exclude=[]):
     """
     Returns a list of strings containing the field names of many to many fields of a model
@@ -114,12 +77,6 @@ class GenericAdminView(admin.ModelAdmin):
 
     def get_model_perms(self, request):
         return get_model_perms_dict(self, request)
-
-    def has_change_permission(self, request, obj=None):
-        return custom_permission(self, request)
-
-    def has_delete_permission(self, request, obj=None):
-        return custom_permission(self, request)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
