@@ -2,7 +2,13 @@ from django.db import migrations
 from django.core.management.sql import emit_post_migrate_signal
 from django.db import transaction
 from account import models
-from account.migrations.initial_users import initial_users
+import sys
+
+# Import initial_users.py, throwing an error if not found
+try:
+    from account.migrations.initial_users import initial_users  # NOQA
+except ImportError:
+    sys.exit('Unable to import initial_users.py in account/migrations (refer to initial_users.example.py for help)')
 
 
 """
