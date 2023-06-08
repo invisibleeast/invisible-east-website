@@ -8,6 +8,48 @@ class WelcomeTemplateView(TemplateView):
     template_name = 'general/welcome.html'
 
 
+class AboutCiteTemplateView(TemplateView):
+    """
+    Class-based view to show the about-cite template
+    """
+    template_name = 'general/about-cite.html'
+
+
+class AboutCreditsTemplateView(TemplateView):
+    """
+    Class-based view to show the about-credits template
+    """
+    template_name = 'general/about-credits.html'
+
+
+class AboutFaqsTemplateView(TemplateView):
+    """
+    Class-based view to show the about-faqs template
+    """
+    template_name = 'general/about-faqs.html'
+
+
+class AboutGlossaryTemplateView(TemplateView):
+    """
+    Class-based view to show the about-glossary template
+    """
+    template_name = 'general/about-glossary.html'
+
+
+class AboutResourcesTemplateView(TemplateView):
+    """
+    Class-based view to show the about-resources template
+    """
+    template_name = 'general/about-resources.html'
+
+
+class AboutTechnicalTemplateView(TemplateView):
+    """
+    Class-based view to show the about-technical template
+    """
+    template_name = 'general/about-technical.html'
+
+
 class AccessibilityTemplateView(TemplateView):
     """
     Class-based view to show the accessibility template

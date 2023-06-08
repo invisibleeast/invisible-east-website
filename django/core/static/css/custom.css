@@ -2,11 +2,11 @@
 /* ---------- General ---------- */
 
 html, body {
-    font-family: 'Be Vietnam Pro', sans-serif;
+    font-family: 'Catamaran', 'Helvetica', sans-serif;
     background: #F8F8F8;
     color: black;
     margin: 0;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 a,
@@ -340,6 +340,32 @@ nav.navbar {
     opacity: 1;
 }
 
+.dropdown-menu {
+    background: #008ca2;
+    font-size: 1.09em;
+}
+
+.dropdown-item {
+    font-weight: 400;
+    color: white;
+    padding: 0.5em 1em;
+    margin: 0.4em 0;
+}
+
+.dropdown-item:hover {
+    background: #00a2bb;
+    color: white;
+}
+
+.dropdown-item:active {
+    background: #00a2bb;
+}
+
+nav a:hover,
+.dropdown-item:hover {
+    color: white;
+}
+
 /* ---------- Main ---------- */
 
 main {
@@ -359,7 +385,7 @@ main section {
     background-image: linear-gradient(180deg, #007688, #41aebf); 
     color: white;
     text-align: center;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 #welcome-banner-icon {
@@ -374,7 +400,7 @@ main section {
 }
 
 #welcome-banner-tagline {
-    font-weight: 500;
+    font-weight: 700;
     opacity: 0.7;
 }
 
