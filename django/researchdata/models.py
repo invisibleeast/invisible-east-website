@@ -373,20 +373,20 @@ class Document(models.Model):
     type = models.ForeignKey('SlDocumentType', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     # The below fields may be related to above 'type' value, e.g. Legal or Administrative so need to show/hide necessary fields in admin
     legal_transactions = models.ManyToManyField('SlDocumentTypeLegalTransactions', blank=True, related_name=related_name, db_index=True)
-    administrative_internal_correspondence = models.ManyToManyField('SlDocumentTypeAdministrativeInternalCorrespondence', blank=True, related_name=related_name, db_index=True)
+    administrative_internal_correspondences = models.ManyToManyField('SlDocumentTypeAdministrativeInternalCorrespondence', blank=True, related_name=related_name, db_index=True)
     administrative_tax_receipts = models.ManyToManyField('SlDocumentTypeAdministrativeTaxReceipts', blank=True, related_name=related_name, db_index=True)
     administrative_lists_and_accounting = models.ManyToManyField('SlDocumentTypeAdministrativeListsAndAccounting', blank=True, related_name=related_name, db_index=True)
     land_measurement_units = models.ManyToManyField('SlDocumentTypeLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
-    people_and_processes_admin = models.ManyToManyField('SlDocumentTypePeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, help_text='People and processes involved in public administration, tax, trade, and commerce')
+    people_and_processes_admins = models.ManyToManyField('SlDocumentTypePeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, help_text='People and processes involved in public administration, tax, trade, and commerce')
     people_and_processes_legal = models.ManyToManyField('SlDocumentTypePeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, help_text='People and processes involved in legal and judiciary system')
-    documentation = models.ManyToManyField('SlDocumentTypeDocumentation', blank=True, related_name=related_name, db_index=True)
+    documentations = models.ManyToManyField('SlDocumentTypeDocumentation', blank=True, related_name=related_name, db_index=True)
     geographic_administrative_units = models.ManyToManyField('SlDocumentTypeGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
     legal_and_administrative_stock_phrases = models.ManyToManyField('SlDocumentTypeLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
     finance_and_accountancy_phrases = models.ManyToManyField('SlDocumentTypeFinanceAndAccountancyPhrases', blank=True, related_name=related_name, db_index=True)
     agricultural_produce = models.ManyToManyField('SlDocumentTypeAgriculturalProduce', blank=True, related_name=related_name, db_index=True, help_text='Agricultural produce, animals, and farming equipment')
     currencies_and_denominations = models.ManyToManyField('SlDocumentTypeCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
     markings = models.ManyToManyField('SlDocumentTypeMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
-    religion = models.ManyToManyField('SlDocumentTypeReligion', blank=True, related_name=related_name, db_index=True)
+    religions = models.ManyToManyField('SlDocumentTypeReligion', blank=True, related_name=related_name, db_index=True)
     # Toponym (place names)
     toponym_bamiyan = models.ManyToManyField('SlDocumentTypeToponymBamiyan', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Bamiyan papers')
     toponym_firuzkuh = models.ManyToManyField('SlDocumentTypeToponymFiruzkuh', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Firuzkuh papers')
@@ -431,10 +431,48 @@ class Document(models.Model):
     # Persons data (see DocumentPerson model)
     # Dates data (see DocumentDate model)
 
+    # Approve Document to Show on Public Website
+    public_review_requests = models.ManyToManyField(
+        User,
+        related_name="document_public_review_request",
+        blank=True,
+        help_text='Select admins to request that they review this Document and approve it to be shown on the public website. Reviewers will be notified via email.'
+    )
+    public_review_notes = models.TextField(blank=True, null=True, help_text="Used to make comments or notes during the review process.")
+    public_approval_1_of_2 = models.ForeignKey(
+        User,
+        related_name="document_public_approval_1_of_2",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        help_text='Documents must be approved by 2 admins to be visible on the public website. This is the 1st approval.'
+    )
+    public_approval_1_of_2_datetime = models.DateTimeField(blank=True, null=True)
+    public_approval_2_of_2 = models.ForeignKey(
+        User,
+        related_name="document_public_approval_2_of_2",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        help_text='Documents must be approved by 2 admins to be visible on the public website. This is the 2nd approval.'
+    )
+    public_approval_2_of_2_datetime = models.DateTimeField(blank=True, null=True)
+
     # Admin
-    admin_classification = models.ForeignKey('SlDocumentClassification', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    admin_public = models.BooleanField(default=False, help_text='Tick to make this document publicly available')
     admin_commentary = models.TextField(blank=True, null=True)
+    admin_classification = models.ForeignKey('SlDocumentClassification', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    admin_owners = models.ManyToManyField(
+        User,
+        related_name='document_admin_owners',
+        blank=True,
+        help_text='Admins who are responsible for this document'
+    )
+    admin_contributors = models.ManyToManyField(
+        User,
+        related_name='document_admin_contributors',
+        blank=True,
+        help_text='Admins who have contributed to this document but are not responsible for it'
+    )
     admin_notes = models.TextField(blank=True, null=True)
 
     # Metadata
@@ -456,6 +494,11 @@ class Document(models.Model):
     @property
     def title_full(self):
         return f"{self.id}: {self.title}"
+
+    @property
+    def public_approved(self):
+        # True if 2 approvals to include this Document on public website
+        return self.public_approval_1_of_2 and self.public_approval_2_of_2
 
     def __str__(self):
         return self.title_full

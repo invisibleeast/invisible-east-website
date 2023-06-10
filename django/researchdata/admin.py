@@ -171,8 +171,8 @@ class DocumentAdminView(GenericAdminView):
         'language',
         'correspondence',
         'country',
+        'public_approved',
         'admin_classification',
-        'admin_public'
     )
     list_display_links = ('id',)
     list_select_related = (
@@ -182,7 +182,7 @@ class DocumentAdminView(GenericAdminView):
         'country',
     )
     list_filter = (
-        'admin_public',
+        ('public_review_requests', RelatedDropdownFilter),
         ('admin_classification', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
         ('language', RelatedDropdownFilter),
@@ -193,6 +193,8 @@ class DocumentAdminView(GenericAdminView):
     )
     search_fields = ('id', 'title', 'shelfmark')
     readonly_fields = (
+        'public_approval_1_of_2_datetime',
+        'public_approval_2_of_2_datetime',
         'meta_created_by',
         'meta_created_datetime',
         'meta_lastupdated_by',
@@ -214,20 +216,20 @@ class DocumentAdminView(GenericAdminView):
             'fields': (
                 'type',
                 'legal_transactions',
-                'administrative_internal_correspondence',
+                'administrative_internal_correspondences',
                 'administrative_tax_receipts',
                 'administrative_lists_and_accounting',
                 'land_measurement_units',
-                'people_and_processes_admin',
+                'people_and_processes_admins',
                 'people_and_processes_legal',
-                'documentation',
+                'documentations',
                 'geographic_administrative_units',
                 'legal_and_administrative_stock_phrases',
                 'finance_and_accountancy_phrases',
                 'agricultural_produce',
                 'currencies_and_denominations',
                 'markings',
-                'religion',
+                'religions',
                 'toponym_bamiyan',
                 'toponym_firuzkuh',
                 'toponym_persian_khalili',
@@ -265,11 +267,22 @@ class DocumentAdminView(GenericAdminView):
                 'place',
             )
         }),
+        ('Approve Document to Show on Public Website', {
+            'fields': (
+                'public_review_requests',
+                'public_review_notes',
+                'public_approval_1_of_2',
+                'public_approval_1_of_2_datetime',
+                'public_approval_2_of_2',
+                'public_approval_2_of_2_datetime'
+            )
+        }),
         ('Admin', {
             'fields': (
-                'admin_classification',
-                'admin_public',
                 'admin_commentary',
+                'admin_classification',
+                'admin_owners',
+                'admin_contributors',
                 'admin_notes',
                 'meta_created_by',
                 'meta_created_datetime',
