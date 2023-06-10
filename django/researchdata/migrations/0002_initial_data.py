@@ -6,6 +6,7 @@ from researchdata import models
 from ast import literal_eval
 from html.parser import HTMLParser
 from io import StringIO
+from account import models as account_models
 import os
 import shutil
 
@@ -78,9 +79,422 @@ def insert_data_select_list_models(apps, schema_editor):
     required to manually set additional values.
     """
 
+    # SlDocumentType
+    for name in [
+        'Legal',
+        'Letter',
+        'List or table',
+        'Literary text',
+        'Paraliterary',
+        'Administrative'
+    ]:
+        models.SlDocumentType.objects.create(name=name)
+
+    # SlDocumentTypeLegalTransactions
+    for name in [
+        'Worship acts (ibādat)',
+        'Sale (bayʿ)',
+        'Rent-hire (ʿijāra)',
+        'Partnership (sharīk/shurāka)',
+        'Marriage (ʿaqd, nikāh)',
+        'Divorce (ṭalāq)',
+        'Loan (wām)/ Debt (dayn)',
+        'Amicable Settlement',
+        'Preemption',
+        'Power of attorney',
+        'Slavery and Manumission',
+        'Inheritance',
+        'Donation',
+        'Transfer of money (Ḥawāla)',
+        'Guarantee of liability (dark-I ḍamān)',
+        'Debt (Unknown origin)',
+        'Penal rules',
+        'Personal Status',
+        'Testimony',
+        'Litigation',
+
+    ]:
+        models.SlDocumentTypeLegalTransactions.objects.create(name=name)
+
+    # SlDocumentTypeAdministrativeInternalCorrespondence
+    for name in [
+        'Missives to the field',
+        'Informational note to the field',
+        'Requests',
+        'Missives for action'
+    ]:
+        models.SlDocumentTypeAdministrativeInternalCorrespondence.objects.create(name=name)
+
+    # SlDocumentTypeAdministrativeTaxReceipts
+    for name in [
+        'TODO',
+    ]:
+        models.SlDocumentTypeAdministrativeTaxReceipts.objects.create(name=name)
+
+    # SlDocumentTypeAdministrativeListsAndAccounting
+    for name in [
+        'TODO',
+    ]:
+        models.SlDocumentTypeAdministrativeListsAndAccounting.objects.create(name=name)
+
+    # SlDocumentTypeLandMeasurementUnits
+    for name in [
+        'Mann',
+        'Sitīr',
+        'Qafīz/Qawīz',
+        'Tasū',
+        'Ṭās',
+        'Pāra',
+        'Kharwār',
+        'Paymāna',
+        'Juft',
+        'Tīr'
+        
+    ]:
+        models.SlDocumentTypeLandMeasurementUnits.objects.create(name=name)
+
+    # SlDocumentTypePeopleAndProcessesAdmin
+    for name in [
+        'Muʿāmala',
+        'Taḥakumāna (ghalla-yi)',
+        'Anbār',
+        'Amīn',
+        'Amīr',
+        'Barzigar',
+        'Khaylbāsh',
+        'Dihqān',
+        'Raʿīs',
+        'Sipahsālār',
+        'Sarhang',
+        'Shiḥna/shiḥnagī',
+        'Mihtar',
+        'Muwakkil',
+        'Mīr',
+        'Muhāṣṣil-i ghalla',
+        'Naqīb',
+        'Nāyib',
+        'Muwakkil',
+        'Dīwān',
+        'ʿAwāriḍ (public expenses)',
+    ]:
+        models.SlDocumentTypePeopleAndProcessesAdmin.objects.create(name=name)
+
+    # SlDocumentTypePeopleAndProcessesLegal
+    for name in [
+        'Qāḍī',
+        'Faqīh',
+        'Muḥtasib'
+    ]:
+        models.SlDocumentTypePeopleAndProcessesLegal.objects.create(name=name)
+
+    # SlDocumentTypeDocumentation
+    for name in [
+        'Qabāla',
+        'Barāt',
+        'Chak',
+        'Ḥujjat',
+        'Ḥisāb/ḥisab',
+        'Mithāl',
+        'Nāma',
+        'Nuskhat',
+        'Nishān',
+        'Ruqʿa',
+        'Risāla'
+    ]:
+        models.SlDocumentTypeDocumentation.objects.create(name=name)
+
+    # SlDocumentTypeGeographicAdministrativeUnits
+    for name in [
+        'Wilāyat',
+        'Badiya',
+        'Dīh',
+        'Qariya',
+        'Qaṣaba',
+        'Zamīn',
+        'Shahr',
+        'Darra',
+        'Ribāṭ',
+        'Sarāy'
+    ]:
+        models.SlDocumentTypeGeographicAdministrativeUnits.objects.create(name=name)
+
+    # SlDocumentTypeLegalAndAdministrativeStockPhrases
+    for name in [
+        'Pious invocations',
+        'Bismillāh (including abbrev)',
+        'In a state of sound body and mind',
+        'Of their own volition and without coercion',
+        'Iqrār opener',
+        'Jawāz (person with legal agency)',
+        'ʿUḍr/ghiflat (excuse or delay)',
+        'Muhlat (extension granted)',
+        'Guwāhī',
+        'Dhimmat (obligation, charge)',
+        'Iʿtimād nimūdan [bar-īn nishān] (trust the seal)',
+        'Gharāmat (fine, debt)',
+        'Ḥīmāyat (protection)',
+        'Ḥaq/Ḥuqūq (obligation, policy, assessed payment)',
+        'Abandoned property',
+        'Tafārīqāt',
+        'Tax collection (bīrun kardan)',
+        'Taxes: Kharāj',
+        'Taxes: ʿUshr',
+        'Taxes: Jizya'
+    ]:
+        models.SlDocumentTypeLegalAndAdministrativeStockPhrases.objects.create(name=name)
+
+    # SlDocumentTypeFinanceAndAccountancyPhrases
+    for name in [
+        'Tafṣīl (itemisation)',
+        'Wajh/wujūh (in account/payment of)',
+        'Bāqī (remainder)',
+        'Wām (-I lāzim) (loan)'
+    ]:
+        models.SlDocumentTypeFinanceAndAccountancyPhrases.objects.create(name=name)
+
+    # SlDocumentTypeAgriculturalProduce
+    for name in [
+        'Ghalla (grain)',
+        'Gandum (wheat)',
+        'Jaw (barley)',
+        'Kāh (straw)',
+        'Sheep',
+        'Oxen',
+        'Donkeys',
+        'Oil',
+        'Seeds',
+        'Plough/plough-share/covers',
+        'Hoe/sickle',
+        'Shovel',
+        'Harvest collecting (bardāshtan, rafʿ kardan)',
+        'ʿĀsiya (mill)',
+    ]:
+        models.SlDocumentTypeAgriculturalProduce.objects.create(name=name)
+
+    # SlDocumentTypeCurrenciesAndDenominations
+    for name in [
+        'ʿAdlī',
+        'Shiyānī',
+        'Sīm (-i nīk, -i rasmī)',
+        'Zar',
+        'Dīnār',
+        'Dilīwār-I sultānī',
+        'Dirham',
+        'Diramsang',
+        'Dāng/dāniq/danānīq (one-sixth)'
+    ]:
+        models.SlDocumentTypeCurrenciesAndDenominations.objects.create(name=name)
+
+    # SlDocumentTypeMarkings
+    for name in [
+        'Oblique stroke (check mark)',
+        'Jaʾiza (cipher)',
+        'Taṣnīf (half-amount stroke above written out number)',
+        'Column format',
+        'Siyāq (accountants’ abbreviations of numbers)',
+    ]:
+        models.SlDocumentTypeMarkings.objects.create(name=name)
+
+    # SlDocumentTypeReligion
+    for name in [
+        'Temple',
+        'Mosque',
+        'Church',
+        'God(s)',
+        'Fatwa/istiftāʿ',
+        'Rituals'
+    ]:
+        models.SlDocumentTypeReligion.objects.create(name=name)
+
+    # SlDocumentTypeToponymBamiyan
+    for name in [
+        'Āhangarān, آهنگران',
+        'Āsiyāb, آسیاب',
+        'Āsyāb-i Sar-i Rāh آسیاب سر راه',
+        'ʿAjagak, عجگک',
+        'Andarāba, اندرابه/ اندراب',
+        'Angār. انگار',
+        'Arsaf, ار سف/ سف',
+        'Arsānī/Sānī, ار سانی/ سانی/ شانی/ شایی',
+        'Azraw',
+        'Balkh, بلخی',
+        'Bāmiyān, بامیان',
+        'Band-i Khāsh, بند خاش',
+        'Batajlīz/Batajlīzh, بنجلیز/ بنجلیژ',
+        'Butiyān, بوتیان',
+        'Chākirī, چاکری/ حاکری',
+        'Darra, دره',
+        'Dāwar, داور',
+        'Dupawi, دو پوی/ دو پول',
+        'Durustī, درستی',
+        'Funduqistān, فندقستان',
+        'Ghandak, غندک',
+        'Ghārminj (or Ghārmīkh), عار میح',
+        'Ghūr Karūd [var. Garūd], غور کرود',
+        'Ghūrwand, غوروند',
+        'Īsh, اِیش',
+        'Jawlāh /Jūlāh, جولاه',
+        'Jawqāni, جوقانی',
+        'Kadūr',
+        'Karyān/Kadyān, کریان',
+        'Kafshān/Kāfshān, کاف‌شان',
+        'Karūd',
+        'Kawrij',
+        'Khīsh, حیس',
+        'Khustgān, خستگان',
+        'Miyān shahr, میان شهر',
+        'Naqdī, نقدی',
+        'Naw Bāgh/ Sar-i Bāgh, نو باغ/ سرباغ',
+        'Nāy, نای',
+        'Nayak',
+        'Panjhīr, پنجهیری',
+        'Rāgh, راغ',
+        'Rubāṭ, رباط ',
+        'Rubāṭiyān, رباطیان',
+        'Rubāṭ-i Miyān shahr,رباط میانشهر',
+        'Rasj, رسح مر',
+        'Rīw, ریو',
+        'Sabz bahār, سبزبهار',
+        'Safī, سفی',
+        'Safīd Sang, سفید سنگ',
+        'Skānj, سکانح',
+        'Sagnūl, سگ نول',
+        'Sar-i Khish, سرخیش',
+        'Sar Āsiyā, سر آسیا',
+        'Sar-i Guzar, سری گذر',
+        'Sū/ Shū, سو/ شو',
+        'Surkh Dar, سرخ در',
+        'Surkh Dar, סורך דר',
+        'Sūya/Sūba, سویه/ سوبه',
+        'Sabārghū/Shabārghū, سبارغو/ شبارغو',
+        'Shawāniq, شوانق',
+        'Shawār/Sawār, شوار/ سوار',
+        'Shīngiryān/Sīngiryān, شنگریانی',
+        'Tālīzh, تالیژ',
+        'Ṭabbakhān-i Karūd, طباخان کرود',
+        'Tūlak, تولکی',
+        'Wak, وک',
+        'Warmiyās/Wariyās, ورمیاس/ وری یاس',
+        'Wāshān, درۀ واشان',
+        'Wān.shān, ואנשאן',
+        'Wazāmān/Farāmān/Barāmān, وزامن/ فرامن',
+        'Zīr-i ʿAj, زیر عج',
+        'Zīrdamān, زیر دمان'
+    ]:
+        models.SlDocumentTypeToponymBamiyan.objects.create(name=name)
+
+    # SlDocumentTypeToponymFiruzkuh
+    for name in [
+        'Abdar [var. Andar]',
+        'Anūr-kūh or Anūr-gird',
+        'Arīz',
+        'Asp-qūl',
+        'Barāslīzh',
+        'Bardīz',
+        'Balkh',
+        'Bandalīzh/Bandalīch/Bandānalīch',
+        'Dāmam',
+        'Fīrūzkūh',
+        'Ghandamīn, Ghalmīn',
+        'Ghaznīn [var. Ghaznī]',
+        'Ghūr',
+        'Hind',
+        'Iraq',
+        'Jūzjān',
+        'Kāliyūn',
+        'Khāy',
+        'Khurāsān',
+        'Maymana [var. Mayman]',
+        'Murghāb',
+        'Nala',
+        'Naylanj',
+        'Pūza-yi ʿAliyā',
+        'Rabanjī',
+        'Rāmtak',
+        'Sakūn',
+        'Sanga/Sangeh',
+        'Shāristay',
+        'Siparf',
+        'Suf [var. Suq]',
+        'Ṭāq [var. Tigāb Ṭāq/Tāgh]',
+        'Tufanda',
+        'Tufandī/Tukhandī',
+        'Ṭūs',
+        'Warsīkh',
+        'Waylīzh',
+        '(Wīlīzh?)'
+    ]:
+        models.SlDocumentTypeToponymFiruzkuh.objects.create(name=name)
+
+    # SlDocumentTypeToponymPersianKhalili
+    for name in [
+        'Istīw, Istiwuy',
+    ]:
+        models.SlDocumentTypeToponymPersianKhalili.objects.create(name=name)
+
+    # SlDocumentTypeToponymBactrian
+    for name in [
+        'TODO',
+    ]:
+        models.SlDocumentTypeToponymBactrian.objects.create(name=name)
+
+    # SlDocumentTypeToponymKhurasan
+    for name in [
+        'TODO',
+    ]:
+        models.SlDocumentTypeToponymKhurasan.objects.create(name=name)
+
+    # SlDocumentTypeToponymMiddlePersian
+    for name in [
+        'TODO',
+    ]:
+        models.SlDocumentTypeToponymMiddlePersian.objects.create(name=name)
+
+    # SlDocumentScript
+    for name in [
+        'Arabic',
+        'Hebrew',
+        'Greek-based',
+        'Ancient Pahlavi'
+    ]:
+        models.SlDocumentScript.objects.create(name=name)
+
     # SlDocumentLanguage
-    for name in ['Arabic', 'Bactrian', 'New Persian']:
-        models.SlDocumentLanguage.objects.create(name=name)
+    for obj in [
+        {
+            'name': 'Arabic',
+            'script': models.SlDocumentScript.objects.get(name='Arabic')
+        },
+        {
+            'name': 'Bactrian',
+            'script': models.SlDocumentScript.objects.get(name='Greek-based')
+        },
+        {
+            'name': 'Judeo-Persian',
+            'script': models.SlDocumentScript.objects.get(name='Hebrew')
+        },
+        {
+            'name': 'Middle Persian',
+            'script': models.SlDocumentScript.objects.get(name='Ancient Pahlavi')
+        },
+        {
+            'name': 'New Persian',
+            'script': models.SlDocumentScript.objects.get(name='Arabic')
+        },
+    ]:
+        models.SlDocumentLanguage.objects.create(**obj)
+
+    # SlDocumentWritingSupport
+    for name in [
+        'paper',
+        'ostraca',
+        'parchment',
+        'linen',
+        'clay (bullae)',
+        'seals',
+        'stone (graves)',
+    ]:
+        models.SlDocumentWritingSupport.objects.create(name=name)
 
     # SlPublicationStatement
     models.SlPublicationStatement.objects.create(
@@ -93,11 +507,42 @@ def insert_data_select_list_models(apps, schema_editor):
         name_full='European Research Council'
     )
 
+    # SlM2MPersonToPersonRelationshipType
+    for name in [
+        'brother',
+        'sister',
+        'mother',
+        'father',
+        'grandfather',
+        'grandmother',
+        'grandson',
+        'granddaughter',
+        'uncle',
+        'aunt',
+        'nephew',
+        'neice',
+        'colleague',
+        'friend',
+    ]:
+        models.SlM2MPersonToPersonRelationshipType.objects.create(name=name)
+
     # SlDocumentClassification
     for obj in [
-        {'name': 'Gold', 'order': 3},
-        {'name': 'Silver', 'order': 2},
-        {'name': 'Bronze', 'order': 1}
+        {
+            'name': 'Bronze',
+            'description': "for internal purposes only",
+            'order': 1
+        },
+        {
+            'name': 'Silver',
+            'description': "given following internal peer review",
+            'order': 2
+        },
+        {
+            'name': 'Gold',
+            'description': "given following external peer review through journal/book publication",
+            'order': 3
+        }
     ]:
         models.SlDocumentClassification.objects.create(**obj)
 
@@ -116,6 +561,7 @@ def insert_data_documents(apps, schema_editor):
     """
 
     # Loop through all XML files found in input dir
+    prefix_map = {"xml": "http://relaxng.org/ns/structure/1.0"}
     for root, dirs, input_files in os.walk(PATH_OLD_DATA):
         for input_file in input_files:
             if input_file.endswith(".xml"):
@@ -125,8 +571,10 @@ def insert_data_documents(apps, schema_editor):
 
                 # Get XML from file as string and pre-process (e.g. remove unwanted parts)
                 file_content = Path(os.path.join(root, input_file)).read_text()
-                file_content = file_content.replace(' xmlns="http://www.tei-c.org/ns/1.0"', '')  # remove TEI namespace
-                file_content = file_content.replace('xml:lang', 'lang')  # remove xml: namespace from lang attributes
+                # remove TEI namespace
+                file_content = file_content.replace(' xmlns="http://www.tei-c.org/ns/1.0"', '')
+                # remove xml: namespace
+                file_content = file_content.replace('xml:', '')
 
                 # Setup ET
                 tree = ET.ElementTree(ET.fromstring(file_content))
@@ -231,6 +679,21 @@ def insert_data_documents(apps, schema_editor):
                 except AttributeError:
                     pass
 
+                # meta_created_by
+                try:
+                    meta_created_by = None
+                    # Ed
+                    if title_stmt.find('respStmt[@id="EST"]', prefix_map):
+                        meta_created_by = account_models.User.objects.get(email="edward.shawe-taylor@wolfson.ox.ac.uk")
+                    # Cat
+                    elif title_stmt.find('respStmt[@id="CM"]'):
+                        meta_created_by = account_models.User.objects.get(email="catherine.mcnally@stx.ox.ac.uk")
+                    if meta_created_by:
+                        document_obj.meta_created_by = meta_created_by
+                except AttributeError:
+                    pass
+                # meta_created_by - Cat
+
                 # Save Document object in db
                 document_obj.save()
 
@@ -238,12 +701,12 @@ def insert_data_documents(apps, schema_editor):
                 # e.g. reverse FK objects and M2M relationships
 
                 # Reverse FK objects:
-                # DocumentPersonAppearance
+                # PersonInDocument
                 for person in corresp_action.findall('persName'):
-                    models.DocumentPersonAppearance.objects.create(
+                    models.PersonInDocument.objects.create(
                         document=document_obj,
-                        type=models.SlDocumentPersonType.objects.get_or_create(name=person.attrib['type'])[0],
-                        person=models.DocumentPerson.objects.get_or_create(name=person.text)[0]
+                        type=models.SlPersonInDocumentType.objects.get_or_create(name=person.attrib['type'])[0],
+                        person=models.Person.objects.get_or_create(name=person.text)[0]
                     )
                 # DocumentDate
                 for date in corresp_action.findall('date'):
