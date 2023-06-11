@@ -129,6 +129,7 @@ class PersonInDocumentTabularInline(admin.TabularInline):
     """
     model = models.PersonInDocument
     extra = 0
+    classes = ['collapse']
     autocomplete_fields = ('person', 'type')
 
 
@@ -138,17 +139,20 @@ class DocumentDateTabularInline(admin.TabularInline):
     """
     model = models.DocumentDate
     extra = 0
+    classes = ['collapse']
 
 
 class M2MPersonToPerson1Inline(admin.TabularInline):
     model = models.Person.person.through
     fk_name = "person_2"
+    classes = ['collapse']
     autocomplete_fields = ('person_1', 'relationship_type')
 
 
 class M2MPersonToPerson2Inline(admin.TabularInline):
     model = models.Person.person.through
     fk_name = "person_1"
+    classes = ['collapse']
     autocomplete_fields = ('person_2', 'relationship_type')
 
 
@@ -236,21 +240,24 @@ class DocumentAdminView(GenericAdminView):
                 'toponym_bactrian',
                 'toponym_khurasan',
                 'toponym_middle_persian'
-            )
+            ),
+            'classes': ['collapse in']
         }),
         ('Publication Statements', {
             'fields': (
                 'publication_statement',
                 'publication_statement_original',
                 'publication_statement_republished',
-            )
+            ),
+            'classes': ['collapse in']
         }),
         ('Manuscript Identifier', {
             'fields': (
                 'country',
                 'collection',
                 'shelfmark'
-            )
+            ),
+            'classes': ['collapse in']
         }),
         ('Physical Description', {
             'fields': (
@@ -260,12 +267,14 @@ class DocumentAdminView(GenericAdminView):
                 'dimensions_height',
                 'dimensions_width',
                 'physical_additional_details'
-            )
+            ),
+            'classes': ['collapse in']
         }),
         ('Correspondance', {
             'fields': (
                 'place',
-            )
+            ),
+            'classes': ['collapse in']
         }),
         ('Approve Document to Show on Public Website', {
             'fields': (
@@ -275,7 +284,8 @@ class DocumentAdminView(GenericAdminView):
                 'public_approval_1_of_2_datetime',
                 'public_approval_2_of_2',
                 'public_approval_2_of_2_datetime'
-            )
+            ),
+            'classes': ['collapse in']
         }),
         ('Admin', {
             'fields': (
@@ -288,7 +298,8 @@ class DocumentAdminView(GenericAdminView):
                 'meta_created_datetime',
                 'meta_lastupdated_by',
                 'meta_lastupdated_datetime',
-            )
+            ),
+            'classes': ['collapse in']
         }),
     )
     inlines = (

@@ -6,7 +6,7 @@ html, body {
     background: #F8F8F8;
     color: black;
     margin: 0;
-    font-weight: 400;
+    font-weight: 300;
 }
 
 a,
@@ -38,7 +38,7 @@ h1 img {
 
 h1 div {
     display: inline-block;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 h2 {
@@ -385,7 +385,6 @@ main section {
     background-image: linear-gradient(180deg, #007688, #41aebf); 
     color: white;
     text-align: center;
-    font-weight: 700;
 }
 
 #welcome-banner-icon {
@@ -397,10 +396,10 @@ main section {
 #welcome-banner-title {
     color: white;
     margin: 1em 0;
+    font-weight: 600;
 }
 
 #welcome-banner-tagline {
-    font-weight: 700;
     opacity: 0.7;
 }
 
@@ -425,7 +424,6 @@ main section {
     font-size: 2em;
     opacity: 0.7;
     display: block;
-    cursor: pointer;
     animation: MoveUpDown 2s linear infinite;
 }
 
