@@ -621,7 +621,9 @@ def insert_data_documents(apps, schema_editor):
                         document_obj.publication_statement = models.SlPublicationStatement.objects.get_or_create(name=publication_p.text)[0]
 
                 # subject
-                document_obj.subject = profile_desc.find('particDesc/p').text
+                document_obj.subject = '\n\n'.join(
+                        [subject.text for subject in profile_desc.findall('particDesc/p')]
+                    )
                 # country
                 try:
                     country = ms_desc.find('msIdentifier/country').text
