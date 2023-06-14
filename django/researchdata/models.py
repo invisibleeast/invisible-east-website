@@ -21,7 +21,7 @@ class SlAbstract(models.Model):
     See: https://docs.djangoproject.com/en/4.0/topics/db/models/#abstract-base-classes
     """
 
-    name = models.CharField(max_length=1000, blank=True, null=True, db_index=True)
+    name = models.CharField(max_length=1000, db_index=True)
 
     def __str__(self):
         return self.name if self.name and self.name != "" else f"#{self.id}"
@@ -34,14 +34,6 @@ class SlAbstract(models.Model):
 #
 # 2. Select List models (all inherit from above SlAbstract class, with some extending with additional fields, etc.)
 #
-
-
-class SlKeyword(SlAbstract):
-    """
-    A common word/phrase associated with a Document
-    E.g. 'administration', 'receipt'
-    """
-    pass
 
 
 class SlDocumentType(SlAbstract):
@@ -157,44 +149,9 @@ class SlDocumentTypeReligion(SlAbstract):
     pass
 
 
-class SlDocumentTypeToponymBamiyan(SlAbstract):
+class SlDocumentTypeToponym(SlAbstract):
     """
-    A Document type related field
-    """
-    pass
-
-
-class SlDocumentTypeToponymFiruzkuh(SlAbstract):
-    """
-    A Document type related field
-    """
-    pass
-
-
-class SlDocumentTypeToponymPersianKhalili(SlAbstract):
-    """
-    A Document type related field
-    """
-    pass
-
-
-class SlDocumentTypeToponymBactrian(SlAbstract):
-    """
-    A Document type related field
-    """
-    pass
-
-
-class SlDocumentTypeToponymKhurasan(SlAbstract):
-    """
-    A Document type related field
-    """
-    pass
-
-
-class SlDocumentTypeToponymMiddlePersian(SlAbstract):
-    """
-    A Document type related field
+    A Document type related field. Toponym = place
     """
     pass
 
@@ -292,22 +249,6 @@ class SlCountry(SlAbstract):
     pass
 
 
-class SlMaterial(SlAbstract):
-    """
-    A material that a Document is made of
-    E.g. 'paper', 'parchment', 'leather'
-    """
-    pass
-
-
-class SlMaterialInk(SlAbstract):
-    """
-    An ink that's used to write content within a Document
-    E.g. 'black'
-    """
-    pass
-
-
 class SlPublicationStatement(SlAbstract):
     """
     A statement about who has published a Document
@@ -348,6 +289,14 @@ class SlM2MPersonToPersonRelationshipType(SlAbstract):
     pass
 
 
+class SlPersonGender(SlAbstract):
+    """
+    A gender of a person.
+    E.g. 'male', 'female'
+    """
+    pass
+
+
 #
 # 3. Main Models
 #
@@ -365,9 +314,7 @@ class Document(models.Model):
     subject = models.TextField(blank=True, null=True)  # "particDesc > p" in xml
     language = models.ForeignKey('SlDocumentLanguage', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     correspondence = models.ForeignKey('SlDocumentCorrespondence', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    keywords = models.ManyToManyField('SlKeyword', blank=True, related_name=related_name, db_index=True)
     funders = models.ManyToManyField('SlFunder', blank=True, related_name=related_name, db_index=True)
-    writing_support = models.ForeignKey('SlDocumentWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
 
     # Type and type-related
     type = models.ForeignKey('SlDocumentType', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
@@ -387,13 +334,7 @@ class Document(models.Model):
     currencies_and_denominations = models.ManyToManyField('SlDocumentTypeCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
     markings = models.ManyToManyField('SlDocumentTypeMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
     religions = models.ManyToManyField('SlDocumentTypeReligion', blank=True, related_name=related_name, db_index=True)
-    # Toponym (place names)
-    toponym_bamiyan = models.ManyToManyField('SlDocumentTypeToponymBamiyan', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Bamiyan papers')
-    toponym_firuzkuh = models.ManyToManyField('SlDocumentTypeToponymFiruzkuh', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Firuzkuh papers')
-    toponym_persian_khalili = models.ManyToManyField('SlDocumentTypeToponymPersianKhalili', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Persian Khalili papers')
-    toponym_bactrian = models.ManyToManyField('SlDocumentTypeToponymBactrian', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Bactrian documents')
-    toponym_khurasan = models.ManyToManyField('SlDocumentTypeToponymKhurasan', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Arabic Bactrian (Khurasan) documents')
-    toponym_middle_persian = models.ManyToManyField('SlDocumentTypeToponymMiddlePersian', blank=True, related_name=related_name, db_index=True, help_text='Place names featuring in Middle Persian documents')
+    toponyms = models.ManyToManyField('SlDocumentTypeToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
 
     # Publication Statements
     publication_statement = models.ForeignKey('SlPublicationStatement', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
@@ -414,20 +355,15 @@ class Document(models.Model):
     # <idno type="URI">?
 
     # Physical Description
-    materials = models.ManyToManyField('SlMaterial', blank=True, related_name=related_name, db_index=True)
-    material_details = models.TextField(blank=True, null=True)
+    writing_support = models.ForeignKey('SlDocumentWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    writing_support_details = models.TextField(blank=True, null=True)
     dimensions_unit = models.ForeignKey('SlUnitOfMeasurement', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     dimensions_height = models.FloatField(blank=True, null=True)
     dimensions_width = models.FloatField(blank=True, null=True)
-
-    # What to do with this data?... inconsistent in XML (see todo.md). Split into recto/verso for line count? Store as char (so can add details) or int (so can sort)? etc.
-    fold_lines = models.IntegerField(blank=True, null=True)
-    layout_description = models.TextField(blank=True, null=True)
-
+    fold_lines_count_details = models.TextField(blank=True, null=True, help_text='Include fold lines count details, e.g. for recto, verso, etc.')
+    fold_lines_count_total = models.IntegerField(blank=True, null=True, help_text='Specify the total number of fold lines for this Document (you may need to add together the fold lines counts of recto, verso, etc. where applicable)')
     physical_additional_details = models.TextField(blank=True, null=True)
 
-    # Correspondance
-    place = models.CharField(max_length=1000, blank=True, null=True)
     # Persons data (see DocumentPerson model)
     # Dates data (see DocumentDate model)
 
@@ -476,19 +412,23 @@ class Document(models.Model):
     admin_notes = models.TextField(blank=True, null=True)
 
     # Metadata
-    meta_created_by = models.ForeignKey(User,
-                                        related_name="document_created_by",
-                                        on_delete=models.PROTECT,
-                                        blank=True,
-                                        null=True,
-                                        verbose_name="created by")
+    meta_created_by = models.ForeignKey(
+        User,
+        related_name="document_created_by",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        verbose_name="created by"
+    )
     meta_created_datetime = models.DateTimeField(auto_now_add=True, verbose_name="created")
-    meta_lastupdated_by = models.ForeignKey(User,
-                                            related_name="document_lastupdated_by",
-                                            on_delete=models.PROTECT,
-                                            blank=True,
-                                            null=True,
-                                            verbose_name="last updated by")
+    meta_lastupdated_by = models.ForeignKey(
+        User,
+        related_name="document_lastupdated_by",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        verbose_name="last updated by"
+    )
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
     @property
@@ -510,6 +450,8 @@ class Person(models.Model):
     """
 
     name = models.CharField(max_length=1000)
+    gender = models.ForeignKey('SlPersonGender', on_delete=models.CASCADE, blank=True, null=True)
+    profession = models.CharField(max_length=1000, blank=True, null=True)
     person = models.ManyToManyField('self', through='M2MPersonToPerson', blank=True)
 
     def __str__(self):

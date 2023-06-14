@@ -92,28 +92,21 @@ admin.site.register(models.SlDocumentTypeAgriculturalProduce, GenericSlAdminView
 admin.site.register(models.SlDocumentTypeCurrenciesAndDenominations, GenericSlAdminView)
 admin.site.register(models.SlDocumentTypeMarkings, GenericSlAdminView)
 admin.site.register(models.SlDocumentTypeReligion, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponymBamiyan, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponymFiruzkuh, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponymPersianKhalili, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponymBactrian, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponymKhurasan, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponymMiddlePersian, GenericSlAdminView)
-admin.site.register(models.SlKeyword, GenericSlAdminView)
+admin.site.register(models.SlDocumentTypeToponym, GenericSlAdminView)
 admin.site.register(models.SlFunder, GenericSlAdminView)
 admin.site.register(models.SlUnitOfMeasurement, GenericSlAdminView)
 admin.site.register(models.SlDocumentCollection, GenericSlAdminView)
 admin.site.register(models.SlDocumentClassification, GenericSlAdminView)
 admin.site.register(models.SlDocumentCorrespondence, GenericSlAdminView)
-admin.site.register(models.SlDocumentWritingSupport, GenericSlAdminView)
 admin.site.register(models.SlDocumentScript, GenericSlAdminView)
 admin.site.register(models.SlDocumentLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
 admin.site.register(models.SlCountry, GenericSlAdminView)
-admin.site.register(models.SlMaterial, GenericSlAdminView)
-admin.site.register(models.SlMaterialInk, GenericSlAdminView)
+admin.site.register(models.SlDocumentWritingSupport, GenericSlAdminView)
 admin.site.register(models.SlPublicationStatement, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlPersonInDocumentType, GenericSlAdminView)
+admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlDocumentTransType, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
 
@@ -143,16 +136,20 @@ class DocumentDateTabularInline(admin.TabularInline):
 
 
 class M2MPersonToPerson1Inline(admin.TabularInline):
+    """
+    A subform/inline form for Person 1 to be used in PersonAdminView
+    """
     model = models.Person.person.through
     fk_name = "person_2"
-    classes = ['collapse']
     autocomplete_fields = ('person_1', 'relationship_type')
 
 
 class M2MPersonToPerson2Inline(admin.TabularInline):
+    """
+    A subform/inline form for Person 1 to be used in PersonAdminView
+    """
     model = models.Person.person.through
     fk_name = "person_1"
-    classes = ['collapse']
     autocomplete_fields = ('person_2', 'relationship_type')
 
 
@@ -190,10 +187,9 @@ class DocumentAdminView(GenericAdminView):
         ('admin_classification', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
         ('language', RelatedDropdownFilter),
-        ('keywords', RelatedDropdownFilter),
         ('correspondence', RelatedDropdownFilter),
         ('country', RelatedDropdownFilter),
-        ('materials', RelatedDropdownFilter),
+        ('writing_support', RelatedDropdownFilter),
     )
     search_fields = ('id', 'title', 'shelfmark')
     readonly_fields = (
@@ -211,9 +207,7 @@ class DocumentAdminView(GenericAdminView):
                 'subject',
                 'language',
                 'correspondence',
-                'keywords',
                 'funders',
-                'writing_support',
             )
         }),
         ('Document Types', {
@@ -234,14 +228,9 @@ class DocumentAdminView(GenericAdminView):
                 'currencies_and_denominations',
                 'markings',
                 'religions',
-                'toponym_bamiyan',
-                'toponym_firuzkuh',
-                'toponym_persian_khalili',
-                'toponym_bactrian',
-                'toponym_khurasan',
-                'toponym_middle_persian'
+                'toponyms'
             ),
-            'classes': ['collapse in']
+            'classes': ['collapse']
         }),
         ('Publication Statements', {
             'fields': (
@@ -249,7 +238,7 @@ class DocumentAdminView(GenericAdminView):
                 'publication_statement_original',
                 'publication_statement_republished',
             ),
-            'classes': ['collapse in']
+            'classes': ['collapse']
         }),
         ('Manuscript Identifier', {
             'fields': (
@@ -257,24 +246,20 @@ class DocumentAdminView(GenericAdminView):
                 'collection',
                 'shelfmark'
             ),
-            'classes': ['collapse in']
+            'classes': ['collapse']
         }),
         ('Physical Description', {
             'fields': (
-                'materials',
-                'material_details',
+                'writing_support',
+                'writing_support_details',
                 'dimensions_unit',
                 'dimensions_height',
                 'dimensions_width',
+                'fold_lines_count_details',
+                'fold_lines_count_total',
                 'physical_additional_details'
             ),
-            'classes': ['collapse in']
-        }),
-        ('Correspondance', {
-            'fields': (
-                'place',
-            ),
-            'classes': ['collapse in']
+            'classes': ['collapse']
         }),
         ('Approve Document to Show on Public Website', {
             'fields': (
@@ -285,7 +270,7 @@ class DocumentAdminView(GenericAdminView):
                 'public_approval_2_of_2',
                 'public_approval_2_of_2_datetime'
             ),
-            'classes': ['collapse in']
+            'classes': ['collapse']
         }),
         ('Admin', {
             'fields': (
@@ -299,7 +284,7 @@ class DocumentAdminView(GenericAdminView):
                 'meta_lastupdated_by',
                 'meta_lastupdated_datetime',
             ),
-            'classes': ['collapse in']
+            'classes': ['collapse']
         }),
     )
     inlines = (

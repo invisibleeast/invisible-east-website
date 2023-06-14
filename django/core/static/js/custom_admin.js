@@ -7,7 +7,8 @@ document.head.appendChild(jQueryScript);
 $(document).ready(function(){
 
     // Move inlines to more appropriate place in the page
-    $("#persons_in_documents-group").detach().insertAfter(".field-place");
-    $("#document_dates-group").detach().insertAfter("#persons_in_documents-group");
+    // TODO
+    // $("#persons_in_documents-group").detach().insertBefore(".field-public_review_requests");
+    // $("#document_dates-group").detach().insertAfter("#persons_in_documents-group");
 
 });

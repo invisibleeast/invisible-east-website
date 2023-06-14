@@ -7,8 +7,7 @@ from ast import literal_eval
 from html.parser import HTMLParser
 from io import StringIO
 from account import models as account_models
-import os
-import shutil
+import os, shutil, re
 
 
 # Reusable functions/variables
@@ -306,8 +305,9 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlDocumentTypeReligion.objects.create(name=name)
 
-    # SlDocumentTypeToponymBamiyan
+    # SlDocumentTypeToponym
     for name in [
+        # Bamiyan
         'Āhangarān, آهنگران',
         'Āsiyāb, آسیاب',
         'Āsyāb-i Sar-i Rāh آسیاب سر راه',
@@ -379,12 +379,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Wān.shān, ואנשאן',
         'Wazāmān/Farāmān/Barāmān, وزامن/ فرامن',
         'Zīr-i ʿAj, زیر عج',
-        'Zīrdamān, زیر دمان'
-    ]:
-        models.SlDocumentTypeToponymBamiyan.objects.create(name=name)
+        'Zīrdamān, زیر دمان',
 
-    # SlDocumentTypeToponymFiruzkuh
-    for name in [
+        # Firuzkuh
         'Abdar [var. Andar]',
         'Anūr-kūh or Anūr-gird',
         'Arīz',
@@ -422,33 +419,21 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ṭūs',
         'Warsīkh',
         'Waylīzh',
-        '(Wīlīzh?)'
-    ]:
-        models.SlDocumentTypeToponymFiruzkuh.objects.create(name=name)
+        '(Wīlīzh?)',
 
-    # SlDocumentTypeToponymPersianKhalili
-    for name in [
+        # PersianKhalili
         'Istīw, Istiwuy',
-    ]:
-        models.SlDocumentTypeToponymPersianKhalili.objects.create(name=name)
 
-    # SlDocumentTypeToponymBactrian
-    for name in [
+        # Bactrian
+        'TODO',
+
+        # Khurasan
+        'TODO',
+
+        # MiddlePersian
         'TODO',
     ]:
-        models.SlDocumentTypeToponymBactrian.objects.create(name=name)
-
-    # SlDocumentTypeToponymKhurasan
-    for name in [
-        'TODO',
-    ]:
-        models.SlDocumentTypeToponymKhurasan.objects.create(name=name)
-
-    # SlDocumentTypeToponymMiddlePersian
-    for name in [
-        'TODO',
-    ]:
-        models.SlDocumentTypeToponymMiddlePersian.objects.create(name=name)
+        models.SlDocumentTypeToponym.objects.create(name=name)
 
     # SlDocumentScript
     for name in [
@@ -554,6 +539,13 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlCalendar.objects.create(**obj)
 
+    # SlPersonGender
+    for name in [
+        'male',
+        'female'
+    ]:
+        models.SlPersonGender.objects.create(name=name)
+
 
 def insert_data_documents(apps, schema_editor):
     """
@@ -601,6 +593,10 @@ def insert_data_documents(apps, schema_editor):
                 # title
                 document_obj.title = title_stmt.find('title').text
 
+                # type
+                document_type = profile_desc.findall('textClass/keywords/term')[0].text
+                document_obj.type = models.SlDocumentType.objects.get_or_create(name=document_type)[0]
+
                 # language
                 # Gets this from the filepath of the XML file (the last dir in root)
                 # (Choices: Arabic, New Persian, Bactrian)
@@ -643,8 +639,14 @@ def insert_data_documents(apps, schema_editor):
                     document_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
                 except AttributeError:
                     pass
-                # material_details
-                document_obj.material_details = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
+
+
+                # writing_support
+                writing_support = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
+                document_obj.writing_support = models.SlDocumentWritingSupport.objects.get_or_create(name=writing_support)[0]
+                # writing_support_details
+                # Includes tags within e.g. "blah blah <material>blah</material> blah blah" so itertext() will remove the tags
+                document_obj.writing_support_details = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
 
                 # Dimensions
                 try:
@@ -659,9 +661,18 @@ def insert_data_documents(apps, schema_editor):
                     pass
 
                 # fold_lines
-                # document_obj. = 
-                # damage
-                # document_obj. = 
+                try:
+                    # Join multiple <p> tag text into single string, separated with new lines
+                    fold_lines_count_details = '\n\n'.join(
+                        [flcd.text for flcd in ms_desc.findall('physDesc/objectDesc/layoutDesc/p')]
+                    )
+                    document_obj.fold_lines_count_details = fold_lines_count_details
+                    # Get all numbers from the details string and add them together to likely give the total count
+                    fold_lines_count_numbers = re.findall(r'\d+', fold_lines_count_details)
+                    document_obj.fold_lines_count_total = sum(map(int, fold_lines_count_numbers))
+                except AttributeError:
+                    print(1)
+
                 # physical_additional_details
                 try:
                     # Many were empty strings with just lots of whitespace
@@ -740,24 +751,20 @@ def insert_data_documents(apps, schema_editor):
 
                 # M2M relationships
                 # (some only have 1 instance in XML but field is M2M for future flexibility):
-                # Keywords
-                for keyword in profile_desc.findall('textClass/keywords/term'):
-                    # Ignore location-based keywords for now until confirmed by team that this should actually be a keyword TODO
-                    if 'type' not in keyword.attrib:
-                        document_obj.keywords.add(
-                            models.SlKeyword.objects.get_or_create(name=keyword.text)[0]
-                        )
+
+                # Toponyms (place/location)
+                try:
+                    toponym = profile_desc.findall('textClass/keywords/term[@type="location"]')[0].text
+                    document_obj.toponyms.add(
+                        models.SlDocumentTypeToponym.objects.get_or_create(name=toponym)[0]
+                    )
+                except (AttributeError, IndexError):
+                    pass
 
                 # Funders
                 funder = title_stmt.find('funder').text
                 document_obj.funders.add(
                     models.SlFunder.objects.get_or_create(name=funder)[0]
-                )
-
-                # Materials
-                material = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
-                document_obj.materials.add(
-                    models.SlMaterial.objects.get_or_create(name=material)[0]
                 )
 
 
