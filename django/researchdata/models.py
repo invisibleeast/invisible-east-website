@@ -289,18 +289,10 @@ class SlDocumentPageOpen(SlAbstract):
     pass
 
 
-class SlDocumentPageContentType(SlAbstract):
+class SlDocumentPagePartType(SlAbstract):
     """
-    A type of DocumentPageContent.
-    E.g. 'translation', 'original transcription', 'transliteration'
-    """
-    pass
-
-
-class SlDocumentPageContentPartType(SlAbstract):
-    """
-    A type of DocumentPageContentPart.
-    E.g. 'line of text', 'drawing'
+    A type of DocumentPagePart.
+    E.g. 'damage', 'mark'
     """
     pass
 
@@ -519,6 +511,20 @@ class DocumentPageLine(models.Model):
     translation_line_number_end = models.IntegerField(blank=True, null=True, help_text='If this line spans multiple lines, specify the last line number here. E.g. if line range is 19-21, put 21 here')
     translation_text = models.TextField(max_length=1000, blank=True, null=True)
 
+    position_in_image = models.TextField(blank=True, null=True)  # TODO
+
+
+class DocumentPagePart(models.Model):
+    """
+    A part of a DocumentPage (other than lines of text) that is noteworthy
+    e.g. damage to the page, marks, drawings, etc.
+    """
+
+    related_name = 'document_page_parts'
+
+    document_page = models.ForeignKey('DocumentPage', on_delete=models.CASCADE, related_name=related_name)
+    type = models.ForeignKey('SlDocumentPagePartType', on_delete=models.CASCADE, related_name=related_name)
+    description = models.TextField(max_length=1000, blank=True, null=True)
     position_in_image = models.TextField(blank=True, null=True)  # TODO
 
 

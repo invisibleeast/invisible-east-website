@@ -567,6 +567,18 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlDocumentPageOpen.objects.create(name=name)
 
+    # SlDocumentPagePartType
+    for name in [
+        'damage',
+        'mark',
+        'drawing',
+        'word',
+        'symbol',
+        'stamp',
+        'date'
+    ]:
+        models.SlDocumentPagePartType.objects.create(name=name)
+
     # SlCalendar
     for obj in [
         {'name': 'Gregorian', 'name_full': 'The Gregorian calendar'},

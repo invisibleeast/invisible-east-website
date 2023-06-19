@@ -108,6 +108,7 @@ admin.site.register(models.SlPublicationStatement, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlDocumentPageSide, GenericSlAdminView)
 admin.site.register(models.SlDocumentPageOpen, GenericSlAdminView)
+admin.site.register(models.SlDocumentPagePartType, GenericSlAdminView)
 admin.site.register(models.SlPersonInDocumentType, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
@@ -157,6 +158,15 @@ class DocumentPageLineTabularInline(admin.TabularInline):
     formfield_overrides = {
         TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 35, 'style': 'height: 4em;'})},
     }
+
+
+class DocumentPagePartTabularInline(admin.TabularInline):
+    """
+    A subform/inline form for DocumentPagePart to be used in DocumentPageAdminView
+    """
+    model = models.DocumentPagePart
+    extra = 1
+    exclude = ('position_in_image',)
 
 
 class M2MPersonToPerson1Inline(admin.TabularInline):
@@ -344,6 +354,7 @@ class DocumentPageAdminView(GenericAdminView):
     )
     inlines = (
         DocumentPageLineTabularInline,
+        DocumentPagePartTabularInline
     )
 
     # Hide this AdminView from sidebar
