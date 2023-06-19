@@ -70,6 +70,14 @@ def add_group_permissions(apps,schema_editor):
                             "permissions": ['view',]
                         },
                         {
+                            "model_name": "documentpage",
+                            "permissions": ['view',]
+                        },
+                        {
+                            "model_name": "documentpageline",
+                            "permissions": ['view',]
+                        },
+                        {
                             "model_name": "person",
                             "permissions": ['view',]
                         },
