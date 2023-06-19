@@ -273,10 +273,34 @@ class SlPersonInDocumentType(SlAbstract):
     pass
 
 
-class SlDocumentTransType(SlAbstract):
+class SlDocumentPageSide(SlAbstract):
     """
-    A type of DocumentTrans.
-    E.g. 'translation', 'transcription'
+    The side of a DocumentPage within a Document.
+    E.g. 'recto', 'verso'
+    """
+    pass
+
+
+class SlDocumentPageOpen(SlAbstract):
+    """
+    Whether a DocumentPage is open or closed.
+    E.g. 'open', 'closed'
+    """
+    pass
+
+
+class SlDocumentPageContentType(SlAbstract):
+    """
+    A type of DocumentPageContent.
+    E.g. 'translation', 'original transcription', 'transliteration'
+    """
+    pass
+
+
+class SlDocumentPageContentPartType(SlAbstract):
+    """
+    A type of DocumentPageContentPart.
+    E.g. 'line of text', 'drawing'
     """
     pass
 
@@ -312,7 +336,7 @@ class Document(models.Model):
     # General
     title = models.CharField(max_length=1000, blank=True, null=True)  # TODO XML titles need to be more consistent in structure across the range of languages
     subject = models.TextField(blank=True, null=True)  # "particDesc > p" in xml
-    language = models.ForeignKey('SlDocumentLanguage', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    languages = models.ManyToManyField('SlDocumentLanguage', blank=True, related_name=related_name, db_index=True)
     correspondence = models.ForeignKey('SlDocumentCorrespondence', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     funders = models.ManyToManyField('SlFunder', blank=True, related_name=related_name, db_index=True)
 
@@ -363,9 +387,6 @@ class Document(models.Model):
     fold_lines_count_details = models.TextField(blank=True, null=True, help_text='Include fold lines count details, e.g. for recto, verso, etc.')
     fold_lines_count_total = models.IntegerField(blank=True, null=True, help_text='Specify the total number of fold lines for this Document (you may need to add together the fold lines counts of recto, verso, etc. where applicable)')
     physical_additional_details = models.TextField(blank=True, null=True)
-
-    # Persons data (see DocumentPerson model)
-    # Dates data (see DocumentDate model)
 
     # Approve Document to Show on Public Website
     public_review_requests = models.ManyToManyField(
@@ -444,6 +465,63 @@ class Document(models.Model):
         return self.title_full
 
 
+class DocumentDate(models.Model):
+    """
+    A date of a Document
+    """
+
+    related_name = 'document_dates'
+
+    document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
+    calendar = models.ForeignKey('SlCalendar', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    date = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
+    date_not_before = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
+    date_not_after = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
+    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 10 Ramaḍān 605, 11 Feb 1198, etc.')
+
+
+class DocumentPage(models.Model):
+    """
+    A page within a Document
+    """
+
+    related_name = 'document_pages'
+
+    document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
+    page_number = models.IntegerField()
+    side = models.ForeignKey('SlDocumentPageSide', on_delete=models.RESTRICT, blank=True, null=True)
+    open_state = models.ForeignKey('SlDocumentPageOpen', on_delete=models.RESTRICT, blank=True, null=True)
+    image = models.ImageField(upload_to='researchdata/document_pages', blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.document}: Page {self.page_number} ({self.side})'
+
+    class Meta:
+        ordering = ['page_number', 'id']
+
+
+class DocumentPageLine(models.Model):
+    """
+    A line of text within a DocumentPage
+    """
+
+    related_name = 'document_page_lines'
+
+    document_page = models.ForeignKey('DocumentPage', on_delete=models.CASCADE, related_name=related_name)
+
+    # Transcription (original language)
+    transcription_line_number = models.IntegerField()
+    transcription_line_number_end = models.IntegerField(blank=True, null=True, help_text='If this line spans multiple lines, specify the last line number here. E.g. if line range is 19-21, put 21 here')
+    transcription_text = models.TextField(max_length=1000, blank=True, null=True)
+
+    # Translation (English)
+    translation_line_number = models.IntegerField(blank=True, null=True)
+    translation_line_number_end = models.IntegerField(blank=True, null=True, help_text='If this line spans multiple lines, specify the last line number here. E.g. if line range is 19-21, put 21 here')
+    translation_text = models.TextField(max_length=1000, blank=True, null=True)
+
+    position_in_image = models.TextField(blank=True, null=True)  # TODO
+
+
 class Person(models.Model):
     """
     A Person that appears in a Document
@@ -463,7 +541,7 @@ class Person(models.Model):
 
 class PersonInDocument(models.Model):
     """
-    An instance of a DocumentPerson appearing within a Document
+    An instance of a Person appearing within a Document
     """
 
     related_name = 'persons_in_documents'
@@ -477,52 +555,12 @@ class PersonInDocument(models.Model):
         return f'{self.document.title}: {self.person.name} ({self.type.name})'
 
 
-class DocumentDate(models.Model):
-    """
-    A date of a Document
-    """
-
-    related_name = 'document_dates'
-
-    document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
-    calendar = models.ForeignKey('SlCalendar', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    date = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
-    date_not_before = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
-    date_not_after = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
-    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 10 Ramaḍān 605, 11 Feb 1198, etc.')
-
-
-class DocumentImage(models.Model):
-    """
-    An image of a Document
-    """
-
-    related_name = 'document_images'
-
-    document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
-    # TODO
-
-
-class DocumentTrans(models.Model):
-    """
-    A transcription or translation of a Document
-    """
-
-    related_name = 'document_trans'
-
-    document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
-    type = models.ForeignKey('SlDocumentTransType', on_delete=models.RESTRICT)  # e.g. transcription or translation
-    # TODO
-
-
-# ... determine structure to record data about parts within documents and link to position in images
-
-
 # Many to Many Relationships
+
 
 class M2MPersonToPerson(models.Model):
     """
-    Many to many relationship between 2x DocumentPerson objects
+    Many to many relationship between 2x Person objects
     """
     person_1 = models.ForeignKey(Person, related_name='person_1', on_delete=models.CASCADE)
     person_2 = models.ForeignKey(Person, related_name='person_2', on_delete=models.CASCADE)

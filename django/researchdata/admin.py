@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
-from django.db.models import ManyToManyField, ForeignKey
+from django.forms import Textarea
+from django.db.models import ManyToManyField, ForeignKey, TextField
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from . import models
 
@@ -105,9 +106,10 @@ admin.site.register(models.SlCountry, GenericSlAdminView)
 admin.site.register(models.SlDocumentWritingSupport, GenericSlAdminView)
 admin.site.register(models.SlPublicationStatement, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
+admin.site.register(models.SlDocumentPageSide, GenericSlAdminView)
+admin.site.register(models.SlDocumentPageOpen, GenericSlAdminView)
 admin.site.register(models.SlPersonInDocumentType, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
-admin.site.register(models.SlDocumentTransType, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
 
 
@@ -121,7 +123,7 @@ class PersonInDocumentTabularInline(admin.TabularInline):
     A subform/inline form for PersonInDocument to be used in DocumentAdminView
     """
     model = models.PersonInDocument
-    extra = 0
+    extra = 1
     classes = ['collapse']
     autocomplete_fields = ('person', 'type')
 
@@ -131,8 +133,30 @@ class DocumentDateTabularInline(admin.TabularInline):
     A subform/inline form for DocumentDate to be used in DocumentAdminView
     """
     model = models.DocumentDate
-    extra = 0
+    extra = 1
     classes = ['collapse']
+
+
+class DocumentPageTabularInline(admin.TabularInline):
+    """
+    A subform/inline form for DocumentPage to be used in DocumentAdminView
+    """
+    model = models.DocumentPage
+    extra = 1
+    classes = ['collapse']
+    show_change_link = True
+
+
+class DocumentPageLineTabularInline(admin.TabularInline):
+    """
+    A subform/inline form for DocumentPageLine to be used in DocumentPageAdminView
+    """
+    model = models.DocumentPageLine
+    extra = 1
+    exclude = ('position_in_image',)
+    formfield_overrides = {
+        TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 35, 'style': 'height: 4em;'})},
+    }
 
 
 class M2MPersonToPerson1Inline(admin.TabularInline):
@@ -169,7 +193,6 @@ class DocumentAdminView(GenericAdminView):
         'title',
         'collection',
         'shelfmark',
-        'language',
         'correspondence',
         'country',
         'public_approved',
@@ -178,7 +201,6 @@ class DocumentAdminView(GenericAdminView):
     list_display_links = ('id',)
     list_select_related = (
         'collection',
-        'language',
         'correspondence',
         'country',
     )
@@ -186,7 +208,7 @@ class DocumentAdminView(GenericAdminView):
         ('public_review_requests', RelatedDropdownFilter),
         ('admin_classification', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
-        ('language', RelatedDropdownFilter),
+        ('languages', RelatedDropdownFilter),
         ('correspondence', RelatedDropdownFilter),
         ('country', RelatedDropdownFilter),
         ('writing_support', RelatedDropdownFilter),
@@ -205,9 +227,9 @@ class DocumentAdminView(GenericAdminView):
             'fields': (
                 'title',
                 'subject',
-                'language',
+                'languages',
                 'correspondence',
-                'funders',
+                'funders'
             )
         }),
         ('Document Types', {
@@ -236,7 +258,7 @@ class DocumentAdminView(GenericAdminView):
             'fields': (
                 'publication_statement',
                 'publication_statement_original',
-                'publication_statement_republished',
+                'publication_statement_republished'
             ),
             'classes': ['collapse']
         }),
@@ -282,14 +304,15 @@ class DocumentAdminView(GenericAdminView):
                 'meta_created_by',
                 'meta_created_datetime',
                 'meta_lastupdated_by',
-                'meta_lastupdated_datetime',
+                'meta_lastupdated_datetime'
             ),
             'classes': ['collapse']
         }),
     )
     inlines = (
         PersonInDocumentTabularInline,
-        DocumentDateTabularInline
+        DocumentDateTabularInline,
+        DocumentPageTabularInline
     )
 
     def save_model(self, request, obj, form, change):
@@ -304,6 +327,43 @@ class DocumentAdminView(GenericAdminView):
 
     class Media:
         js = ['js/custom_admin.js',]
+
+
+@admin.register(models.DocumentPage)
+class DocumentPageAdminView(GenericAdminView):
+    """
+    Customise the DocumentPage section of the admin dashboard
+    """
+
+    list_display = ('id', 'document')
+    list_display_links = ('id',)
+    search_fields = (
+        'document__id',
+        'document__title',
+        'side__name'
+    )
+    inlines = (
+        DocumentPageLineTabularInline,
+    )
+
+    # Hide this AdminView from sidebar
+    def get_model_perms(self, request):
+        return {}
+
+
+@admin.register(models.DocumentPageLine)
+class DocumentPageLineAdminView(GenericAdminView):
+    """
+    Customise the DocumentPage section of the admin dashboard
+    """
+
+    list_display = ('id', 'document_page')
+    list_display_links = ('id',)
+    search_fields = ('id',)
+
+    # Hide this AdminView from sidebar
+    def get_model_perms(self, request):
+        return {}
 
 
 @admin.register(models.Person)
@@ -331,6 +391,10 @@ class PersonInDocumentAdminView(GenericAdminView):
     list_display_links = ('id',)
     search_fields = ('id', 'name')
 
+    # Hide this AdminView from sidebar
+    def get_model_perms(self, request):
+        return {}
+
 
 @admin.register(models.DocumentDate)
 class DocumentDateAdminView(GenericAdminView):
@@ -349,6 +413,10 @@ class DocumentDateAdminView(GenericAdminView):
     )
     list_display_links = ('id',)
     search_fields = ('id', 'name')
+
+    # Hide this AdminView from sidebar
+    def get_model_perms(self, request):
+        return {}
 
 
 @admin.register(models.M2MPersonToPerson)
@@ -372,3 +440,7 @@ class M2MPersonToPersonAdminView(GenericAdminView):
         'person_2__name',
         'relationship_type__name'
     )
+
+    # Hide this AdminView from sidebar
+    def get_model_perms(self, request):
+        return {}

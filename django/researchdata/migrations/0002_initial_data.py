@@ -68,6 +68,21 @@ def strip_html_tags(html):
         return stripper.get_data().strip()
 
 
+def line_numbers(line_element):
+    """
+    Returns tuple of line number values when given ET XML <lb> element
+    e.g. returns (line number, line number end)
+    """
+    if line_element is not None:
+        if '-' in line_element.attrib['n']:
+            line_transcription_n = line_element.attrib['n'].split('-')
+            return (int(line_transcription_n[0]), int(line_transcription_n[1]))
+        else:
+            return (int(line_element.attrib['n']), None)
+    else:
+        return (None, None)
+
+
 # Migration functions
 
 
@@ -469,6 +484,13 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlDocumentLanguage.objects.create(**obj)
 
+    # SlTranslationLanguage
+    for name in [
+        'English',
+        'French'
+    ]:
+        models.SlTranslationLanguage.objects.create(name=name)
+
     # SlDocumentWritingSupport
     for name in [
         'paper',
@@ -530,6 +552,20 @@ def insert_data_select_list_models(apps, schema_editor):
         }
     ]:
         models.SlDocumentClassification.objects.create(**obj)
+
+    # SlDocumentPageSide
+    for name in [
+        'recto',
+        'verso'
+    ]:
+        models.SlDocumentPageSide.objects.create(name=name)
+
+    # SlDocumentPageOpen
+    for name in [
+        'open',
+        'closed'
+    ]:
+        models.SlDocumentPageOpen.objects.create(name=name)
 
     # SlCalendar
     for obj in [
@@ -673,7 +709,7 @@ def insert_data_documents(apps, schema_editor):
                     fold_lines_count_numbers = re.findall(r'\d+', fold_lines_count_details)
                     document_obj.fold_lines_count_total = sum(map(int, fold_lines_count_numbers))
                 except AttributeError:
-                    print(1)
+                    pass
 
                 # physical_additional_details
                 try:
@@ -714,6 +750,7 @@ def insert_data_documents(apps, schema_editor):
                 # e.g. reverse FK objects and M2M relationships
 
                 # Reverse FK objects:
+
                 # PersonInDocument
                 for person in corresp_action.findall('persName'):
                     models.PersonInDocument.objects.create(
@@ -721,6 +758,7 @@ def insert_data_documents(apps, schema_editor):
                         type=models.SlPersonInDocumentType.objects.get_or_create(name=person.attrib['type'])[0],
                         person=models.Person.objects.get_or_create(name=person.text)[0]
                     )
+
                 # DocumentDate
                 for date in corresp_action.findall('date'):
                     # Define values
@@ -740,7 +778,7 @@ def insert_data_documents(apps, schema_editor):
                     try:
                         date_text = date.text
                     except AttributeError:
-                        pass
+                        date_text = None
                     # Create the object
                     models.DocumentDate.objects.create(
                         document=document_obj,
@@ -750,6 +788,97 @@ def insert_data_documents(apps, schema_editor):
                         date_not_after=date_not_after,
                         date_text=date_text
                     )
+
+                # Document Pages and Lines
+                for page_div in body.findall('div[@type="original"]'):
+
+                    # Check that same amount of pb as there are ab,
+                    # as below code relies on there being a matching ab for each pb
+                    pb_count = len(page_div.findall('pb'))
+                    ab_count = len(page_div.findall('ab'))
+                    if pb_count != ab_count:
+                        print(f'WARNING: pb count ({pb_count}) != ab count ({ab_count}):', input_file)
+
+                    # DocumentPage
+                    for page_index, page in enumerate(page_div.findall('pb')):
+
+                        # Side (e.g. recto or verso)
+                        side_code = page.attrib['id'].rsplit('-', 1)[-1]
+                        if 'v' in side_code:
+                            side_name = 'verso'
+                        elif 'r' in side_code:
+                            side_name = 'recto'
+                        else:
+                            side_name = None
+                        side = models.SlDocumentPageSide.objects.get(name=side_name) if side_name else None
+
+                        # Open state (e.g. open or closed)
+                        try:
+                            open_state = models.SlDocumentPageOpen.objects.filter(name=page_div.attrib['subtype']).first()
+                        except KeyError:
+                            open_state = None
+
+                        # Create the DocumentPage object
+                        page_obj = models.DocumentPage.objects.create(
+                            document=document_obj,
+                            page_number=page.attrib['n'],
+                            side=side,
+                            open_state=open_state
+                        )
+
+                        # DocumentPageLines within this DocumentPage
+                        page_content = page_div.findall('ab')[page_index]
+                        for line_transcription in page_content.findall('lb'):
+
+                            line_transcription_id = line_transcription.attrib["id"]
+
+                            # Set transcription line number (and line number end, if a hyphen exists, e.g. 2-3)
+                            line_transcription_number, line_transcription_number_end = line_numbers(line_transcription)
+
+                            # Check that line numbers match numbers in ID
+                            if line_transcription.attrib['n'] not in line_transcription_id:
+                                print('WARNING: Mismatched line number and ID in:', input_file, line_transcription.attrib['n'], ' --- ', line_transcription_id)
+
+                            # Find matching line in translation
+                            # Note, not all will be found, as some lines become grouped in a range
+                            # (e.g. lines 2, 3, 4 may be translated into a single line of range 2-4)
+                            line_translation_id = f'tr-{line_transcription_id}'
+                            line_translation = body.find(f'div[@type="translation"]/ab/lb[@id="{line_translation_id}"]')
+
+                            # If not found, likely due to being in a range
+                            if line_translation is None:
+                                for potential_line_translation in body.findall(f'div[@type="translation"]/ab/lb[@id]'):
+                                    # Get first line in range (e.g. line 4 in 4-6, ignoring 5 and 6)
+                                    if potential_line_translation.attrib['id'].startswith(f'{line_translation_id}-'):
+                                        line_translation = potential_line_translation
+                                        break
+
+                            # Set translation line number (and line number end, if a hyphen exists, e.g. 2-3)
+                            line_translation_number, line_translation_number_end = line_numbers(line_translation)
+
+                            # Create the DocumentPageLine object
+                            try:
+                                line_obj = models.DocumentPageLine.objects.create(
+                                    document_page=page_obj,
+                                    transcription_line_number=line_transcription_number,
+                                    transcription_line_number_end=line_transcription_number_end,
+                                    transcription_text=line_transcription.tail.strip(),
+                                )
+                            except AttributeError as e:
+                                # pass
+                                print(input_file, line_transcription_id, e)
+
+                            # place TODO
+
+                            # Add translation data to line obj (separately, as optional)
+                            try:
+                                line_obj.translation_line_number = line_translation_number
+                                line_obj.translation_line_number_end = line_translation_number_end
+                                line_obj.translation_text = line_translation.tail.strip()
+                                line_obj.save()
+                            except AttributeError:
+                                pass
+                                # print(input_file, line_transcription_id)
 
                 # M2M relationships
                 # (some only have 1 instance in XML but field is M2M for future flexibility):
