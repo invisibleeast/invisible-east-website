@@ -489,7 +489,7 @@ class DocumentPage(models.Model):
         return f'{self.document}: Page {self.page_number} ({self.side})'
 
     class Meta:
-        ordering = ['page_number', 'id']
+        ordering = ['document', 'open_state', 'page_number', 'side', 'id']
 
 
 class DocumentPageLine(models.Model):
