@@ -574,7 +574,11 @@ def insert_data_select_list_models(apps, schema_editor):
         'drawing',
         'word',
         'symbol',
-        'stamp',
+        'seal',
+        'sealing',
+        'chord',
+        'hole',
+        'place',
         'date'
     ]:
         models.SlDocumentPagePartType.objects.create(name=name)
@@ -640,7 +644,32 @@ def insert_data_documents(apps, schema_editor):
 
                 # title
                 document_obj.title = title_stmt.find('title').text
-
+                # collection
+                try:
+                    collection = ms_desc.find('msIdentifier/institution').text
+                    document_obj.collection = models.SlDocumentCollection.objects.get_or_create(name=collection)[0]
+                except AttributeError:
+                    pass
+                # shelfmark
+                try:
+                    document_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
+                except AttributeError:
+                    pass
+                # id_nicholas_simms_williams
+                try:
+                    document_obj.id_nicholas_simms_williams = ms_desc.find('msIdentifier/idno[@type="NSW"]').text
+                except AttributeError:
+                    pass
+                # country
+                try:
+                    country = ms_desc.find('msIdentifier/country').text
+                    document_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
+                except AttributeError:
+                    pass
+                # subject
+                document_obj.subject = '\n\n'.join(
+                    [subject.text for subject in profile_desc.findall('particDesc/p')]
+                )
                 # type
                 document_type = profile_desc.findall('textClass/keywords/term')[0].text
                 document_obj.type = models.SlDocumentType.objects.get_or_create(name=document_type)[0]
@@ -667,29 +696,6 @@ def insert_data_documents(apps, schema_editor):
                     # publication_statement
                     else:
                         document_obj.publication_statement = models.SlPublicationStatement.objects.get_or_create(name=publication_p.text)[0]
-
-                # subject
-                document_obj.subject = '\n\n'.join(
-                        [subject.text for subject in profile_desc.findall('particDesc/p')]
-                    )
-                # country
-                try:
-                    country = ms_desc.find('msIdentifier/country').text
-                    document_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
-                except AttributeError:
-                    pass
-                # collection
-                try:
-                    collection = ms_desc.find('msIdentifier/institution').text
-                    document_obj.collection = models.SlDocumentCollection.objects.get_or_create(name=collection)[0]
-                except AttributeError:
-                    pass
-                # shelfmark
-                try:
-                    document_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
-                except AttributeError:
-                    pass
-
 
                 # writing_support
                 writing_support = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
@@ -767,7 +773,7 @@ def insert_data_documents(apps, schema_editor):
                 for person in corresp_action.findall('persName'):
                     models.PersonInDocument.objects.create(
                         document=document_obj,
-                        type=models.SlPersonInDocumentType.objects.get_or_create(name=person.attrib['type'])[0],
+                        person_role_in_document=models.SlPersonInDocumentRole.objects.get_or_create(name=person.attrib['type'])[0],
                         person=models.Person.objects.get_or_create(name=person.text)[0]
                     )
 
@@ -833,7 +839,6 @@ def insert_data_documents(apps, schema_editor):
                         # Create the DocumentPage object
                         page_obj = models.DocumentPage.objects.create(
                             document=document_obj,
-                            page_number=page.attrib['n'],
                             side=side,
                             open_state=open_state
                         )

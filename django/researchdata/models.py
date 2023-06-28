@@ -265,7 +265,7 @@ class SlCalendar(SlAbstract):
     name_full = models.CharField(max_length=100, blank=True, null=True)
 
 
-class SlPersonInDocumentType(SlAbstract):
+class SlPersonInDocumentRole(SlAbstract):
     """
     A type of person within a document.
     E.g. 'promisor', 'promisee', 'witness', 'sender', 'receiver'
@@ -327,7 +327,11 @@ class Document(models.Model):
 
     # General
     title = models.CharField(max_length=1000, blank=True, null=True)  # TODO XML titles need to be more consistent in structure across the range of languages
-    subject = models.TextField(blank=True, null=True)  # "particDesc > p" in xml
+    collection = models.ForeignKey('SlDocumentCollection', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    shelfmark = models.CharField(max_length=1000, blank=True, null=True)
+    id_nicholas_simms_williams = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Nicholas Simms-Williams ID")
+    country = models.ForeignKey('SlCountry', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    subject = models.TextField(blank=True, null=True)
     languages = models.ManyToManyField('SlDocumentLanguage', blank=True, related_name=related_name, db_index=True)
     correspondence = models.ForeignKey('SlDocumentCorrespondence', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     funders = models.ManyToManyField('SlFunder', blank=True, related_name=related_name, db_index=True)
@@ -340,8 +344,8 @@ class Document(models.Model):
     administrative_tax_receipts = models.ManyToManyField('SlDocumentTypeAdministrativeTaxReceipts', blank=True, related_name=related_name, db_index=True)
     administrative_lists_and_accounting = models.ManyToManyField('SlDocumentTypeAdministrativeListsAndAccounting', blank=True, related_name=related_name, db_index=True)
     land_measurement_units = models.ManyToManyField('SlDocumentTypeLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
-    people_and_processes_admins = models.ManyToManyField('SlDocumentTypePeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, help_text='People and processes involved in public administration, tax, trade, and commerce')
-    people_and_processes_legal = models.ManyToManyField('SlDocumentTypePeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, help_text='People and processes involved in legal and judiciary system')
+    people_and_processes_admins = models.ManyToManyField('SlDocumentTypePeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in public administration, tax, trade, and commerce')
+    people_and_processes_legal = models.ManyToManyField('SlDocumentTypePeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in legal and judiciary system')
     documentations = models.ManyToManyField('SlDocumentTypeDocumentation', blank=True, related_name=related_name, db_index=True)
     geographic_administrative_units = models.ManyToManyField('SlDocumentTypeGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
     legal_and_administrative_stock_phrases = models.ManyToManyField('SlDocumentTypeLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
@@ -362,13 +366,6 @@ class Document(models.Model):
     # Preparation of the document for the Invisible East
     # TEI encoding
     # Encoding review
-
-    # Manuscript Identifier (msIdentifier)
-    country = models.ForeignKey('SlCountry', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    collection = models.ForeignKey('SlDocumentCollection', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)  # <institution> in xml
-    shelfmark = models.CharField(max_length=1000, blank=True, null=True)
-    # <idno type="NSW">?
-    # <idno type="URI">?
 
     # Physical Description
     writing_support = models.ForeignKey('SlDocumentWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
@@ -480,16 +477,19 @@ class DocumentPage(models.Model):
     related_name = 'document_pages'
 
     document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
-    page_number = models.IntegerField()
     side = models.ForeignKey('SlDocumentPageSide', on_delete=models.RESTRICT, blank=True, null=True)
     open_state = models.ForeignKey('SlDocumentPageOpen', on_delete=models.RESTRICT, blank=True, null=True)
     image = models.ImageField(upload_to='researchdata/document_pages', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.document}: Page {self.page_number} ({self.side})'
+        # Build the descriptors text
+        descriptors = [str(field) for field in [self.side, self.open_state] if field is not None]
+        descriptors_text = f' ({", ".join(descriptors)})' if len(descriptors) else ''
+        # Return the string
+        return f'{self.document}: Page {descriptors_text}'
 
     class Meta:
-        ordering = ['document', 'open_state', 'page_number', 'side', 'id']
+        ordering = ['document', 'open_state', 'side', 'id']
 
 
 class DocumentPageLine(models.Model):
@@ -555,10 +555,10 @@ class PersonInDocument(models.Model):
     document = models.ForeignKey('Document', on_delete=models.CASCADE, related_name=related_name)
     person = models.ForeignKey('Person', on_delete=models.CASCADE, related_name=related_name)
     person_name_in_document = models.CharField(max_length=1000, blank=True, null=True, help_text='If Person is named differently in Document than in this database then record their name in the Document here')
-    type = models.ForeignKey('SlPersonInDocumentType', on_delete=models.RESTRICT, related_name=related_name)
+    person_role_in_document = models.ForeignKey('SlPersonInDocumentRole', on_delete=models.RESTRICT, related_name=related_name)
 
     def __str__(self):
-        return f'{self.document.title}: {self.person.name} ({self.type.name})'
+        return f'{self.document.title}: {self.person.name} ({self.person_role_in_document.name})'
 
 
 # Many to Many Relationships

@@ -109,7 +109,7 @@ admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlDocumentPageSide, GenericSlAdminView)
 admin.site.register(models.SlDocumentPageOpen, GenericSlAdminView)
 admin.site.register(models.SlDocumentPagePartType, GenericSlAdminView)
-admin.site.register(models.SlPersonInDocumentType, GenericSlAdminView)
+admin.site.register(models.SlPersonInDocumentRole, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
 
@@ -126,7 +126,7 @@ class PersonInDocumentTabularInline(admin.TabularInline):
     model = models.PersonInDocument
     extra = 1
     classes = ['collapse']
-    autocomplete_fields = ('person', 'type')
+    autocomplete_fields = ('person', 'person_role_in_document')
 
 
 class DocumentDateTabularInline(admin.TabularInline):
@@ -203,6 +203,7 @@ class DocumentAdminView(GenericAdminView):
         'title',
         'collection',
         'shelfmark',
+        'id_nicholas_simms_williams',
         'correspondence',
         'country',
         'public_approved',
@@ -223,7 +224,7 @@ class DocumentAdminView(GenericAdminView):
         ('country', RelatedDropdownFilter),
         ('writing_support', RelatedDropdownFilter),
     )
-    search_fields = ('id', 'title', 'shelfmark')
+    search_fields = ('id', 'title', 'shelfmark', 'id_nicholas_simms_williams')
     readonly_fields = (
         'public_approval_1_of_2_datetime',
         'public_approval_2_of_2_datetime',
@@ -236,6 +237,10 @@ class DocumentAdminView(GenericAdminView):
         ('General', {
             'fields': (
                 'title',
+                'collection',
+                'shelfmark',
+                'id_nicholas_simms_williams',
+                'country',
                 'subject',
                 'languages',
                 'correspondence',
@@ -269,14 +274,6 @@ class DocumentAdminView(GenericAdminView):
                 'publication_statement',
                 'publication_statement_original',
                 'publication_statement_republished'
-            ),
-            'classes': ['collapse']
-        }),
-        ('Manuscript Identifier', {
-            'fields': (
-                'country',
-                'collection',
-                'shelfmark'
             ),
             'classes': ['collapse']
         }),
@@ -398,7 +395,7 @@ class PersonInDocumentAdminView(GenericAdminView):
     Customise the PersonInDocument section of the admin dashboard
     """
 
-    list_display = ('id', 'document', 'person', 'type')
+    list_display = ('id', 'document', 'person', 'person_role_in_document')
     list_display_links = ('id',)
     search_fields = ('id', 'name')
 
