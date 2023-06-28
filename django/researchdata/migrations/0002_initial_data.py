@@ -968,9 +968,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(insert_data_select_list_models),
-        migrations.RunPython(insert_data_documents),
-        # migrations.RunPython(insert_data_documents_fk),
-        # migrations.RunPython(insert_data_documents_m2m),
-        # migrations.RunPython(insert_data_documentimages),
-        # migrations.RunPython(insert_data_documentimageparts),
+        migrations.RunPython(insert_data_documents)
     ]
