@@ -77,41 +77,43 @@ class GenericSlAdminView(GenericAdminView):
 #
 
 # Register Select List models (most, if not all, use GenericSlAdminView)
-admin.site.register(models.SlDocumentType, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeLegalTransactions, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeAdministrativeInternalCorrespondence, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeAdministrativeTaxReceipts, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeAdministrativeListsAndAccounting, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeLandMeasurementUnits, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypePeopleAndProcessesAdmin, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypePeopleAndProcessesLegal, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeDocumentation, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeGeographicAdministrativeUnits, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeLegalAndAdministrativeStockPhrases, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeFinanceAndAccountancyPhrases, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeAgriculturalProduce, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeCurrenciesAndDenominations, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeMarkings, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeReligion, GenericSlAdminView)
-admin.site.register(models.SlDocumentTypeToponym, GenericSlAdminView)
+admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
+admin.site.register(models.SlTextType, GenericSlAdminView)
+admin.site.register(models.SlTextTypeLegalTransactions, GenericSlAdminView)
+admin.site.register(models.SlTextTypeAdministrativeInternalCorrespondence, GenericSlAdminView)
+admin.site.register(models.SlTextTypeAdministrativeTaxReceipts, GenericSlAdminView)
+admin.site.register(models.SlTextTypeAdministrativeListsAndAccounting, GenericSlAdminView)
+admin.site.register(models.SlTextTypeLandMeasurementUnits, GenericSlAdminView)
+admin.site.register(models.SlTextTypePeopleAndProcessesAdmin, GenericSlAdminView)
+admin.site.register(models.SlTextTypePeopleAndProcessesLegal, GenericSlAdminView)
+admin.site.register(models.SlTextTypeDocumentation, GenericSlAdminView)
+admin.site.register(models.SlTextTypeGeographicAdministrativeUnits, GenericSlAdminView)
+admin.site.register(models.SlTextTypeLegalAndAdministrativeStockPhrases, GenericSlAdminView)
+admin.site.register(models.SlTextTypeFinanceAndAccountancyPhrases, GenericSlAdminView)
+admin.site.register(models.SlTextTypeAgriculturalProduce, GenericSlAdminView)
+admin.site.register(models.SlTextTypeCurrenciesAndDenominations, GenericSlAdminView)
+admin.site.register(models.SlTextTypeMarkings, GenericSlAdminView)
+admin.site.register(models.SlTextTypeReligion, GenericSlAdminView)
+admin.site.register(models.SlTextTypeToponym, GenericSlAdminView)
 admin.site.register(models.SlFunder, GenericSlAdminView)
 admin.site.register(models.SlUnitOfMeasurement, GenericSlAdminView)
-admin.site.register(models.SlDocumentCollection, GenericSlAdminView)
-admin.site.register(models.SlDocumentClassification, GenericSlAdminView)
-admin.site.register(models.SlDocumentCorrespondence, GenericSlAdminView)
-admin.site.register(models.SlDocumentScript, GenericSlAdminView)
-admin.site.register(models.SlDocumentLanguage, GenericSlAdminView)
+admin.site.register(models.SlTextCollection, GenericSlAdminView)
+admin.site.register(models.SlTextClassification, GenericSlAdminView)
+admin.site.register(models.SlTextCorrespondence, GenericSlAdminView)
+admin.site.register(models.SlTextScript, GenericSlAdminView)
+admin.site.register(models.SlTextLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
 admin.site.register(models.SlCountry, GenericSlAdminView)
-admin.site.register(models.SlDocumentWritingSupport, GenericSlAdminView)
+admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
 admin.site.register(models.SlPublicationStatement, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
-admin.site.register(models.SlDocumentPageSide, GenericSlAdminView)
-admin.site.register(models.SlDocumentPageOpen, GenericSlAdminView)
-admin.site.register(models.SlDocumentPagePartType, GenericSlAdminView)
-admin.site.register(models.SlPersonInDocumentRole, GenericSlAdminView)
+admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
+admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
+admin.site.register(models.SlTextFolioPartType, GenericSlAdminView)
+admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
+admin.site.register(models.SlM2MTextToTextRelationshipType, GenericSlAdminView)
 
 
 #
@@ -119,40 +121,40 @@ admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminVi
 #
 
 
-class PersonInDocumentTabularInline(admin.TabularInline):
+class PersonInTextTabularInline(admin.TabularInline):
     """
-    A subform/inline form for PersonInDocument to be used in DocumentAdminView
+    A subform/inline form for PersonInText to be used in TextAdminView
     """
-    model = models.PersonInDocument
+    model = models.PersonInText
     extra = 1
     classes = ['collapse']
-    autocomplete_fields = ('person', 'person_role_in_document')
+    autocomplete_fields = ('person', 'person_role_in_text')
 
 
-class DocumentDateTabularInline(admin.TabularInline):
+class TextDateTabularInline(admin.TabularInline):
     """
-    A subform/inline form for DocumentDate to be used in DocumentAdminView
+    A subform/inline form for TextDate to be used in TextAdminView
     """
-    model = models.DocumentDate
+    model = models.TextDate
     extra = 1
     classes = ['collapse']
 
 
-class DocumentPageTabularInline(admin.TabularInline):
+class TextFolioTabularInline(admin.TabularInline):
     """
-    A subform/inline form for DocumentPage to be used in DocumentAdminView
+    A subform/inline form for TextFolio to be used in TextAdminView
     """
-    model = models.DocumentPage
+    model = models.TextFolio
     extra = 1
     classes = ['collapse']
     show_change_link = True
 
 
-class DocumentPageLineTabularInline(admin.TabularInline):
+class TextFolioLineTabularInline(admin.TabularInline):
     """
-    A subform/inline form for DocumentPageLine to be used in DocumentPageAdminView
+    A subform/inline form for TextFolioLine to be used in TextFolioAdminView
     """
-    model = models.DocumentPageLine
+    model = models.TextFolioLine
     extra = 1
     exclude = ('position_in_image',)
     formfield_overrides = {
@@ -160,11 +162,11 @@ class DocumentPageLineTabularInline(admin.TabularInline):
     }
 
 
-class DocumentPagePartTabularInline(admin.TabularInline):
+class TextFolioPartTabularInline(admin.TabularInline):
     """
-    A subform/inline form for DocumentPagePart to be used in DocumentPageAdminView
+    A subform/inline form for TextFolioPart to be used in TextFolioAdminView
     """
-    model = models.DocumentPagePart
+    model = models.TextFolioPart
     extra = 1
     exclude = ('position_in_image',)
 
@@ -172,19 +174,53 @@ class DocumentPagePartTabularInline(admin.TabularInline):
 class M2MPersonToPerson1Inline(admin.TabularInline):
     """
     A subform/inline form for Person 1 to be used in PersonAdminView
+    Data is read only, to show relationships set in the related person
     """
-    model = models.Person.person.through
+    model = models.Person.persons.through
     fk_name = "person_2"
-    autocomplete_fields = ('person_1', 'relationship_type')
+    readonly_fields = ('person_1', 'relationship_type', 'relationship_details')
+    can_delete = False
+    max_num = 0
+    extra = 0
+    verbose_name = 'Related persons that have defined a relationship with this person'
+    verbose_name_plural = verbose_name
 
 
 class M2MPersonToPerson2Inline(admin.TabularInline):
     """
-    A subform/inline form for Person 1 to be used in PersonAdminView
+    A subform/inline form for Person 2 to be used in PersonAdminView
     """
-    model = models.Person.person.through
+    model = models.Person.persons.through
     fk_name = "person_1"
     autocomplete_fields = ('person_2', 'relationship_type')
+    verbose_name = 'Related Person'
+
+
+class M2MTextToText1Inline(admin.TabularInline):
+    """
+    A subform/inline form for Text 1 to be used in TextAdminView
+    Data is read only, to show relationships set in the related text
+    """
+    model = models.Text.texts.through
+    fk_name = "text_2"
+    readonly_fields = ('text_1', 'relationship_type', 'relationship_details')
+    can_delete = False
+    max_num = 0
+    extra = 0
+    classes = ['collapse']
+    verbose_name = 'Related Texts that have defined a relationship with this Text'
+    verbose_name_plural = verbose_name
+
+
+class M2MTextToText2Inline(admin.TabularInline):
+    """
+    A subform/inline form for Text 2 to be used in TextAdminView
+    """
+    model = models.Text.texts.through
+    fk_name = "text_1"
+    autocomplete_fields = ('text_2', 'relationship_type')
+    classes = ['collapse']
+    verbose_name = 'Related Text'
 
 
 #
@@ -192,20 +228,21 @@ class M2MPersonToPerson2Inline(admin.TabularInline):
 #
 
 
-@admin.register(models.Document)
-class DocumentAdminView(GenericAdminView):
+@admin.register(models.Text)
+class TextAdminView(GenericAdminView):
     """
-    Customise the Document section of the admin dashboard
+    Customise the Text section of the admin dashboard
     """
 
     list_display = (
         'id',
-        'title',
-        'collection',
         'shelfmark',
-        'id_nicholas_simms_williams',
+        'collection',
+        'type',
         'correspondence',
         'country',
+        'id_khan',
+        'id_nicholas_simms_williams',
         'public_approved',
         'admin_classification',
     )
@@ -224,7 +261,14 @@ class DocumentAdminView(GenericAdminView):
         ('country', RelatedDropdownFilter),
         ('writing_support', RelatedDropdownFilter),
     )
-    search_fields = ('id', 'title', 'shelfmark', 'id_nicholas_simms_williams')
+    search_fields = (
+        'id',
+        'collection__name',
+        'country__name',
+        'shelfmark',
+        'id_khan',
+        'id_nicholas_simms_williams',
+    )
     readonly_fields = (
         'public_approval_1_of_2_datetime',
         'public_approval_2_of_2_datetime',
@@ -236,9 +280,9 @@ class DocumentAdminView(GenericAdminView):
     fieldsets = (
         ('General', {
             'fields': (
-                'title',
                 'collection',
                 'shelfmark',
+                'id_khan',
                 'id_nicholas_simms_williams',
                 'country',
                 'subject',
@@ -247,7 +291,7 @@ class DocumentAdminView(GenericAdminView):
                 'funders'
             )
         }),
-        ('Document Types', {
+        ('Text Types', {
             'fields': (
                 'type',
                 'legal_transactions',
@@ -290,7 +334,7 @@ class DocumentAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
-        ('Approve Document to Show on Public Website', {
+        ('Approve Text to Show on Public Website', {
             'fields': (
                 'public_review_requests',
                 'public_review_notes',
@@ -317,9 +361,11 @@ class DocumentAdminView(GenericAdminView):
         }),
     )
     inlines = (
-        PersonInDocumentTabularInline,
-        DocumentDateTabularInline,
-        DocumentPageTabularInline
+        M2MTextToText2Inline,
+        M2MTextToText1Inline,
+        PersonInTextTabularInline,
+        TextDateTabularInline,
+        TextFolioTabularInline
     )
 
     def save_model(self, request, obj, form, change):
@@ -336,22 +382,22 @@ class DocumentAdminView(GenericAdminView):
         js = ['js/custom_admin.js',]
 
 
-@admin.register(models.DocumentPage)
-class DocumentPageAdminView(GenericAdminView):
+@admin.register(models.TextFolio)
+class TextFolioAdminView(GenericAdminView):
     """
-    Customise the DocumentPage section of the admin dashboard
+    Customise the TextFolio section of the admin dashboard
     """
 
-    list_display = ('id', 'document')
+    list_display = ('id', 'text')
     list_display_links = ('id',)
     search_fields = (
-        'document__id',
-        'document__title',
+        'text__id',
+        'text__title',
         'side__name'
     )
     inlines = (
-        DocumentPageLineTabularInline,
-        DocumentPagePartTabularInline
+        TextFolioLineTabularInline,
+        TextFolioPartTabularInline
     )
 
     # Hide this AdminView from sidebar
@@ -359,13 +405,13 @@ class DocumentPageAdminView(GenericAdminView):
         return {}
 
 
-@admin.register(models.DocumentPageLine)
-class DocumentPageLineAdminView(GenericAdminView):
+@admin.register(models.TextFolioLine)
+class TextFolioLineAdminView(GenericAdminView):
     """
-    Customise the DocumentPage section of the admin dashboard
+    Customise the TextFolio section of the admin dashboard
     """
 
-    list_display = ('id', 'document_page')
+    list_display = ('id', 'text_folio')
     list_display_links = ('id',)
     search_fields = ('id',)
 
@@ -375,27 +421,27 @@ class DocumentPageLineAdminView(GenericAdminView):
 
 
 @admin.register(models.Person)
-class DocumentPersonAdminView(GenericAdminView):
+class TextPersonAdminView(GenericAdminView):
     """
-    Customise the DocumentPerson section of the admin dashboard
+    Customise the TextPerson section of the admin dashboard
     """
 
     list_display = ('id', 'name')
     list_display_links = ('id',)
     search_fields = ('id', 'name')
     inlines = (
-        M2MPersonToPerson1Inline,
-        M2MPersonToPerson2Inline
+        M2MPersonToPerson2Inline,
+        M2MPersonToPerson1Inline
     )
 
 
-@admin.register(models.PersonInDocument)
-class PersonInDocumentAdminView(GenericAdminView):
+@admin.register(models.PersonInText)
+class PersonInTextAdminView(GenericAdminView):
     """
-    Customise the PersonInDocument section of the admin dashboard
+    Customise the PersonInText section of the admin dashboard
     """
 
-    list_display = ('id', 'document', 'person', 'person_role_in_document')
+    list_display = ('id', 'text', 'person', 'person_role_in_text')
     list_display_links = ('id',)
     search_fields = ('id', 'name')
 
@@ -404,15 +450,15 @@ class PersonInDocumentAdminView(GenericAdminView):
         return {}
 
 
-@admin.register(models.DocumentDate)
-class DocumentDateAdminView(GenericAdminView):
+@admin.register(models.TextDate)
+class TextDateAdminView(GenericAdminView):
     """
-    Customise the DocumentDate section of the admin dashboard
+    Customise the TextDate section of the admin dashboard
     """
 
     list_display = (
         'id',
-        'document',
+        'text',
         'calendar',
         'date',
         'date_not_before',

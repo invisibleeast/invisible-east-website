@@ -66,19 +66,19 @@ def add_group_permissions(apps,schema_editor):
                     "app_name": "researchdata",
                     "models": [
                         {
-                            "model_name": "document",
+                            "model_name": "text",
                             "permissions": ['view',]
                         },
                         {
-                            "model_name": "documentpage",
+                            "model_name": "textfolio",
                             "permissions": ['view',]
                         },
                         {
-                            "model_name": "documentpageline",
+                            "model_name": "textfolioline",
                             "permissions": ['view',]
                         },
                         {
-                            "model_name": "documentpagepart",
+                            "model_name": "textfoliopart",
                             "permissions": ['view',]
                         },
                         {
@@ -86,7 +86,7 @@ def add_group_permissions(apps,schema_editor):
                             "permissions": ['view',]
                         },
                         {
-                            "model_name": "documentdate",
+                            "model_name": "textdate",
                             "permissions": ['view',]
                         },
                     ]

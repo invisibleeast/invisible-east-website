@@ -8,10 +8,10 @@
     <h2>Account</h2>
 </section>
 
-{% if my_recent_documents %}
+{% if my_recent_texts %}
     <section class="container" id="account-recentactivity">
-        <h3>My Recent Documents</h3>
-        {% include "researchdata/snippets/list-body.html" with object_list=my_recent_documents list_type='imagecompact' %}
+        <h3>My Recent Texts</h3>
+        {% include "researchdata/snippets/list-body.html" with object_list=my_recent_texts list_type='imagecompact' %}
     </section>
 {% endif %}
 

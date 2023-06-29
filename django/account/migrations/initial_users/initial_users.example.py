@@ -3,7 +3,7 @@
 """
 A list of default users to add to the database upon initial creation
 
-This data is used in account/migrations/0002_data_initial.py
+This data is used in account/migrations/0002_initial_data.py
 
 Data is kept in this separate file to keep users' details confidental
 as this file is ignored from git

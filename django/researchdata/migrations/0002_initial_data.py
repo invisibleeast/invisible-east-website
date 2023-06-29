@@ -18,7 +18,7 @@ PATH_OLD_DATA = os.path.join(settings.BASE_DIR, 'researchdata', 'migrations', 'o
 def set_related_values(data_file, main_model, relationship_type):
     """
     data_file = a .txt file containing a list of objects
-    main_model = the model of the object for which the data is being set, e.g. models.Document
+    main_model = the model of the object for which the data is being set, e.g. models.Text
     relationship_type = 'fk' or 'm2m'
     """
     for object_dict in literal_eval(data_file.read()):
@@ -28,7 +28,7 @@ def set_related_values(data_file, main_model, relationship_type):
         for field, value in object_dict.items():
             if field != 'id':
                 # Get the related object
-                related_object = models.Document._meta.get_field(field).related_model.objects.get_or_create(name_en=value)[0]
+                related_object = models.Text._meta.get_field(field).related_model.objects.get_or_create(name_en=value)[0]
                 # Set related field value based on relationship type (either FK or M2m)
                 if relationship_type == 'fk':
                     setattr(object, field, related_object)
@@ -93,18 +93,43 @@ def insert_data_select_list_models(apps, schema_editor):
     required to manually set additional values.
     """
 
-    # SlDocumentType
+    # SlTextTypeCategory
     for name in [
-        'Legal',
-        'Letter',
-        'List or table',
-        'Literary text',
-        'Paraliterary',
-        'Administrative'
+        'Document',
+        'Literature',
     ]:
-        models.SlDocumentType.objects.create(name=name)
+        models.SlTextTypeCategory.objects.create(name=name)
 
-    # SlDocumentTypeLegalTransactions
+    # SlTextType
+    for obj in [
+        {
+            'name': 'Administrative',
+            'category': models.SlTextTypeCategory.objects.get(name='Document')
+        },
+        {
+            'name': 'Legal',
+            'category': models.SlTextTypeCategory.objects.get(name='Document')
+        },
+        {
+            'name': 'Letter',
+            'category': models.SlTextTypeCategory.objects.get(name='Document')
+        },
+        {
+            'name': 'List or table',
+            'category': models.SlTextTypeCategory.objects.get(name='Document')
+        },
+        {
+            'name': 'Literary text',
+            'category': models.SlTextTypeCategory.objects.get(name='Literature')
+        },
+        {
+            'name': 'Paraliterary',
+            'category': models.SlTextTypeCategory.objects.get(name='Literature')
+        }
+    ]:
+        models.SlTextType.objects.create(**obj)
+
+    # SlTextTypeLegalTransactions
     for name in [
         'Worship acts (ibādat)',
         'Sale (bayʿ)',
@@ -128,30 +153,30 @@ def insert_data_select_list_models(apps, schema_editor):
         'Litigation',
 
     ]:
-        models.SlDocumentTypeLegalTransactions.objects.create(name=name)
+        models.SlTextTypeLegalTransactions.objects.create(name=name)
 
-    # SlDocumentTypeAdministrativeInternalCorrespondence
+    # SlTextTypeAdministrativeInternalCorrespondence
     for name in [
         'Missives to the field',
         'Informational note to the field',
         'Requests',
         'Missives for action'
     ]:
-        models.SlDocumentTypeAdministrativeInternalCorrespondence.objects.create(name=name)
+        models.SlTextTypeAdministrativeInternalCorrespondence.objects.create(name=name)
 
-    # SlDocumentTypeAdministrativeTaxReceipts
+    # SlTextTypeAdministrativeTaxReceipts
     for name in [
         'TODO',
     ]:
-        models.SlDocumentTypeAdministrativeTaxReceipts.objects.create(name=name)
+        models.SlTextTypeAdministrativeTaxReceipts.objects.create(name=name)
 
-    # SlDocumentTypeAdministrativeListsAndAccounting
+    # SlTextTypeAdministrativeListsAndAccounting
     for name in [
         'TODO',
     ]:
-        models.SlDocumentTypeAdministrativeListsAndAccounting.objects.create(name=name)
+        models.SlTextTypeAdministrativeListsAndAccounting.objects.create(name=name)
 
-    # SlDocumentTypeLandMeasurementUnits
+    # SlTextTypeLandMeasurementUnits
     for name in [
         'Mann',
         'Sitīr',
@@ -165,9 +190,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Tīr'
         
     ]:
-        models.SlDocumentTypeLandMeasurementUnits.objects.create(name=name)
+        models.SlTextTypeLandMeasurementUnits.objects.create(name=name)
 
-    # SlDocumentTypePeopleAndProcessesAdmin
+    # SlTextTypePeopleAndProcessesAdmin
     for name in [
         'Muʿāmala',
         'Taḥakumāna (ghalla-yi)',
@@ -191,17 +216,17 @@ def insert_data_select_list_models(apps, schema_editor):
         'Dīwān',
         'ʿAwāriḍ (public expenses)',
     ]:
-        models.SlDocumentTypePeopleAndProcessesAdmin.objects.create(name=name)
+        models.SlTextTypePeopleAndProcessesAdmin.objects.create(name=name)
 
-    # SlDocumentTypePeopleAndProcessesLegal
+    # SlTextTypePeopleAndProcessesLegal
     for name in [
         'Qāḍī',
         'Faqīh',
         'Muḥtasib'
     ]:
-        models.SlDocumentTypePeopleAndProcessesLegal.objects.create(name=name)
+        models.SlTextTypePeopleAndProcessesLegal.objects.create(name=name)
 
-    # SlDocumentTypeDocumentation
+    # SlTextTypeDocumentation
     for name in [
         'Qabāla',
         'Barāt',
@@ -215,9 +240,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ruqʿa',
         'Risāla'
     ]:
-        models.SlDocumentTypeDocumentation.objects.create(name=name)
+        models.SlTextTypeDocumentation.objects.create(name=name)
 
-    # SlDocumentTypeGeographicAdministrativeUnits
+    # SlTextTypeGeographicAdministrativeUnits
     for name in [
         'Wilāyat',
         'Badiya',
@@ -230,9 +255,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ribāṭ',
         'Sarāy'
     ]:
-        models.SlDocumentTypeGeographicAdministrativeUnits.objects.create(name=name)
+        models.SlTextTypeGeographicAdministrativeUnits.objects.create(name=name)
 
-    # SlDocumentTypeLegalAndAdministrativeStockPhrases
+    # SlTextTypeLegalAndAdministrativeStockPhrases
     for name in [
         'Pious invocations',
         'Bismillāh (including abbrev)',
@@ -255,18 +280,18 @@ def insert_data_select_list_models(apps, schema_editor):
         'Taxes: ʿUshr',
         'Taxes: Jizya'
     ]:
-        models.SlDocumentTypeLegalAndAdministrativeStockPhrases.objects.create(name=name)
+        models.SlTextTypeLegalAndAdministrativeStockPhrases.objects.create(name=name)
 
-    # SlDocumentTypeFinanceAndAccountancyPhrases
+    # SlTextTypeFinanceAndAccountancyPhrases
     for name in [
         'Tafṣīl (itemisation)',
         'Wajh/wujūh (in account/payment of)',
         'Bāqī (remainder)',
         'Wām (-I lāzim) (loan)'
     ]:
-        models.SlDocumentTypeFinanceAndAccountancyPhrases.objects.create(name=name)
+        models.SlTextTypeFinanceAndAccountancyPhrases.objects.create(name=name)
 
-    # SlDocumentTypeAgriculturalProduce
+    # SlTextTypeAgriculturalProduce
     for name in [
         'Ghalla (grain)',
         'Gandum (wheat)',
@@ -283,9 +308,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Harvest collecting (bardāshtan, rafʿ kardan)',
         'ʿĀsiya (mill)',
     ]:
-        models.SlDocumentTypeAgriculturalProduce.objects.create(name=name)
+        models.SlTextTypeAgriculturalProduce.objects.create(name=name)
 
-    # SlDocumentTypeCurrenciesAndDenominations
+    # SlTextTypeCurrenciesAndDenominations
     for name in [
         'ʿAdlī',
         'Shiyānī',
@@ -297,9 +322,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Diramsang',
         'Dāng/dāniq/danānīq (one-sixth)'
     ]:
-        models.SlDocumentTypeCurrenciesAndDenominations.objects.create(name=name)
+        models.SlTextTypeCurrenciesAndDenominations.objects.create(name=name)
 
-    # SlDocumentTypeMarkings
+    # SlTextTypeMarkings
     for name in [
         'Oblique stroke (check mark)',
         'Jaʾiza (cipher)',
@@ -307,9 +332,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Column format',
         'Siyāq (accountants’ abbreviations of numbers)',
     ]:
-        models.SlDocumentTypeMarkings.objects.create(name=name)
+        models.SlTextTypeMarkings.objects.create(name=name)
 
-    # SlDocumentTypeReligion
+    # SlTextTypeReligion
     for name in [
         'Temple',
         'Mosque',
@@ -318,9 +343,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Fatwa/istiftāʿ',
         'Rituals'
     ]:
-        models.SlDocumentTypeReligion.objects.create(name=name)
+        models.SlTextTypeReligion.objects.create(name=name)
 
-    # SlDocumentTypeToponym
+    # SlTextTypeToponym
     for name in [
         # Bamiyan
         'Āhangarān, آهنگران',
@@ -448,41 +473,41 @@ def insert_data_select_list_models(apps, schema_editor):
         # MiddlePersian
         'TODO',
     ]:
-        models.SlDocumentTypeToponym.objects.create(name=name)
+        models.SlTextTypeToponym.objects.create(name=name)
 
-    # SlDocumentScript
+    # SlTextScript
     for name in [
         'Arabic',
         'Hebrew',
         'Greek-based',
         'Ancient Pahlavi'
     ]:
-        models.SlDocumentScript.objects.create(name=name)
+        models.SlTextScript.objects.create(name=name)
 
-    # SlDocumentLanguage
+    # SlTextLanguage
     for obj in [
         {
             'name': 'Arabic',
-            'script': models.SlDocumentScript.objects.get(name='Arabic')
+            'script': models.SlTextScript.objects.get(name='Arabic')
         },
         {
             'name': 'Bactrian',
-            'script': models.SlDocumentScript.objects.get(name='Greek-based')
+            'script': models.SlTextScript.objects.get(name='Greek-based')
         },
         {
             'name': 'Judeo-Persian',
-            'script': models.SlDocumentScript.objects.get(name='Hebrew')
+            'script': models.SlTextScript.objects.get(name='Hebrew')
         },
         {
             'name': 'Middle Persian',
-            'script': models.SlDocumentScript.objects.get(name='Ancient Pahlavi')
+            'script': models.SlTextScript.objects.get(name='Ancient Pahlavi')
         },
         {
             'name': 'New Persian',
-            'script': models.SlDocumentScript.objects.get(name='Arabic')
+            'script': models.SlTextScript.objects.get(name='Arabic')
         },
     ]:
-        models.SlDocumentLanguage.objects.create(**obj)
+        models.SlTextLanguage.objects.create(**obj)
 
     # SlTranslationLanguage
     for name in [
@@ -491,7 +516,7 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTranslationLanguage.objects.create(name=name)
 
-    # SlDocumentWritingSupport
+    # SlTextWritingSupport
     for name in [
         'paper',
         'ostraca',
@@ -501,11 +526,11 @@ def insert_data_select_list_models(apps, schema_editor):
         'seals',
         'stone (graves)',
     ]:
-        models.SlDocumentWritingSupport.objects.create(name=name)
+        models.SlTextWritingSupport.objects.create(name=name)
 
     # SlPublicationStatement
     models.SlPublicationStatement.objects.create(
-        name='This document is published and distributed online by the Invisible East project, University of Oxford.'
+        name='This text is published and distributed online by the Invisible East project, University of Oxford.'
     )
 
     # SlFunder
@@ -533,7 +558,13 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlM2MPersonToPersonRelationshipType.objects.create(name=name)
 
-    # SlDocumentClassification
+    # SlM2MTextToTextRelationshipType
+    for name in [
+        'part of same document',
+    ]:
+        models.SlM2MTextToTextRelationshipType.objects.create(name=name)
+
+    # SlTextClassification
     for obj in [
         {
             'name': 'Bronze',
@@ -551,23 +582,23 @@ def insert_data_select_list_models(apps, schema_editor):
             'order': 3
         }
     ]:
-        models.SlDocumentClassification.objects.create(**obj)
+        models.SlTextClassification.objects.create(**obj)
 
-    # SlDocumentPageSide
+    # SlTextFolioSide
     for name in [
         'recto',
         'verso'
     ]:
-        models.SlDocumentPageSide.objects.create(name=name)
+        models.SlTextFolioSide.objects.create(name=name)
 
-    # SlDocumentPageOpen
+    # SlTextFolioOpen
     for name in [
         'open',
         'closed'
     ]:
-        models.SlDocumentPageOpen.objects.create(name=name)
+        models.SlTextFolioOpen.objects.create(name=name)
 
-    # SlDocumentPagePartType
+    # SlTextFolioPartType
     for name in [
         'damage',
         'mark',
@@ -581,7 +612,7 @@ def insert_data_select_list_models(apps, schema_editor):
         'place',
         'date'
     ]:
-        models.SlDocumentPagePartType.objects.create(name=name)
+        models.SlTextFolioPartType.objects.create(name=name)
 
     # SlCalendar
     for obj in [
@@ -599,9 +630,9 @@ def insert_data_select_list_models(apps, schema_editor):
         models.SlPersonGender.objects.create(name=name)
 
 
-def insert_data_documents(apps, schema_editor):
+def insert_data_texts(apps, schema_editor):
     """
-    Inserts data into the Document model
+    Inserts data into the Text model
     """
 
     # Loop through all XML files found in input dir
@@ -636,83 +667,86 @@ def insert_data_documents(apps, schema_editor):
 
                 # Start creating data objects
                 # Order based on relation (i.e. parent models, followed by child models)
-                # E.g. Document (parent) comes before DocumentPerson (child)
+                # E.g. Text (parent) comes before TextPerson (child)
                 # Optional fields must be exception handled in case value is None or element doesn't exist in XML
 
-                # Create Document object
-                document_obj = models.Document()
+                # Create Text object
+                text_obj = models.Text()
 
-                # title
-                document_obj.title = title_stmt.find('title').text
                 # collection
                 try:
                     collection = ms_desc.find('msIdentifier/institution').text
-                    document_obj.collection = models.SlDocumentCollection.objects.get_or_create(name=collection)[0]
+                    text_obj.collection = models.SlTextCollection.objects.get_or_create(name=collection)[0]
                 except AttributeError:
                     pass
                 # shelfmark
                 try:
-                    document_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
+                    text_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
+                except AttributeError:
+                    pass
+                # id_khan
+                try:
+                    text_obj.id_khan = ms_desc.find('msIdentifier/idno[@type="Khan"]').text
                 except AttributeError:
                     pass
                 # id_nicholas_simms_williams
                 try:
-                    document_obj.id_nicholas_simms_williams = ms_desc.find('msIdentifier/idno[@type="NSW"]').text
+                    text_obj.id_nicholas_simms_williams = ms_desc.find('msIdentifier/idno[@type="NSW"]').text
                 except AttributeError:
                     pass
                 # country
                 try:
                     country = ms_desc.find('msIdentifier/country').text
-                    document_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
+                    text_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
                 except AttributeError:
                     pass
                 # subject
-                document_obj.subject = '\n\n'.join(
+                text_obj.subject = '\n\n'.join(
                     [subject.text for subject in profile_desc.findall('particDesc/p')]
                 )
                 # type
-                document_type = profile_desc.findall('textClass/keywords/term')[0].text
-                document_obj.type = models.SlDocumentType.objects.get_or_create(name=document_type)[0]
+                text_type = profile_desc.findall('textClass/keywords/term')[0].text
+                text_obj.type = models.SlTextType.objects.get_or_create(name=text_type)[0]
 
                 # language
                 # Gets this from the filepath of the XML file (the last dir in root)
                 # (Choices: Arabic, New Persian, Bactrian)
                 language = root.split('/')[-1]
-                document_obj.language = models.SlDocumentLanguage.objects.get(name=language)
+                text_obj.language = models.SlTextLanguage.objects.get(name=language)
                 # correspondence
                 correspondence = corresp_action.attrib['type']
-                document_obj.correspondence = models.SlDocumentCorrespondence.objects.get_or_create(name=correspondence)[0]
+                text_obj.correspondence = models.SlTextCorrespondence.objects.get_or_create(name=correspondence)[0]
 
                 # Publication data, stored in separate <p> elements within publicationStmt
                 pub_start_original = 'Originally published in: '
-                pub_start_republished = 'The document was later republished in '
+                pub_start_republished = 'The text was later republished in '
                 for publication_p in file_desc.findall('publicationStmt/p'):
                     # publication_statement_original
                     if publication_p.text.startswith(pub_start_original):
-                        document_obj.publication_statement_original = publication_p.text.replace(pub_start_original, '')
+                        text_obj.publication_statement_original = publication_p.text.replace(pub_start_original, '')
                     # publication_statement_republished
                     elif publication_p.text.startswith(pub_start_republished):
-                        document_obj.publication_statement_republished = publication_p.text.replace(pub_start_republished, '')
+                        text_obj.publication_statement_republished = publication_p.text.replace(pub_start_republished, '')
                     # publication_statement
                     else:
-                        document_obj.publication_statement = models.SlPublicationStatement.objects.get_or_create(name=publication_p.text)[0]
+                        text_obj.publication_statement = models.SlPublicationStatement.objects.get_or_create(name=publication_p.text)[0]
 
                 # writing_support
                 writing_support = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
-                document_obj.writing_support = models.SlDocumentWritingSupport.objects.get_or_create(name=writing_support)[0]
+                text_obj.writing_support = models.SlTextWritingSupport.objects.get_or_create(name=writing_support)[0]
                 # writing_support_details
                 # Includes tags within e.g. "blah blah <material>blah</material> blah blah" so itertext() will remove the tags
-                document_obj.writing_support_details = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
+                text_obj.writing_support_details = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
 
                 # Dimensions
                 try:
                     # dimensions_unit
                     dimensions_unit = dimensions.find('height').attrib['unit']
-                    document_obj.dimensions_unit = models.SlUnitOfMeasurement.objects.get_or_create(name=dimensions_unit)[0]
+                    text_obj.dimensions_unit = models.SlUnitOfMeasurement.objects.get_or_create(name=dimensions_unit)[0]
                     # dimensions_height
-                    document_obj.dimensions_height = dimensions.find('height').text
+                    text_obj.dimensions_height = dimensions.find('height').text
                     # dimensions_width
-                    document_obj.dimensions_width = dimensions.find('width').text
+                    text_obj.dimensions_width = dimensions.find('width').text
                 except AttributeError:
                     pass
 
@@ -722,10 +756,10 @@ def insert_data_documents(apps, schema_editor):
                     fold_lines_count_details = '\n\n'.join(
                         [flcd.text for flcd in ms_desc.findall('physDesc/objectDesc/layoutDesc/p')]
                     )
-                    document_obj.fold_lines_count_details = fold_lines_count_details
+                    text_obj.fold_lines_count_details = fold_lines_count_details
                     # Get all numbers from the details string and add them together to likely give the total count
                     fold_lines_count_numbers = re.findall(r'\d+', fold_lines_count_details)
-                    document_obj.fold_lines_count_total = sum(map(int, fold_lines_count_numbers))
+                    text_obj.fold_lines_count_total = sum(map(int, fold_lines_count_numbers))
                 except AttributeError:
                     pass
 
@@ -736,13 +770,13 @@ def insert_data_documents(apps, schema_editor):
                     # Set empty string values to be null
                     if not len(physical_additional_details):
                         physical_additional_details = None
-                    document_obj.physical_additional_details = physical_additional_details
+                    text_obj.physical_additional_details = physical_additional_details
                 except AttributeError:
                     pass
  
                 # place
                 try:
-                    document_obj.place = corresp_action.find('placeName').text
+                    text_obj.place = corresp_action.find('placeName').text
                 except AttributeError:
                     pass
 
@@ -756,28 +790,28 @@ def insert_data_documents(apps, schema_editor):
                     elif title_stmt.find('respStmt[@id="CM"]'):
                         meta_created_by = account_models.User.objects.get(email="catherine.mcnally@stx.ox.ac.uk")
                     if meta_created_by:
-                        document_obj.meta_created_by = meta_created_by
+                        text_obj.meta_created_by = meta_created_by
                 except AttributeError:
                     pass
                 # meta_created_by - Cat
 
-                # Save Document object in db
-                document_obj.save()
+                # Save Text object in db
+                text_obj.save()
 
-                # Once Document object is saved in db we can add related data,
+                # Once Text object is saved in db we can add related data,
                 # e.g. reverse FK objects and M2M relationships
 
                 # Reverse FK objects:
 
-                # PersonInDocument
+                # PersonInText
                 for person in corresp_action.findall('persName'):
-                    models.PersonInDocument.objects.create(
-                        document=document_obj,
-                        person_role_in_document=models.SlPersonInDocumentRole.objects.get_or_create(name=person.attrib['type'])[0],
+                    models.PersonInText.objects.create(
+                        text=text_obj,
+                        person_role_in_text=models.SlPersonInTextRole.objects.get_or_create(name=person.attrib['type'])[0],
                         person=models.Person.objects.get_or_create(name=person.text)[0]
                     )
 
-                # DocumentDate
+                # TextDate
                 for date in corresp_action.findall('date'):
                     # Define values
                     calendar = date.attrib['calendar'].replace('#', '')
@@ -798,8 +832,8 @@ def insert_data_documents(apps, schema_editor):
                     except AttributeError:
                         date_text = None
                     # Create the object
-                    models.DocumentDate.objects.create(
-                        document=document_obj,
+                    models.TextDate.objects.create(
+                        text=text_obj,
                         calendar=models.SlCalendar.objects.get_or_create(name=calendar)[0],
                         date=date_when,
                         date_not_before=date_not_before,
@@ -807,45 +841,45 @@ def insert_data_documents(apps, schema_editor):
                         date_text=date_text
                     )
 
-                # Document Pages and Lines
-                for page_div in body.findall('div[@type="original"]'):
+                # Text Folios and Lines
+                for folio_div in body.findall('div[@type="original"]'):
 
                     # Check that same amount of pb as there are ab,
                     # as below code relies on there being a matching ab for each pb
-                    pb_count = len(page_div.findall('pb'))
-                    ab_count = len(page_div.findall('ab'))
+                    pb_count = len(folio_div.findall('pb'))
+                    ab_count = len(folio_div.findall('ab'))
                     if pb_count != ab_count:
                         print(f'WARNING: pb count ({pb_count}) != ab count ({ab_count}):', input_file)
 
-                    # DocumentPage
-                    for page_index, page in enumerate(page_div.findall('pb')):
+                    # TextFolio
+                    for folio_index, folio in enumerate(folio_div.findall('pb')):
 
                         # Side (e.g. recto or verso)
-                        side_code = page.attrib['id'].rsplit('-', 1)[-1]
+                        side_code = folio.attrib['id'].rsplit('-', 1)[-1]
                         if 'v' in side_code:
                             side_name = 'verso'
                         elif 'r' in side_code:
                             side_name = 'recto'
                         else:
                             side_name = None
-                        side = models.SlDocumentPageSide.objects.get(name=side_name) if side_name else None
+                        side = models.SlTextFolioSide.objects.get(name=side_name) if side_name else None
 
                         # Open state (e.g. open or closed)
                         try:
-                            open_state = models.SlDocumentPageOpen.objects.filter(name=page_div.attrib['subtype']).first()
+                            open_state = models.SlTextFolioOpen.objects.filter(name=folio_div.attrib['subtype']).first()
                         except KeyError:
                             open_state = None
 
-                        # Create the DocumentPage object
-                        page_obj = models.DocumentPage.objects.create(
-                            document=document_obj,
+                        # Create the TextFolio object
+                        folio_obj = models.TextFolio.objects.create(
+                            text=text_obj,
                             side=side,
                             open_state=open_state
                         )
 
-                        # DocumentPageLines within this DocumentPage
-                        page_content = page_div.findall('ab')[page_index]
-                        for line_transcription in page_content.findall('lb'):
+                        # TextFolioLines within this TextFolio
+                        folio_content = folio_div.findall('ab')[folio_index]
+                        for line_transcription in folio_content.findall('lb'):
 
                             line_transcription_id = line_transcription.attrib["id"]
 
@@ -873,10 +907,10 @@ def insert_data_documents(apps, schema_editor):
                             # Set translation line number (and line number end, if a hyphen exists, e.g. 2-3)
                             line_translation_number, line_translation_number_end = line_numbers(line_translation)
 
-                            # Create the DocumentPageLine object
+                            # Create the TextFolioLine object
                             try:
-                                line_obj = models.DocumentPageLine.objects.create(
-                                    document_page=page_obj,
+                                line_obj = models.TextFolioLine.objects.create(
+                                    text_folio=folio_obj,
                                     transcription_line_number=line_transcription_number,
                                     transcription_line_number_end=line_transcription_number_end,
                                     transcription_text=line_transcription.tail.strip(),
@@ -903,66 +937,66 @@ def insert_data_documents(apps, schema_editor):
                 # Toponyms (place/location)
                 try:
                     toponym = profile_desc.findall('textClass/keywords/term[@type="location"]')[0].text
-                    document_obj.toponyms.add(
-                        models.SlDocumentTypeToponym.objects.get_or_create(name=toponym)[0]
+                    text_obj.toponyms.add(
+                        models.SlTextTypeToponym.objects.get_or_create(name=toponym)[0]
                     )
                 except (AttributeError, IndexError):
                     pass
 
                 # Funders
                 funder = title_stmt.find('funder').text
-                document_obj.funders.add(
+                text_obj.funders.add(
                     models.SlFunder.objects.get_or_create(name=funder)[0]
                 )
 
 
-def insert_data_documents_fk(apps, schema_editor):
+def insert_data_texts_fk(apps, schema_editor):
     """
-    Inserts data for foreign key fields in the Document model
-    """
-
-    with open(os.path.join(PATH_OLD_DATA, "data_documents_fk.txt"), 'r') as file:
-        set_related_values(file, models.Document, 'fk')
-
-
-def insert_data_documents_m2m(apps, schema_editor):
-    """
-    Inserts data for many to many fields in the Document model
+    Inserts data for foreign key fields in the Text model
     """
 
-    with open(os.path.join(PATH_OLD_DATA, "data_documents_m2m.txt"), 'r') as file:
-        set_related_values(file, models.Document, 'm2m')
+    with open(os.path.join(PATH_OLD_DATA, "data_texts_fk.txt"), 'r') as file:
+        set_related_values(file, models.Text, 'fk')
 
 
-def insert_data_documentimages(apps, schema_editor):
+def insert_data_texts_m2m(apps, schema_editor):
     """
-    Inserts data into the Document Image model
+    Inserts data for many to many fields in the Text model
+    """
+
+    with open(os.path.join(PATH_OLD_DATA, "data_texts_m2m.txt"), 'r') as file:
+        set_related_values(file, models.Text, 'm2m')
+
+
+def insert_data_textimages(apps, schema_editor):
+    """
+    Inserts data into the Text Image model
     """
 
     # Delete thumbnail directory and the existing images in them, to start fresh
     try:
-        shutil.rmtree(os.path.join(settings.BASE_DIR, f"media/palaeography/documentimages-thumbnails"))
+        shutil.rmtree(os.path.join(settings.BASE_DIR, f"media/palaeography/textimages-thumbnails"))
     except FileNotFoundError:
         pass  # it's ok if can't find dir, will just skip it
 
-    with open(os.path.join(PATH_OLD_DATA, "data_documentimages.txt"), 'r') as file:
+    with open(os.path.join(PATH_OLD_DATA, "data_textimages.txt"), 'r') as file:
         for object in literal_eval(file.read()):
 
             # Tidy custom_instructions data
             object['custom_instructions'] = strip_html_tags(object['custom_instructions'])
 
             # Save object
-            models.DocumentImage.objects.create(**object)
+            models.TextImage.objects.create(**object)
 
 
-def insert_data_documentimageparts(apps, schema_editor):
+def insert_data_textimageparts(apps, schema_editor):
     """
-    Inserts data into the Document Image Part model
+    Inserts data into the Text Image Part model
     """
 
-    with open(os.path.join(PATH_OLD_DATA, "data_documentimageparts.txt"), 'r') as file:
+    with open(os.path.join(PATH_OLD_DATA, "data_textimageparts.txt"), 'r') as file:
         for object in literal_eval(file.read()):
-            models.DocumentImagePart.objects.create(**object)
+            models.TextImagePart.objects.create(**object)
 
 
 class Migration(migrations.Migration):
@@ -973,5 +1007,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(insert_data_select_list_models),
-        migrations.RunPython(insert_data_documents)
+        migrations.RunPython(insert_data_texts)
     ]

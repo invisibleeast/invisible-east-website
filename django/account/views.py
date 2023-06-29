@@ -28,8 +28,8 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
 
         # My Recent Data
-        # Documents
-        context['my_recent_documents'] = researchdata_models.Document.objects.filter(meta_created_by=self.request.user).order_by('-meta_lastupdated_datetime')[:30]
+        # Texts
+        context['my_recent_texts'] = researchdata_models.Text.objects.filter(meta_created_by=self.request.user).order_by('-meta_lastupdated_datetime')[:30]
 
         return context
 
