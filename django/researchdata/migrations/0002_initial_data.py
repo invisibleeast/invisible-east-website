@@ -93,10 +93,18 @@ def insert_data_select_list_models(apps, schema_editor):
     required to manually set additional values.
     """
 
+    # SlTextCategory
+    for name in [
+        'Arabic',
+        'Bactrian',
+        'New Persian'
+    ]:
+        models.SlTextCategory.objects.create(name=name)
+
     # SlTextTypeCategory
     for name in [
         'Document',
-        'Literature',
+        'Literature'
     ]:
         models.SlTextTypeCategory.objects.create(name=name)
 
@@ -129,7 +137,7 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextType.objects.create(**obj)
 
-    # SlTextTypeLegalTransactions
+    # SlTextSubjectLegalTransactions
     for name in [
         'Worship acts (ibādat)',
         'Sale (bayʿ)',
@@ -153,30 +161,30 @@ def insert_data_select_list_models(apps, schema_editor):
         'Litigation',
 
     ]:
-        models.SlTextTypeLegalTransactions.objects.create(name=name)
+        models.SlTextSubjectLegalTransactions.objects.create(name=name)
 
-    # SlTextTypeAdministrativeInternalCorrespondence
+    # SlTextSubjectAdministrativeInternalCorrespondence
     for name in [
         'Missives to the field',
         'Informational note to the field',
         'Requests',
         'Missives for action'
     ]:
-        models.SlTextTypeAdministrativeInternalCorrespondence.objects.create(name=name)
+        models.SlTextSubjectAdministrativeInternalCorrespondence.objects.create(name=name)
 
-    # SlTextTypeAdministrativeTaxReceipts
+    # SlTextSubjectAdministrativeTaxReceipts
     for name in [
         'TODO',
     ]:
-        models.SlTextTypeAdministrativeTaxReceipts.objects.create(name=name)
+        models.SlTextSubjectAdministrativeTaxReceipts.objects.create(name=name)
 
-    # SlTextTypeAdministrativeListsAndAccounting
+    # SlTextSubjectAdministrativeListsAndAccounting
     for name in [
         'TODO',
     ]:
-        models.SlTextTypeAdministrativeListsAndAccounting.objects.create(name=name)
+        models.SlTextSubjectAdministrativeListsAndAccounting.objects.create(name=name)
 
-    # SlTextTypeLandMeasurementUnits
+    # SlTextSubjectLandMeasurementUnits
     for name in [
         'Mann',
         'Sitīr',
@@ -190,9 +198,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Tīr'
         
     ]:
-        models.SlTextTypeLandMeasurementUnits.objects.create(name=name)
+        models.SlTextSubjectLandMeasurementUnits.objects.create(name=name)
 
-    # SlTextTypePeopleAndProcessesAdmin
+    # SlTextSubjectPeopleAndProcessesAdmin
     for name in [
         'Muʿāmala',
         'Taḥakumāna (ghalla-yi)',
@@ -216,17 +224,17 @@ def insert_data_select_list_models(apps, schema_editor):
         'Dīwān',
         'ʿAwāriḍ (public expenses)',
     ]:
-        models.SlTextTypePeopleAndProcessesAdmin.objects.create(name=name)
+        models.SlTextSubjectPeopleAndProcessesAdmin.objects.create(name=name)
 
-    # SlTextTypePeopleAndProcessesLegal
+    # SlTextSubjectPeopleAndProcessesLegal
     for name in [
         'Qāḍī',
         'Faqīh',
         'Muḥtasib'
     ]:
-        models.SlTextTypePeopleAndProcessesLegal.objects.create(name=name)
+        models.SlTextSubjectPeopleAndProcessesLegal.objects.create(name=name)
 
-    # SlTextTypeDocumentation
+    # SlTextSubjectDocumentation
     for name in [
         'Qabāla',
         'Barāt',
@@ -240,9 +248,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ruqʿa',
         'Risāla'
     ]:
-        models.SlTextTypeDocumentation.objects.create(name=name)
+        models.SlTextSubjectDocumentation.objects.create(name=name)
 
-    # SlTextTypeGeographicAdministrativeUnits
+    # SlTextSubjectGeographicAdministrativeUnits
     for name in [
         'Wilāyat',
         'Badiya',
@@ -255,9 +263,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ribāṭ',
         'Sarāy'
     ]:
-        models.SlTextTypeGeographicAdministrativeUnits.objects.create(name=name)
+        models.SlTextSubjectGeographicAdministrativeUnits.objects.create(name=name)
 
-    # SlTextTypeLegalAndAdministrativeStockPhrases
+    # SlTextSubjectLegalAndAdministrativeStockPhrases
     for name in [
         'Pious invocations',
         'Bismillāh (including abbrev)',
@@ -280,18 +288,18 @@ def insert_data_select_list_models(apps, schema_editor):
         'Taxes: ʿUshr',
         'Taxes: Jizya'
     ]:
-        models.SlTextTypeLegalAndAdministrativeStockPhrases.objects.create(name=name)
+        models.SlTextSubjectLegalAndAdministrativeStockPhrases.objects.create(name=name)
 
-    # SlTextTypeFinanceAndAccountancyPhrases
+    # SlTextSubjectFinanceAndAccountancyPhrases
     for name in [
         'Tafṣīl (itemisation)',
         'Wajh/wujūh (in account/payment of)',
         'Bāqī (remainder)',
         'Wām (-I lāzim) (loan)'
     ]:
-        models.SlTextTypeFinanceAndAccountancyPhrases.objects.create(name=name)
+        models.SlTextSubjectFinanceAndAccountancyPhrases.objects.create(name=name)
 
-    # SlTextTypeAgriculturalProduce
+    # SlTextSubjectAgriculturalProduce
     for name in [
         'Ghalla (grain)',
         'Gandum (wheat)',
@@ -308,9 +316,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Harvest collecting (bardāshtan, rafʿ kardan)',
         'ʿĀsiya (mill)',
     ]:
-        models.SlTextTypeAgriculturalProduce.objects.create(name=name)
+        models.SlTextSubjectAgriculturalProduce.objects.create(name=name)
 
-    # SlTextTypeCurrenciesAndDenominations
+    # SlTextSubjectCurrenciesAndDenominations
     for name in [
         'ʿAdlī',
         'Shiyānī',
@@ -322,9 +330,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Diramsang',
         'Dāng/dāniq/danānīq (one-sixth)'
     ]:
-        models.SlTextTypeCurrenciesAndDenominations.objects.create(name=name)
+        models.SlTextSubjectCurrenciesAndDenominations.objects.create(name=name)
 
-    # SlTextTypeMarkings
+    # SlTextSubjectMarkings
     for name in [
         'Oblique stroke (check mark)',
         'Jaʾiza (cipher)',
@@ -332,9 +340,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Column format',
         'Siyāq (accountants’ abbreviations of numbers)',
     ]:
-        models.SlTextTypeMarkings.objects.create(name=name)
+        models.SlTextSubjectMarkings.objects.create(name=name)
 
-    # SlTextTypeReligion
+    # SlTextSubjectReligion
     for name in [
         'Temple',
         'Mosque',
@@ -343,9 +351,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Fatwa/istiftāʿ',
         'Rituals'
     ]:
-        models.SlTextTypeReligion.objects.create(name=name)
+        models.SlTextSubjectReligion.objects.create(name=name)
 
-    # SlTextTypeToponym
+    # SlTextSubjectToponym
     for name in [
         # Bamiyan
         'Āhangarān, آهنگران',
@@ -473,7 +481,7 @@ def insert_data_select_list_models(apps, schema_editor):
         # MiddlePersian
         'TODO',
     ]:
-        models.SlTextTypeToponym.objects.create(name=name)
+        models.SlTextSubjectToponym.objects.create(name=name)
 
     # SlTextScript
     for name in [
@@ -673,17 +681,22 @@ def insert_data_texts(apps, schema_editor):
                 # Create Text object
                 text_obj = models.Text()
 
+                # shelfmark
+                try:
+                    text_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
+                except AttributeError:
+                    pass
                 # collection
                 try:
                     collection = ms_desc.find('msIdentifier/institution').text
                     text_obj.collection = models.SlTextCollection.objects.get_or_create(name=collection)[0]
                 except AttributeError:
                     pass
-                # shelfmark
-                try:
-                    text_obj.shelfmark = ms_desc.find('msIdentifier/idno[@type="shelfmark"]').text
-                except AttributeError:
-                    pass
+                # category
+                # Gets this from the filepath of the XML file (the last dir in root)
+                # (Choices: Arabic, New Persian, Bactrian)
+                category = root.split('/')[-1]
+                text_obj.category = models.SlTextCategory.objects.get(name=category)
                 # id_khan
                 try:
                     text_obj.id_khan = ms_desc.find('msIdentifier/idno[@type="Khan"]').text
@@ -700,19 +713,13 @@ def insert_data_texts(apps, schema_editor):
                     text_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
                 except AttributeError:
                     pass
-                # subject
-                text_obj.subject = '\n\n'.join(
-                    [subject.text for subject in profile_desc.findall('particDesc/p')]
+                # context
+                text_obj.context = '\n\n'.join(
+                    [context.text for context in profile_desc.findall('particDesc/p')]
                 )
                 # type
                 text_type = profile_desc.findall('textClass/keywords/term')[0].text
                 text_obj.type = models.SlTextType.objects.get_or_create(name=text_type)[0]
-
-                # language
-                # Gets this from the filepath of the XML file (the last dir in root)
-                # (Choices: Arabic, New Persian, Bactrian)
-                language = root.split('/')[-1]
-                text_obj.language = models.SlTextLanguage.objects.get(name=language)
                 # correspondence
                 correspondence = corresp_action.attrib['type']
                 text_obj.correspondence = models.SlTextCorrespondence.objects.get_or_create(name=correspondence)[0]
@@ -934,19 +941,27 @@ def insert_data_texts(apps, schema_editor):
                 # M2M relationships
                 # (some only have 1 instance in XML but field is M2M for future flexibility):
 
-                # Toponyms (place/location)
+                # toponyms (place/location)
                 try:
                     toponym = profile_desc.findall('textClass/keywords/term[@type="location"]')[0].text
                     text_obj.toponyms.add(
-                        models.SlTextTypeToponym.objects.get_or_create(name=toponym)[0]
+                        models.SlTextSubjectToponym.objects.get_or_create(name=toponym)[0]
                     )
                 except (AttributeError, IndexError):
                     pass
 
-                # Funders
+                # funders
                 funder = title_stmt.find('funder').text
                 text_obj.funders.add(
                     models.SlFunder.objects.get_or_create(name=funder)[0]
+                )
+
+                # languages
+                # Gets this from the filepath of the XML file (the last dir in root)
+                # (Choices: Arabic, New Persian, Bactrian)
+                language = root.split('/')[-1]
+                text_obj.languages.add(
+                    models.SlTextLanguage.objects.get(name=language)
                 )
 
 

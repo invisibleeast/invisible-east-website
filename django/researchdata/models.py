@@ -36,6 +36,14 @@ class SlAbstract(models.Model):
 #
 
 
+class SlTextCategory(SlAbstract):
+    """
+    A category of Text within the IE corpus, typically separated by primary language
+    E.g. 'Arabic', 'Bactrian', 'New Persian'
+    """
+    pass
+
+
 class SlTextTypeCategory(SlAbstract):
     """
     A type of Text
@@ -55,112 +63,112 @@ class SlTextType(SlAbstract):
         return f'{self.name} ({self.category.name})' if self.category else self.name
 
 
-class SlTextTypeLegalTransactions(SlAbstract):
+class SlTextSubjectLegalTransactions(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeAdministrativeInternalCorrespondence(SlAbstract):
+class SlTextSubjectAdministrativeInternalCorrespondence(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeAdministrativeTaxReceipts(SlAbstract):
+class SlTextSubjectAdministrativeTaxReceipts(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeAdministrativeListsAndAccounting(SlAbstract):
+class SlTextSubjectAdministrativeListsAndAccounting(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeLandMeasurementUnits(SlAbstract):
+class SlTextSubjectLandMeasurementUnits(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypePeopleAndProcessesAdmin(SlAbstract):
+class SlTextSubjectPeopleAndProcessesAdmin(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypePeopleAndProcessesLegal(SlAbstract):
+class SlTextSubjectPeopleAndProcessesLegal(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeDocumentation(SlAbstract):
+class SlTextSubjectDocumentation(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeGeographicAdministrativeUnits(SlAbstract):
+class SlTextSubjectGeographicAdministrativeUnits(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeLegalAndAdministrativeStockPhrases(SlAbstract):
+class SlTextSubjectLegalAndAdministrativeStockPhrases(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeFinanceAndAccountancyPhrases(SlAbstract):
+class SlTextSubjectFinanceAndAccountancyPhrases(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeAgriculturalProduce(SlAbstract):
+class SlTextSubjectAgriculturalProduce(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeCurrenciesAndDenominations(SlAbstract):
+class SlTextSubjectCurrenciesAndDenominations(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeMarkings(SlAbstract):
+class SlTextSubjectMarkings(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeReligion(SlAbstract):
+class SlTextSubjectReligion(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextTypeToponym(SlAbstract):
+class SlTextSubjectToponym(SlAbstract):
     """
     A Text type related field. Toponym = place
     """
@@ -345,36 +353,37 @@ class Text(models.Model):
     related_name = 'texts'
 
     # General
-    collection = models.ForeignKey('SlTextCollection', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    shelfmark = models.CharField(max_length=1000, blank=True, null=True)
+    shelfmark = models.CharField(max_length=1000)
+    collection = models.ForeignKey('SlTextCollection', on_delete=models.RESTRICT, related_name=related_name)
+    category = models.ForeignKey('SlTextCategory', on_delete=models.RESTRICT, related_name=related_name)
+    type = models.ForeignKey('SlTextType', on_delete=models.RESTRICT, related_name=related_name)
+    correspondence = models.ForeignKey('SlTextCorrespondence', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     id_khan = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Khan ID")
     id_nicholas_simms_williams = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Nicholas Simms-Williams ID")
     country = models.ForeignKey('SlCountry', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    subject = models.TextField(blank=True, null=True)
+    context = models.TextField(blank=True, null=True)
     languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True)
-    correspondence = models.ForeignKey('SlTextCorrespondence', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     funders = models.ManyToManyField('SlFunder', blank=True, related_name=related_name, db_index=True)
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
 
-    # Type and type-related
-    type = models.ForeignKey('SlTextType', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    # Subject
     # The below fields may be related to above 'type' value, e.g. Legal or Administrative so need to show/hide necessary fields in admin
-    legal_transactions = models.ManyToManyField('SlTextTypeLegalTransactions', blank=True, related_name=related_name, db_index=True)
-    administrative_internal_correspondences = models.ManyToManyField('SlTextTypeAdministrativeInternalCorrespondence', blank=True, related_name=related_name, db_index=True)
-    administrative_tax_receipts = models.ManyToManyField('SlTextTypeAdministrativeTaxReceipts', blank=True, related_name=related_name, db_index=True)
-    administrative_lists_and_accounting = models.ManyToManyField('SlTextTypeAdministrativeListsAndAccounting', blank=True, related_name=related_name, db_index=True)
-    land_measurement_units = models.ManyToManyField('SlTextTypeLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
-    people_and_processes_admins = models.ManyToManyField('SlTextTypePeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in public administration, tax, trade, and commerce')
-    people_and_processes_legal = models.ManyToManyField('SlTextTypePeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in legal and judiciary system')
-    documentations = models.ManyToManyField('SlTextTypeDocumentation', blank=True, related_name=related_name, db_index=True)
-    geographic_administrative_units = models.ManyToManyField('SlTextTypeGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
-    legal_and_administrative_stock_phrases = models.ManyToManyField('SlTextTypeLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
-    finance_and_accountancy_phrases = models.ManyToManyField('SlTextTypeFinanceAndAccountancyPhrases', blank=True, related_name=related_name, db_index=True)
-    agricultural_produce = models.ManyToManyField('SlTextTypeAgriculturalProduce', blank=True, related_name=related_name, db_index=True, help_text='Agricultural produce, animals, and farming equipment')
-    currencies_and_denominations = models.ManyToManyField('SlTextTypeCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
-    markings = models.ManyToManyField('SlTextTypeMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
-    religions = models.ManyToManyField('SlTextTypeReligion', blank=True, related_name=related_name, db_index=True)
-    toponyms = models.ManyToManyField('SlTextTypeToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
+    legal_transactions = models.ManyToManyField('SlTextSubjectLegalTransactions', blank=True, related_name=related_name, db_index=True)
+    administrative_internal_correspondences = models.ManyToManyField('SlTextSubjectAdministrativeInternalCorrespondence', blank=True, related_name=related_name, db_index=True)
+    administrative_tax_receipts = models.ManyToManyField('SlTextSubjectAdministrativeTaxReceipts', blank=True, related_name=related_name, db_index=True)
+    administrative_lists_and_accounting = models.ManyToManyField('SlTextSubjectAdministrativeListsAndAccounting', blank=True, related_name=related_name, db_index=True)
+    land_measurement_units = models.ManyToManyField('SlTextSubjectLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
+    people_and_processes_admins = models.ManyToManyField('SlTextSubjectPeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in public administration, tax, trade, and commerce')
+    people_and_processes_legal = models.ManyToManyField('SlTextSubjectPeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in legal and judiciary system')
+    documentations = models.ManyToManyField('SlTextSubjectDocumentation', blank=True, related_name=related_name, db_index=True)
+    geographic_administrative_units = models.ManyToManyField('SlTextSubjectGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
+    legal_and_administrative_stock_phrases = models.ManyToManyField('SlTextSubjectLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
+    finance_and_accountancy_phrases = models.ManyToManyField('SlTextSubjectFinanceAndAccountancyPhrases', blank=True, related_name=related_name, db_index=True)
+    agricultural_produce = models.ManyToManyField('SlTextSubjectAgriculturalProduce', blank=True, related_name=related_name, db_index=True, help_text='Agricultural produce, animals, and farming equipment')
+    currencies_and_denominations = models.ManyToManyField('SlTextSubjectCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
+    markings = models.ManyToManyField('SlTextSubjectMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
+    religions = models.ManyToManyField('SlTextSubjectReligion', blank=True, related_name=related_name, db_index=True)
+    toponyms = models.ManyToManyField('SlTextSubjectToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
 
     # Publication Statements
     publication_statement = models.ForeignKey('SlPublicationStatement', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)

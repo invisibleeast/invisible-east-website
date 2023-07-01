@@ -77,24 +77,25 @@ class GenericSlAdminView(GenericAdminView):
 #
 
 # Register Select List models (most, if not all, use GenericSlAdminView)
+admin.site.register(models.SlTextCategory, GenericSlAdminView)
 admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
-admin.site.register(models.SlTextTypeLegalTransactions, GenericSlAdminView)
-admin.site.register(models.SlTextTypeAdministrativeInternalCorrespondence, GenericSlAdminView)
-admin.site.register(models.SlTextTypeAdministrativeTaxReceipts, GenericSlAdminView)
-admin.site.register(models.SlTextTypeAdministrativeListsAndAccounting, GenericSlAdminView)
-admin.site.register(models.SlTextTypeLandMeasurementUnits, GenericSlAdminView)
-admin.site.register(models.SlTextTypePeopleAndProcessesAdmin, GenericSlAdminView)
-admin.site.register(models.SlTextTypePeopleAndProcessesLegal, GenericSlAdminView)
-admin.site.register(models.SlTextTypeDocumentation, GenericSlAdminView)
-admin.site.register(models.SlTextTypeGeographicAdministrativeUnits, GenericSlAdminView)
-admin.site.register(models.SlTextTypeLegalAndAdministrativeStockPhrases, GenericSlAdminView)
-admin.site.register(models.SlTextTypeFinanceAndAccountancyPhrases, GenericSlAdminView)
-admin.site.register(models.SlTextTypeAgriculturalProduce, GenericSlAdminView)
-admin.site.register(models.SlTextTypeCurrenciesAndDenominations, GenericSlAdminView)
-admin.site.register(models.SlTextTypeMarkings, GenericSlAdminView)
-admin.site.register(models.SlTextTypeReligion, GenericSlAdminView)
-admin.site.register(models.SlTextTypeToponym, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectLegalTransactions, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectAdministrativeInternalCorrespondence, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectAdministrativeTaxReceipts, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectAdministrativeListsAndAccounting, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectLandMeasurementUnits, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectPeopleAndProcessesAdmin, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectPeopleAndProcessesLegal, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectDocumentation, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectGeographicAdministrativeUnits, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectLegalAndAdministrativeStockPhrases, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectFinanceAndAccountancyPhrases, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectAgriculturalProduce, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectCurrenciesAndDenominations, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectMarkings, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectReligion, GenericSlAdminView)
+admin.site.register(models.SlTextSubjectToponym, GenericSlAdminView)
 admin.site.register(models.SlFunder, GenericSlAdminView)
 admin.site.register(models.SlUnitOfMeasurement, GenericSlAdminView)
 admin.site.register(models.SlTextCollection, GenericSlAdminView)
@@ -238,6 +239,7 @@ class TextAdminView(GenericAdminView):
         'id',
         'shelfmark',
         'collection',
+        'category',
         'type',
         'correspondence',
         'country',
@@ -251,10 +253,12 @@ class TextAdminView(GenericAdminView):
         'collection',
         'correspondence',
         'country',
+        'category',
     )
     list_filter = (
         ('public_review_requests', RelatedDropdownFilter),
         ('admin_classification', RelatedDropdownFilter),
+        ('category', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
         ('languages', RelatedDropdownFilter),
         ('correspondence', RelatedDropdownFilter),
@@ -280,20 +284,21 @@ class TextAdminView(GenericAdminView):
     fieldsets = (
         ('General', {
             'fields': (
-                'collection',
                 'shelfmark',
+                'collection',
+                'category',
+                'type',
+                'correspondence',
                 'id_khan',
                 'id_nicholas_simms_williams',
                 'country',
-                'subject',
+                'context',
                 'languages',
-                'correspondence',
                 'funders'
             )
         }),
-        ('Text Types', {
+        ('Subjects', {
             'fields': (
-                'type',
                 'legal_transactions',
                 'administrative_internal_correspondences',
                 'administrative_tax_receipts',
