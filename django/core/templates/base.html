@@ -77,7 +77,7 @@
                     </li>
                     <!-- Corpus -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/corpus/" in request.path %} active{% endif %}" href="#">
+                        <a class="nav-link{% if "/corpus/" in request.path %} active{% endif %}" href="{% url 'researchdata:text-list' %}">
                             Corpus
                         </a>
                     </li>
