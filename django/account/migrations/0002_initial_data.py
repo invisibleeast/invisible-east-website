@@ -63,7 +63,7 @@ def add_group_permissions(apps,schema_editor):
             "group_name": "collaborator_permissions_group",
             "apps": [
                 {
-                    "app_name": "researchdata",
+                    "app_name": "corpus",
                     "models": [
                         {
                             "model_name": "text",

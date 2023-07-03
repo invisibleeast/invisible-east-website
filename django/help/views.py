@@ -30,7 +30,7 @@ class HelpDetailView(DetailView):
     """
     Class-based view for help detail template
     """
-    template_name = 'help/detail.html'
+    template_name = 'help/help-detail.html'
     model = models.HelpItem
 
     def get_queryset(self):
@@ -41,7 +41,7 @@ class HelpListView(ListView):
     """
     Class-based view for help list template
     """
-    template_name = 'help/list.html'
+    template_name = 'help/help-list.html'
     model = models.HelpItem
 
     def get_queryset(self):

@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static pagination_go_to_page %}
+
+{% block main %}
+
+<div id="corpus-text-list">
+
+    <!-- List Options  -->
+    <section>
+
+        <div id="corpus-text-list-options-toggler">
+            <!-- Inactive (show left arrow, to signal sliding in) -->
+            <div id="corpus-text-list-options-toggler-inactive">
+                <i class="far fa-caret-square-left"></i>
+            </div>
+            <!-- Active (show right arrow, to signal sliding out) -->
+            <div id="corpus-text-list-options-toggler-active">
+                <i class="far fa-caret-square-right"></i>
+            </div>
+        </div>
+
+        <form method="GET" id="corpus-text-list-options">
+
+            <div class="corpus-text-list-options-showing">
+                Showing X of Y total texts
+            </div>
+
+            <!-- List Pagination, if there are multiple pages -->
+            {% if page_obj.paginator.num_pages > 1 %}
+            <div id="corpus-text-list-options-pagination">
+
+                <div class="corpus-text-list-options-pagination-section{% if page_obj.has_previous == False %} disabled{% endif %}">
+                    <!-- First Page -->
+                    <div class="corpus-text-list-options-pagination-action">
+                        {% if page_obj.has_previous %}
+                            <a class="fas fa-angle-double-left" href="{% pagination_go_to_page page_number=1 %}" title="First"></a><label>First</label>
+                        {% endif %}
+                    </div>
+                    <!-- Previous Page -->
+                    <div class="corpus-text-list-options-pagination-action">
+                        {% if page_obj.has_previous %}
+                            <a class="fas fa-angle-left" href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}" title="Previous"></a><label>Previous</label>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="corpus-text-list-options-pagination-section">
+                    <!-- Current page info -->
+                    <span class="corpus-text-list-options-pagination-current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </div>
+
+                <div class="corpus-text-list-options-pagination-section{% if page_obj.has_next == False %} disabled{% endif %}">
+                    <!-- Next Page -->
+                    <div class="corpus-text-list-options-pagination-action">
+                        {% if page_obj.has_next %}
+                            <a class="fas fa-angle-right" href="{% pagination_go_to_page page_number=page_obj.next_page_number %}" title="Next"></a><label>Next</label>
+                        {% endif %}
+                    </div>
+                    <!-- Last Page -->
+                    <div class="corpus-text-list-options-pagination-action">
+                        {% if page_obj.has_next %}
+                            <a class="fas fa-angle-double-right" href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}" title="Last"></a><label>Last</label>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        {% endif %}
+
+            <!-- Search (allows for multiple search criteria) -->
+            <div class="corpus-text-list-options-subtitle">Search</div>
+            <!-- Hidden fields that will have value determined in JS -->
+            <input type="hidden" id="corpus-text-list-options-search-values" name="search">
+            <input type="hidden" id="corpus-text-list-options-search-operator" name="search_operator">
+            <!-- Search fields (dynamically filled via JS) -->
+            <div id="corpus-text-list-options-search-fields"></div>
+            <div id="corpus-text-list-options-search-fields-add"><i class="fas fa-plus"></i> Add search box</div>
+
+            <!-- Sort -->
+            <div class="corpus-text-list-options-subtitle">Sort</div>
+            <!-- Sort by -->
+            <label for="corpus-text-list-options-sort-by">Sort by:</label>
+            <select id="corpus-text-list-options-sort-by" name="sort_by">
+                <!-- Alphabetical sorts (options defined in view) -->
+                {% if options_sortby_alphabetical|length > 0 %}
+                    {% for osa in options_sortby_alphabetical %}
+                        <option value="{{ osa.value }}">{{ osa.label }}</option>
+                    {% endfor %}
+                {% endif %}
+                <!-- Numerical sorts (options defined in view) -->
+                {% if options_sortby_numerical|length > 0 %}
+                    {% for osn in options_sortby_numerical %}
+                        <option value="{{ osn.value }}">{{ osn.label }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+            <!-- Sort direction -->
+            <label for="corpus-text-list-options-sort-direction">Sort direction:</label>
+            <select id="corpus-text-list-options-sort-direction" name="sort_direction">
+                <option value="">Ascending (A-Z, 0-9)</option>
+                <option value="-">Descending (Z-A, 9-0)</option>
+            </select>
+
+            <!-- Filter -->
+            {% if options_filters|length > 0 %}
+                <div class="corpus-text-list-options-subtitle">Filters</div>
+                <div class="corpus-text-list-options-filters">
+                    {% for filter_group in options_filters %}
+                        <div class="corpus-text-list-options-filters-group">
+                            {% for f in filter_group %}
+                                <div class="corpus-text-list-options-filters-group-filter">
+                                    <label for="{{ f.filter_id }}">
+                                        {{ f.filter_name }}
+                                    </label>
+                                    <span class="input-clear"><i class="fas fa-times-circle"></i></span>
+                                    <select id="{{ f.filter_id }}"
+                                        class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
+                                        title="{{ f.filter_id }}"
+                                        name="{{ f.filter_id }}"
+
+                                        {# Filter Dependencies #}
+                                        {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
+
+                                        {# Data Hierarchy #}
+                                        {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
+                                        {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
+                                        {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
+                                        {% include 'snippets/select-default.html' %}
+                                        {% for o in f.filter_options %}
+                                            <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="corpus-text-list-options-submitbuttons">
+                <button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary">
+                    <i class="fas fa-search"></i> Search
+                </button><!--
+                --><button id="corpus-text-list-options-reset" title="Reset search" class="corpus-text-list-options-submitbuttons-secondary">
+                    <i class="fas fa-redo-alt"></i>
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- List Items -->
+    <section id="corpus-text-list-items">
+        {% for object in object_list %}
+            <!-- Set the URL based on the main model supplied to this page -->
+            <a href="{% url 'corpus:text-detail' object.id %}" class="corpus-text-list-items-item">
+                <!-- Text -->
+                <div class="corpus-text-list-items-item-text">
+                    <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
+                    <div class="corpus-text-list-items-item-text-details">{{ object.list_details }}</div>
+                </div>
+                <!-- Image -->
+                <div class="corpus-text-list-items-item-imagecontainer">
+                    <img src="{{ object.image_thumbnail.url }}" alt="Image of corpus text">
+                </div>
+            </a>
+        {% empty %}
+            <div class="corpus-text-list-items-empty">
+                <div class="corpus-text-list-items-empty-title">
+                    No records found
+                </div>
+                <div class="corpus-text-list-items-empty-details">
+                    This may be because no data of this type exists yet or because your search criteria is too narrow
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+
+    
+
+</div>
+
+
+<!-- JS -->
+<script>
+    $(document).ready(function() {
+        {% include "corpus/snippets/list.js" %}
+    });
+</script>
+
+{% endblock %}

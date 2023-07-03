@@ -17,9 +17,7 @@ $(document).ready(function() {
 
     // Apply above quickSearchList function to the various lists
 
-    // Detail related data lists, e.g. on Item detail page a list of related Graphic Elements
-    $(".detail-list-quicksearch").on('keyup', function(){ quickSearchList($(this), ".list-body-item") });
     // Help list
-    $("#help-list-head-search").on('keyup', function(){ quickSearchList($(this), ".list-body-item") });
+    $("#help-list-head-search").on('keyup', function(){ quickSearchList($(this), ".help-list-items-item") });
 
 });

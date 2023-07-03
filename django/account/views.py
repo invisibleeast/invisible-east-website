@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (PasswordChangeView, PasswordResetView, PasswordResetConfirmView)
 from account import (forms, models)
-from researchdata import models as researchdata_models
+from corpus import models as corpus_models
 
 
 class AccountUpdateView(LoginRequiredMixin, UpdateView):
@@ -29,7 +29,7 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
 
         # My Recent Data
         # Texts
-        context['my_recent_texts'] = researchdata_models.Text.objects.filter(meta_created_by=self.request.user).order_by('-meta_lastupdated_datetime')[:30]
+        context['my_recent_texts'] = corpus_models.Text.objects.filter(meta_created_by=self.request.user).order_by('-meta_lastupdated_datetime')[:30]
 
         return context
 

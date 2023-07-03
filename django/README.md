@@ -14,7 +14,7 @@ Apps include:
 
 - **account** - custom user accounts and auth (overrides the default Django account and auth functionality)
 - **general** - this is for general sections of the website that don't require a data model (e.g. about page, cookies page, accessibility page, etc.)
-- **researchdata** - the main project data, managed via the admin dashboard and presented to users through a public interface
+- **corpus** - the main project data, managed via the admin dashboard and presented to users through a public interface
 - **help** - content to help users to use the website, e.g. PDFs with screenshots, video tutorials, etc.
 
 

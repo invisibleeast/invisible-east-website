@@ -54,7 +54,7 @@
 
     .nav-link.active {
         padding-left: 0.5em;
-        border-left: 3px solid #c1b98a;
+        border-left: 3px solid var(--color-secondary);
     }
 
     /* ---------- Main ---------- */
@@ -80,26 +80,44 @@
         font-size: 1.2em;
     }
 
-    /* ---------- List ---------- */
+    /* ---------- Corpus: List ---------- */
 
-    #list {
+    #corpus-text-list {
         width: 100%;
     }
 
-    .list-body-type-image {
+    #corpus-text-list-options-toggler {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 3em;
+        width: 3rem;
+        height: 3rem;
         text-align: center;
+        padding-top: 0.55em;
+        font-size: 1.6em;
+        background: var(--color-primary);
+        color: white;
+        z-index: 970;
+        cursor: pointer;
     }
 
-    .list-body-type-imagecompact .list-body-item {
-        margin: 0.5em;
+    #corpus-text-list-options-toggler-active {
+        display: none;
     }
 
-    .list-body-type-imagecompact .list-body-item-text {
-        width: 100%;
-        color: #007688;
+    #corpus-text-list-options {
+        top: 3em;
+        height: calc(100vh - 6.32em);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    .list-pagination-section {
+    .corpus-text-list-options,
+    .corpus-text-list-options-submitbuttons {
+        right: -23em;
+    }
+
+    .corpus-text-list-options-pagination-section {
         width: 100%;
         display: block;
     }

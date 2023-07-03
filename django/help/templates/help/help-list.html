@@ -19,16 +19,16 @@
     {% endif %}
 </section>
 
-<section id="help-list-items" class="list-body list-body-type-text container">
+<section id="help-list-items" class="container">
     {% for object in object_list  %}
-        <a href="{{ object.url_detail }}" class="list-body-item">
-            <div class="list-body-item-text-title">{{ object.list_title }}</div>
-            <div class="list-body-item-text-details" data-description="{{ object.description }}">{{ object.list_details | safe }}</div>
+        <a href="{{ object.url_detail }}" class="help-list-items-item">
+            <div class="help-list-items-item-title">{{ object.list_title }}</div>
+            <div class="help-list-items-item-details" data-description="{{ object.description }}">{{ object.list_details | safe }}</div>
         </a>
     {% empty %}
-        <div class="list-body-empty">
-            <div class="list-body-empty-title">No help items</div>
-            <div class="list-body-empty-details">
+        <div class="help-list-items-empty">
+            <div class="help-list-items-empty-title">No help items</div>
+            <div class="help-list-items-empty-details">
                 There are no help items to show yet. Please check back soon or <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a> if you have a question.
             </div>
         </div>

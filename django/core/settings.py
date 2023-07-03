@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     # Custom
     'account',
     'general',
-    'researchdata',
+    'corpus',
     'help'
 ]
 

@@ -6,7 +6,7 @@ class TextDetailView(DetailView):
     """
     Class-based view for Text detail template
     """
-    template_name = 'researchdata/text-detail.html'
+    template_name = 'corpus/text-detail.html'
     model = models.Text
 
     def get_context_data(self, **kwargs):
@@ -21,9 +21,9 @@ class TextListView(ListView):
     """
     Class-based view for Text list template
     """
-    template_name = 'researchdata/text-list.html'
+    template_name = 'corpus/text-list.html'
     model = models.Text
-    paginate_by = 100
+    paginate_by = 20
 
     def get_queryset(self):
         # Start with all objects

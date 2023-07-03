@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from django.conf import settings
 from django.db import migrations
-from researchdata import models
+from corpus import models
 from ast import literal_eval
 from html.parser import HTMLParser
 from io import StringIO
@@ -12,7 +12,7 @@ import os, shutil, re
 
 # Reusable functions/variables
 
-PATH_OLD_DATA = os.path.join(settings.BASE_DIR, 'researchdata', 'migrations', 'old_data')
+PATH_OLD_DATA = os.path.join(settings.BASE_DIR, 'corpus', 'migrations', 'old_data')
 
 
 def set_related_values(data_file, main_model, relationship_type):
@@ -1017,7 +1017,7 @@ def insert_data_textimageparts(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('researchdata', '0001_initial')
+        ('corpus', '0001_initial')
     ]
 
     operations = [

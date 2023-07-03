@@ -505,7 +505,7 @@ class TextFolio(models.Model):
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT, blank=True, null=True)
     open_state = models.ForeignKey('SlTextFolioOpen', on_delete=models.RESTRICT, blank=True, null=True)
-    image = models.ImageField(upload_to='researchdata/text_folios', blank=True, null=True)
+    image = models.ImageField(upload_to='corpus/text_folios', blank=True, null=True)
 
     def __str__(self):
         # Build the descriptors text

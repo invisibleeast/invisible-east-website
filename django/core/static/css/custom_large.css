@@ -17,7 +17,7 @@
     }
 
     .nav-link.active {
-        border-bottom: 4px solid #c1b98a;
+        border-bottom: 4px solid var(--color-secondary);
     }
 
     /* ---------- Main ---------- */
@@ -42,45 +42,30 @@
         font-size: 1.6em;
     }
 
-    /* ---------- List ---------- */
+    /* ---------- Corpus: List ---------- */
 
-    #list-options {
+    #corpus-text-list {
+        width: calc(100% - 23em);
+    }
+
+    #corpus-text-list-options,
+    .corpus-text-list-options-submitbuttons {
         right: 0;
     }
 
-    .list-body-type-image .list-body-item {
-        vertical-align: top;
-        display: inline-block;
-    }
-
-    .list-body-type-imagecompact .list-body-item {
-        margin: 0;
-    }
-
-    .list-body-type-imagecompact .list-body-item-text {
+    #corpus-text-list-options-toggler {
         display: none;
-        width: calc(100% + 2px);
-        position: absolute;
-        left: -1px;
-        top: 6rem;
-        background: #007688;
-        color: white;
-        z-index: 700;
     }
 
-    .list-body-type-imagecompact .list-body-item-text.active {
-        display: block;
+    #corpus-text-list-options {
+        height: calc(100vh - 6.82em);
     }
 
-    .list-body-type-imagecompact .list-body-item-text-title {
-        color: white;
-    }
-
-    #list-pagination {
+    #corpus-text-list-options-pagination {
         white-space: nowrap;
     }
 
-    .list-pagination-section {
+    .corpus-text-list-options-pagination-section {
         white-space: normal;
         width: 33%;
         display: inline-block;
