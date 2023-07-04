@@ -61,15 +61,8 @@
         height: calc(100vh - 6.82em);
     }
 
-    #corpus-text-list-options-pagination {
-        white-space: nowrap;
-    }
-
-    .corpus-text-list-options-pagination-section {
-        white-space: normal;
-        width: 33%;
-        display: inline-block;
-        vertical-align: middle;
+    #corpus-text-list-items {
+        grid-template-columns: 33% 33% 33%; /* 4 columns */
     }
 
 }

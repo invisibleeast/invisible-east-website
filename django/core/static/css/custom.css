@@ -485,8 +485,8 @@ main section {
 }
 
 #corpus-text-list-options hr {
-    margin: 1.8em auto 0.5em auto;
-    border-top: 0.13em solid #DDD;
+    margin: 2em auto 0.7em auto;
+    border-top: 1px solid #DDD;
     width: 100%;
 }
 
@@ -538,7 +538,7 @@ main section {
 }
 
 #corpus-text-list-options div.disabled {
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
 #corpus-text-list-options .spinner-container {
@@ -670,70 +670,77 @@ main section {
 
 #corpus-text-list-options-pagination {
     text-align: center;
-    margin: 1em auto 3em auto;
+    margin: 0;
     width: 100%;
-}
-
-.corpus-text-list-options-pagination-section {
-    margin: 1em 0;
-}
-
-.corpus-text-list-options-pagination-section.disabled {
-    visibility: hidden;
-}
-
-#corpus-text-list-options-pagination a {
-    color: rgba(0, 0, 0, 0.6);
-    background: rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    font-size: 2em;
-    width: 2em;
-    height: 1.4em;
-    padding: 0.2em 0.2em 0.2em 0.2em;
-    border-radius: 0.2em;
-}
-
-#corpus-text-list-options-pagination a:hover {
-    text-decoration: none;
-    background: var(--color-primary);
-    color: white;
 }
 
 .corpus-text-list-options-pagination-action,
 .corpus-text-list-options-pagination-action-disabled {
     display: inline-block;
-    margin: 0 0.4em;
+    margin: 0 2%;
+    width: 20%;
 }
 
-.corpus-text-list-options-pagination-action label {
-    font-size: 0.7em;
-    padding-top: 0.3em;
+.corpus-text-list-options-pagination-action a {
+    color: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    font-size: 1.3em;
+    width: 100%;
+    height: 1.5em;
+    padding: 0.2em 0.2em 0.2em 0.2em;
+    border-radius: 0.2em;
     display: block;
 }
 
-.corpus-text-list-options-pagination-current {
+.corpus-text-list-options-pagination-action.disabled a {
+    cursor: default;
+}
+
+.corpus-text-list-options-pagination-action:not(.disabled) a:hover {
+    text-decoration: none;
+    background: var(--color-primary);
+    color: white;
+}
+
+.corpus-text-list-options-pagination-action span {
+    font-size: 0.8em;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+}
+
+.corpus-text-list-options-pagination-goto {
     font-size: 1em;
     font-weight: 600;
     display: block;
-    padding-top: 1.3em;
+    padding: 0.7em 0 0.2em 0;
 }
 
 /* Corpus List body */
 
 #corpus-text-list-items {
-    margin-top: 1.3em;
+    text-align: center;
+    display: grid;
+    max-width: 80rem;
+    margin: 0 auto;
 }
 
 .corpus-text-list-items-item {
-    display: block;
     overflow-wrap: break-word;
     word-wrap: break-word;
     color: #131313;
-    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #F2F2F2;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 0.3em;
 }
 
 .corpus-text-list-items-item:hover {
     color: #131313;
+    text-decoration: none;
+    outline: 1px solid var(--color-secondary);
 }
 
 .corpus-text-list-items-item-text-title {

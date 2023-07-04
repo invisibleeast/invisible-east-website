@@ -108,6 +108,7 @@
 
     #corpus-text-list-options {
         top: 3em;
+        right: 0;
         height: calc(100vh - 6.32em);
         border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
@@ -117,9 +118,8 @@
         right: -23em;
     }
 
-    .corpus-text-list-options-pagination-section {
-        width: 100%;
-        display: block;
+    #corpus-text-list-items {
+        grid-template-columns: auto; /* 1 column */
     }
 
 }

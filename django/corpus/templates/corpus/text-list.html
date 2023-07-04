@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static pagination_go_to_page %}
+{% load static pagination_go_to_page pagination_showing_per_page %}
 
 {% block main %}
 
@@ -21,51 +21,45 @@
 
         <form method="GET" id="corpus-text-list-options">
 
-            <div class="corpus-text-list-options-showing">
-                Showing X of Y total texts
+            <!-- Showing -->
+            <div id="corpus-text-list-options-showing">
+                <div>
+                    Found {{ page_obj.paginator.count }} texts {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} texts)</a>{% endif %}
+                </div>
+                <div>
+                    {% pagination_showing_per_page per_page=page_obj.paginator.per_page current_page=page_obj.number count_total_pages=page_obj.paginator.num_pages count_total_items=count_all_texts items_name='texts' %}
+                </div>
             </div>
 
             <!-- List Pagination, if there are multiple pages -->
             {% if page_obj.paginator.num_pages > 1 %}
-            <div id="corpus-text-list-options-pagination">
+                <div id="corpus-text-list-options-pagination">
+                    <div class="corpus-text-list-options-pagination-goto">Go to Page:</div>
 
-                <div class="corpus-text-list-options-pagination-section{% if page_obj.has_previous == False %} disabled{% endif %}">
                     <!-- First Page -->
-                    <div class="corpus-text-list-options-pagination-action">
-                        {% if page_obj.has_previous %}
-                            <a class="fas fa-angle-double-left" href="{% pagination_go_to_page page_number=1 %}" title="First"></a><label>First</label>
-                        {% endif %}
+                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_previous == False %} disabled{% endif %}">
+                        <a class="fas fa-angle-double-left" {% if page_obj.has_previous %}href="{% pagination_go_to_page page_number=1 %}"{% endif %} title="First"></a>
+                        <span>First</span>
                     </div>
                     <!-- Previous Page -->
-                    <div class="corpus-text-list-options-pagination-action">
-                        {% if page_obj.has_previous %}
-                            <a class="fas fa-angle-left" href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}" title="Previous"></a><label>Previous</label>
-                        {% endif %}
+                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_previous == False %} disabled{% endif %}">
+                        <a class="fas fa-angle-left" {% if page_obj.has_previous %}href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}"{% endif %} title="Previous"></a>
+                        <span>Previous</span>
                     </div>
-                </div>
-
-                <div class="corpus-text-list-options-pagination-section">
-                    <!-- Current page info -->
-                    <span class="corpus-text-list-options-pagination-current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </div>
-
-                <div class="corpus-text-list-options-pagination-section{% if page_obj.has_next == False %} disabled{% endif %}">
                     <!-- Next Page -->
-                    <div class="corpus-text-list-options-pagination-action">
-                        {% if page_obj.has_next %}
-                            <a class="fas fa-angle-right" href="{% pagination_go_to_page page_number=page_obj.next_page_number %}" title="Next"></a><label>Next</label>
-                        {% endif %}
+                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_next == False %} disabled{% endif %}">
+                        <a class="fas fa-angle-right" {% if page_obj.has_next %}href="{% pagination_go_to_page page_number=page_obj.next_page_number %}"{% endif %} title="Next"></a>
+                        <span>Next</span>
                     </div>
                     <!-- Last Page -->
-                    <div class="corpus-text-list-options-pagination-action">
-                        {% if page_obj.has_next %}
-                            <a class="fas fa-angle-double-right" href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}" title="Last"></a><label>Last</label>
-                        {% endif %}
+                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_next == False %} disabled{% endif %}">
+                        <a class="fas fa-angle-double-right" {% if page_obj.has_next %}href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}"{% endif %} title="Last"></a>
+                        <span>Last</span>
                     </div>
                 </div>
+            {% endif %}
 
-            </div>
-        {% endif %}
+            <hr>
 
             <!-- Search (allows for multiple search criteria) -->
             <div class="corpus-text-list-options-subtitle">Search</div>
@@ -141,7 +135,7 @@
                 <button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary">
                     <i class="fas fa-search"></i> Search
                 </button><!--
-                --><button id="corpus-text-list-options-reset" title="Reset search" class="corpus-text-list-options-submitbuttons-secondary">
+                --><button id="corpus-text-list-options-reset" title="Reset search" class="reset-form corpus-text-list-options-submitbuttons-secondary">
                     <i class="fas fa-redo-alt"></i>
                 </button>
             </div>
@@ -156,12 +150,16 @@
                 <!-- Text -->
                 <div class="corpus-text-list-items-item-text">
                     <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
-                    <div class="corpus-text-list-items-item-text-details">{{ object.list_details }}</div>
+                    <div class="corpus-text-list-items-item-text-details">
+                        <div>{{ object.description }}</div>
+                    </div>
                 </div>
-                <!-- Image -->
-                <div class="corpus-text-list-items-item-imagecontainer">
-                    <img src="{{ object.image_thumbnail.url }}" alt="Image of corpus text">
-                </div>
+                {% if object.image_thumbnail %}
+                    <!-- Image -->
+                    <div class="corpus-text-list-items-item-imagecontainer">
+                        <img src="{{ object.image_thumbnail.url }}" alt="Image of corpus text">
+                    </div>
+                {% endif %}
             </a>
         {% empty %}
             <div class="corpus-text-list-items-empty">

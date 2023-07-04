@@ -19,7 +19,7 @@ $('#corpus-text-list-options-toggler').on('click', function(){
 });
 
 // Reset form
-$('#corpus-text-list-options-reset').on('click', function(e){
+$('.reset-form').on('click', function(e){
     e.preventDefault();
     // Go to the current URL but without any parameters (remove everything after ? in url)
     window.location.replace(window.location.href.split('?')[0]);

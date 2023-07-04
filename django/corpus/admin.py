@@ -289,10 +289,10 @@ class TextAdminView(GenericAdminView):
                 'category',
                 'type',
                 'correspondence',
+                'description',
                 'id_khan',
                 'id_nicholas_simms_williams',
                 'country',
-                'context',
                 'languages',
                 'funders'
             )

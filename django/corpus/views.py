@@ -23,7 +23,7 @@ class TextListView(ListView):
     """
     template_name = 'corpus/text-list.html'
     model = models.Text
-    paginate_by = 20
+    paginate_by = 50
 
     def get_queryset(self):
         # Start with all objects
@@ -66,4 +66,5 @@ class TextListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['count_all_texts'] = self.model.objects.all().count()
+        # context['count_all_texts'] = self.model.objects.filter(public_approval_1_of_2__isnull=False, public_approval_2_of_2__isnull=False).count()  // TODO - replace above line with this when live
         return context

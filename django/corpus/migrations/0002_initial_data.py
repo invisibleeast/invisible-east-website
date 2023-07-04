@@ -713,9 +713,9 @@ def insert_data_texts(apps, schema_editor):
                     text_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
                 except AttributeError:
                     pass
-                # context
-                text_obj.context = '\n\n'.join(
-                    [context.text for context in profile_desc.findall('particDesc/p')]
+                # description
+                text_obj.description = '\n\n'.join(
+                    [description.text for description in profile_desc.findall('particDesc/p')]
                 )
                 # type
                 text_type = profile_desc.findall('textClass/keywords/term')[0].text
