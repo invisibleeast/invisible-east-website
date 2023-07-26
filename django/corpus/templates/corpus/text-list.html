@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static pagination_go_to_page pagination_showing_per_page %}
+{% load static pagination_go_to_page %}
 
 {% block main %}
 
@@ -20,46 +20,6 @@
         </div>
 
         <form method="GET" id="corpus-text-list-options">
-
-            <!-- Showing -->
-            <div id="corpus-text-list-options-showing">
-                <div>
-                    Found {{ page_obj.paginator.count }} texts {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} texts)</a>{% endif %}
-                </div>
-                <div>
-                    {% pagination_showing_per_page per_page=page_obj.paginator.per_page current_page=page_obj.number count_total_pages=page_obj.paginator.num_pages count_total_items=count_all_texts items_name='texts' %}
-                </div>
-            </div>
-
-            <!-- List Pagination, if there are multiple pages -->
-            {% if page_obj.paginator.num_pages > 1 %}
-                <div id="corpus-text-list-options-pagination">
-                    <div class="corpus-text-list-options-pagination-goto">Go to Page:</div>
-
-                    <!-- First Page -->
-                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_previous == False %} disabled{% endif %}">
-                        <a class="fas fa-angle-double-left" {% if page_obj.has_previous %}href="{% pagination_go_to_page page_number=1 %}"{% endif %} title="First"></a>
-                        <span>First</span>
-                    </div>
-                    <!-- Previous Page -->
-                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_previous == False %} disabled{% endif %}">
-                        <a class="fas fa-angle-left" {% if page_obj.has_previous %}href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}"{% endif %} title="Previous"></a>
-                        <span>Previous</span>
-                    </div>
-                    <!-- Next Page -->
-                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_next == False %} disabled{% endif %}">
-                        <a class="fas fa-angle-right" {% if page_obj.has_next %}href="{% pagination_go_to_page page_number=page_obj.next_page_number %}"{% endif %} title="Next"></a>
-                        <span>Next</span>
-                    </div>
-                    <!-- Last Page -->
-                    <div class="corpus-text-list-options-pagination-action{% if page_obj.has_next == False %} disabled{% endif %}">
-                        <a class="fas fa-angle-double-right" {% if page_obj.has_next %}href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}"{% endif %} title="Last"></a>
-                        <span>Last</span>
-                    </div>
-                </div>
-            {% endif %}
-
-            <hr>
 
             <!-- Search (allows for multiple search criteria) -->
             <div class="corpus-text-list-options-subtitle">Search</div>
@@ -139,7 +99,18 @@
                     <i class="fas fa-redo-alt"></i>
                 </button>
             </div>
+
         </form>
+    </section>
+
+    <!-- List Counts -->
+    <section id="corpus-text-list-counts">
+        <div id="corpus-text-list-counts-found">
+            {{ page_obj.paginator.count }} Corpus Texts found {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} texts)</a>{% endif %}
+        </div>
+        <div id="corpus-text-list-counts-showing">
+            Showing {{ page_obj.paginator.per_page }} results per page. Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </div>
     </section>
 
     <!-- List Items -->
@@ -147,19 +118,22 @@
         {% for object in object_list %}
             <!-- Set the URL based on the main model supplied to this page -->
             <a href="{% url 'corpus:text-detail' object.id %}" class="corpus-text-list-items-item">
-                <!-- Text -->
+                <!-- Image -->
+                <div class="corpus-text-list-items-item-imagecontainer">
+                    <img src="{% if object.image_thumbnail %}{{ object.image_thumbnail.url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}" alt="Corpus text image">
+                </div>
+                <!--Text -->
                 <div class="corpus-text-list-items-item-text">
                     <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
                     <div class="corpus-text-list-items-item-text-details">
                         <div>{{ object.description }}</div>
+                        <dl>
+                            <div><dt>Language</dt><dd>{{ object.category }}</dd></div>
+                            <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
+                            <div><dt>Correspondence</dt><dd>{{ object.correspondence | title }}</dd></div>
+                        </dl>
                     </div>
                 </div>
-                {% if object.image_thumbnail %}
-                    <!-- Image -->
-                    <div class="corpus-text-list-items-item-imagecontainer">
-                        <img src="{{ object.image_thumbnail.url }}" alt="Image of corpus text">
-                    </div>
-                {% endif %}
             </a>
         {% empty %}
             <div class="corpus-text-list-items-empty">
@@ -173,7 +147,41 @@
         {% endfor %}
     </section>
 
-    
+    <!-- List Pagination, if there are multiple pages -->
+    {% if page_obj.paginator.num_pages > 1 %}
+        <section id="corpus-text-list-pagination" class="container">
+            <!-- Backwards -->
+            <div class="corpus-text-list-pagination-section">
+                {% if page_obj.has_previous %}
+                    <!-- First Page -->
+                    <div class="corpus-text-list-pagination-action">
+                        <a class="fas fa-angle-double-left" href="{% pagination_go_to_page page_number=1 %}" title="First"></a><label>First</label>
+                    </div>
+                    <!-- Previous Page -->
+                    <div class="corpus-text-list-pagination-action">
+                        <a class="fas fa-angle-left" href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}" title="Previous"></a><label>Previous</label>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- Current page -->
+            <div class="corpus-text-list-pagination-section">
+                <span class="corpus-text-list-pagination-current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </div>
+            <!-- Forwards -->
+            <div class="corpus-text-list-pagination-section">
+                {% if page_obj.has_next %}
+                    <!-- Next Page -->
+                    <div class="corpus-text-list-pagination-action">
+                        <a class="fas fa-angle-right" href="{% pagination_go_to_page page_number=page_obj.next_page_number %}" title="Next"></a><label>Next</label>
+                    </div>
+                    <!-- Last Page -->
+                    <div class="corpus-text-list-pagination-action">
+                        <a class="fas fa-angle-double-right" href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}" title="Last"></a><label>Last</label>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
 
 </div>
 

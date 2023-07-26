@@ -61,8 +61,33 @@
         height: calc(100vh - 6.82em);
     }
 
-    #corpus-text-list-items {
-        grid-template-columns: 33% 33% 33%; /* 4 columns */
+    .corpus-text-list-items-item {
+        margin: 1.3rem 0;
+    }
+
+    .corpus-text-list-items-item-imagecontainer {
+        display: inline-block;
+        vertical-align: top;
+        width: 11em;
+        height: 11em;
+    }
+
+    .corpus-text-list-items-item-text {
+        display: inline-block;
+        vertical-align: top;
+        width: calc(100% - 11.5em);
+        padding: 0.7em 0.6em;
+    }
+
+    #corpus-text-list-pagination {
+        white-space: nowrap;
+    }
+
+    .corpus-text-list-pagination-section {
+        white-space: normal;
+        width: 33%;
+        display: inline-block;
+        vertical-align: middle;
     }
 
 }

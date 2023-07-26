@@ -2,7 +2,7 @@
 $('#corpus-text-list-options-toggler').on('click', function(){
     // Hide
     if ($(this).hasClass('active')){
-        $('.corpus-text-list-options, .corpus-text-list-options-submitbuttons').animate({'right': '-23em'}, 270, function(){$(this).hide();});
+        $('#corpus-text-list-options, .corpus-text-list-options-submitbuttons').animate({'right': '-23em'}, 270, function(){$(this).hide();});
         $(this).removeClass('active');
         // Icon
         $(this).find('#corpus-text-list-options-toggler-inactive').show();
@@ -10,7 +10,7 @@ $('#corpus-text-list-options-toggler').on('click', function(){
     }
     // Show
     else {
-        $('.corpus-text-list-options, .corpus-text-list-options-submitbuttons').show().animate({'right': '0'}, 270);
+        $('#corpus-text-list-options, .corpus-text-list-options-submitbuttons').show().animate({'right': '0'}, 270);
         $(this).addClass('active');
         // Icon
         $(this).find('#corpus-text-list-options-toggler-inactive').hide();
@@ -68,21 +68,21 @@ $('.{{ filter_pre_gt }}, .{{ filter_pre_lt }}').on('change', function(){
     // E.g. find 'Date (from)' in the relationship: 'Date (from)' -> 'Date (to)'
     let gt = $('#' + $(this).attr('id').replace('{{ filter_pre_lt }}', '{{ filter_pre_gt }}'));
 
-        // Find matching 'less than' element
-        // E.g. if this is 'Date (from)' find matching 'Date (to)'
-        let lt = $('#' + $(this).attr('id').replace('{{ filter_pre_gt }}', '{{ filter_pre_lt }}'));
+    // Find matching 'less than' element
+    // E.g. if this is 'Date (from)' find matching 'Date (to)'
+    let lt = $('#' + $(this).attr('id').replace('{{ filter_pre_gt }}', '{{ filter_pre_lt }}'));
 
-        // If a matching gt & lt pair found
-        if (gt && lt){
-            // Get their current values (as integers, for proper comparison)
-            let gtVal = parseInt(gt.val());
-            let ltVal = parseInt(lt.val());
-            // If both have valid values and gt is more than lt, swap their values
-            if (gtVal !== '' && ltVal !== '' && gtVal > ltVal){
-                gt.val(ltVal);
-                lt.val(gtVal);
-            }
+    // If a matching gt & lt pair found
+    if (gt && lt){
+        // Get their current values (as integers, for proper comparison)
+        let gtVal = parseInt(gt.val());
+        let ltVal = parseInt(lt.val());
+        // If both have valid values and gt is more than lt, swap their values
+        if (gtVal !== '' && ltVal !== '' && gtVal > ltVal){
+            gt.val(ltVal);
+            lt.val(gtVal);
         }
+    }
 });
 
 // Submit form (after performing certain functions)
