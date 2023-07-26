@@ -76,6 +76,25 @@ hr {
     margin: 0.2em 0 1.3em 0;
 }
 
+dl {
+    display: block;
+    margin: 0.5em 0;
+}
+
+dt {
+    display: inline-block;
+    font-weight: bold;
+}
+
+dt::after {
+    content: ': ';
+}
+
+dd {
+    display: inline-block;
+    margin-left: 0.5em;
+}
+
 table {
     width: 100%;
 }
@@ -668,89 +687,67 @@ main section {
     border-top: none;
 }
 
-#corpus-text-list-options-pagination {
-    text-align: center;
-    margin: 0;
-    width: 100%;
+/* Corpus List Counts */
+
+#corpus-text-list-counts {
+    padding: 0;
+    margin: 0 2.5em;
 }
 
-.corpus-text-list-options-pagination-action,
-.corpus-text-list-options-pagination-action-disabled {
-    display: inline-block;
-    margin: 0 2%;
-    width: 20%;
-}
-
-.corpus-text-list-options-pagination-action a {
-    color: rgba(0, 0, 0, 0.6);
-    background: rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    font-size: 1.3em;
-    width: 100%;
-    height: 1.5em;
-    padding: 0.2em 0.2em 0.2em 0.2em;
-    border-radius: 0.2em;
-    display: block;
-}
-
-.corpus-text-list-options-pagination-action.disabled a {
-    cursor: default;
-}
-
-.corpus-text-list-options-pagination-action:not(.disabled) a:hover {
-    text-decoration: none;
-    background: var(--color-primary);
-    color: white;
-}
-
-.corpus-text-list-options-pagination-action span {
-    font-size: 0.8em;
+#corpus-text-list-counts-found {
+    font-size: 1.05em;
     font-weight: bold;
-    display: block;
-    width: 100%;
 }
 
-.corpus-text-list-options-pagination-goto {
-    font-size: 1em;
-    font-weight: 600;
-    display: block;
-    padding: 0.7em 0 0.2em 0;
+#corpus-text-list-counts-showing {
+    font-size: 0.95em;
 }
 
-/* Corpus List body */
+/* Corpus List Items */
 
 #corpus-text-list-items {
     text-align: center;
     display: grid;
-    max-width: 80rem;
     margin: 0 auto;
+    padding: 0 2rem;
 }
 
 .corpus-text-list-items-item {
     overflow-wrap: break-word;
     word-wrap: break-word;
     color: #131313;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid #AAA;
+    border-radius: 0.4rem;
+    margin: 1.3rem 0;
+    padding: 0;
+    text-align: left;
     background: #F2F2F2;
-    margin: 1rem;
-    padding: 1rem;
-    border-radius: 0.3em;
+    overflow: hidden;
 }
 
 .corpus-text-list-items-item:hover {
     color: #131313;
     text-decoration: none;
-    outline: 1px solid var(--color-secondary);
+    box-shadow: rgba(0, 0, 0, 0.13) 0px 3px 8px;
+}
+
+.corpus-text-list-items-item-imagecontainer {
+    background: #DDD;
+}
+
+.corpus-text-list-items-item-imagecontainer img {
+    width: 100%;
 }
 
 .corpus-text-list-items-item-text-title {
-    font-size: 1.1em;
+    font-size: 1.17em;
     font-weight: bold;
     color: var(--color-primary);
+    margin-bottom: 0.5em;
 }
 
 .corpus-text-list-items-item-text-details {
-    font-size: 0.8em;
+    font-size: 0.9em;
     padding-top: 0.2em;
     opacity: 0.8;
 }
@@ -769,6 +766,54 @@ main section {
 .corpus-text-list-items-empty-details strong {
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* Pagination */
+
+#corpus-text-list-pagination {
+    text-align: center;
+    margin: 2em auto;
+    width: 100%;
+}
+
+.corpus-text-list-pagination-section {
+    height: 4em;
+    margin: 1em 0;
+}
+
+#corpus-text-list-pagination a {
+    color: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    font-size: 2em;
+    width: 2em;
+    height: 1.4em;
+    padding: 0.2em 0.2em 0.2em 0.2em;
+    border-radius: 0.2em;
+}
+
+#corpus-text-list-pagination a:hover {
+    text-decoration: none;
+    background: #007688;
+    color: white;
+}
+
+.corpus-text-list-pagination-action {
+    display: inline-block;
+    margin: 0 0.4em;
+}
+
+.corpus-text-list-pagination-action label {
+    font-size: 0.7em;
+    padding-top: 0.3em;
+    display: block;
+}
+
+.corpus-text-list-pagination-current {
+    font-size: 1.1em;
+    font-weight: 600;
+    display: block;
+    padding-top: 1em;
 }
 
 /* ---------- Help ---------- */
