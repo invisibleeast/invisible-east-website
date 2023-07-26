@@ -137,11 +137,11 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'Maximize',
+                    'NumberedList', 'Source',
                     '-',
                     'Undo', 'Redo',
                     '-',
-                    'NumberedList', 'Source'
+                    'Maximize',
                 ]
             },
         ],
