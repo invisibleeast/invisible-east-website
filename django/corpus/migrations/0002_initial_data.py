@@ -606,7 +606,7 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextFolioOpen.objects.create(name=name)
 
-    # SlTextFolioPartType
+    # SlTextFolioAnnotationType
     for name in [
         'damage',
         'mark',
@@ -620,7 +620,7 @@ def insert_data_select_list_models(apps, schema_editor):
         'place',
         'date'
     ]:
-        models.SlTextFolioPartType.objects.create(name=name)
+        models.SlTextFolioAnnotationType.objects.create(name=name)
 
     # SlCalendar
     for obj in [

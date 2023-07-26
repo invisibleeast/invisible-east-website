@@ -110,7 +110,7 @@ admin.site.register(models.SlPublicationStatement, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
 admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
-admin.site.register(models.SlTextFolioPartType, GenericSlAdminView)
+admin.site.register(models.SlTextFolioAnnotationType, GenericSlAdminView)
 admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
@@ -141,12 +141,12 @@ class TextDateTabularInline(admin.TabularInline):
     classes = ['collapse']
 
 
-class TextFolioTabularInline(admin.TabularInline):
+class TextFolioStackedInline(admin.StackedInline):
     """
     A subform/inline form for TextFolio to be used in TextAdminView
     """
     model = models.TextFolio
-    extra = 1
+    extra = 0
     classes = ['collapse']
     show_change_link = True
 
@@ -163,11 +163,11 @@ class TextFolioLineTabularInline(admin.TabularInline):
     }
 
 
-class TextFolioPartTabularInline(admin.TabularInline):
+class TextFolioAnnotationTabularInline(admin.TabularInline):
     """
-    A subform/inline form for TextFolioPart to be used in TextFolioAdminView
+    A subform/inline form for TextFolioAnnotation to be used in TextFolioAdminView
     """
-    model = models.TextFolioPart
+    model = models.TextFolioAnnotation
     extra = 1
     exclude = ('position_in_image',)
 
@@ -370,7 +370,7 @@ class TextAdminView(GenericAdminView):
         M2MTextToText1Inline,
         PersonInTextTabularInline,
         TextDateTabularInline,
-        TextFolioTabularInline
+        TextFolioStackedInline
     )
 
     def save_model(self, request, obj, form, change):
@@ -402,7 +402,7 @@ class TextFolioAdminView(GenericAdminView):
     )
     inlines = (
         TextFolioLineTabularInline,
-        TextFolioPartTabularInline
+        TextFolioAnnotationTabularInline
     )
 
     # Hide this AdminView from sidebar

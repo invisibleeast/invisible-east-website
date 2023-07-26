@@ -17,8 +17,3 @@ def pagination_showing_per_page(per_page, current_page, count_total_pages, count
     end = end if count_total_items > end else count_total_items
     # Return the data as a human readable sentence
     return f'Showing {start} - {end} {items_name} (Page {current_page} of {count_total_pages})'
-
-
-
-# context['paginateStart'] = (page - 1) * paginate_by if total_objects else 0,
-# context['paginateEnd'] = page * paginate_by if total_objects else 0,

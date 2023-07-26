@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'captcha',
     'embed_video',
     'debug_toolbar',
+    'ckeditor',
     'rest_framework',
     'django_admin_listfilter_dropdown',
     # Custom
@@ -125,6 +126,32 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 # https://docs.djangoproject.com/en/latest/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# CKEditor configuration options
+# For full list of toolbar options see:
+# https://ckeditor.com/latest/samples/old/toolbar/toolbar.html
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar_CustomToolbarConfig': [
+            {
+                'name': 'tools',
+                'items': [
+                    'Maximize',
+                    '-',
+                    'Undo', 'Redo',
+                    '-',
+                    'NumberedList', 'Source'
+                ]
+            },
+        ],
+        'toolbar': 'CustomToolbarConfig',
+        'enterMode': 2,
+        'format_tags': 'p;h4',
+        'height': '10em',
+        'allowedContent': True
+    }
+}
 
 
 # Import local_settings.py
