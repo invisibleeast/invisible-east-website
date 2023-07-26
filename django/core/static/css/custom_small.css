@@ -118,6 +118,11 @@
         right: -23em;
     }
 
+    #corpus-text-list-counts span {
+        margin: 0.5rem;
+        display: block;
+    }
+
     .corpus-text-list-items-item {
         margin: 1.3rem 0;
     }

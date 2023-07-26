@@ -105,12 +105,15 @@
 
     <!-- List Counts -->
     <section id="corpus-text-list-counts">
-        <div id="corpus-text-list-counts-found">
+        <span>
             {{ page_obj.paginator.count }} Corpus Texts found {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} texts)</a>{% endif %}
-        </div>
-        <div id="corpus-text-list-counts-showing">
-            Showing {{ page_obj.paginator.per_page }} results per page. Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </div>
+        </span>
+        <span>
+            Showing {{ page_obj.paginator.per_page }} results per page
+        </span>
+        <span>
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
     </section>
 
     <!-- List Items -->

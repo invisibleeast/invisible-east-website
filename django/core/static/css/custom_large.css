@@ -61,6 +61,12 @@
         height: calc(100vh - 6.82em);
     }
 
+    #corpus-text-list-counts span {
+        margin: 0 1rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     .corpus-text-list-items-item {
         margin: 1.3rem 0;
     }
