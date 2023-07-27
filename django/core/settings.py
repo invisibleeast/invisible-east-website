@@ -148,6 +148,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'CustomToolbarConfig',
         'enterMode': 2,
         'format_tags': 'p;h4',
+        'tabSpaces': 4,
         'height': '10em',
         'allowedContent': True
     }
