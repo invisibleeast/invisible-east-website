@@ -8,3 +8,4 @@ django-embed-video~=1.4.8
 django-debug-toolbar~=4.1.0
 djangorestframework~=3.14.0
 django-admin-list-filter-dropdown~=1.0.3
+django-ckeditor~=6.5.1

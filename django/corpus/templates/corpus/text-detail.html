@@ -5,9 +5,17 @@
 
 <section class="container">
     <h2>Detail</h2>
-    <p>
-        ...
-    </p>
+
+    {% for folio in object.text_folios.all %}
+        <p>{{ folio.translation | safe }}</p>
+    {% endfor %}
 </section>
+
+<script>
+    $('li').each(function(){
+        console.log($(this).val())
+    })
+</script>
+
 
 {% endblock %}

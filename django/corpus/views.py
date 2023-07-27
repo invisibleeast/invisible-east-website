@@ -30,11 +30,10 @@ class TextListView(ListView):
         queryset = self.model.objects.all()
 
         # Improve performance
-        # queryset = queryset.select_related(
-        #     'gender',
-        #     'nameinfo',
-        #     'editorialstatus'
-        # )
+        queryset = queryset.select_related(
+            'type',
+            'collection'
+        )
 
         # # Search
         # # Name (must concat headname and headnumber so can search for specific person)

@@ -78,7 +78,7 @@ def add_group_permissions(apps,schema_editor):
                             "permissions": ['view',]
                         },
                         {
-                            "model_name": "textfoliopart",
+                            "model_name": "textfolioannotation",
                             "permissions": ['view',]
                         },
                         {

@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from ckeditor.fields import RichTextField
 from django.db.models.functions import Upper
 from account.models import User
 
@@ -308,9 +308,9 @@ class SlTextFolioOpen(SlAbstract):
     pass
 
 
-class SlTextFolioPartType(SlAbstract):
+class SlTextFolioAnnotationType(SlAbstract):
     """
-    A type of TextFolioPart.
+    A type of TextFolioAnnotation.
     E.g. 'damage', 'mark'
     """
     pass
@@ -501,11 +501,23 @@ class TextFolio(models.Model):
     """
 
     related_name = 'text_folios'
+    text_folio_trans_help_text = """
+To start creating lines of text click the 'numbered list' button
+<br>
+If you need to change an automatic line number simply:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1. Click the 'Source' button
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2. Insert a 'value' attribute in the <em>&lt;li&gt;</em> element. E.g. change <em>&lt;li&gt;</em> to <em>&lt;li value="4"&gt;</em> will force that line to be numbered 4. All lines after will continue (e.g. 5, 6, 7, ...)
+"""
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT, blank=True, null=True)
     open_state = models.ForeignKey('SlTextFolioOpen', on_delete=models.RESTRICT, blank=True, null=True)
     image = models.ImageField(upload_to='corpus/text_folios', blank=True, null=True)
+    transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    transliteration = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
 
     def __str__(self):
         # Build the descriptors text
@@ -540,16 +552,16 @@ class TextFolioLine(models.Model):
     position_in_image = models.TextField(blank=True, null=True)  # TODO
 
 
-class TextFolioPart(models.Model):
+class TextFolioAnnotation(models.Model):
     """
-    A part of a TextFolio (other than lines of text) that is noteworthy
-    e.g. damage, marks, drawings, etc.
+    A note/description of a part of a TextFolio (other than lines of text)
+    e.g. damage, marks, drawings, characters, etc.
     """
 
     related_name = 'text_folio_parts'
 
     text_folio = models.ForeignKey('TextFolio', on_delete=models.CASCADE, related_name=related_name)
-    type = models.ForeignKey('SlTextFolioPartType', on_delete=models.CASCADE, related_name=related_name)
+    type = models.ForeignKey('SlTextFolioAnnotationType', on_delete=models.CASCADE, related_name=related_name)
     description = models.TextField(max_length=1000, blank=True, null=True)
     position_in_image = models.TextField(blank=True, null=True)  # TODO
 
