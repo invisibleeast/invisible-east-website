@@ -36,14 +36,6 @@ class SlAbstract(models.Model):
 #
 
 
-class SlTextCategory(SlAbstract):
-    """
-    A category of Text within the IE corpus, typically separated by primary language
-    E.g. 'Arabic', 'Bactrian', 'New Persian'
-    """
-    pass
-
-
 class SlTextTypeCategory(SlAbstract):
     """
     A type of Text
@@ -207,6 +199,14 @@ class SlTextCollection(SlAbstract):
     pass
 
 
+class SlTextCorpus(SlAbstract):
+    """
+    Another corpus of Texts
+    E.g. 'Bamiyan Papers', 'Firuzkuh Papers'
+    """
+    pass
+
+
 class SlTextClassification(SlAbstract):
     """
     The team classifies Texts based on their quality/stag of development
@@ -355,14 +355,15 @@ class Text(models.Model):
     # General
     shelfmark = models.CharField(max_length=1000)
     collection = models.ForeignKey('SlTextCollection', on_delete=models.RESTRICT, related_name=related_name)
-    category = models.ForeignKey('SlTextCategory', on_delete=models.RESTRICT, related_name=related_name)
+    corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name)
+    primary_language = models.ForeignKey('SlTextLanguage', on_delete=models.RESTRICT, related_name=f'{related_name}_primary')
     type = models.ForeignKey('SlTextType', on_delete=models.RESTRICT, related_name=related_name)
     correspondence = models.ForeignKey('SlTextCorrespondence', on_delete=models.RESTRICT, related_name=related_name)
     description = models.TextField()
     id_khan = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Khan ID")
     id_nicholas_simms_williams = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Nicholas Simms-Williams ID")
     country = models.ForeignKey('SlCountry', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True)
+    additional_languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True, help_text="Don't include the primary language. Only include additional languages/scripts that also appear in the text.")
     funders = models.ManyToManyField('SlFunder', blank=True, related_name=related_name, db_index=True)
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
 
@@ -400,49 +401,65 @@ class Text(models.Model):
     fold_lines_count_total = models.IntegerField(blank=True, null=True, help_text='Specify the total number of fold lines for this Text (you may need to add together the fold lines counts of recto, verso, etc. where applicable)')
     physical_additional_details = models.TextField(blank=True, null=True)
 
-    # Approve Text to Show on Public Website
-    public_review_requests = models.ManyToManyField(
-        User,
-        related_name="text_public_review_request",
-        blank=True,
-        help_text='Select admins to request that they review this Text and approve it to be shown on the public website. Reviewers will be notified via email.'
+    # Review & Approve Text to Show on Public Website
+    public_review_ready = models.BooleanField(
+        default=False,
+        help_text='Tick this box to mark this Corpus Text as ready to be reviewed by the editor. If the editor approves it, this Corpus Text will then be visible on the public website. The editor will be notified via email when you tick this box.',
+        verbose_name='Ready to Review'
     )
-    public_review_notes = models.TextField(blank=True, null=True, help_text="Used to make comments or notes during the review process.")
-    public_approval_1_of_2 = models.ForeignKey(
+    public_review_notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Optional. Include any necessary comments, feedback, or notes during the review process.",
+        verbose_name='Review Notes'
+    )
+    public_review_approved = models.BooleanField(
+        default=False,
+        help_text='Tick to approve this Corpus Text. This will make it visible on the public website. You can only tick this box if you are the Principal Editor and this Corpus Text has been marked as ready to review',
+        verbose_name='Approved'
+    )
+    public_review_approved_by = models.ForeignKey(
         User,
-        related_name="text_public_approval_1_of_2",
+        related_name="text_public_review_approved_by",
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        help_text='Texts must be approved by 2 admins to be visible on the public website. This is the 1st approval.'
+        verbose_name='Approved By'
     )
-    public_approval_1_of_2_datetime = models.DateTimeField(blank=True, null=True)
-    public_approval_2_of_2 = models.ForeignKey(
-        User,
-        related_name="text_public_approval_2_of_2",
-        on_delete=models.PROTECT,
+    public_review_approved_datetime = models.DateTimeField(
         blank=True,
         null=True,
-        help_text='Texts must be approved by 2 admins to be visible on the public website. This is the 2nd approval.'
+        verbose_name='Approved Date/Time'
     )
-    public_approval_2_of_2_datetime = models.DateTimeField(blank=True, null=True)
 
     # Admin
-    admin_commentary = models.TextField(blank=True, null=True)
-    admin_classification = models.ForeignKey('SlTextClassification', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    admin_owners = models.ManyToManyField(
+    admin_classification = models.ForeignKey('SlTextClassification', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name, verbose_name='Classification')
+    admin_principal_editor = models.ForeignKey(
         User,
-        related_name='text_admin_owners',
+        related_name='text_admin_principal_editor',
+        on_delete=models.PROTECT,
         blank=True,
-        help_text='Admins who are responsible for this text'
+        null=True,
+        help_text='The main person responsible for this Corpus Text',
+        verbose_name='Principal Editor'
+    )
+    admin_principal_data_entry_person = models.ForeignKey(
+        User,
+        related_name='text_admin_principal_data_entry_person',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        help_text='The main person who has entered the data for this Corpus Text into the database',
+        verbose_name='Principal Data Entry Person'
     )
     admin_contributors = models.ManyToManyField(
         User,
         related_name='text_admin_contributors',
         blank=True,
-        help_text='Admins who have contributed to this text but are not responsible for it'
+        help_text='Users who have contributed to this Corpus Text (e.g. co-editors, data entry persons, etc.) but are not the principal editor or principal data entry person (these are specified above).<br>',
+        verbose_name='Contributors'
     )
-    admin_notes = models.TextField(blank=True, null=True)
+    admin_commentary = models.TextField(blank=True, null=True, verbose_name='Commentary')
 
     # Metadata
     meta_created_by = models.ForeignKey(
@@ -466,12 +483,7 @@ class Text(models.Model):
 
     @property
     def title(self):
-        return f"{self.type.name}: {self.collection}, {self.shelfmark}"
-
-    @property
-    def public_approved(self):
-        # True if 2 approvals to include this Text on public website
-        return self.public_approval_1_of_2 and self.public_approval_2_of_2
+        return f"{self.primary_language.name}: {self.collection}, {self.shelfmark}. ({self.type.name})"
 
     def __str__(self):
         return self.title
@@ -504,20 +516,22 @@ class TextFolio(models.Model):
     text_folio_trans_help_text = """
 To start creating lines of text click the 'numbered list' button
 <br>
-If you need to change an automatic line number simply:
+To manually override an automatic line number simply:
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;1. Click the 'Source' button
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;2. Insert a 'value' attribute in the <em>&lt;li&gt;</em> element. E.g. change <em>&lt;li&gt;</em> to <em>&lt;li value="4"&gt;</em> will force that line to be numbered 4. All lines after will continue (e.g. 5, 6, 7, ...)
+&nbsp;&nbsp;&nbsp;&nbsp;2. Add a value to the <em>&lt;li&gt;</em>. E.g. change <em>&lt;li&gt;</em> to <em>&lt;li value="4"&gt;</em>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;3. If last line is a range (e.g. 8-9) add <em>'data-range-end'</em>. E.g. <em>&lt;li data-range-end="9"&gt;</em>
 """
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
-    side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT, blank=True, null=True)
-    open_state = models.ForeignKey('SlTextFolioOpen', on_delete=models.RESTRICT, blank=True, null=True)
+    side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT)
+    open_state = models.ForeignKey('SlTextFolioOpen', on_delete=models.RESTRICT, blank=True, null=True, help_text='Optional. Only relevant to some Bactrian texts.')
     image = models.ImageField(upload_to='corpus/text_folios', blank=True, null=True)
-    transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
-    transliteration = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    transcription = RichTextField(help_text=text_folio_trans_help_text)
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    transliteration = RichTextField(blank=True, null=True, help_text='Optional. Only relevant to some Middle Persian texts.')
 
     def __str__(self):
         # Build the descriptors text
@@ -528,28 +542,6 @@ If you need to change an automatic line number simply:
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
-
-
-class TextFolioLine(models.Model):
-    """
-    A line of text within a TextFolio
-    """
-
-    related_name = 'text_folio_lines'
-
-    text_folio = models.ForeignKey('TextFolio', on_delete=models.CASCADE, related_name=related_name)
-
-    # Transcription (original language)
-    transcription_line_number = models.IntegerField()
-    transcription_line_number_end = models.IntegerField(blank=True, null=True, help_text='If this line spans multiple lines, specify the last line number here. E.g. if line range is 19-21, put 21 here')
-    transcription_text = models.TextField(max_length=1000, blank=True, null=True)
-
-    # Translation (English)
-    translation_line_number = models.IntegerField(blank=True, null=True)
-    translation_line_number_end = models.IntegerField(blank=True, null=True, help_text='If this line spans multiple lines, specify the last line number here. E.g. if line range is 19-21, put 21 here')
-    translation_text = models.TextField(max_length=1000, blank=True, null=True)
-
-    position_in_image = models.TextField(blank=True, null=True)  # TODO
 
 
 class TextFolioAnnotation(models.Model):

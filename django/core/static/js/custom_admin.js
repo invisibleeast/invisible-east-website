@@ -7,8 +7,11 @@ document.head.appendChild(jQueryScript);
 $(document).ready(function(){
 
     // Move inlines to more appropriate place in the page
-    // TODO
-    // $("#persons_in_documents-group").detach().insertBefore(".field-public_review_requests");
-    // $("#document_dates-group").detach().insertAfter("#persons_in_documents-group");
+    $(".inline-group").detach().insertAfter($(".field-physical_additional_details").parent());
+
+    // Set automatic language direction of various elements
+    // so English (etc) content will be left to right (ltr)
+    // and Arabic (etc) will be right to left (rtl)
+    $('input, textarea').attr('dir', 'auto');
 
 });

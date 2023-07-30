@@ -9,6 +9,9 @@ class TextDetailView(DetailView):
     template_name = 'corpus/text-detail.html'
     model = models.Text
 
+    def get_queryset(self):
+        return self.model.objects.filter(public_review_approved=True)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -23,11 +26,11 @@ class TextListView(ListView):
     """
     template_name = 'corpus/text-list.html'
     model = models.Text
-    paginate_by = 50
+    paginate_by = 30
 
     def get_queryset(self):
         # Start with all objects
-        queryset = self.model.objects.all()
+        queryset = self.model.objects.filter(public_review_approved=True)
 
         # Improve performance
         queryset = queryset.select_related(
@@ -65,5 +68,5 @@ class TextListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['count_all_texts'] = self.model.objects.all().count()
-        # context['count_all_texts'] = self.model.objects.filter(public_approval_1_of_2__isnull=False, public_approval_2_of_2__isnull=False).count()  // TODO - replace above line with this when live
+        # context['count_all_texts'] = self.model.objects.filter(public_review_approved=True).count()  // TODO - replace above line with this when live
         return context

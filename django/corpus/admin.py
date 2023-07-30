@@ -77,7 +77,6 @@ class GenericSlAdminView(GenericAdminView):
 #
 
 # Register Select List models (most, if not all, use GenericSlAdminView)
-admin.site.register(models.SlTextCategory, GenericSlAdminView)
 admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
 admin.site.register(models.SlTextSubjectLegalTransactions, GenericSlAdminView)
@@ -99,6 +98,7 @@ admin.site.register(models.SlTextSubjectToponym, GenericSlAdminView)
 admin.site.register(models.SlFunder, GenericSlAdminView)
 admin.site.register(models.SlUnitOfMeasurement, GenericSlAdminView)
 admin.site.register(models.SlTextCollection, GenericSlAdminView)
+admin.site.register(models.SlTextCorpus, GenericSlAdminView)
 admin.site.register(models.SlTextClassification, GenericSlAdminView)
 admin.site.register(models.SlTextCorrespondence, GenericSlAdminView)
 admin.site.register(models.SlTextScript, GenericSlAdminView)
@@ -149,18 +149,13 @@ class TextFolioStackedInline(admin.StackedInline):
     extra = 0
     classes = ['collapse']
     show_change_link = True
-
-
-class TextFolioLineTabularInline(admin.TabularInline):
-    """
-    A subform/inline form for TextFolioLine to be used in TextFolioAdminView
-    """
-    model = models.TextFolioLine
-    extra = 1
-    exclude = ('position_in_image',)
-    formfield_overrides = {
-        TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 35, 'style': 'height: 4em;'})},
-    }
+    fields = (
+        'side',
+        'open_state',
+        'image',
+        ('transcription', 'translation'),
+        'transliteration'
+    )
 
 
 class TextFolioAnnotationTabularInline(admin.TabularInline):
@@ -239,30 +234,36 @@ class TextAdminView(GenericAdminView):
         'id',
         'shelfmark',
         'collection',
-        'category',
+        'primary_language',
         'type',
         'correspondence',
         'country',
         'id_khan',
         'id_nicholas_simms_williams',
-        'public_approved',
+        'public_review_approved',
+        'public_review_approved_by',
         'admin_classification',
     )
-    list_display_links = ('id',)
+    list_display_links = ('id', 'shelfmark')
     list_select_related = (
         'collection',
         'correspondence',
         'country',
-        'category',
+        'primary_language',
     )
     list_filter = (
-        ('public_review_requests', RelatedDropdownFilter),
+        'public_review_ready',
+        'public_review_approved',
+        ('public_review_approved_by', RelatedDropdownFilter),
+        ('admin_principal_editor', RelatedDropdownFilter),
+        ('admin_principal_data_entry_person', RelatedDropdownFilter),
         ('admin_classification', RelatedDropdownFilter),
-        ('category', RelatedDropdownFilter),
+        ('primary_language', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
-        ('languages', RelatedDropdownFilter),
+        ('additional_languages', RelatedDropdownFilter),
         ('correspondence', RelatedDropdownFilter),
         ('country', RelatedDropdownFilter),
+        ('persons_in_texts__person', RelatedDropdownFilter),
         ('writing_support', RelatedDropdownFilter),
     )
     search_fields = (
@@ -273,27 +274,34 @@ class TextAdminView(GenericAdminView):
         'id_khan',
         'id_nicholas_simms_williams',
     )
-    readonly_fields = (
-        'public_approval_1_of_2_datetime',
-        'public_approval_2_of_2_datetime',
-        'meta_created_by',
-        'meta_created_datetime',
-        'meta_lastupdated_by',
-        'meta_lastupdated_datetime',
-    )
     fieldsets = (
+        ('Admin', {
+            'fields': (
+                'admin_classification',
+                'admin_principal_data_entry_person',
+                'admin_principal_editor',
+                'admin_contributors',
+                'admin_commentary',
+                'meta_created_by',
+                'meta_created_datetime',
+                'meta_lastupdated_by',
+                'meta_lastupdated_datetime'
+            ),
+            'classes': ['collapse']
+        }),
         ('General', {
             'fields': (
                 'shelfmark',
                 'collection',
-                'category',
+                'corpus',
+                'primary_language',
                 'type',
                 'correspondence',
                 'description',
                 'id_khan',
                 'id_nicholas_simms_williams',
                 'country',
-                'languages',
+                'additional_languages',
                 'funders'
             )
         }),
@@ -339,28 +347,13 @@ class TextAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
-        ('Approve Text to Show on Public Website', {
+        ('Review and Approve to Show this Corpus Text on Public Website', {
             'fields': (
-                'public_review_requests',
+                'public_review_ready',
                 'public_review_notes',
-                'public_approval_1_of_2',
-                'public_approval_1_of_2_datetime',
-                'public_approval_2_of_2',
-                'public_approval_2_of_2_datetime'
-            ),
-            'classes': ['collapse']
-        }),
-        ('Admin', {
-            'fields': (
-                'admin_commentary',
-                'admin_classification',
-                'admin_owners',
-                'admin_contributors',
-                'admin_notes',
-                'meta_created_by',
-                'meta_created_datetime',
-                'meta_lastupdated_by',
-                'meta_lastupdated_datetime'
+                'public_review_approved',
+                'public_review_approved_by',
+                'public_review_approved_datetime'
             ),
             'classes': ['collapse']
         }),
@@ -373,14 +366,53 @@ class TextAdminView(GenericAdminView):
         TextFolioStackedInline
     )
 
+    def get_readonly_fields(self, request, obj):
+        readonly_fields = [
+            'public_review_approved_by',
+            'public_review_approved_datetime',
+            'meta_created_by',
+            'meta_created_datetime',
+            'meta_lastupdated_by',
+            'meta_lastupdated_datetime',
+        ]
+        # Only allow principal editor to approve (when ready to review)
+        if request.user != obj.admin_principal_editor or not obj.public_review_ready:
+            readonly_fields.append('public_review_approved')
+        # Once approved, review fields are read only
+        if obj.public_review_approved:
+            readonly_fields += ['public_review_ready', 'public_review_notes']
+        return readonly_fields
+
     def save_model(self, request, obj, form, change):
-        # Meta: created (if not yet set) or last updated by (if created already set)
-        if obj.meta_created_by is None:
+        # Get current object, so can access values before this save
+        obj_old = None
+        if obj.id:
+            obj_old = self.model.objects.get(id=obj.id)
+
+        # Set public review approval
+        if obj_old and obj_old.public_review_approved is False and obj.public_review_approved is True:
+            # Set the user and datetime of the approval
+            obj.public_review_approved_by = request.user
+            obj.public_review_approved_datetime = timezone.now()
+            obj.public_review_ready = False
+        # Remove public review approval
+        elif obj_old and obj_old.public_review_approved is True and obj.public_review_approved is False:
+            obj.public_review_approved_by = None
+            obj.public_review_approved_datetime = None
+
+        # Set principal data entry person as the current user (if it's not yet set)
+        if obj_old and obj_old.admin_principal_data_entry_person is None:
+            obj.admin_principal_data_entry_person = request.user
+
+        # Set meta created data (if adding a new object)
+        if obj.id is None:
             obj.meta_created_by = request.user
             # meta_created_datetime default value set in model so not needed here
+        # Set last updated data (if editing existing object)
         else:
             obj.meta_lastupdated_by = request.user
             obj.meta_lastupdated_datetime = timezone.now()
+
         obj.save()
 
     class Media:
@@ -393,32 +425,23 @@ class TextFolioAdminView(GenericAdminView):
     Customise the TextFolio section of the admin dashboard
     """
 
-    list_display = ('id', 'text')
+    list_display = ('id', 'text', 'transcription', 'translation')
     list_display_links = ('id',)
     search_fields = (
         'text__id',
         'text__title',
-        'side__name'
+        'side__name',
+        'transcription',
+        'translation'
     )
-    inlines = (
-        TextFolioLineTabularInline,
-        TextFolioAnnotationTabularInline
+    fields = (
+        'side',
+        'open_state',
+        'image',
+        ('transcription', 'translation'),
+        'transliteration'
     )
-
-    # Hide this AdminView from sidebar
-    def get_model_perms(self, request):
-        return {}
-
-
-@admin.register(models.TextFolioLine)
-class TextFolioLineAdminView(GenericAdminView):
-    """
-    Customise the TextFolio section of the admin dashboard
-    """
-
-    list_display = ('id', 'text_folio')
-    list_display_links = ('id',)
-    search_fields = ('id',)
+    inlines = (TextFolioAnnotationTabularInline,)
 
     # Hide this AdminView from sidebar
     def get_model_perms(self, request):
@@ -431,8 +454,8 @@ class TextPersonAdminView(GenericAdminView):
     Customise the TextPerson section of the admin dashboard
     """
 
-    list_display = ('id', 'name')
-    list_display_links = ('id',)
+    list_display = ('id', 'name', 'gender', 'profession')
+    list_display_links = ('id', 'name')
     search_fields = ('id', 'name')
     inlines = (
         M2MPersonToPerson2Inline,

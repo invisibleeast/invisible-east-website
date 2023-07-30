@@ -68,19 +68,34 @@ def strip_html_tags(html):
         return stripper.get_data().strip()
 
 
-def line_numbers(line_element):
+def folio_lines_html(folio_lines):
     """
-    Returns tuple of line number values when given ET XML <lb> element
-    e.g. returns (line number, line number end)
+    Return the HTML of lines of text in a trans/translation for a folio
+    This will be an ordered list <ol> with <li> for each line of text
+    Some lines will need the automatic line numbering manually set using the value attribute
     """
-    if line_element is not None:
-        if '-' in line_element.attrib['n']:
-            line_transcription_n = line_element.attrib['n'].split('-')
-            return (int(line_transcription_n[0]), int(line_transcription_n[1]))
+    folio_trans_text = '<ol>'
+    for i, line_trans in enumerate(folio_lines):
+        # Determine line number as value attribute (if need to override automatic line numbering)
+        line_number = line_trans.attrib['n']
+        value = ''
+        range_end = ''
+        # Set first line number
+        if i == 0:
+            value = f' value="{line_number.split("-")[0]}"'
+        # Determine if there's a range in previous line and set this line number to 1 above the end range
+        # e.g. if previous line is 3-4 set this to 5
         else:
-            return (int(line_element.attrib['n']), None)
-    else:
-        return (None, None)
+            line_number_previous = folio_lines[i - 1].attrib['n']
+            if '-' in line_number_previous:
+                value = f' value="{int(line_number_previous.split("-")[1]) + 1}"'
+        # If last line number has a range, include the end number in the 'data-range-end' attribute
+        if i + 1 == len(folio_lines) and '-' in line_number:
+            range_end = f' data-range-end="{line_number.split("-")[1]}"'
+        # Create <li> element for this line
+        folio_trans_text += f'<li{value}{range_end}>{line_trans.tail.strip()}</li>'
+    folio_trans_text += '</ol>'
+    return folio_trans_text
 
 
 # Migration functions
@@ -93,20 +108,19 @@ def insert_data_select_list_models(apps, schema_editor):
     required to manually set additional values.
     """
 
-    # SlTextCategory
-    for name in [
-        'Arabic',
-        'Bactrian',
-        'New Persian'
-    ]:
-        models.SlTextCategory.objects.create(name=name)
-
     # SlTextTypeCategory
     for name in [
         'Document',
         'Literature'
     ]:
         models.SlTextTypeCategory.objects.create(name=name)
+
+    # SlTextCorpus
+    for name in [
+        'Bamiyan Papers',
+        'Firuzkuh Papers'
+    ]:
+        models.SlTextCorpus.objects.create(name=name)
 
     # SlTextType
     for obj in [
@@ -643,6 +657,10 @@ def insert_data_texts(apps, schema_editor):
     Inserts data into the Text model
     """
 
+    # User accounts used below
+    account_ed = account_models.User.objects.get(email="edward.shawe-taylor@wolfson.ox.ac.uk")
+    account_cat = account_models.User.objects.get(email="catherine.mcnally@stx.ox.ac.uk")
+
     # Loop through all XML files found in input dir
     prefix_map = {"xml": "http://relaxng.org/ns/structure/1.0"}
     for root, dirs, input_files in os.walk(PATH_OLD_DATA):
@@ -692,11 +710,11 @@ def insert_data_texts(apps, schema_editor):
                     text_obj.collection = models.SlTextCollection.objects.get_or_create(name=collection)[0]
                 except AttributeError:
                     pass
-                # category
+                # primary language
                 # Gets this from the filepath of the XML file (the last dir in root)
                 # (Choices: Arabic, New Persian, Bactrian)
-                category = root.split('/')[-1]
-                text_obj.category = models.SlTextCategory.objects.get(name=category)
+                primary_language = root.split('/')[-1]
+                text_obj.primary_language = models.SlTextLanguage.objects.get(name=primary_language)
                 # id_khan
                 try:
                     text_obj.id_khan = ms_desc.find('msIdentifier/idno[@type="Khan"]').text
@@ -787,17 +805,22 @@ def insert_data_texts(apps, schema_editor):
                 except AttributeError:
                     pass
 
-                # meta_created_by
+                # meta_created_by and admin_principal_data_entry_person
                 try:
                     meta_created_by = None
+                    admin_principal_data_entry_person = None
                     # Ed
                     if title_stmt.find('respStmt[@id="EST"]', prefix_map):
-                        meta_created_by = account_models.User.objects.get(email="edward.shawe-taylor@wolfson.ox.ac.uk")
+                        meta_created_by = account_ed
+                        admin_principal_data_entry_person = account_ed
                     # Cat
                     elif title_stmt.find('respStmt[@id="CM"]'):
-                        meta_created_by = account_models.User.objects.get(email="catherine.mcnally@stx.ox.ac.uk")
+                        meta_created_by = account_cat
+                        admin_principal_data_entry_person = account_cat
                     if meta_created_by:
                         text_obj.meta_created_by = meta_created_by
+                    if admin_principal_data_entry_person:
+                        text_obj.admin_principal_data_entry_person = admin_principal_data_entry_person
                 except AttributeError:
                     pass
                 # meta_created_by - Cat
@@ -849,6 +872,7 @@ def insert_data_texts(apps, schema_editor):
                     )
 
                 # Text Folios and Lines
+                # Loop through original (i.e. transcription) texts
                 for folio_div in body.findall('div[@type="original"]'):
 
                     # Check that same amount of pb as there are ab,
@@ -865,10 +889,8 @@ def insert_data_texts(apps, schema_editor):
                         side_code = folio.attrib['id'].rsplit('-', 1)[-1]
                         if 'v' in side_code:
                             side_name = 'verso'
-                        elif 'r' in side_code:
-                            side_name = 'recto'
                         else:
-                            side_name = None
+                            side_name = 'recto'
                         side = models.SlTextFolioSide.objects.get(name=side_name) if side_name else None
 
                         # Open state (e.g. open or closed)
@@ -884,59 +906,31 @@ def insert_data_texts(apps, schema_editor):
                             open_state=open_state
                         )
 
-                        # TextFolioLines within this TextFolio
+                        # Transcription
                         folio_content = folio_div.findall('ab')[folio_index]
-                        for line_transcription in folio_content.findall('lb'):
+                        folio_transcription_id = folio_content.attrib['id']
+                        folio_transcription_lines = folio_content.findall('lb')
+                        # Build HTML for transcription text
+                        folio_obj.transcription = folio_lines_html(folio_transcription_lines)
 
-                            line_transcription_id = line_transcription.attrib["id"]
+                        # Translation
+                        # Get the matching translation block
+                        folio_translation_id = '_tr-'.join(folio_transcription_id.rsplit('_', 1))
+                        folio_translation = body.find(f'div[@type="translation"]/ab[@id="{folio_translation_id}"]')
+                        # Many translations don't have an ID provided (human error in XML input)
+                        # but only have 1 <ab> so just use the first (and only) translation <ab>
+                        if folio_translation is None:
+                            folio_translation = body.findall(f'div[@type="translation"]/ab')[0]
+                        # If a valid matching translation has been found, add it
+                        if folio_translation is not None:
+                            folio_translation_lines = folio_translation.findall('lb')
+                            if len(folio_translation_lines):
+                                folio_obj.translation = folio_lines_html(folio_translation_lines)
+                        else:
+                            print(f'No matching translation found for this transcription: {folio_transcription_id}')
 
-                            # Set transcription line number (and line number end, if a hyphen exists, e.g. 2-3)
-                            line_transcription_number, line_transcription_number_end = line_numbers(line_transcription)
-
-                            # Check that line numbers match numbers in ID
-                            if line_transcription.attrib['n'] not in line_transcription_id:
-                                print('WARNING: Mismatched line number and ID in:', input_file, line_transcription.attrib['n'], ' --- ', line_transcription_id)
-
-                            # Find matching line in translation
-                            # Note, not all will be found, as some lines become grouped in a range
-                            # (e.g. lines 2, 3, 4 may be translated into a single line of range 2-4)
-                            line_translation_id = f'tr-{line_transcription_id}'
-                            line_translation = body.find(f'div[@type="translation"]/ab/lb[@id="{line_translation_id}"]')
-
-                            # If not found, likely due to being in a range
-                            if line_translation is None:
-                                for potential_line_translation in body.findall(f'div[@type="translation"]/ab/lb[@id]'):
-                                    # Get first line in range (e.g. line 4 in 4-6, ignoring 5 and 6)
-                                    if potential_line_translation.attrib['id'].startswith(f'{line_translation_id}-'):
-                                        line_translation = potential_line_translation
-                                        break
-
-                            # Set translation line number (and line number end, if a hyphen exists, e.g. 2-3)
-                            line_translation_number, line_translation_number_end = line_numbers(line_translation)
-
-                            # Create the TextFolioLine object
-                            try:
-                                line_obj = models.TextFolioLine.objects.create(
-                                    text_folio=folio_obj,
-                                    transcription_line_number=line_transcription_number,
-                                    transcription_line_number_end=line_transcription_number_end,
-                                    transcription_text=line_transcription.tail.strip(),
-                                )
-                            except AttributeError as e:
-                                # pass
-                                print(input_file, line_transcription_id, e)
-
-                            # place TODO
-
-                            # Add translation data to line obj (separately, as optional)
-                            try:
-                                line_obj.translation_line_number = line_translation_number
-                                line_obj.translation_line_number_end = line_translation_number_end
-                                line_obj.translation_text = line_translation.tail.strip()
-                                line_obj.save()
-                            except AttributeError:
-                                pass
-                                # print(input_file, line_transcription_id)
+                        # Save the folio object once the transcription + translation data has been added
+                        folio_obj.save()
 
                 # M2M relationships
                 # (some only have 1 instance in XML but field is M2M for future flexibility):
@@ -954,14 +948,6 @@ def insert_data_texts(apps, schema_editor):
                 funder = title_stmt.find('funder').text
                 text_obj.funders.add(
                     models.SlFunder.objects.get_or_create(name=funder)[0]
-                )
-
-                # languages
-                # Gets this from the filepath of the XML file (the last dir in root)
-                # (Choices: Arabic, New Persian, Bactrian)
-                language = root.split('/')[-1]
-                text_obj.languages.add(
-                    models.SlTextLanguage.objects.get(name=language)
                 )
 
 

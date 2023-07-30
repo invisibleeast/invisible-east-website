@@ -137,7 +137,11 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'NumberedList', 'Source',
+                    'NumberedList', 'PasteText', 'Source',
+                    '-',
+                    'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
+                    '-',
+                    'Bold', 'Italic', 'Underline', 'Strike',
                     '-',
                     'Undo', 'Redo',
                     '-',
@@ -149,7 +153,8 @@ CKEDITOR_CONFIGS = {
         'enterMode': 2,
         'format_tags': 'p;h4',
         'tabSpaces': 4,
-        'height': '10em',
+        'height': '27em',
+        'width': '27vw',
         'allowedContent': True
     }
 }

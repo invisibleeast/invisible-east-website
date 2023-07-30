@@ -7,7 +7,7 @@
     <h2>Detail</h2>
 
     {% for folio in object.text_folios.all %}
-        <p>{{ folio.translation | safe }}</p>
+        <div>{{ folio.transcription | safe }}</div>
     {% endfor %}
 </section>
 
