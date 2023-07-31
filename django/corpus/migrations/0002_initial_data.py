@@ -659,7 +659,7 @@ def insert_data_texts(apps, schema_editor):
 
     # User accounts used below
     account_ed = account_models.User.objects.get(email="edward.shawe-taylor@wolfson.ox.ac.uk")
-    account_cat = account_models.User.objects.get(email="catherine.mcnally@stx.ox.ac.uk")
+    account_cat = account_models.User.objects.get(email="catherinemcnally@comcast.net")
 
     # Loop through all XML files found in input dir
     prefix_map = {"xml": "http://relaxng.org/ns/structure/1.0"}

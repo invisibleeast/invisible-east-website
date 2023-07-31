@@ -1,7 +1,11 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+from PIL import Image, ImageOps
+from django.core.files import File
+from io import BytesIO
 from django.db.models.functions import Upper
 from account.models import User
+import os
 
 
 # Three main sections:
@@ -29,6 +33,62 @@ class SlAbstract(models.Model):
     class Meta:
         abstract = True
         ordering = [Upper('name'), 'id']
+
+
+def image_compress(image_field_original, image_field_compressed, image_size):
+    """
+    Compresses an image to be suitable for web (i.e. in JPEG or PNG format with faster load times)
+    Returns the value of an image field:
+        - if an image exists will return the file path within the media directory as a string
+        - if no image exists will delete it and return None
+    """
+    if image_field_original:
+        # Must be PNG (.png) or JPEG (.jpg)
+        file_extension = image_field_original.name.split('.')[-1].lower()
+        if file_extension == 'png':
+            file_format = 'PNG'
+        else:
+            file_format = 'JPEG'
+            file_extension = 'jpg'
+        if image_field_compressed:
+            image_field_compressed.delete(save=False)
+        img_compressed = Image.open(image_field_original.path)
+        img_compressed.thumbnail((image_size, image_size))
+        img_compressed = ImageOps.exif_transpose(img_compressed)  # Rotate to correct orientation
+        blob_thumbnail = BytesIO()
+        if file_format == 'JPEG' and img_compressed.mode in ("RGBA", "P"):
+            img_compressed = img_compressed.convert("RGB")
+        img_compressed.save(blob_thumbnail, file_format, optimize=True, quality=80)
+        name = os.path.basename(image_field_original.name).rsplit('.', 1)[0]  # removes extension from main image name
+
+        image_field_compressed_full_name = f'{name}__lte{image_size}px.{file_extension}'
+        # Save the image file
+        image_field_compressed.save(image_field_compressed_full_name, File(blob_thumbnail), save=False)
+        # Return the compressed image field value (the path to the image)
+        return f'{image_field_compressed.field.upload_to}/{image_field_compressed_full_name}'
+
+    # Delete compressed image if no original image field but compressed image field still exists
+    elif image_field_compressed:
+        image_field_compressed.delete(save=False)
+        return None
+
+
+def image_is_wider_than_tall(image_field):
+    """
+    Takes in a Django image_field
+    Returns:
+        - True, if the image is wider than it is tall (height > width)
+        - False, if the image is taller than it is wide (width > height)
+        - None, if imagefield has no image
+    Called by certain models below that have images, e.g. DocumentImage
+    """
+
+    if image_field:
+        try:
+            width, height = Image.open(image_field.path).size
+            return True if width > height else False
+        except Exception:
+            pass
 
 
 #
@@ -217,7 +277,7 @@ class SlTextClassification(SlAbstract):
 
     def __str__(self):
         return f'{self.order} - {self.name} ({self.description})'
-    
+
     class Meta:
         ordering = ['order', Upper('name'), 'id']
 
@@ -404,19 +464,19 @@ class Text(models.Model):
     # Review & Approve Text to Show on Public Website
     public_review_ready = models.BooleanField(
         default=False,
-        help_text='Tick this box to mark this Corpus Text as ready to be reviewed by the editor. If the editor approves it, this Corpus Text will then be visible on the public website. The editor will be notified via email when you tick this box.',
-        verbose_name='Ready to Review'
+        help_text='Tick this box to mark this Corpus Text as ready to be reviewed by the Principal Editor.<br>If the editor approves it, this Corpus Text will then be visible on the public website.<br>The editor will be notified via email when you tick this box.<br>You can only tick this box if a Principal Editor has been set for this Corpus Text (see the above Admin section).',  # NOQA
+        verbose_name='ready to review'
     )
     public_review_notes = models.TextField(
         blank=True,
         null=True,
         help_text="Optional. Include any necessary comments, feedback, or notes during the review process.",
-        verbose_name='Review Notes'
+        verbose_name='review notes'
     )
     public_review_approved = models.BooleanField(
         default=False,
         help_text='Tick to approve this Corpus Text. This will make it visible on the public website. You can only tick this box if you are the Principal Editor and this Corpus Text has been marked as ready to review',
-        verbose_name='Approved'
+        verbose_name='approved'
     )
     public_review_approved_by = models.ForeignKey(
         User,
@@ -424,12 +484,12 @@ class Text(models.Model):
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        verbose_name='Approved By'
+        verbose_name='approved by'
     )
     public_review_approved_datetime = models.DateTimeField(
         blank=True,
         null=True,
-        verbose_name='Approved Date/Time'
+        verbose_name='approved date/time'
     )
 
     # Admin
@@ -441,7 +501,7 @@ class Text(models.Model):
         blank=True,
         null=True,
         help_text='The main person responsible for this Corpus Text',
-        verbose_name='Principal Editor'
+        verbose_name='principal editor'
     )
     admin_principal_data_entry_person = models.ForeignKey(
         User,
@@ -450,14 +510,14 @@ class Text(models.Model):
         blank=True,
         null=True,
         help_text='The main person who has entered the data for this Corpus Text into the database',
-        verbose_name='Principal Data Entry Person'
+        verbose_name='principal data entry person'
     )
     admin_contributors = models.ManyToManyField(
         User,
         related_name='text_admin_contributors',
         blank=True,
         help_text='Users who have contributed to this Corpus Text (e.g. co-editors, data entry persons, etc.) but are not the principal editor or principal data entry person (these are specified above).<br>',
-        verbose_name='Contributors'
+        verbose_name='contributors'
     )
     admin_commentary = models.TextField(blank=True, null=True, verbose_name='Commentary')
 
@@ -528,10 +588,19 @@ To manually override an automatic line number simply:
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT)
     open_state = models.ForeignKey('SlTextFolioOpen', on_delete=models.RESTRICT, blank=True, null=True, help_text='Optional. Only relevant to some Bactrian texts.')
-    image = models.ImageField(upload_to='corpus/text_folios', blank=True, null=True)
+
+    image = models.ImageField(upload_to='corpus/text_folios__original', blank=True, null=True)
+    image_small = models.ImageField(upload_to='corpus/text_folios__small', blank=True, null=True)
+    image_medium = models.ImageField(upload_to='corpus/text_folios__medium', blank=True, null=True)
+    image_large = models.ImageField(upload_to='corpus/text_folios__large', blank=True, null=True)
+
     transcription = RichTextField(help_text=text_folio_trans_help_text)
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     transliteration = RichTextField(blank=True, null=True, help_text='Optional. Only relevant to some Middle Persian texts.')
+
+    @property
+    def image_is_wider_than_tall(self):
+        return image_is_wider_than_tall(self.image)
 
     def __str__(self):
         # Build the descriptors text
@@ -539,6 +608,17 @@ To manually override an automatic line number simply:
         descriptors_text = f' ({", ".join(descriptors)})' if len(descriptors) else ''
         # Return the string
         return f'{self.text}: Folio {descriptors_text}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Must save now, so image is saved before working with it
+
+        # Create small, medium, and large versions of the original image
+        # Update the object (must use update() not save() to avoid unique ID error)
+        TextFolio.objects.filter(id=self.id).update(
+            image_small=image_compress(self.image, self.image_small, 640),
+            image_medium=image_compress(self.image, self.image_medium, 1920),
+            image_large=image_compress(self.image, self.image_large, 5000)
+        )
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']

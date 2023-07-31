@@ -1,9 +1,15 @@
 from django.contrib import admin
 from django.utils import timezone
-from django.forms import Textarea
-from django.db.models import ManyToManyField, ForeignKey, TextField
+from django.db.models import ManyToManyField, ForeignKey
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse
 from . import models
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 admin.site.site_header = 'Invisible East: Admin Dashboard'
 
@@ -153,9 +159,13 @@ class TextFolioStackedInline(admin.StackedInline):
         'side',
         'open_state',
         'image',
+        'image_small',
+        'image_medium',
+        'image_large',
         ('transcription', 'translation'),
         'transliteration'
     )
+    readonly_fields = ('image_small', 'image_medium', 'image_large',)
 
 
 class TextFolioAnnotationTabularInline(admin.TabularInline):
@@ -240,6 +250,7 @@ class TextAdminView(GenericAdminView):
         'country',
         'id_khan',
         'id_nicholas_simms_williams',
+        'public_review_ready',
         'public_review_approved',
         'public_review_approved_by',
         'admin_classification',
@@ -278,8 +289,8 @@ class TextAdminView(GenericAdminView):
         ('Admin', {
             'fields': (
                 'admin_classification',
-                'admin_principal_data_entry_person',
                 'admin_principal_editor',
+                'admin_principal_data_entry_person',
                 'admin_contributors',
                 'admin_commentary',
                 'meta_created_by',
@@ -379,18 +390,31 @@ class TextAdminView(GenericAdminView):
         if request.user != obj.admin_principal_editor or not obj.public_review_ready:
             readonly_fields.append('public_review_approved')
         # Once approved, review fields are read only
-        if obj.public_review_approved:
+        if obj.public_review_approved or obj.admin_principal_editor is None:
             readonly_fields += ['public_review_ready', 'public_review_notes']
         return readonly_fields
 
     def save_model(self, request, obj, form, change):
         # Get current object, so can access values before this save
-        obj_old = None
-        if obj.id:
-            obj_old = self.model.objects.get(id=obj.id)
+        obj_old = self.model.objects.filter(id=obj.id).first()
+
+        # If marked as ready to review, email the Principal Editor
+        if ((obj_old and obj_old.public_review_ready is False) or obj_old is None) and obj.public_review_ready is True:
+            email_link_obj = request.build_absolute_uri(reverse('admin:corpus_text_change', args=[obj.id]))
+            email_link_list = request.build_absolute_uri(reverse('admin:corpus_text_changelist') + f'?admin_principal_editor__id__exact={obj.admin_principal_editor.id}&public_review_ready__exact=1')
+            try:
+                send_mail(
+                    'Invisible East: A corpus text is ready to review',
+                    f"Dear {obj.admin_principal_editor.name},\n\nA corpus text ({str(obj)}) has been marked as ready to review by {request.user.name}.\n\nYou can view this corpus text here: {email_link_obj}\n\nYou are the Principal Editor of this corpus text, meaning you are required to review and approve it. Once approved it will be visible to all users on the public website.\n\nTo approve it, simply go to the above link, scroll to the bottom of the page, tick the 'Approved' box and click save.\n\nYou can also see all corpus texts ready for you to review and approve here: {email_link_list}\n\nThanks,\nInvisible East",  # NOQA
+                    settings.DEFAULT_FROM_EMAIL,
+                    (obj.admin_principal_editor.email,),
+                    fail_silently=False
+                )
+            except Exception:
+                logger.exception("Failed to send email")
 
         # Set public review approval
-        if obj_old and obj_old.public_review_approved is False and obj.public_review_approved is True:
+        if ((obj_old and obj_old.public_review_approved is False) or obj_old is None) and obj.public_review_approved is True:
             # Set the user and datetime of the approval
             obj.public_review_approved_by = request.user
             obj.public_review_approved_datetime = timezone.now()
@@ -438,9 +462,13 @@ class TextFolioAdminView(GenericAdminView):
         'side',
         'open_state',
         'image',
+        'image_small',
+        'image_medium',
+        'image_large',
         ('transcription', 'translation'),
         'transliteration'
     )
+    readonly_fields = ('image_small', 'image_medium', 'image_large',)
     inlines = (TextFolioAnnotationTabularInline,)
 
     # Hide this AdminView from sidebar
@@ -512,7 +540,6 @@ class M2MPersonToPersonAdminView(GenericAdminView):
         'person_1',
         'relationship_type',
         'person_2',
-        
     )
     list_display_links = ('id',)
     list_filter = ('relationship_type',)
