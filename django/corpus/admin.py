@@ -162,10 +162,11 @@ class TextFolioStackedInline(admin.StackedInline):
         'image_small',
         'image_medium',
         'image_large',
+        'image_preview',
         ('transcription', 'translation'),
         'transliteration'
     )
-    readonly_fields = ('image_small', 'image_medium', 'image_large',)
+    readonly_fields = ('image_small', 'image_medium', 'image_large', 'image_preview')
 
 
 class TextFolioAnnotationTabularInline(admin.TabularInline):
@@ -465,10 +466,11 @@ class TextFolioAdminView(GenericAdminView):
         'image_small',
         'image_medium',
         'image_large',
+        'image_preview',
         ('transcription', 'translation'),
         'transliteration'
     )
-    readonly_fields = ('image_small', 'image_medium', 'image_large',)
+    readonly_fields = ('image_small', 'image_medium', 'image_large', 'image_preview')
     inlines = (TextFolioAnnotationTabularInline,)
 
     # Hide this AdminView from sidebar

@@ -1,5 +1,6 @@
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.utils.html import mark_safe
 from PIL import Image, ImageOps
 from django.core.files import File
 from io import BytesIO
@@ -601,6 +602,10 @@ To manually override an automatic line number simply:
     @property
     def image_is_wider_than_tall(self):
         return image_is_wider_than_tall(self.image)
+
+    @property
+    def image_preview(self):
+        return mark_safe(f'<img src="{self.image_small.url}" alt="image of this folio" />')
 
     def __str__(self):
         # Build the descriptors text
