@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.http.request import HttpRequest
 from django.utils import timezone
-from django.db.models import ManyToManyField, ForeignKey
+from django.db.models import ManyToManyField, ForeignKey, Prefetch
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from django.conf import settings
 from django.core.mail import send_mail
@@ -248,6 +250,7 @@ class TextAdminView(GenericAdminView):
         'primary_language',
         'type',
         'correspondence',
+        'count_text_folios',
         'country',
         'id_khan',
         'id_nicholas_simms_williams',
@@ -257,12 +260,6 @@ class TextAdminView(GenericAdminView):
         'admin_classification',
     )
     list_display_links = ('id', 'shelfmark')
-    list_select_related = (
-        'collection',
-        'correspondence',
-        'country',
-        'primary_language',
-    )
     list_filter = (
         'public_review_ready',
         'public_review_approved',
@@ -380,6 +377,9 @@ class TextAdminView(GenericAdminView):
 
     def get_readonly_fields(self, request, obj):
         readonly_fields = [
+            'public_review_ready',
+            'public_review_notes',
+            'public_review_approved',
             'public_review_approved_by',
             'public_review_approved_datetime',
             'meta_created_by',
@@ -388,12 +388,29 @@ class TextAdminView(GenericAdminView):
             'meta_lastupdated_datetime',
         ]
         # Only allow principal editor to approve (when ready to review)
-        if request.user != obj.admin_principal_editor or not obj.public_review_ready:
-            readonly_fields.append('public_review_approved')
+        if obj and (request.user == obj.admin_principal_editor and obj.public_review_ready):
+            readonly_fields.remove('public_review_approved')
         # Once approved, review fields are read only
-        if obj.public_review_approved or obj.admin_principal_editor is None:
-            readonly_fields += ['public_review_ready', 'public_review_notes']
+        if obj and not obj.public_review_approved and obj.admin_principal_editor is not None:
+            readonly_fields.remove('public_review_ready')
+            readonly_fields.remove('public_review_notes')
         return readonly_fields
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        # Prefetch related (multiple related data)
+        queryset = queryset.prefetch_related(
+            'text_folios',
+        )
+        # Select related (single related data)
+        queryset = queryset.select_related(
+            'collection',
+            'correspondence',
+            'country',
+            'primary_language__script',
+            'type__category'
+        )
+        return queryset
 
     def save_model(self, request, obj, form, change):
         # Get current object, so can access values before this save

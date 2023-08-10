@@ -106,10 +106,10 @@
     <!-- List Counts -->
     <section id="corpus-text-list-counts">
         <span>
-            {{ page_obj.paginator.count }} Corpus Texts found {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} texts)</a>{% endif %}
+            {{ page_obj.paginator.count }} results found {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} Corpus Texts)</a>{% endif %}
         </span>
         <span>
-            Showing {{ page_obj.paginator.per_page }} results per page
+            Showing up to {{ page_obj.paginator.per_page }} results per page
         </span>
         <span>
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
@@ -123,7 +123,7 @@
             <a href="{% url 'corpus:text-detail' object.id %}" class="corpus-text-list-items-item">
                 <!-- Image -->
                 <div class="corpus-text-list-items-item-imagecontainer">
-                    <img src="{% if object.image_thumbnail %}{{ object.image_thumbnail.url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}" alt="Corpus text image">
+                    <img src="{% if object.list_image %}{{ object.list_image.url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}" alt="Corpus text image">
                 </div>
                 <!--Text -->
                 <div class="corpus-text-list-items-item-text">
@@ -131,9 +131,10 @@
                     <div class="corpus-text-list-items-item-text-details">
                         <div>{{ object.description }}</div>
                         <dl>
-                            <div><dt>Language</dt><dd>{{ object.category }}</dd></div>
+                            <div><dt>Language</dt><dd>{{ object.primary_language }}</dd></div>
                             <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
                             <div><dt>Correspondence</dt><dd>{{ object.correspondence | title }}</dd></div>
+                            <div><dt>Number of Folios</dt><dd>{{ object.text_folios.count }}</dd></div>
                         </dl>
                     </div>
                 </div>

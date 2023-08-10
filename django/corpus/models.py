@@ -543,6 +543,15 @@ class Text(models.Model):
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
     @property
+    def count_text_folios(self):
+        return self.text_folios.count()
+
+    @property
+    def list_image(self):
+        # Return the first image of a folio, if exists
+        return self.text_folios.first().image_small
+
+    @property
     def title(self):
         return f"{self.primary_language.name}: {self.collection}, {self.shelfmark}. ({self.type.name})"
 

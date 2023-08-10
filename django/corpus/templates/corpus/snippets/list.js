@@ -137,8 +137,8 @@ if (urlSearchesArray){
     });
 }
 // Sort
-setFieldValueFromUrl('list-options-sort-by', 'sort_by');
-setFieldValueFromUrl('list-options-sort-direction', 'sort_direction');
+setFieldValueFromUrl('corpus-text-list-options-sort-by', 'sort_by');
+setFieldValueFromUrl('corpus-text-list-options-sort-direction', 'sort_direction');
 // Filters
 new URL(window.location.href).searchParams.forEach(function(value, key){
     // If key starts with the 'filter_pre' (as defined in Django view get_context_data() method) then it's a filter
