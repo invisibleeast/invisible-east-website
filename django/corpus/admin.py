@@ -1,8 +1,6 @@
 from django.contrib import admin
-from django.db.models.query import QuerySet
-from django.http.request import HttpRequest
 from django.utils import timezone
-from django.db.models import ManyToManyField, ForeignKey, Prefetch
+from django.db.models import ManyToManyField, ForeignKey
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from django.conf import settings
 from django.core.mail import send_mail
@@ -87,6 +85,7 @@ class GenericSlAdminView(GenericAdminView):
 # Register Select List models (most, if not all, use GenericSlAdminView)
 admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
+admin.site.register(models.SlTextCentury, GenericSlAdminView)
 admin.site.register(models.SlTextSubjectLegalTransactions, GenericSlAdminView)
 admin.site.register(models.SlTextSubjectAdministrativeInternalCorrespondence, GenericSlAdminView)
 admin.site.register(models.SlTextSubjectAdministrativeTaxReceipts, GenericSlAdminView)
@@ -248,6 +247,7 @@ class TextAdminView(GenericAdminView):
         'shelfmark',
         'collection',
         'primary_language',
+        'century',
         'type',
         'correspondence',
         'count_text_folios',
@@ -267,13 +267,14 @@ class TextAdminView(GenericAdminView):
         ('admin_principal_editor', RelatedDropdownFilter),
         ('admin_principal_data_entry_person', RelatedDropdownFilter),
         ('admin_classification', RelatedDropdownFilter),
-        ('primary_language', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
+        ('primary_language', RelatedDropdownFilter),
         ('additional_languages', RelatedDropdownFilter),
+        ('century', RelatedDropdownFilter),
         ('correspondence', RelatedDropdownFilter),
+        ('writing_support', RelatedDropdownFilter),
         ('country', RelatedDropdownFilter),
         ('persons_in_texts__person', RelatedDropdownFilter),
-        ('writing_support', RelatedDropdownFilter),
     )
     search_fields = (
         'id',
@@ -306,6 +307,7 @@ class TextAdminView(GenericAdminView):
                 'primary_language',
                 'type',
                 'correspondence',
+                'century',
                 'description',
                 'id_khan',
                 'id_nicholas_simms_williams',

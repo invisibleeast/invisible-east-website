@@ -6,7 +6,9 @@ from django.core.files import File
 from io import BytesIO
 from django.db.models.functions import Upper
 from account.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 import os
+import textwrap
 
 
 # Three main sections:
@@ -345,6 +347,25 @@ class SlCalendar(SlAbstract):
     name_full = models.CharField(max_length=100, blank=True, null=True)
 
 
+class SlTextCentury(SlAbstract):
+    """
+    A century in Gregorian calendar CE.
+    E.g. 1st Century CE ... 21st Century CE
+    """
+
+    century_number = models.IntegerField(validators=[MaxValueValidator(21), MinValueValidator(1)])
+
+    @property
+    def html_select_value_field(self):
+        """
+        The field to be used as the value in the <option value=""> for select html elements. 'id' used by default.
+        """
+        return self.century_number
+
+    class Meta:
+        ordering = ['century_number']
+
+
 class SlPersonInTextRole(SlAbstract):
     """
     A type of person within a text.
@@ -420,6 +441,7 @@ class Text(models.Model):
     primary_language = models.ForeignKey('SlTextLanguage', on_delete=models.RESTRICT, related_name=f'{related_name}_primary')
     type = models.ForeignKey('SlTextType', on_delete=models.RESTRICT, related_name=related_name)
     correspondence = models.ForeignKey('SlTextCorrespondence', on_delete=models.RESTRICT, related_name=related_name)
+    century = models.ForeignKey(SlTextCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='Uses the Gregorian calendar. This is used to filter and sort results in the public interface. More specific data about dates can be added below in the "Text Dates" section of this form.')
     description = models.TextField()
     id_khan = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Khan ID")
     id_nicholas_simms_williams = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Nicholas Simms-Williams ID")
@@ -543,8 +565,24 @@ class Text(models.Model):
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
     @property
+    def has_transcription(self):
+        for folio in self.text_folios.all():
+            if folio.transcription is not None and len(folio.transcription):
+                return True
+
+    @property
+    def has_translation(self):
+        for folio in self.text_folios.all():
+            if folio.translation is not None and len(folio.translation):
+                return True
+
+    @property
     def count_text_folios(self):
         return self.text_folios.count()
+
+    @property
+    def description_preview(self):
+        return textwrap.shorten(self.description, width=350, placeholder="...")
 
     @property
     def list_image(self):
@@ -553,7 +591,7 @@ class Text(models.Model):
 
     @property
     def title(self):
-        return f"{self.primary_language.name}: {self.collection}, {self.shelfmark}. ({self.type.name})"
+        return f"{self.primary_language.name}: {self.collection}, {self.shelfmark}"
 
     def __str__(self):
         return self.title
@@ -604,7 +642,7 @@ To manually override an automatic line number simply:
     image_medium = models.ImageField(upload_to='corpus/text_folios__medium', blank=True, null=True)
     image_large = models.ImageField(upload_to='corpus/text_folios__large', blank=True, null=True)
 
-    transcription = RichTextField(help_text=text_folio_trans_help_text)
+    transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     transliteration = RichTextField(blank=True, null=True, help_text='Optional. Only relevant to some Middle Persian texts.')
 

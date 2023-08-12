@@ -74,15 +74,15 @@
     .corpus-text-list-items-item-imagecontainer {
         display: inline-block;
         vertical-align: top;
-        width: 11em;
-        height: 11em;
+        width: 13em;
+        height: 13em;
     }
 
     .corpus-text-list-items-item-text {
         display: inline-block;
         vertical-align: top;
-        width: calc(100% - 11.5em);
-        padding: 0.7em 0.6em;
+        width: calc(100% - 13.5em);
+        padding: 0.7em 0.5em;
     }
 
     #corpus-text-list-pagination {

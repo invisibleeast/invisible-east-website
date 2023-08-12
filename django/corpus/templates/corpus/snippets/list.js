@@ -119,7 +119,13 @@ $('body').on('keydown', 'form#corpus-text-list-options input', function(e){
 
 function setFieldValueFromUrl(formItemID, urlParameter, triggerChange=false) {
     var value = new URL(window.location.href).searchParams.get(urlParameter);
-    if (value) $('#' + formItemID).val(value);
+    // If a valid value found
+    if (value){
+        // Checkboxes (check the box)
+        if (urlParameter.startsWith('{{ filter_pre_hs }}')) $('#' + formItemID).prop('checked', 'checked')
+        // Select List (set correct option)
+        else $('#' + formItemID).val(value);
+    }
     if (triggerChange) $('#' + formItemID).trigger('change');
 }
 // Set Multiple Search Operator (or/and) from URL

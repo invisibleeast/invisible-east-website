@@ -92,7 +92,7 @@ dt::after {
 
 dd {
     display: inline-block;
-    margin-left: 0.5em;
+    margin-left: 0.3em;
 }
 
 table {
@@ -500,7 +500,11 @@ main section {
 .corpus-text-list-options-subtitle {
     font-size: 1.3em;
     font-weight: bold;
-    margin: 1.5em 0 0.2em 0;
+    margin: 2em 0 0.2em 0;
+}
+
+.corpus-text-list-options-subtitle:first-child {
+    margin-top: 0.5em;
 }
 
 #corpus-text-list-options hr {
@@ -511,7 +515,7 @@ main section {
 
 #corpus-text-list-options label {
     font-weight: bold;
-    font-size: 0.89em;
+    font-size: 0.95em;
     margin: 1.2em 0 0 0;
     display: inline-block;
     width: calc(100% - 2.1em);
@@ -545,9 +549,10 @@ main section {
 }
 
 #corpus-text-list-options input[type='checkbox'] {
+    transform: scale(1.5);
     display: inline;
     width: initial;
-    margin-right: 0.5em;
+    margin-right: 0.69em;
 }
 
 #corpus-text-list-options .helptext {
@@ -717,6 +722,7 @@ main section {
     text-align: left;
     background: #F2F2F2;
     overflow: hidden;
+    position: relative;
 }
 
 .corpus-text-list-items-item:hover {
@@ -727,10 +733,6 @@ main section {
 
 .corpus-text-list-items-item-imagecontainer {
     background: #DDD;
-}
-
-.corpus-text-list-items-item-imagecontainer img {
-    width: 100%;
 }
 
 .corpus-text-list-items-item-text-title {
@@ -744,6 +746,29 @@ main section {
     font-size: 0.9em;
     padding-top: 0.2em;
     opacity: 0.8;
+}
+
+.corpus-text-list-items-item-text-details dl {
+    margin-bottom: 0;
+}
+
+.corpus-text-list-items-item-has {
+    position: absolute;
+    bottom: 0;
+    right: 15px;
+    font-size: 0.9em;
+}
+
+.corpus-text-list-items-item-has span {
+    display: inline-block;
+    margin-left: 1em;
+    color: #606060;
+    opacity: 0.5;
+}
+
+.corpus-text-list-items-item-has span.active {
+    color: var(--color-primary);
+    opacity: 1;
 }
 
 .corpus-text-list-items-empty {

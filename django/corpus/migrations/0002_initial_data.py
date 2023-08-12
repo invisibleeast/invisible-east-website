@@ -15,6 +15,13 @@ import os, shutil, re
 PATH_OLD_DATA = os.path.join(settings.BASE_DIR, 'corpus', 'migrations', 'old_data')
 
 
+def ordinal_number(n):
+    """
+    Return correct ordinal number (e.g. 1 -> 1st, 22 -> 22nd, 34 -> 34th, etc.)
+    """
+    return "%d%s" % (n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
+
+
 def set_related_values(data_file, main_model, relationship_type):
     """
     data_file = a .txt file containing a list of objects
@@ -150,6 +157,14 @@ def insert_data_select_list_models(apps, schema_editor):
         }
     ]:
         models.SlTextType.objects.create(**obj)
+
+    # SlTextCentury
+    # e.g. "1st Century CE, 2nd Century CE, ... 21st Century CE"
+    for object in range(1, 22):
+        models.SlTextCentury(
+            name=f'{ordinal_number(object)} Century CE',
+            century_number=object
+        ).save()
 
     # SlTextSubjectLegalTransactions
     for name in [
@@ -730,6 +745,20 @@ def insert_data_texts(apps, schema_editor):
                     country = ms_desc.find('msIdentifier/country').text
                     text_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
                 except AttributeError:
+                    pass
+                # century
+                try:
+                    gregorian = corresp_action.findall('date[@calendar="#Gregorian"]')[0]
+                    century = None
+                    if 'when' in gregorian.attrib:
+                        century = int(gregorian.attrib['when'][:2]) + 1
+                    elif 'notAfter' in gregorian.attrib:
+                        century = int(gregorian.attrib['notAfter'][:2]) + 1
+                    elif 'notBefore' in gregorian.attrib:
+                        century = int(gregorian.attrib['notBefore'][:2]) + 1
+                    if century:
+                        text_obj.century = models.SlTextCentury.objects.get(century_number=century)
+                except IndexError:
                     pass
                 # description
                 text_obj.description = '\n\n'.join(

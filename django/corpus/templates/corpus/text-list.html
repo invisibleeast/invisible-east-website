@@ -63,27 +63,32 @@
                         <div class="corpus-text-list-options-filters-group">
                             {% for f in filter_group %}
                                 <div class="corpus-text-list-options-filters-group-filter">
-                                    <label for="{{ f.filter_id }}">
-                                        {{ f.filter_name }}
-                                    </label>
-                                    <span class="input-clear"><i class="fas fa-times-circle"></i></span>
-                                    <select id="{{ f.filter_id }}"
-                                        class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
-                                        title="{{ f.filter_id }}"
-                                        name="{{ f.filter_id }}"
 
-                                        {# Filter Dependencies #}
-                                        {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
+                                    {% if filter_pre_hs in f.filter_id %}
+                                        <label><input type="checkbox" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
+                                    {% else %}
+                                        <label for="{{ f.filter_id }}">
+                                            {{ f.filter_name }}
+                                        </label>
+                                        <span class="input-clear"><i class="fas fa-times-circle"></i></span>
+                                        <select id="{{ f.filter_id }}"
+                                            class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
+                                            title="{{ f.filter_name }}"
+                                            name="{{ f.filter_id }}"
 
-                                        {# Data Hierarchy #}
-                                        {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
-                                        {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
-                                        {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
-                                        {% include 'snippets/select-default.html' %}
-                                        {% for o in f.filter_options %}
-                                            <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
-                                        {% endfor %}
-                                    </select>
+                                            {# Filter Dependencies #}
+                                            {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
+
+                                            {# Data Hierarchy #}
+                                            {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
+                                            {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
+                                            {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
+                                            {% include 'snippets/select-default.html' %}
+                                            {% for o in f.filter_options %}
+                                                <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
@@ -122,21 +127,25 @@
             <!-- Set the URL based on the main model supplied to this page -->
             <a href="{% url 'corpus:text-detail' object.id %}" class="corpus-text-list-items-item">
                 <!-- Image -->
-                <div class="corpus-text-list-items-item-imagecontainer">
-                    <img src="{% if object.list_image %}{{ object.list_image.url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}" alt="Corpus text image">
+                <div class="corpus-text-list-items-item-imagecontainer" style="background-image: url({% if object.list_image %}{{ object.list_image.url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}); background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
                 </div>
                 <!--Text -->
                 <div class="corpus-text-list-items-item-text">
                     <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
                     <div class="corpus-text-list-items-item-text-details">
-                        <div>{{ object.description }}</div>
+                        <div class="corpus-text-list-items-item-text-details-description">{{ object.description_preview }}</div>
                         <dl>
-                            <div><dt>Language</dt><dd>{{ object.primary_language }}</dd></div>
                             <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
                             <div><dt>Correspondence</dt><dd>{{ object.correspondence | title }}</dd></div>
                             <div><dt>Number of Folios</dt><dd>{{ object.text_folios.count }}</dd></div>
+                            {% if object.century %}<div><dt>Date</dt><dd>{{ object.century }}</dd></div>{% endif %}
+                            <div><dt>IE Input Date</dt><dd>{{ object.meta_created_datetime | date:"n M o" }}</dd></div>
                         </dl>
                     </div>
+                </div>
+                <div class="corpus-text-list-items-item-has">
+                    <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
+                    <span{% if object.has_translation %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Translation</span>
                 </div>
             </a>
         {% empty %}
@@ -192,7 +201,7 @@
 
 <!-- JS -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function(){
         {% include "corpus/snippets/list.js" %}
     });
 </script>

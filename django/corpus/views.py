@@ -25,7 +25,6 @@ class TextDetailView(DetailView):
         return context
 
 
-
 class TextListView(ListView):
     """
     Class-based view for Text list template
@@ -40,6 +39,7 @@ class TextListView(ListView):
     filter_pre_fk = f'{filter_pre}fk_'  # Foreign Key relationship
     filter_pre_gt = f'{filter_pre}gt_'  # Greater than (or equal to) filter, e.g. "Date (from)"
     filter_pre_lt = f'{filter_pre}lt_'  # Less than (or equal to) filter, e.g. "Date (to)"
+    filter_pre_hs = f'{filter_pre}hs_'  # Has content filter, e.g. "Has transcription"
 
     # Special starts to the values & labels of options in 'sort by' select lists, used in below sort() function and within views scripts
     sort_pre_count_value = 'count_'
@@ -64,13 +64,30 @@ class TextListView(ListView):
 
         # Improve performance
         queryset = queryset.select_related(
-            'type',
-            'collection'
+            'primary_language__script',
+            'type__category',
+            'century',
+            'collection',
+            'correspondence'
+        ).prefetch_related(
+            'text_folios'
         )
 
         # Search
         searches = json.loads(self.request.GET.get('search', '[]'))
-        field_names_to_search = ['shelfmark', 'collection__name']
+        field_names_to_search = [
+            'shelfmark',
+            'collection__name',
+            'corpus__name',
+            'primary_language__name',
+            'primary_language__script__name',
+            'type__name',
+            'correspondence__name',
+            'description',
+            'id_khan',
+            'id_nicholas_simms_williams',
+            'country__name',
+        ]
         # Set list of search options
         if searches not in [[''], []]:
             operator = or_ if self.request.GET.get('search_operator', '') == 'or' else and_
@@ -83,17 +100,32 @@ class TextListView(ListView):
             # Filter the queryset using the completed search query
             queryset = queryset.filter(queries)
 
-
-        # # Filter
-        # # Description
-        # search_description = self.request.GET.get('search-description', None)
-        # queryset = queryset.filter(description__icontains=search_description) if search_description else queryset
-        # # Vill
-        # search_vill = self.request.GET.get('search-vill', None)
-        # queryset = queryset.filter(tenant__property_fk__vill__name__icontains=search_vill) if search_vill else queryset
-        # # Shire
-        # search_shire = self.request.GET.get('search-shire', None)
-        # queryset = queryset.filter(tenant__property_fk__shire__icontains=search_shire) if search_shire else queryset
+        # Filter
+        for filter_key in [k for k in list(self.request.GET.keys()) if k.startswith(self.filter_pre)]:
+            filter_value = self.request.GET.get(filter_key, '')
+            if filter_value != '':
+                # Many to Many relationship (uses __in comparison and filter_value is a list)
+                if filter_key.startswith(self.filter_pre_mm):
+                    filter_field = filter_key.replace(self.filter_pre_mm, '')
+                    queryset = queryset.filter(**{f'{filter_field}__in': [filter_value]})
+                # Foreign Key relationship
+                elif filter_key.startswith(self.filter_pre_fk):
+                    filter_field = filter_key.replace(self.filter_pre_fk, '')
+                    queryset = queryset.filter(**{filter_field: filter_value})
+                # Greater than or equal to
+                elif filter_key.startswith(self.filter_pre_gt):
+                    filter_field = filter_key.replace(self.filter_pre_gt, '')
+                    queryset = queryset.filter(**{f'{filter_field}__gte': filter_value})
+                # Less than or equal to
+                elif filter_key.startswith(self.filter_pre_lt):
+                    filter_field = filter_key.replace(self.filter_pre_lt, '')
+                    queryset = queryset.filter(**{f'{filter_field}__lte': filter_value})
+                # Has content (e.g. field is not null or empty string)
+                elif filter_key.startswith(self.filter_pre_hs):
+                    filter_field = filter_key.replace(self.filter_pre_hs, '')
+                    if filter_value == 'on':
+                        queryset = queryset.exclude(**{f'{filter_field}__isnull': True})  # remove null values
+                        queryset = queryset.exclude(**{f'{filter_field}__exact': ''})  # remove empty strings
 
         # Sort
         # Establish the sort direction (asc/desc) and the field to sort by, from the self.request
@@ -136,12 +168,14 @@ class TextListView(ListView):
         context['filter_pre'] = self.filter_pre
         context['filter_pre_gt'] = self.filter_pre_gt
         context['filter_pre_lt'] = self.filter_pre_lt
+        context['filter_pre_hs'] = self.filter_pre_hs
 
-        # Options: Sort By 
+        # Options: Sort By
         # Alphabetical
         context['options_sortby_alphabetical'] = [
             {'value': 'shelfmark', 'label': 'Shelfmark'},
-            {'value': 'collection__name', 'label': 'Collection'}
+            {'value': 'century__century_number', 'label': 'Date'},
+            {'value': 'meta_created_datetime', 'label': 'IE Input Date'}
         ]
         # Numerical
         context['options_sortby_numerical'] = [
@@ -149,6 +183,168 @@ class TextListView(ListView):
                 'value': f'{self.sort_pre_count_value}text_folios',
                 'label': f'{self.sort_pre_count_label}Folios'
             },
+        ]
+
+        # Reused querysets in below filters (specified here to avoid duplicate SQL queries)
+        filter_queryset_languages = models.SlTextLanguage.objects.all().select_related('script')
+        filter_queryset_centuries = models.SlTextCentury.objects.all()
+
+        # Filters
+        context['options_filters'] = [
+            # Has Content
+            [
+                {
+                    'filter_id': f'{self.filter_pre_hs}text_folios__image',
+                    'filter_name': 'Has an Image'
+                },
+                {
+                    'filter_id': f'{self.filter_pre_hs}text_folios__transcription',
+                    'filter_name': 'Has a Transcription'
+                },
+                {
+                    'filter_id': f'{self.filter_pre_hs}text_folios__translation',
+                    'filter_name': 'Has a Translation'
+                },
+            ],
+            # Languages
+            [
+                {
+                    'filter_id': f'{self.filter_pre_fk}primary_language',
+                    'filter_name': 'Primary Language',
+                    'filter_options': filter_queryset_languages
+                },
+                {
+                    'filter_id': f'{self.filter_pre_fk}additional_languages',
+                    'filter_name': 'Additional Languages',
+                    'filter_options': filter_queryset_languages
+                },
+            ],
+            # Dates
+            [
+                {
+                    'filter_id': f'{self.filter_pre_gt}century__century_number',
+                    'filter_classes': self.filter_pre_gt,
+                    'filter_name': 'Date (from)',
+                    'filter_options': filter_queryset_centuries
+                },
+                {
+                    'filter_id': f'{self.filter_pre_lt}century__century_number',
+                    'filter_classes': self.filter_pre_lt,
+                    'filter_name': 'Date (to)',
+                    'filter_options': filter_queryset_centuries
+                }
+            ],
+            # Important Fields
+            [
+                {
+                    'filter_id': f'{self.filter_pre_fk}collection',
+                    'filter_name': 'Collection',
+                    'filter_options': models.SlTextCollection.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_fk}country',
+                    'filter_name': 'Country',
+                    'filter_options': models.SlCountry.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_fk}type',
+                    'filter_name': 'Type',
+                    'filter_options': models.SlTextType.objects.all().select_related('category')
+                },
+                {
+                    'filter_id': f'{self.filter_pre_fk}correspondence',
+                    'filter_name': 'Correspondence',
+                    'filter_options': models.SlTextCorrespondence.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_fk}writing_support',
+                    'filter_name': 'Writing Support',
+                    'filter_options': models.SlTextWritingSupport.objects.all()
+                },
+            ],
+            # Subjects
+            [
+                {
+                    'filter_id': f'{self.filter_pre_mm}legal_transactions',
+                    'filter_name': 'Legal Transactions',
+                    'filter_options': models.SlTextSubjectLegalTransactions.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}administrative_internal_correspondences',
+                    'filter_name': 'Administrative Internal Correspondences',
+                    'filter_options': models.SlTextSubjectAdministrativeInternalCorrespondence.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}administrative_tax_receipts',
+                    'filter_name': 'Administrative Tax Receipts',
+                    'filter_options': models.SlTextSubjectAdministrativeTaxReceipts.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}administrative_lists_and_accounting',
+                    'filter_name': 'Administrative Lists and Accounting',
+                    'filter_options': models.SlTextSubjectAdministrativeListsAndAccounting.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}land_measurement_units',
+                    'filter_name': 'Land Measurement Units',
+                    'filter_options': models.SlTextSubjectLandMeasurementUnits.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}people_and_processes_admins',
+                    'filter_name': 'People and processes involved in public administration, tax, trade, and commerce',
+                    'filter_options': models.SlTextSubjectPeopleAndProcessesAdmin.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}people_and_processes_legal',
+                    'filter_name': 'People and processes involved in legal and judiciary system',
+                    'filter_options': models.SlTextSubjectPeopleAndProcessesLegal.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}documentations',
+                    'filter_name': 'Documentations',
+                    'filter_options': models.SlTextSubjectDocumentation.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}geographic_administrative_units',
+                    'filter_name': 'Geographic Administrative Units',
+                    'filter_options': models.SlTextSubjectGeographicAdministrativeUnits.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}legal_and_administrative_stock_phrases',
+                    'filter_name': 'Legal and Administrative Stock Phrases',
+                    'filter_options': models.SlTextSubjectLegalAndAdministrativeStockPhrases.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}finance_and_accountancy_phrases',
+                    'filter_name': 'Finance and Accountancy Phrases',
+                    'filter_options': models.SlTextSubjectFinanceAndAccountancyPhrases.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}agricultural_produce',
+                    'filter_name': 'Agricultural Produce',
+                    'filter_options': models.SlTextSubjectAgriculturalProduce.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}currencies_and_denominations',
+                    'filter_name': 'Currencies and Denominations',
+                    'filter_options': models.SlTextSubjectCurrenciesAndDenominations.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}markings',
+                    'filter_name': 'Markings',
+                    'filter_options': models.SlTextSubjectMarkings.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}religions',
+                    'filter_name': 'Religions',
+                    'filter_options': models.SlTextSubjectReligion.objects.all()
+                },
+                {
+                    'filter_id': f'{self.filter_pre_mm}toponyms',
+                    'filter_name': 'Toponyms',
+                    'filter_options': models.SlTextSubjectToponym.objects.all()
+                },
+            ]
         ]
 
         return context
