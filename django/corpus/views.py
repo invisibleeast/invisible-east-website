@@ -20,7 +20,7 @@ class TextDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['xxx'] = '...'
+        context['text_folios'] = self.object.text_folios.all()
 
         return context
 
@@ -68,7 +68,6 @@ class TextListView(ListView):
             'type__category',
             'century',
             'collection',
-            'correspondence'
         ).prefetch_related(
             'text_folios'
         )
@@ -82,11 +81,7 @@ class TextListView(ListView):
             'primary_language__name',
             'primary_language__script__name',
             'type__name',
-            'correspondence__name',
-            'description',
-            'id_khan',
-            'id_nicholas_simms_williams',
-            'country__name',
+            'summary_of_content',
         ]
         # Set list of search options
         if searches not in [[''], []]:
@@ -242,19 +237,9 @@ class TextListView(ListView):
                     'filter_options': models.SlTextCollection.objects.all()
                 },
                 {
-                    'filter_id': f'{self.filter_pre_fk}country',
-                    'filter_name': 'Country',
-                    'filter_options': models.SlCountry.objects.all()
-                },
-                {
                     'filter_id': f'{self.filter_pre_fk}type',
                     'filter_name': 'Type',
                     'filter_options': models.SlTextType.objects.all().select_related('category')
-                },
-                {
-                    'filter_id': f'{self.filter_pre_fk}correspondence',
-                    'filter_name': 'Correspondence',
-                    'filter_options': models.SlTextCorrespondence.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_fk}writing_support',
@@ -265,84 +250,64 @@ class TextListView(ListView):
             # Subjects
             [
                 {
-                    'filter_id': f'{self.filter_pre_mm}legal_transactions',
-                    'filter_name': 'Legal Transactions',
-                    'filter_options': models.SlTextSubjectLegalTransactions.objects.all()
-                },
-                {
-                    'filter_id': f'{self.filter_pre_mm}administrative_internal_correspondences',
-                    'filter_name': 'Administrative Internal Correspondences',
-                    'filter_options': models.SlTextSubjectAdministrativeInternalCorrespondence.objects.all()
-                },
-                {
-                    'filter_id': f'{self.filter_pre_mm}administrative_tax_receipts',
-                    'filter_name': 'Administrative Tax Receipts',
-                    'filter_options': models.SlTextSubjectAdministrativeTaxReceipts.objects.all()
-                },
-                {
-                    'filter_id': f'{self.filter_pre_mm}administrative_lists_and_accounting',
-                    'filter_name': 'Administrative Lists and Accounting',
-                    'filter_options': models.SlTextSubjectAdministrativeListsAndAccounting.objects.all()
-                },
-                {
                     'filter_id': f'{self.filter_pre_mm}land_measurement_units',
                     'filter_name': 'Land Measurement Units',
-                    'filter_options': models.SlTextSubjectLandMeasurementUnits.objects.all()
+                    'filter_options': models.SlTextTagLandMeasurementUnits.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}people_and_processes_admins',
                     'filter_name': 'People and processes involved in public administration, tax, trade, and commerce',
-                    'filter_options': models.SlTextSubjectPeopleAndProcessesAdmin.objects.all()
+                    'filter_options': models.SlTextTagPeopleAndProcessesAdmin.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}people_and_processes_legal',
                     'filter_name': 'People and processes involved in legal and judiciary system',
-                    'filter_options': models.SlTextSubjectPeopleAndProcessesLegal.objects.all()
+                    'filter_options': models.SlTextTagPeopleAndProcessesLegal.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}documentations',
                     'filter_name': 'Documentations',
-                    'filter_options': models.SlTextSubjectDocumentation.objects.all()
+                    'filter_options': models.SlTextTagDocumentation.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}geographic_administrative_units',
                     'filter_name': 'Geographic Administrative Units',
-                    'filter_options': models.SlTextSubjectGeographicAdministrativeUnits.objects.all()
+                    'filter_options': models.SlTextTagGeographicAdministrativeUnits.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}legal_and_administrative_stock_phrases',
                     'filter_name': 'Legal and Administrative Stock Phrases',
-                    'filter_options': models.SlTextSubjectLegalAndAdministrativeStockPhrases.objects.all()
+                    'filter_options': models.SlTextTagLegalAndAdministrativeStockPhrases.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}finance_and_accountancy_phrases',
                     'filter_name': 'Finance and Accountancy Phrases',
-                    'filter_options': models.SlTextSubjectFinanceAndAccountancyPhrases.objects.all()
+                    'filter_options': models.SlTextTagFinanceAndAccountancyPhrases.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}agricultural_produce',
                     'filter_name': 'Agricultural Produce',
-                    'filter_options': models.SlTextSubjectAgriculturalProduce.objects.all()
+                    'filter_options': models.SlTextTagAgriculturalProduce.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}currencies_and_denominations',
                     'filter_name': 'Currencies and Denominations',
-                    'filter_options': models.SlTextSubjectCurrenciesAndDenominations.objects.all()
+                    'filter_options': models.SlTextTagCurrenciesAndDenominations.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}markings',
                     'filter_name': 'Markings',
-                    'filter_options': models.SlTextSubjectMarkings.objects.all()
+                    'filter_options': models.SlTextTagMarkings.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}religions',
                     'filter_name': 'Religions',
-                    'filter_options': models.SlTextSubjectReligion.objects.all()
+                    'filter_options': models.SlTextTagReligion.objects.all()
                 },
                 {
                     'filter_id': f'{self.filter_pre_mm}toponyms',
                     'filter_name': 'Toponyms',
-                    'filter_options': models.SlTextSubjectToponym.objects.all()
+                    'filter_options': models.SlTextTagToponym.objects.all()
                 },
             ]
         ]

@@ -7,4 +7,4 @@ exclude =
 	venv,
 	resources/private
 ignore = F405, F403, W503, W504
-max-line-length = 300
+max-line-length = 500

@@ -96,4 +96,27 @@
         vertical-align: middle;
     }
 
+    /* ---------- Corpus - Text: Detail ---------- */
+
+    #corpus-text-detail-content-tabs {
+        border-bottom: 0.3em solid var(--color-secondary);
+        margin: 1em 0 2em 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+
+    #corpus-text-detail-content-tabs li {
+        display: inline-block;
+        vertical-align: bottom;
+        width: auto;
+        margin-right: -5px;
+        padding: 0.85em 1.3em;
+    }
+
+    #corpus-text-detail-content-tabs li:not(.active):hover {
+        background: var(--color-primary-dark);
+        color: rgba(255, 255, 255, 1);
+    }
+
 }

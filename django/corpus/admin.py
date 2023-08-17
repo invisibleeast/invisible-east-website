@@ -82,38 +82,31 @@ class GenericSlAdminView(GenericAdminView):
 # 2. Select List admin views
 #
 
-# Register Select List models (most, if not all, use GenericSlAdminView)
+# Register Select List models (most use GenericSlAdminView)
 admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
+admin.site.register(models.SlTextDocumentSubtypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextCentury, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectLegalTransactions, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectAdministrativeInternalCorrespondence, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectAdministrativeTaxReceipts, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectAdministrativeListsAndAccounting, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectLandMeasurementUnits, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectPeopleAndProcessesAdmin, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectPeopleAndProcessesLegal, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectDocumentation, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectGeographicAdministrativeUnits, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectLegalAndAdministrativeStockPhrases, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectFinanceAndAccountancyPhrases, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectAgriculturalProduce, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectCurrenciesAndDenominations, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectMarkings, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectReligion, GenericSlAdminView)
-admin.site.register(models.SlTextSubjectToponym, GenericSlAdminView)
-admin.site.register(models.SlFunder, GenericSlAdminView)
-admin.site.register(models.SlUnitOfMeasurement, GenericSlAdminView)
+admin.site.register(models.SlTextTagLandMeasurementUnits, GenericSlAdminView)
+admin.site.register(models.SlTextTagPeopleAndProcessesAdmin, GenericSlAdminView)
+admin.site.register(models.SlTextTagPeopleAndProcessesLegal, GenericSlAdminView)
+admin.site.register(models.SlTextTagDocumentation, GenericSlAdminView)
+admin.site.register(models.SlTextTagGeographicAdministrativeUnits, GenericSlAdminView)
+admin.site.register(models.SlTextTagLegalAndAdministrativeStockPhrases, GenericSlAdminView)
+admin.site.register(models.SlTextTagFinanceAndAccountancyPhrases, GenericSlAdminView)
+admin.site.register(models.SlTextTagAgriculturalProduce, GenericSlAdminView)
+admin.site.register(models.SlTextTagCurrenciesAndDenominations, GenericSlAdminView)
+admin.site.register(models.SlTextTagMarkings, GenericSlAdminView)
+admin.site.register(models.SlTextTagReligion, GenericSlAdminView)
+admin.site.register(models.SlTextTagToponym, GenericSlAdminView)
 admin.site.register(models.SlTextCollection, GenericSlAdminView)
 admin.site.register(models.SlTextCorpus, GenericSlAdminView)
 admin.site.register(models.SlTextClassification, GenericSlAdminView)
-admin.site.register(models.SlTextCorrespondence, GenericSlAdminView)
 admin.site.register(models.SlTextScript, GenericSlAdminView)
 admin.site.register(models.SlTextLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
-admin.site.register(models.SlCountry, GenericSlAdminView)
 admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
-admin.site.register(models.SlPublicationStatement, GenericSlAdminView)
+admin.site.register(models.SlTextPublication, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
 admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
@@ -122,6 +115,14 @@ admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
 admin.site.register(models.SlM2MTextToTextRelationshipType, GenericSlAdminView)
+
+
+@admin.register(models.SlTextDocumentSubtype)
+class SlTextDocumentSubtypeAdminView(GenericSlAdminView):
+    """
+    Customise the SlTextDocumentSubtype, in addition to GenericSlAdminView
+    """
+    search_fields = ('id', 'name', 'category__name')
 
 
 #
@@ -139,13 +140,29 @@ class PersonInTextTabularInline(admin.TabularInline):
     autocomplete_fields = ('person', 'person_role_in_text')
 
 
-class TextDateTabularInline(admin.TabularInline):
+class TextDateStackedInline(admin.StackedInline):
     """
     A subform/inline form for TextDate to be used in TextAdminView
     """
     model = models.TextDate
-    extra = 1
+    extra = 0
     classes = ['collapse']
+    fields = (
+        'calendar',
+        'date_text',
+        'date',
+        ('date_range_start', 'date_range_end')
+    )
+
+
+class TextRelatedPublicationStackedInline(admin.StackedInline):
+    """
+    A subform/inline form for TextRelatedPublication to be used in TextAdminView
+    """
+    model = models.TextRelatedPublication
+    extra = 0
+    classes = ['collapse']
+    autocomplete_fields = ('publication',)
 
 
 class TextFolioStackedInline(admin.StackedInline):
@@ -154,7 +171,6 @@ class TextFolioStackedInline(admin.StackedInline):
     """
     model = models.TextFolio
     extra = 0
-    classes = ['collapse']
     show_change_link = True
     fields = (
         'side',
@@ -226,6 +242,7 @@ class M2MTextToText2Inline(admin.TabularInline):
     """
     model = models.Text.texts.through
     fk_name = "text_1"
+    extra = 1
     autocomplete_fields = ('text_2', 'relationship_type')
     classes = ['collapse']
     verbose_name = 'Related Text'
@@ -249,11 +266,7 @@ class TextAdminView(GenericAdminView):
         'primary_language',
         'century',
         'type',
-        'correspondence',
         'count_text_folios',
-        'country',
-        'id_khan',
-        'id_nicholas_simms_williams',
         'public_review_ready',
         'public_review_approved',
         'public_review_approved_by',
@@ -271,18 +284,13 @@ class TextAdminView(GenericAdminView):
         ('primary_language', RelatedDropdownFilter),
         ('additional_languages', RelatedDropdownFilter),
         ('century', RelatedDropdownFilter),
-        ('correspondence', RelatedDropdownFilter),
         ('writing_support', RelatedDropdownFilter),
-        ('country', RelatedDropdownFilter),
         ('persons_in_texts__person', RelatedDropdownFilter),
     )
     search_fields = (
         'id',
         'collection__name',
-        'country__name',
         'shelfmark',
-        'id_khan',
-        'id_nicholas_simms_williams',
     )
     fieldsets = (
         ('Admin', {
@@ -305,23 +313,31 @@ class TextAdminView(GenericAdminView):
                 'collection',
                 'corpus',
                 'primary_language',
-                'type',
-                'correspondence',
-                'century',
-                'description',
-                'id_khan',
-                'id_nicholas_simms_williams',
-                'country',
                 'additional_languages',
-                'funders'
+                'type',
+                'document_subtype',
+                'century',
             )
         }),
-        ('Subjects', {
+        ('Physical Description', {
             'fields': (
-                'legal_transactions',
-                'administrative_internal_correspondences',
-                'administrative_tax_receipts',
-                'administrative_lists_and_accounting',
+                'writing_support',
+                'writing_support_details',
+                'dimensions_height',
+                'dimensions_width',
+                'fold_lines_details',
+                'physical_additional_details'
+            ),
+            'classes': ['collapse']
+        }),
+        ('Content', {
+            'fields': (
+                'summary_of_content',
+            ),
+            'classes': ['collapse']
+        }),
+        ('Tags of Terms in Text', {
+            'fields': (
                 'land_measurement_units',
                 'people_and_processes_admins',
                 'people_and_processes_legal',
@@ -337,27 +353,6 @@ class TextAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
-        ('Publication Statements', {
-            'fields': (
-                'publication_statement',
-                'publication_statement_original',
-                'publication_statement_republished'
-            ),
-            'classes': ['collapse']
-        }),
-        ('Physical Description', {
-            'fields': (
-                'writing_support',
-                'writing_support_details',
-                'dimensions_unit',
-                'dimensions_height',
-                'dimensions_width',
-                'fold_lines_count_details',
-                'fold_lines_count_total',
-                'physical_additional_details'
-            ),
-            'classes': ['collapse']
-        }),
         ('Review and Approve to Show this Corpus Text on Public Website', {
             'fields': (
                 'public_review_ready',
@@ -366,14 +361,14 @@ class TextAdminView(GenericAdminView):
                 'public_review_approved_by',
                 'public_review_approved_datetime'
             ),
-            'classes': ['collapse']
         }),
     )
     inlines = (
         M2MTextToText2Inline,
         M2MTextToText1Inline,
         PersonInTextTabularInline,
-        TextDateTabularInline,
+        TextDateStackedInline,
+        TextRelatedPublicationStackedInline,
         TextFolioStackedInline
     )
 
@@ -407,8 +402,6 @@ class TextAdminView(GenericAdminView):
         # Select related (single related data)
         queryset = queryset.select_related(
             'collection',
-            'correspondence',
-            'country',
             'primary_language__script',
             'type__category'
         )
@@ -460,7 +453,10 @@ class TextAdminView(GenericAdminView):
         obj.save()
 
     class Media:
-        js = ['js/custom_admin.js',]
+        js = (
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js',  # jQuery (must load before custom script)
+            'js/custom_admin.js',  # custom script
+        )
 
 
 @admin.register(models.TextFolio)
@@ -538,12 +534,35 @@ class TextDateAdminView(GenericAdminView):
         'text',
         'calendar',
         'date',
-        'date_not_before',
-        'date_not_after',
+        'date_range_start',
+        'date_range_end',
         'date_text'
     )
     list_display_links = ('id',)
-    search_fields = ('id', 'name')
+    search_fields = (
+        'id',
+        'text__shelfmark',
+        'calendar__name',
+        'date',
+        'date_range_start',
+        'date_range_end',
+        'date_text'
+    )
+
+    # Hide this AdminView from sidebar
+    def get_model_perms(self, request):
+        return {}
+
+
+@admin.register(models.TextRelatedPublication)
+class TextRelatedPublicationAdminView(GenericAdminView):
+    """
+    Customise the TextRelatedPublication section of the admin dashboard
+    """
+
+    list_display = ('id', 'text', 'publication', 'pages')
+    list_display_links = ('id',)
+    search_fields = ('id', 'text__shelfmark', 'publication__name', 'pages')
 
     # Hide this AdminView from sidebar
     def get_model_perms(self, request):

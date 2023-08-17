@@ -101,7 +101,7 @@ def image_is_wider_than_tall(image_field):
 
 class SlTextTypeCategory(SlAbstract):
     """
-    A type of Text
+    A category of Text types
     E.g. 'document', 'literature'
     """
     pass
@@ -118,112 +118,106 @@ class SlTextType(SlAbstract):
         return f'{self.name} ({self.category.name})' if self.category else self.name
 
 
-class SlTextSubjectLegalTransactions(SlAbstract):
+class SlTextDocumentSubtypeCategory(SlAbstract):
+    """
+    A category of subtypes of Texts that are documents
+    E.g. 'administrative', 'legal'
+    """
+    pass
+
+
+class SlTextDocumentSubtype(SlAbstract):
+    """
+    A subtype of Texts that are documents
+    E.g. 'legal', 'letter'
+    """
+    category = models.ForeignKey('SlTextDocumentSubtypeCategory', on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.category.name}: {self.name}' if self.category else self.name
+
+    class Meta:
+        ordering = [Upper('category__name'), Upper('name'), 'id']
+
+
+class SlTextTagLandMeasurementUnits(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectAdministrativeInternalCorrespondence(SlAbstract):
+class SlTextTagPeopleAndProcessesAdmin(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectAdministrativeTaxReceipts(SlAbstract):
+class SlTextTagPeopleAndProcessesLegal(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectAdministrativeListsAndAccounting(SlAbstract):
+class SlTextTagDocumentation(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectLandMeasurementUnits(SlAbstract):
+class SlTextTagGeographicAdministrativeUnits(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectPeopleAndProcessesAdmin(SlAbstract):
+class SlTextTagLegalAndAdministrativeStockPhrases(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectPeopleAndProcessesLegal(SlAbstract):
+class SlTextTagFinanceAndAccountancyPhrases(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectDocumentation(SlAbstract):
+class SlTextTagAgriculturalProduce(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectGeographicAdministrativeUnits(SlAbstract):
+class SlTextTagCurrenciesAndDenominations(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectLegalAndAdministrativeStockPhrases(SlAbstract):
+class SlTextTagMarkings(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectFinanceAndAccountancyPhrases(SlAbstract):
+class SlTextTagReligion(SlAbstract):
     """
     A Text type related field
     """
     pass
 
 
-class SlTextSubjectAgriculturalProduce(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextSubjectCurrenciesAndDenominations(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextSubjectMarkings(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextSubjectReligion(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextSubjectToponym(SlAbstract):
+class SlTextTagToponym(SlAbstract):
     """
     A Text type related field. Toponym = place
     """
@@ -234,22 +228,6 @@ class SlTextWritingSupport(SlAbstract):
     """
     A type of Text
     E.g. 'paper', 'ostraca', 'parchment'
-    """
-    pass
-
-
-class SlFunder(SlAbstract):
-    """
-    A research funder
-    E.g. 'ERC'
-    """
-    name_full = models.CharField(max_length=100, blank=True, null=True)
-
-
-class SlUnitOfMeasurement(SlAbstract):
-    """
-    A unit of measurement
-    E.g. 'mm', 'cm'
     """
     pass
 
@@ -285,14 +263,6 @@ class SlTextClassification(SlAbstract):
         ordering = ['order', Upper('name'), 'id']
 
 
-class SlTextCorrespondence(SlAbstract):
-    """
-    The correspondence of a Text
-    E.g. 'contract', 'administration', 'legal', 'colophon'
-    """
-    pass
-
-
 class SlTextScript(SlAbstract):
     """
     A script that a Text was originally written in
@@ -323,18 +293,10 @@ class SlTranslationLanguage(SlAbstract):
     pass
 
 
-class SlCountry(SlAbstract):
-    """
-    A type of location
-    E.g. 'United Kingdom', 'United Arab Emirates'
-    """
-    pass
-
-
-class SlPublicationStatement(SlAbstract):
+class SlTextPublication(SlAbstract):
     """
     A statement about who has published a Text
-    E.g. 'This text is published and distributed online by the Invisible East project, University of Oxford.'
+    E.g. 'Khan, Geoffrey. 2007. Arabic documents from early Islamic Khurasan (Studies in the Khalili Collection Volume V). London: The Nour Foundation in association with Azimuth Editions.'
     """
     pass
 
@@ -435,53 +397,39 @@ class Text(models.Model):
     related_name = 'texts'
 
     # General
-    shelfmark = models.CharField(max_length=1000)
+    shelfmark = models.CharField(max_length=1000, help_text="If this Corpus Text doesn't have a shelfmark then insert another value here to use as a title, such as a catalogue number or a brief description. If this Corpus Text is part of reused sheet that shares a shelfmark with another Corpus Text then append 'recto' or 'verso' to this shelfmark.", verbose_name="Shelfmark / Title")
     collection = models.ForeignKey('SlTextCollection', on_delete=models.RESTRICT, related_name=related_name)
     corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name)
     primary_language = models.ForeignKey('SlTextLanguage', on_delete=models.RESTRICT, related_name=f'{related_name}_primary')
-    type = models.ForeignKey('SlTextType', on_delete=models.RESTRICT, related_name=related_name)
-    correspondence = models.ForeignKey('SlTextCorrespondence', on_delete=models.RESTRICT, related_name=related_name)
-    century = models.ForeignKey(SlTextCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='Uses the Gregorian calendar. This is used to filter and sort results in the public interface. More specific data about dates can be added below in the "Text Dates" section of this form.')
-    description = models.TextField()
-    id_khan = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Khan ID")
-    id_nicholas_simms_williams = models.CharField(max_length=1000, blank=True, null=True, verbose_name="Nicholas Simms-Williams ID")
-    country = models.ForeignKey('SlCountry', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     additional_languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True, help_text="Don't include the primary language. Only include additional languages/scripts that also appear in the text.")
-    funders = models.ManyToManyField('SlFunder', blank=True, related_name=related_name, db_index=True)
+    type = models.ForeignKey('SlTextType', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
+    document_subtype = models.ForeignKey('SlTextDocumentSubtype', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name, help_text='If a type of Administrative or Legal is selected for this Corpus Text, please also provide the subtype')
+    century = models.ForeignKey(SlTextCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='Uses the Gregorian calendar. This is used to filter and sort results in the public interface. If only a date range is available then select the century in the middle of the range. More specific data about dates can be found below in the "Text Dates" section of this form.')
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
 
-    # Subject
-    # The below fields may be related to above 'type' value, e.g. Legal or Administrative so need to show/hide necessary fields in admin
-    legal_transactions = models.ManyToManyField('SlTextSubjectLegalTransactions', blank=True, related_name=related_name, db_index=True)
-    administrative_internal_correspondences = models.ManyToManyField('SlTextSubjectAdministrativeInternalCorrespondence', blank=True, related_name=related_name, db_index=True)
-    administrative_tax_receipts = models.ManyToManyField('SlTextSubjectAdministrativeTaxReceipts', blank=True, related_name=related_name, db_index=True)
-    administrative_lists_and_accounting = models.ManyToManyField('SlTextSubjectAdministrativeListsAndAccounting', blank=True, related_name=related_name, db_index=True)
-    land_measurement_units = models.ManyToManyField('SlTextSubjectLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
-    people_and_processes_admins = models.ManyToManyField('SlTextSubjectPeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in public administration, tax, trade, and commerce')
-    people_and_processes_legal = models.ManyToManyField('SlTextSubjectPeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in legal and judiciary system')
-    documentations = models.ManyToManyField('SlTextSubjectDocumentation', blank=True, related_name=related_name, db_index=True)
-    geographic_administrative_units = models.ManyToManyField('SlTextSubjectGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
-    legal_and_administrative_stock_phrases = models.ManyToManyField('SlTextSubjectLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
-    finance_and_accountancy_phrases = models.ManyToManyField('SlTextSubjectFinanceAndAccountancyPhrases', blank=True, related_name=related_name, db_index=True)
-    agricultural_produce = models.ManyToManyField('SlTextSubjectAgriculturalProduce', blank=True, related_name=related_name, db_index=True, help_text='Agricultural produce, animals, and farming equipment')
-    currencies_and_denominations = models.ManyToManyField('SlTextSubjectCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
-    markings = models.ManyToManyField('SlTextSubjectMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
-    religions = models.ManyToManyField('SlTextSubjectReligion', blank=True, related_name=related_name, db_index=True)
-    toponyms = models.ManyToManyField('SlTextSubjectToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
+    # Content
+    summary_of_content = RichTextField(blank=True, null=True)
 
-    # Publication Statements
-    publication_statement = models.ForeignKey('SlPublicationStatement', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    publication_statement_original = models.TextField(blank=True, null=True)  # "publicationStmt > p (Originally...)" in xml
-    publication_statement_republished = models.TextField(blank=True, null=True)  # "publicationStmt > p (The text was later republished...)" in xml
+    # Tags of Terms in Text
+    land_measurement_units = models.ManyToManyField('SlTextTagLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
+    people_and_processes_admins = models.ManyToManyField('SlTextTagPeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in public administration, tax, trade, and commerce')
+    people_and_processes_legal = models.ManyToManyField('SlTextTagPeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in legal and judiciary system')
+    documentations = models.ManyToManyField('SlTextTagDocumentation', blank=True, related_name=related_name, db_index=True)
+    geographic_administrative_units = models.ManyToManyField('SlTextTagGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
+    legal_and_administrative_stock_phrases = models.ManyToManyField('SlTextTagLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
+    finance_and_accountancy_phrases = models.ManyToManyField('SlTextTagFinanceAndAccountancyPhrases', blank=True, related_name=related_name, db_index=True)
+    agricultural_produce = models.ManyToManyField('SlTextTagAgriculturalProduce', blank=True, related_name=related_name, db_index=True, help_text='Agricultural produce, animals, and farming equipment')
+    currencies_and_denominations = models.ManyToManyField('SlTextTagCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
+    markings = models.ManyToManyField('SlTextTagMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
+    religions = models.ManyToManyField('SlTextTagReligion', blank=True, related_name=related_name, db_index=True)
+    toponyms = models.ManyToManyField('SlTextTagToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
 
     # Physical Description
     writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
     writing_support_details = models.TextField(blank=True, null=True)
-    dimensions_unit = models.ForeignKey('SlUnitOfMeasurement', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    dimensions_height = models.FloatField(blank=True, null=True)
-    dimensions_width = models.FloatField(blank=True, null=True)
-    fold_lines_count_details = models.TextField(blank=True, null=True, help_text='Include fold lines count details, e.g. for recto, verso, etc.')
-    fold_lines_count_total = models.IntegerField(blank=True, null=True, help_text='Specify the total number of fold lines for this Text (you may need to add together the fold lines counts of recto, verso, etc. where applicable)')
+    dimensions_height = models.FloatField(blank=True, null=True, verbose_name='height (cm)')
+    dimensions_width = models.FloatField(blank=True, null=True, verbose_name='width (cm)')
+    fold_lines_details = models.TextField(blank=True, null=True)
     physical_additional_details = models.TextField(blank=True, null=True)
 
     # Review & Approve Text to Show on Public Website
@@ -581,8 +529,8 @@ class Text(models.Model):
         return self.text_folios.count()
 
     @property
-    def description_preview(self):
-        return textwrap.shorten(self.description, width=350, placeholder="...")
+    def summary_of_content_preview(self):
+        return textwrap.shorten(self.summary_of_content, width=350, placeholder="...")
 
     @property
     def list_image(self):
@@ -605,14 +553,27 @@ class TextDate(models.Model):
     A date of a Text
     """
 
+    date_help_text = 'Format date as: YYYY-MM-DD - e.g. 0605-01-31'
     related_name = 'text_dates'
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     calendar = models.ForeignKey('SlCalendar', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    date = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
-    date_not_before = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
-    date_not_after = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 0605-09-10, 1198-02-11, etc.')
-    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='E.g. 10 Ramaḍān 605, 11 Feb 1198, etc.')
+    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 10 Ramaḍān 605, 11 Feb 1198')
+    date = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+    date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+    date_range_end = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+
+
+class TextRelatedPublication(models.Model):
+    """
+    A related publication of a Text
+    """
+
+    related_name = 'text_related_publications'
+
+    text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
+    publication = models.ForeignKey('SlTextPublication', on_delete=models.RESTRICT, related_name=related_name)
+    pages = models.CharField(max_length=1000, blank=True, null=True, help_text='Specify the page number or range of page numbers - e.g. 4, 82-84, etc.')
 
 
 class TextFolio(models.Model):
@@ -674,6 +635,8 @@ To manually override an automatic line number simply:
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
+        verbose_name = 'Text Folio (including Transcription, Translation, Images, etc.)'
+        verbose_name_plural = verbose_name
 
 
 class TextFolioAnnotation(models.Model):

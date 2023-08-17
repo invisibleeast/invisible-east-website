@@ -154,7 +154,7 @@ CKEDITOR_CONFIGS = {
         'format_tags': 'p;h4',
         'tabSpaces': 4,
         'height': '27em',
-        'width': '27vw',
+        'width': '36.5em',
         'allowedContent': True
     }
 }

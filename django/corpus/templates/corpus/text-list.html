@@ -133,10 +133,9 @@
                 <div class="corpus-text-list-items-item-text">
                     <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
                     <div class="corpus-text-list-items-item-text-details">
-                        <div class="corpus-text-list-items-item-text-details-description">{{ object.description_preview }}</div>
+                        <div class="corpus-text-list-items-item-text-details-summary">{{ object.summary_of_content_preview }}</div>
                         <dl>
                             <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
-                            <div><dt>Correspondence</dt><dd>{{ object.correspondence | title }}</dd></div>
                             <div><dt>Number of Folios</dt><dd>{{ object.text_folios.count }}</dd></div>
                             {% if object.century %}<div><dt>Date</dt><dd>{{ object.century }}</dd></div>{% endif %}
                             <div><dt>IE Input Date</dt><dd>{{ object.meta_created_datetime | date:"n M o" }}</dd></div>
@@ -202,7 +201,7 @@
 <!-- JS -->
 <script>
     $(document).ready(function(){
-        {% include "corpus/snippets/list.js" %}
+        {% include "corpus/js/list.js" %}
     });
 </script>
 

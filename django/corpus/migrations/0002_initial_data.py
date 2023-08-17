@@ -115,13 +115,6 @@ def insert_data_select_list_models(apps, schema_editor):
     required to manually set additional values.
     """
 
-    # SlTextTypeCategory
-    for name in [
-        'Document',
-        'Literature'
-    ]:
-        models.SlTextTypeCategory.objects.create(name=name)
-
     # SlTextCorpus
     for name in [
         'Bamiyan Papers',
@@ -129,34 +122,85 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextCorpus.objects.create(name=name)
 
+    # SlTextTypeCategory
+    for name in [
+        'Document',
+        'Literature'
+    ]:
+        models.SlTextTypeCategory.objects.create(name=name)
+
     # SlTextType
+    category_document = models.SlTextTypeCategory.objects.get(name='Document')
+    category_literature = models.SlTextTypeCategory.objects.get(name='Literature')
     for obj in [
         {
             'name': 'Administrative',
-            'category': models.SlTextTypeCategory.objects.get(name='Document')
+            'category': category_document
         },
         {
             'name': 'Legal',
-            'category': models.SlTextTypeCategory.objects.get(name='Document')
+            'category': category_document
         },
         {
             'name': 'Letter',
-            'category': models.SlTextTypeCategory.objects.get(name='Document')
+            'category': category_document
         },
         {
             'name': 'List or table',
-            'category': models.SlTextTypeCategory.objects.get(name='Document')
+            'category': category_document
         },
         {
             'name': 'Literary text',
-            'category': models.SlTextTypeCategory.objects.get(name='Literature')
+            'category': category_literature
         },
         {
             'name': 'Paraliterary',
-            'category': models.SlTextTypeCategory.objects.get(name='Literature')
+            'category': category_literature
         }
     ]:
         models.SlTextType.objects.create(**obj)
+
+    # SlTextDocumentSubtypeCategory
+    for name in [
+        'Administrative',
+        'Legal'
+    ]:
+        models.SlTextDocumentSubtypeCategory.objects.create(name=name)
+
+    # SlTextDocumentSubtype
+    category_administrative = models.SlTextDocumentSubtypeCategory.objects.get(name='Administrative')
+    category_legal = models.SlTextDocumentSubtypeCategory.objects.get(name='Legal')
+    for obj in [
+        # Administrative
+        { 'name': 'Missives to the field', 'category': category_administrative },
+        { 'name': 'Informational note to the field', 'category': category_administrative },
+        { 'name': 'Requests', 'category': category_administrative },
+        { 'name': 'Missives for action', 'category': category_administrative },
+        { 'name': 'Tax receipts', 'category': category_administrative },
+        { 'name': 'Lists and accounting', 'category': category_administrative },
+        # Legal
+        { 'name': 'Worship acts (ibādat)', 'category': category_legal },
+        { 'name': 'Sale (bayʿ)', 'category': category_legal },
+        { 'name': 'Rent-hire (ʿijāra)', 'category': category_legal },
+        { 'name': 'Partnership (sharīk/shurāka)', 'category': category_legal },
+        { 'name': 'Marriage (ʿaqd, nikāh)', 'category': category_legal },
+        { 'name': 'Divorce (ṭalāq)', 'category': category_legal },
+        { 'name': 'Loan (wām)/ Debt (dayn)', 'category': category_legal },
+        { 'name': 'Amicable Settlement', 'category': category_legal },
+        { 'name': 'Preemption', 'category': category_legal },
+        { 'name': 'Power of attorney', 'category': category_legal },
+        { 'name': 'Slavery and Manumission', 'category': category_legal },
+        { 'name': 'Inheritance', 'category': category_legal },
+        { 'name': 'Donation', 'category': category_legal },
+        { 'name': 'Transfer of money (Ḥawāla)', 'category': category_legal },
+        { 'name': 'Guarantee of liability (dark-I ḍamān)', 'category': category_legal },
+        { 'name': 'Debt (Unknown origin)', 'category': category_legal },
+        { 'name': 'Penal rules', 'category': category_legal },
+        { 'name': 'Personal Status', 'category': category_legal },
+        { 'name': 'Testimony', 'category': category_legal },
+        { 'name': 'Litigation', 'category': category_legal },
+    ]:
+        models.SlTextDocumentSubtype.objects.create(**obj)
 
     # SlTextCentury
     # e.g. "1st Century CE, 2nd Century CE, ... 21st Century CE"
@@ -166,54 +210,7 @@ def insert_data_select_list_models(apps, schema_editor):
             century_number=object
         ).save()
 
-    # SlTextSubjectLegalTransactions
-    for name in [
-        'Worship acts (ibādat)',
-        'Sale (bayʿ)',
-        'Rent-hire (ʿijāra)',
-        'Partnership (sharīk/shurāka)',
-        'Marriage (ʿaqd, nikāh)',
-        'Divorce (ṭalāq)',
-        'Loan (wām)/ Debt (dayn)',
-        'Amicable Settlement',
-        'Preemption',
-        'Power of attorney',
-        'Slavery and Manumission',
-        'Inheritance',
-        'Donation',
-        'Transfer of money (Ḥawāla)',
-        'Guarantee of liability (dark-I ḍamān)',
-        'Debt (Unknown origin)',
-        'Penal rules',
-        'Personal Status',
-        'Testimony',
-        'Litigation',
-
-    ]:
-        models.SlTextSubjectLegalTransactions.objects.create(name=name)
-
-    # SlTextSubjectAdministrativeInternalCorrespondence
-    for name in [
-        'Missives to the field',
-        'Informational note to the field',
-        'Requests',
-        'Missives for action'
-    ]:
-        models.SlTextSubjectAdministrativeInternalCorrespondence.objects.create(name=name)
-
-    # SlTextSubjectAdministrativeTaxReceipts
-    for name in [
-        'TODO',
-    ]:
-        models.SlTextSubjectAdministrativeTaxReceipts.objects.create(name=name)
-
-    # SlTextSubjectAdministrativeListsAndAccounting
-    for name in [
-        'TODO',
-    ]:
-        models.SlTextSubjectAdministrativeListsAndAccounting.objects.create(name=name)
-
-    # SlTextSubjectLandMeasurementUnits
+    # SlTextTagLandMeasurementUnits
     for name in [
         'Mann',
         'Sitīr',
@@ -227,9 +224,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Tīr'
         
     ]:
-        models.SlTextSubjectLandMeasurementUnits.objects.create(name=name)
+        models.SlTextTagLandMeasurementUnits.objects.create(name=name)
 
-    # SlTextSubjectPeopleAndProcessesAdmin
+    # SlTextTagPeopleAndProcessesAdmin
     for name in [
         'Muʿāmala',
         'Taḥakumāna (ghalla-yi)',
@@ -253,17 +250,17 @@ def insert_data_select_list_models(apps, schema_editor):
         'Dīwān',
         'ʿAwāriḍ (public expenses)',
     ]:
-        models.SlTextSubjectPeopleAndProcessesAdmin.objects.create(name=name)
+        models.SlTextTagPeopleAndProcessesAdmin.objects.create(name=name)
 
-    # SlTextSubjectPeopleAndProcessesLegal
+    # SlTextTagPeopleAndProcessesLegal
     for name in [
         'Qāḍī',
         'Faqīh',
         'Muḥtasib'
     ]:
-        models.SlTextSubjectPeopleAndProcessesLegal.objects.create(name=name)
+        models.SlTextTagPeopleAndProcessesLegal.objects.create(name=name)
 
-    # SlTextSubjectDocumentation
+    # SlTextTagDocumentation
     for name in [
         'Qabāla',
         'Barāt',
@@ -277,9 +274,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ruqʿa',
         'Risāla'
     ]:
-        models.SlTextSubjectDocumentation.objects.create(name=name)
+        models.SlTextTagDocumentation.objects.create(name=name)
 
-    # SlTextSubjectGeographicAdministrativeUnits
+    # SlTextTagGeographicAdministrativeUnits
     for name in [
         'Wilāyat',
         'Badiya',
@@ -292,9 +289,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Ribāṭ',
         'Sarāy'
     ]:
-        models.SlTextSubjectGeographicAdministrativeUnits.objects.create(name=name)
+        models.SlTextTagGeographicAdministrativeUnits.objects.create(name=name)
 
-    # SlTextSubjectLegalAndAdministrativeStockPhrases
+    # SlTextTagLegalAndAdministrativeStockPhrases
     for name in [
         'Pious invocations',
         'Bismillāh (including abbrev)',
@@ -317,18 +314,18 @@ def insert_data_select_list_models(apps, schema_editor):
         'Taxes: ʿUshr',
         'Taxes: Jizya'
     ]:
-        models.SlTextSubjectLegalAndAdministrativeStockPhrases.objects.create(name=name)
+        models.SlTextTagLegalAndAdministrativeStockPhrases.objects.create(name=name)
 
-    # SlTextSubjectFinanceAndAccountancyPhrases
+    # SlTextTagFinanceAndAccountancyPhrases
     for name in [
         'Tafṣīl (itemisation)',
         'Wajh/wujūh (in account/payment of)',
         'Bāqī (remainder)',
         'Wām (-I lāzim) (loan)'
     ]:
-        models.SlTextSubjectFinanceAndAccountancyPhrases.objects.create(name=name)
+        models.SlTextTagFinanceAndAccountancyPhrases.objects.create(name=name)
 
-    # SlTextSubjectAgriculturalProduce
+    # SlTextTagAgriculturalProduce
     for name in [
         'Ghalla (grain)',
         'Gandum (wheat)',
@@ -345,9 +342,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Harvest collecting (bardāshtan, rafʿ kardan)',
         'ʿĀsiya (mill)',
     ]:
-        models.SlTextSubjectAgriculturalProduce.objects.create(name=name)
+        models.SlTextTagAgriculturalProduce.objects.create(name=name)
 
-    # SlTextSubjectCurrenciesAndDenominations
+    # SlTextTagCurrenciesAndDenominations
     for name in [
         'ʿAdlī',
         'Shiyānī',
@@ -359,9 +356,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Diramsang',
         'Dāng/dāniq/danānīq (one-sixth)'
     ]:
-        models.SlTextSubjectCurrenciesAndDenominations.objects.create(name=name)
+        models.SlTextTagCurrenciesAndDenominations.objects.create(name=name)
 
-    # SlTextSubjectMarkings
+    # SlTextTagMarkings
     for name in [
         'Oblique stroke (check mark)',
         'Jaʾiza (cipher)',
@@ -369,9 +366,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Column format',
         'Siyāq (accountants’ abbreviations of numbers)',
     ]:
-        models.SlTextSubjectMarkings.objects.create(name=name)
+        models.SlTextTagMarkings.objects.create(name=name)
 
-    # SlTextSubjectReligion
+    # SlTextTagReligion
     for name in [
         'Temple',
         'Mosque',
@@ -380,9 +377,9 @@ def insert_data_select_list_models(apps, schema_editor):
         'Fatwa/istiftāʿ',
         'Rituals'
     ]:
-        models.SlTextSubjectReligion.objects.create(name=name)
+        models.SlTextTagReligion.objects.create(name=name)
 
-    # SlTextSubjectToponym
+    # SlTextTagToponym
     for name in [
         # Bamiyan
         'Āhangarān, آهنگران',
@@ -510,7 +507,7 @@ def insert_data_select_list_models(apps, schema_editor):
         # MiddlePersian
         'TODO',
     ]:
-        models.SlTextSubjectToponym.objects.create(name=name)
+        models.SlTextTagToponym.objects.create(name=name)
 
     # SlTextScript
     for name in [
@@ -565,17 +562,6 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextWritingSupport.objects.create(name=name)
 
-    # SlPublicationStatement
-    models.SlPublicationStatement.objects.create(
-        name='This text is published and distributed online by the Invisible East project, University of Oxford.'
-    )
-
-    # SlFunder
-    models.SlFunder.objects.create(
-        name='ERC',
-        name_full='European Research Council'
-    )
-
     # SlM2MPersonToPersonRelationshipType
     for name in [
         'brother',
@@ -597,7 +583,7 @@ def insert_data_select_list_models(apps, schema_editor):
 
     # SlM2MTextToTextRelationshipType
     for name in [
-        'part of same document',
+        'part of same text',
     ]:
         models.SlM2MTextToTextRelationshipType.objects.create(name=name)
 
@@ -730,22 +716,6 @@ def insert_data_texts(apps, schema_editor):
                 # (Choices: Arabic, New Persian, Bactrian)
                 primary_language = root.split('/')[-1]
                 text_obj.primary_language = models.SlTextLanguage.objects.get(name=primary_language)
-                # id_khan
-                try:
-                    text_obj.id_khan = ms_desc.find('msIdentifier/idno[@type="Khan"]').text
-                except AttributeError:
-                    pass
-                # id_nicholas_simms_williams
-                try:
-                    text_obj.id_nicholas_simms_williams = ms_desc.find('msIdentifier/idno[@type="NSW"]').text
-                except AttributeError:
-                    pass
-                # country
-                try:
-                    country = ms_desc.find('msIdentifier/country').text
-                    text_obj.country = models.SlCountry.objects.get_or_create(name=country)[0]
-                except AttributeError:
-                    pass
                 # century
                 try:
                     gregorian = corresp_action.findall('date[@calendar="#Gregorian"]')[0]
@@ -760,30 +730,13 @@ def insert_data_texts(apps, schema_editor):
                         text_obj.century = models.SlTextCentury.objects.get(century_number=century)
                 except IndexError:
                     pass
-                # description
-                text_obj.description = '\n\n'.join(
-                    [description.text for description in profile_desc.findall('particDesc/p')]
+                # summary_of_content
+                text_obj.summary_of_content = '\n\n'.join(
+                    [summary_of_content.text for summary_of_content in profile_desc.findall('particDesc/p')]
                 )
                 # type
                 text_type = profile_desc.findall('textClass/keywords/term')[0].text
                 text_obj.type = models.SlTextType.objects.get_or_create(name=text_type)[0]
-                # correspondence
-                correspondence = corresp_action.attrib['type']
-                text_obj.correspondence = models.SlTextCorrespondence.objects.get_or_create(name=correspondence)[0]
-
-                # Publication data, stored in separate <p> elements within publicationStmt
-                pub_start_original = 'Originally published in: '
-                pub_start_republished = 'The text was later republished in '
-                for publication_p in file_desc.findall('publicationStmt/p'):
-                    # publication_statement_original
-                    if publication_p.text.startswith(pub_start_original):
-                        text_obj.publication_statement_original = publication_p.text.replace(pub_start_original, '')
-                    # publication_statement_republished
-                    elif publication_p.text.startswith(pub_start_republished):
-                        text_obj.publication_statement_republished = publication_p.text.replace(pub_start_republished, '')
-                    # publication_statement
-                    else:
-                        text_obj.publication_statement = models.SlPublicationStatement.objects.get_or_create(name=publication_p.text)[0]
 
                 # writing_support
                 writing_support = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
@@ -794,26 +747,29 @@ def insert_data_texts(apps, schema_editor):
 
                 # Dimensions
                 try:
-                    # dimensions_unit
                     dimensions_unit = dimensions.find('height').attrib['unit']
-                    text_obj.dimensions_unit = models.SlUnitOfMeasurement.objects.get_or_create(name=dimensions_unit)[0]
                     # dimensions_height
-                    text_obj.dimensions_height = dimensions.find('height').text
+                    dimensions_height = dimensions.find('height').text
+                    if dimensions_height and len(dimensions_height):
+                        # Convert mm to cm
+                        dimensions_height = int(dimensions_height) / 10 if dimensions_unit == 'mm' else dimensions_height
+                        text_obj.dimensions_height = dimensions_height
                     # dimensions_width
-                    text_obj.dimensions_width = dimensions.find('width').text
+                    dimensions_width = dimensions.find('width').text
+                    if dimensions_width and len(dimensions_width):
+                        # Convert mm to cm
+                        dimensions_width = int(dimensions_width) / 10 if dimensions_unit == 'mm' else dimensions_width
+                        text_obj.dimensions_width = dimensions_width
                 except AttributeError:
                     pass
 
                 # fold_lines
                 try:
                     # Join multiple <p> tag text into single string, separated with new lines
-                    fold_lines_count_details = '\n\n'.join(
+                    fold_lines_details = '\n\n'.join(
                         [flcd.text for flcd in ms_desc.findall('physDesc/objectDesc/layoutDesc/p')]
                     )
-                    text_obj.fold_lines_count_details = fold_lines_count_details
-                    # Get all numbers from the details string and add them together to likely give the total count
-                    fold_lines_count_numbers = re.findall(r'\d+', fold_lines_count_details)
-                    text_obj.fold_lines_count_total = sum(map(int, fold_lines_count_numbers))
+                    text_obj.fold_lines_details = fold_lines_details
                 except AttributeError:
                     pass
 
@@ -852,7 +808,6 @@ def insert_data_texts(apps, schema_editor):
                         text_obj.admin_principal_data_entry_person = admin_principal_data_entry_person
                 except AttributeError:
                     pass
-                # meta_created_by - Cat
 
                 # Save Text object in db
                 text_obj.save()
@@ -870,6 +825,28 @@ def insert_data_texts(apps, schema_editor):
                         person=models.Person.objects.get_or_create(name=person.text)[0]
                     )
 
+                # Text Related Publications, stored in separate <p> elements within publicationStmt
+                for publication_p in file_desc.findall('publicationStmt/p'):
+                    # Ignore 'Invisible East' publication statements
+                    if 'Invisible East' not in publication_p.text:
+
+                        # Remove unwanted text from statement
+                        publication_text = publication_p.text
+                        publication_text = publication_text.replace('Originally published in: ', '')
+                        publication_text = publication_text.replace('The document was later republished in ', '')
+
+                        # Split pages from publication text
+                        if ' Pages ' in publication_text:
+                            publication_text, pages = publication_text.split(' Pages ')
+                            pages = pages.strip().replace('.', '')
+
+                        # Create the object
+                        models.TextRelatedPublication.objects.create(
+                            text=text_obj,
+                            publication=models.SlTextPublication.objects.get_or_create(name=publication_text)[0],
+                            pages=pages
+                        )
+
                 # TextDate
                 for date in corresp_action.findall('date'):
                     # Define values
@@ -879,13 +856,13 @@ def insert_data_texts(apps, schema_editor):
                     except KeyError:
                         date_when = None
                     try:
-                        date_not_before = date.attrib['notBefore']
+                        date_range_start = date.attrib['notBefore']
                     except KeyError:
-                        date_not_before = None
+                        date_range_start = None
                     try:
-                        date_not_after = date.attrib['notAfter']
+                        date_range_end = date.attrib['notAfter']
                     except KeyError:
-                        date_not_after = None
+                        date_range_end = None
                     try:
                         date_text = date.text
                     except AttributeError:
@@ -895,12 +872,12 @@ def insert_data_texts(apps, schema_editor):
                         text=text_obj,
                         calendar=models.SlCalendar.objects.get_or_create(name=calendar)[0],
                         date=date_when,
-                        date_not_before=date_not_before,
-                        date_not_after=date_not_after,
+                        date_range_start=date_range_start,
+                        date_range_end=date_range_end,
                         date_text=date_text
                     )
 
-                # Text Folios and Lines
+                # Text Folios
                 # Loop through original (i.e. transcription) texts
                 for folio_div in body.findall('div[@type="original"]'):
 
@@ -968,16 +945,10 @@ def insert_data_texts(apps, schema_editor):
                 try:
                     toponym = profile_desc.findall('textClass/keywords/term[@type="location"]')[0].text
                     text_obj.toponyms.add(
-                        models.SlTextSubjectToponym.objects.get_or_create(name=toponym)[0]
+                        models.SlTextTagToponym.objects.get_or_create(name=toponym)[0]
                     )
                 except (AttributeError, IndexError):
                     pass
-
-                # funders
-                funder = title_stmt.find('funder').text
-                text_obj.funders.add(
-                    models.SlFunder.objects.get_or_create(name=funder)[0]
-                )
 
 
 def insert_data_texts_fk(apps, schema_editor):

@@ -3,19 +3,114 @@
 
 {% block main %}
 
-<section class="container">
-    <h2>Detail</h2>
+<div id="corpus-text-detail">
 
-    {% for folio in object.text_folios.all %}
-        <div>{{ folio.transcription | safe }}</div>
-    {% endfor %}
-</section>
+    <!-- Content -->
+    <section id="corpus-text-detail-content">
+        <div id="corpus-text-detail-content-title">
+            {{ object.title }}
+        </div>
 
+        <ul id="corpus-text-detail-content-tabs">
+            <li id="details"><i class="fas fa-align-left"></i> Details</li>
+            <li id="transcription"><i class="fas fa-pen-fancy"></i> Transcription</li>
+            <li id="translation"><i class="fas fa-globe-europe"></i> Translation</li>
+            <li id="map"><i class="fas fa-map-marker-alt"></i> Map</li>
+            <li id="admin"><i class="fas fa-user-cog"></i> Admin</li>
+        </ul>
+
+        <article class="tabbed" id="corpus-text-detail-content-details">
+            <div class="tabbed-title">Details</div>
+            <p>
+                Details
+            </p>
+        </article>
+
+        <article class="tabbed" id="corpus-text-detail-content-transcription">
+            <div class="tabbed-title">Transcription</div>
+            {% for folio in text_folios %}
+                <div>{{ folio.transcription | safe }}</div>
+            {% endfor %}
+        </article>
+
+        <article class="tabbed" id="corpus-text-detail-content-translation">
+            <div class="tabbed-title">Translation</div>
+            {% for folio in text_folios %}
+                <div>{{ folio.translation | safe }}</div>
+            {% endfor %}
+        </article>
+
+        <article class="tabbed" id="corpus-text-detail-content-map">
+            <div class="tabbed-title">Map</div>
+            <p>
+                Map
+            </p>
+        </article>
+
+        <article class="tabbed" id="corpus-text-detail-content-admin">
+            <div class="tabbed-title">Admin</div>
+            <p>
+                Admin
+            </p>
+        </article>
+
+    </section><!--
+
+    Image
+    --><section id="corpus-text-detail-images">
+        <!-- Image Controls -->
+        <div id="corpus-text-detail-images-controls">
+            <!-- Choose Image -->
+            <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
+                <select{% if object.count_documentimages < 2 %} style="display: none;"{% endif %}>
+                    {% for text_folio in text_folios %}
+                        <option value="{{ text_folio.id }}">Image {{ forloop.counter }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Reset Viewer -->
+            <div id="corpus-text-detail-images-controls-reset" class="corpus-text-detail-images-controls-item" title="Reset Image"><i class="fas fa-sync-alt"></i></div>
+            <!-- Download Image -->
+            <div id="corpus-text-detail-images-controls-downloadimage" class="corpus-text-detail-images-controls-item" title="Download Image">
+                <a href="{{ object.default_image.image.url }}" title="download image" download><i class="fas fa-download"></i></a>
+            </div>
+            <!-- Reveal All Parts -->
+            <div id="corpus-text-detail-images-controls-revealallparts" class="corpus-text-detail-images-controls-item" title="Reveal All Parts on Image"><i class="fas fa-border-none"></i></div>
+            <!-- Rotate Image Anticlockwise -->
+            <div id="corpus-text-detail-images-controls-rotate-anticlockwise" class="corpus-text-detail-images-controls-item" title="Rotate Image Anticlockwise"><i class="fas fa-undo-alt"></i></div>
+            <!-- Rotate Image Clockwise -->
+            <div id="corpus-text-detail-images-controls-rotate-clockwise" class="corpus-text-detail-images-controls-item" title="Rotate Image Clockwise"><i class="fas fa-redo-alt"></i></div>
+        </div>
+        <div id="corpus-text-detail-images-container">
+            {% for text_folio in text_folios %}
+                <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
+                    <div class="corpus-text-detail-images-image-rotatelayer">
+                        <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
+                        <div class="corpus-text-detail-images-image-parts">
+                            {% for annotation in text_folio.textfolioannotation_set.all %}
+                                <div id="corpus-text-detail-images-image-parts-part-{{ annotation.id }}" class="corpus-text-detail-images-image-parts-part" style="top: {{ annotation.image_cropped_top }}px; left: {{ annotation.image_cropped_left }}px; width: {{ annotation.image_cropped_width }}px; height: {{ annotation.image_cropped_height }}px;"></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+
+<!-- JS -->
+
+<!-- Panzoom -->
+<!-- https://www.jqueryscript.net/zoom/jQuery-Plugin-For-Panning-Zooming-Any-Elements-panzoom.html -->
+<!-- https://github.com/timmywil/panzoom -->
+<script src="{% static 'js/panzoom.min.js' %}"></script>
+
+<!-- Custom JS -->
 <script>
-    $('li').each(function(){
-        console.log($(this).val())
-    })
+    $(document).ready(function(){
+        {% include "corpus/js/detail.js" %}
+    });
 </script>
-
 
 {% endblock %}
