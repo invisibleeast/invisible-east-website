@@ -6,39 +6,124 @@
 <div id="corpus-text-detail">
 
     <!-- Content -->
-    <section id="corpus-text-detail-content">
+    <section id="corpus-text-detail-content"{% if not object.has_image %} class="full"{% endif %}>
         <div id="corpus-text-detail-content-title">
             {{ object.title }}
         </div>
 
         <ul id="corpus-text-detail-content-tabs">
             <li id="details"><i class="fas fa-align-left"></i> Details</li>
-            <li id="transcription"><i class="fas fa-pen-fancy"></i> Transcription</li>
-            <li id="translation"><i class="fas fa-globe-europe"></i> Translation</li>
+            {% if object.count_text_folios > 1 %}<li id="folios"><i class="fas fa-scroll"></i> Folios</li>{% endif %}
+            <li id="tags"><i class="fas fa-hashtag"></i> Tags of Terms</li>
+            {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> Transcriptions</li>{% endif %}
+            {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
+            {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
             <li id="map"><i class="fas fa-map-marker-alt"></i> Map</li>
-            <li id="admin"><i class="fas fa-user-cog"></i> Admin</li>
+            {% if object.texts.all %}<li id="related"><i class="fas fa-file"></i> Related Texts</li>{% endif %}
         </ul>
 
         <article class="tabbed" id="corpus-text-detail-content-details">
             <div class="tabbed-title">Details</div>
-            <p>
-                Details
-            </p>
-        </article>
+            {% for data_item in data_items %}
 
-        <article class="tabbed" id="corpus-text-detail-content-transcription">
-            <div class="tabbed-title">Transcription</div>
-            {% for folio in text_folios %}
-                <div>{{ folio.transcription | safe }}</div>
+                {% if data_item.section_header %}
+                    {% if forloop.counter > 1 %}</div>{% endif %}
+                    <div class="corpus-text-detail-content-details-datagroup">
+                    <h3>{{ data_item.section_header }}</h3>
+                {% endif %}
+
+                {% if data_item.value %}
+                    <div class="corpus-text-detail-content-details-datagroup-dataitem">
+                        <label>{{ data_item.label }}</label><span>{{ data_item.value | safe }}</span>
+                    </div>
+                {% endif %}
+
+                {% if forloop.last %}</div>{% endif %}
+
             {% endfor %}
         </article>
 
-        <article class="tabbed" id="corpus-text-detail-content-translation">
-            <div class="tabbed-title">Translation</div>
-            {% for folio in text_folios %}
-                <div>{{ folio.translation | safe }}</div>
+        <article class="tabbed" id="corpus-text-detail-content-folios">
+            <div class="tabbed-title">Folios</div>
+            {% for text_folio in text_folios %}
+
+                <div class="corpus-text-detail-content-folios-folio" data-folio="{{ text_folio.id }}">
+                    <div class="corpus-text-detail-content-folios-folio-title">
+                        Folio {{ forloop.counter }}
+                    </div>
+                    
+                    <!-- Image -->
+                    <div class="corpus-text-detail-content-folios-folio-imagecontainer" style="background-image: url({% if text_folio.image_small %}{{ text_folio.image_small.url }}); cursor: pointer;{% else %}{% static 'images/noimagefound.jpg' %});{% endif %} background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
+                    </div>
+                    <!-- Info -->
+                    <dl>
+                        {% if text_folio.open_state %}<div><dt>Open State</dt><dd>{{ text_folio.open_state }}</dd></div>{% endif %}
+                        <div><dt>Side</dt><dd>{{ text_folio.side }}</dd></div>
+                    </dl>
+                    <!-- Text links -->
+                    <div class="corpus-text-detail-content-folios-folio-textlinks">
+                        {% if text_folio.transcription %}
+                            <div data-trans="transcription"><i class="fas fa-pen-fancy"></i> Transcription</div>
+                        {% endif %}
+                        {% if text_folio.translation %}
+                            <div data-trans="translation"><i class="fas fa-globe-europe"></i>Translation</div>
+                        {% endif %}
+                        {% if text_folio.transliteration %}
+                            <div data-trans="transliteration"><i class="fas fa-font"></i>Transliteration</div>
+                        {% endif %}
+                    </div>
+                </div>
+
             {% endfor %}
         </article>
+
+        {% if object.has_transcription %}
+            <article class="tabbed" id="corpus-text-detail-content-transcription">
+                <div class="tabbed-title">Transcription</div>
+
+                {% include "corpus/snippets/foliotext-options.html" with current_tab='transcription' %}
+
+                {% for text_folio in text_folios %}
+                    {% if text_folio.transcription_lines %}
+                        <div class="corpus-text-detail-content-transcription-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
+                            {{ text_folio.transcription_lines | safe }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </article>
+        {% endif %}
+
+        {% if object.has_translation %}
+            <article class="tabbed" id="corpus-text-detail-content-translation">
+                <div class="tabbed-title">Translation</div>
+
+                {% include "corpus/snippets/foliotext-options.html" with current_tab='translation' %}
+
+                {% for text_folio in text_folios %}
+                    {% if text_folio.translation_lines %}
+                        <div class="corpus-text-detail-content-translation-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
+                            {{ text_folio.translation_lines | safe }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </article>
+        {% endif %}
+
+        {% if object.has_transliteration %}
+            <article class="tabbed" id="corpus-text-detail-content-transliteration">
+                <div class="tabbed-title">Transliteration</div>
+
+                {% include "corpus/snippets/foliotext-options.html" with current_tab='transliteration' %}
+
+                {% for text_folio in text_folios %}
+                    {% if text_folio.transliteration_lines %}
+                        <div class="corpus-text-detail-content-transliteration-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
+                            {{ text_folio.transliteration_lines | safe }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </article>
+        {% endif %}
 
         <article class="tabbed" id="corpus-text-detail-content-map">
             <div class="tabbed-title">Map</div>
@@ -47,24 +132,33 @@
             </p>
         </article>
 
-        <article class="tabbed" id="corpus-text-detail-content-admin">
-            <div class="tabbed-title">Admin</div>
+        {% if object.texts.all %}
+            <article class="tabbed" id="corpus-text-detail-content-related">
+                <div class="tabbed-title">Related Texts</div>
+                <p>
+                    Related Texts: {{ object.texts.all }}
+                </p>
+            </article>
+        {% endif %}
+
+        <article class="tabbed" id="corpus-text-detail-content-tags">
+            <div class="tabbed-title">Tags</div>
             <p>
-                Admin
+                Tags
             </p>
         </article>
 
     </section><!--
 
     Image
-    --><section id="corpus-text-detail-images">
+    -->{% if object.has_image %}<section id="corpus-text-detail-images">
         <!-- Image Controls -->
         <div id="corpus-text-detail-images-controls">
             <!-- Choose Image -->
             <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
-                <select{% if object.count_documentimages < 2 %} style="display: none;"{% endif %}>
+                <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
                     {% for text_folio in text_folios %}
-                        <option value="{{ text_folio.id }}">Image {{ forloop.counter }}</option>
+                        <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -72,7 +166,7 @@
             <div id="corpus-text-detail-images-controls-reset" class="corpus-text-detail-images-controls-item" title="Reset Image"><i class="fas fa-sync-alt"></i></div>
             <!-- Download Image -->
             <div id="corpus-text-detail-images-controls-downloadimage" class="corpus-text-detail-images-controls-item" title="Download Image">
-                <a href="{{ object.default_image.image.url }}" title="download image" download><i class="fas fa-download"></i></a>
+                <a href="{{ object.default_image.image.url }}" title="Download Image" download><i class="fas fa-download"></i></a>
             </div>
             <!-- Reveal All Parts -->
             <div id="corpus-text-detail-images-controls-revealallparts" class="corpus-text-detail-images-controls-item" title="Reveal All Parts on Image"><i class="fas fa-border-none"></i></div>
@@ -83,19 +177,21 @@
         </div>
         <div id="corpus-text-detail-images-container">
             {% for text_folio in text_folios %}
-                <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
-                    <div class="corpus-text-detail-images-image-rotatelayer">
-                        <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
-                        <div class="corpus-text-detail-images-image-parts">
-                            {% for annotation in text_folio.textfolioannotation_set.all %}
-                                <div id="corpus-text-detail-images-image-parts-part-{{ annotation.id }}" class="corpus-text-detail-images-image-parts-part" style="top: {{ annotation.image_cropped_top }}px; left: {{ annotation.image_cropped_left }}px; width: {{ annotation.image_cropped_width }}px; height: {{ annotation.image_cropped_height }}px;"></div>
-                            {% endfor %}
+                {% if text_folio.image %}
+                    <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
+                        <div class="corpus-text-detail-images-image-rotatelayer">
+                            <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
+                            <div class="corpus-text-detail-images-image-parts">
+                                {% for annotation in text_folio.textfolioannotation_set.all %}
+                                    <div id="corpus-text-detail-images-image-parts-part-{{ annotation.id }}" class="corpus-text-detail-images-image-parts-part" style="top: {{ annotation.image_cropped_top }}px; left: {{ annotation.image_cropped_left }}px; width: {{ annotation.image_cropped_width }}px; height: {{ annotation.image_cropped_height }}px;"></div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
         </div>
-    </section>
+    </section>{% endif %}
 
 </div>
 

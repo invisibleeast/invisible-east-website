@@ -1,0 +1,25 @@
+<div class="corpus-text-detail-content-foliotext-options">
+    <div>
+        <select class="corpus-text-detail-folio-select" title="Select a folio"{% if object.count_text_folios < 2 %} disabled{% endif %}>
+            {% for folio in text_folios %}
+                <option value="{{ folio.id }}">{{ folio.name_short }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% if current_tab != 'transcription' and object.has_transcription %}
+        <div>
+            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transcription"> Show Transcriptions</label>
+        </div>
+    {% endif %}
+    {% if current_tab != 'translation' and object.has_translation %}
+        <div>
+            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="translation"> Show Translations</label>
+        </div>
+    {% endif %}
+    {% if current_tab != 'transliteration' and object.has_transliteration %}
+        <div>
+            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transliteration"> Show Transliterations</label>
+        </div>
+    {% endif %}
+</div>

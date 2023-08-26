@@ -319,6 +319,24 @@ form.full-form button[type=submit].button-danger {
     font-size: 0.9em;
 }
 
+/* ---------- Rotation ---------- */
+
+.rotate-0 {
+    transform: rotate(0deg);
+}
+
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.rotate-270 {
+    transform: rotate(270deg);
+}
+
 /* ---------- Navigation ---------- */
 
 nav.navbar {
@@ -845,9 +863,13 @@ main section {
     overflow: hidden;
 }
 
+#corpus-text-detail-content.full {
+    width: 100%;
+}
+
 #corpus-text-detail-content-title {
-    font-size: 2.4em;
-    margin: 0.3em 0 0.7em 0;
+    font-size: 2.1em;
+    margin: 0.5em 0;
     font-weight: 400;
     line-height: 1em;
     color: var(--color-primary);
@@ -879,8 +901,137 @@ main section {
     margin-right: 0.3em;
 }
 
-article.tabbed {
+#corpus-text-detail-content article.tabbed {
     display: none;
+    overflow: auto;
+    padding: 1em;
+    height: calc(100vh - 13em);
+}
+
+#corpus-text-detail-content h3 {
+    margin-top: 2.7em;
+}
+
+#corpus-text-detail-content h3:first-of-type {
+    margin-top: 1em;
+}
+
+.corpus-text-detail-content-details-datagroup-dataitem {
+    line-height: 1em;
+}
+
+.corpus-text-detail-content-details-datagroup-dataitem label {
+    font-weight: bold;
+    line-height: 1.5em;
+}
+
+.corpus-text-detail-content-details-datagroup-dataitem span {
+    display: inline-block;
+    width: calc(100% - 17em);
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.5em;
+}
+
+.corpus-text-detail-content-folios-folio {
+    display: inline-block;
+    border: 1px solid #DDD;
+    margin: 0.5em;
+    padding: 0.8em;
+    width: 15em;
+    max-width: 100%;
+    vertical-align: top;
+}
+
+.corpus-text-detail-content-folios-folio-title {
+    font-weight: 400;
+    font-size: 1.4em;
+    color: var(--color-primary);
+}
+
+.corpus-text-detail-content-folios-folio-imagecontainer {
+    background: #DDD;
+    height: 15em;
+    margin: 1em auto;
+}
+
+.corpus-text-detail-content-folios-folio-textlinks div {
+    text-align: center;
+    padding: 0.5em 1em 0.3em 1em;
+    margin: 0.5em 0;
+    width: 100%;
+    background: #DDD;
+    color: #303030;
+    cursor: pointer;
+}
+
+.corpus-text-detail-content-folios-folio-textlinks div:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+.corpus-text-detail-content-folios-folio-textlinks i {
+    margin-right: 0.3em;
+}
+
+.corpus-text-detail-content-foliotext-options {
+    background: #E4E4E4;
+    padding: 0.5em;
+}
+
+.corpus-text-detail-content-foliotext-options div label {
+    font-weight: 400;
+    cursor: pointer;
+    user-select: none;
+}
+
+.corpus-text-detail-content-foliotext-options div {
+    display: inline-block;
+    margin: 0 1em;
+}
+
+.corpus-text-detail-content-transcription-folio-lines,
+.corpus-text-detail-content-translation-folio-lines,
+.corpus-text-detail-content-transliteration-folio-lines {
+    margin: 1em 0;
+    font-size: 1.2em;
+}
+
+.corpus-text-detail-content-transcription-folio-lines-line,
+.corpus-text-detail-content-translation-folio-lines-line,
+.corpus-text-detail-content-transliteration-folio-lines-line {
+    padding: 0.5em 0;
+    margin: 0.3em 0;
+}
+
+.corpus-text-detail-content-transcription-folio-lines label,
+.corpus-text-detail-content-translation-folio-lines label,
+.corpus-text-detail-content-transliteration-folio-lines label {
+    display: inline-block;
+    width: 2.7em;
+    font-weight: bold;
+    text-align: right;
+    margin-right: 1em;
+    vertical-align: top;
+}
+
+.corpus-text-detail-content-transcription-folio-lines span,
+.corpus-text-detail-content-translation-folio-lines span,
+.corpus-text-detail-content-transliteration-folio-lines span {
+    display: inline-block;
+    width: calc(100% - 4em);
+    vertical-align: top;
+}
+
+.related-lines {
+    margin-bottom: 1.3em;
+    display: none;
+}
+
+.relatedline {
+    background: var(--color-secondary);
+    padding: 0.6em;
+    font-size: 0.8em;
 }
 
 #corpus-text-detail-images-controls-rotate-clockwise.disabled,
@@ -890,8 +1041,8 @@ article.tabbed {
 
 #corpus-text-detail-images-container {
     overflow: auto;
-    height: calc(100vh - 8em);
-    background: #EEE;
+    height: calc(100vh - 9em);
+    background: #DDD;
 }
 
 .corpus-text-detail-images-image {
@@ -950,7 +1101,7 @@ article.tabbed {
     padding: 0 2em 0 0.3em;
     height: 2em;
     border: 0;
-    width: 7em;
+    width: 8em;
     margin: 0.4em 0.8em;
 }
 

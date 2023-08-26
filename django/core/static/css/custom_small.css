@@ -156,4 +156,19 @@
         padding: 0.5em;
     }
 
+    .corpus-text-detail-content-details-datagroup-dataitem {
+        line-height: 1em;
+        margin: 2em 0;
+    }
+
+    .corpus-text-detail-content-details-datagroup-dataitem label {
+        display: block;
+        text-align: left;
+        width: 100%;
+    }
+
+    .corpus-text-detail-content-details-datagroup-dataitem span {
+        width: 100%;
+    }
+
 }

@@ -7,6 +7,7 @@ from io import BytesIO
 from django.db.models.functions import Upper
 from account.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from bs4 import BeautifulSoup
 import os
 import textwrap
 
@@ -407,6 +408,14 @@ class Text(models.Model):
     century = models.ForeignKey(SlTextCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='Uses the Gregorian calendar. This is used to filter and sort results in the public interface. If only a date range is available then select the century in the middle of the range. More specific data about dates can be found below in the "Text Dates" section of this form.')
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
 
+    # Physical Description
+    writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+    writing_support_details = models.TextField(blank=True, null=True)
+    dimensions_height = models.FloatField(blank=True, null=True, verbose_name='height (cm)')
+    dimensions_width = models.FloatField(blank=True, null=True, verbose_name='width (cm)')
+    fold_lines_details = models.TextField(blank=True, null=True)
+    physical_additional_details = models.TextField(blank=True, null=True)
+
     # Content
     summary_of_content = RichTextField(blank=True, null=True)
 
@@ -423,14 +432,6 @@ class Text(models.Model):
     markings = models.ManyToManyField('SlTextTagMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
     religions = models.ManyToManyField('SlTextTagReligion', blank=True, related_name=related_name, db_index=True)
     toponyms = models.ManyToManyField('SlTextTagToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
-
-    # Physical Description
-    writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    writing_support_details = models.TextField(blank=True, null=True)
-    dimensions_height = models.FloatField(blank=True, null=True, verbose_name='height (cm)')
-    dimensions_width = models.FloatField(blank=True, null=True, verbose_name='width (cm)')
-    fold_lines_details = models.TextField(blank=True, null=True)
-    physical_additional_details = models.TextField(blank=True, null=True)
 
     # Review & Approve Text to Show on Public Website
     public_review_ready = models.BooleanField(
@@ -525,6 +526,18 @@ class Text(models.Model):
                 return True
 
     @property
+    def has_transliteration(self):
+        for folio in self.text_folios.all():
+            if folio.transliteration is not None and len(folio.transliteration):
+                return True
+
+    @property
+    def has_image(self):
+        for folio in self.text_folios.all():
+            if folio.image:
+                return True
+
+    @property
     def count_text_folios(self):
         return self.text_folios.count()
 
@@ -535,7 +548,9 @@ class Text(models.Model):
     @property
     def list_image(self):
         # Return the first image of a folio, if exists
-        return self.text_folios.first().image_small
+        for folio in self.text_folios.all():
+                if folio.image:
+                    return folio.image_small
 
     @property
     def title(self):
@@ -607,6 +622,78 @@ To manually override an automatic line number simply:
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     transliteration = RichTextField(blank=True, null=True, help_text='Optional. Only relevant to some Middle Persian texts.')
 
+    def text_lines(self, text_field, field_name):
+        """
+        Takes the specified 'text' field (e.g. one of transcription, translation, transliteration)
+        and generates the HTML needed to display on the public interface
+
+        Each of these fields should have a related property that calls this method like so:
+        @property
+        def transcription_lines(self):
+            return self.text_lines(self.transcription, 'transcription')
+        """
+
+        # Ensure the transcription is a HTML ordered list with items
+        if '<ol>' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
+            html_to_return = ''
+            text_as_html = BeautifulSoup(text_field)
+            lines = text_as_html.find_all('li')
+            line_number = 0
+
+            for line_index, line in enumerate(lines):
+
+                # Line number
+                try:
+                    line_number = int(line.attrs['value'])
+                except KeyError:
+                    line_number += 1
+                # Line number range end
+                try:
+                    # If the next line has a value attribute that's greater than 1 more than current line count then
+                    next_line_number = int(lines[line_index + 1].attrs['value'])
+                    if line_number < (next_line_number - 1):
+                        line_number_range_end = next_line_number - 1
+                except (IndexError, KeyError):
+                    try:
+                        # Try getting the current line's 'data-range-end' attribute (valid if this is the last line)
+                        line_number_range_end = int(line.attrs['data-range-end'])
+                    except KeyError:
+                        line_number_range_end = None
+                # Line number label
+                line_number_label = f'{line_number}-{line_number_range_end}' if line_number_range_end else str(line_number)
+                # Line numbers (e.g. if line number label is 4-6 then line numbers is 4,5,6)
+                line_numbers = ",".join([str(ln) for ln in range(line_number, line_number_range_end + 1)]) if line_number_range_end else line_number
+
+                # Build HTML for this line
+                html_to_return += f"""
+                <div>
+                    <div class="corpus-text-detail-content-{field_name}-folio-lines-line" data-linenumbers="{line_numbers}" data-folio="{self.id}">
+                        <label>{line_number_label}</label>
+                        <span>{line.get_text()}</span>
+                    </div>
+                """
+                # Add related lines divs for the other 'trans...' fields.
+                # e.g. if current field is transcription add related lines div for translation nad transliteration
+                for trans in ['transcription', 'translation', 'transliteration']:
+                    if trans != field_name:
+                        html_to_return += f'<div class="related-lines" data-trans="{trans}"></div>'
+                # Close final div
+                html_to_return += '</div>'
+
+            return html_to_return
+
+    @property
+    def transcription_lines(self):
+        return self.text_lines(self.transcription, 'transcription')
+
+    @property
+    def translation_lines(self):
+        return self.text_lines(self.translation, 'translation')
+    
+    @property
+    def transliteration_lines(self):
+        return self.text_lines(self.transliteration, 'transliteration')
+
     @property
     def image_is_wider_than_tall(self):
         return image_is_wider_than_tall(self.image)
@@ -615,12 +702,12 @@ To manually override an automatic line number simply:
     def image_preview(self):
         return mark_safe(f'<img src="{self.image_small.url}" alt="image of this folio" />')
 
+    @property
+    def name_short(self):
+        return ", ".join([str(field) for field in [self.open_state, self.side] if field is not None])
+
     def __str__(self):
-        # Build the descriptors text
-        descriptors = [str(field) for field in [self.side, self.open_state] if field is not None]
-        descriptors_text = f' ({", ".join(descriptors)})' if len(descriptors) else ''
-        # Return the string
-        return f'{self.text}: Folio {descriptors_text}'
+        return f'{self.text}: Folio ({self.name_short})'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Must save now, so image is saved before working with it

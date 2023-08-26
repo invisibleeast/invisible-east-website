@@ -100,7 +100,7 @@
 
     #corpus-text-detail-content-tabs {
         border-bottom: 0.3em solid var(--color-secondary);
-        margin: 1em 0 2em 0;
+        margin: 1em 0 0 0;
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
@@ -111,12 +111,35 @@
         vertical-align: bottom;
         width: auto;
         margin-right: -5px;
-        padding: 0.85em 1.3em;
+        padding: 0.95em 1.3em 0.8em 1.3em;
     }
 
     #corpus-text-detail-content-tabs li:not(.active):hover {
         background: var(--color-primary-dark);
         color: rgba(255, 255, 255, 1);
+    }
+
+    .corpus-text-detail-content-details-datagroup-dataitem {
+        line-height: 1em;
+        margin: 0.5em 0;
+        padding: 0.5em 0;
+        border-bottom: 1px solid #E4E4E4;
+    }
+
+    .corpus-text-detail-content-details-datagroup-dataitem:last-of-type {
+        border: none;
+    }
+
+    .corpus-text-detail-content-details-datagroup-dataitem label {
+        display: inline-block;
+        margin-right: 0.5em;
+        vertical-align: top;
+        text-align: right;
+        width: 10em;
+    }
+
+    .corpus-text-detail-content-details-datagroup-dataitem span {
+        width: calc(100% - 12em);
     }
 
 }

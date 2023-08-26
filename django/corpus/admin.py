@@ -465,7 +465,7 @@ class TextFolioAdminView(GenericAdminView):
     Customise the TextFolio section of the admin dashboard
     """
 
-    list_display = ('id', 'text', 'transcription', 'translation')
+    list_display = ('id', 'text', 'name_short', 'transcription', 'translation')
     list_display_links = ('id',)
     search_fields = (
         'text__id',

@@ -1,12 +1,6 @@
-// Functions for simplifying interacting with URL parameters
-function getUrlParameter(parameter) {
-    return new URLSearchParams(window.location.search).get(parameter);
-}
-function setUrlParameter(parameter, value) {
-    let urlParams = new URLSearchParams(window.location.search);
-    urlParams.set(parameter, value);
-    history.replaceState(null, null, "?" + urlParams.toString());
-}
+//
+// Tabs
+//
 
 // Tabbed sections
 $('#corpus-text-detail-content-tabs li').on('click', function(){
@@ -17,36 +11,101 @@ $('#corpus-text-detail-content-tabs li').on('click', function(){
     // Alter active state of tab button
     $('#corpus-text-detail-content-tabs li').removeClass('active');
     $(this).addClass('active');
-    // Set URL parameter
-    setUrlParameter('tab', active_tab_id);
     // Scroll to top
     window.scrollTo(0, 0);
-});
-
-// Get tab from url params and initiate above click event function
-function setTabFromUrl(){
-    var tab_value = getUrlParameter('tab');
-    var valid_tab_values = []
-    $("#corpus-text-detail-content-tabs li").each(function(){ valid_tab_values.push($(this).attr('id')); })
-    var tab = (!valid_tab_values.includes(tab_value) ? valid_tab_values[0] : tab_value);
-    $('#corpus-text-detail-content-tabs li#' + tab).trigger('click');
-}
-setTabFromUrl();  // Set initial tab on page load
+}).first().trigger('click');
 
 // On print show all tabs
 $(window).bind("beforeprint", function(){
     $('article.tabbed').show();
 });
 
-// On print show all tabs
+// On print show just the active tab
 $(window).bind("afterprint", function(){
-    setTabFromUrl();
+    $('#corpus-text-detail-content-tabs li.active').trigger('click');
 });
 
 
+//
+// Detail
+//
+
+// Hide a section if it's empty (otherwise the h3 section title will show but with no content)
+$('.corpus-text-detail-content-details-datagroup').each(function(){
+    if ($(this).find('div').length < 1) $(this).hide();
+});
 
 
+//
+// Folios
+//
 
+// Load folio when clicking on it
+$('.corpus-text-detail-content-folios-folio-imagecontainer').on('click', function(){
+    let folioId = $(this).closest('.corpus-text-detail-content-folios-folio').attr('data-folio');
+    $('#corpus-text-detail-images-controls-chooseimage select').val(folioId).trigger('change');
+});
+
+$('.corpus-text-detail-content-folios-folio-textlinks div').on('click', function(){
+    let folioId = $(this).closest('.corpus-text-detail-content-folios-folio').attr('data-folio');
+    let trans = $(this).attr('data-trans');
+    // Select this folio in the specified trans tab
+    $(`#corpus-text-detail-content-tabs #${trans}`).trigger('click');
+    $(`article#corpus-text-detail-content-${trans}`).find('.corpus-text-detail-folio-select').val(folioId).trigger('change');
+});
+
+
+//
+// Trans fields (i.e. transcription, translation, transliteration)
+//
+
+// Options: Select folio
+$('.corpus-text-detail-folio-select').on('change', function(){
+    let folioId = $(this).val();
+    // Show only this folio across all trans tabs
+    $('.folio-lines').hide();
+    $(`.folio-lines[data-folio="${folioId}"]`).show();
+    // Update all other folio select values to this value
+    $('.corpus-text-detail-folio-select').val(folioId);
+    // Show this folio in image
+    let imageSelect = $('#corpus-text-detail-images-controls-chooseimage select');
+    if (imageSelect.val() != folioId) imageSelect.val(folioId).trigger('change');
+}).trigger('change');
+
+// Options: Show translation
+$('.corpus-text-detail-inline-trans-checkbox').on('change', function(){
+    related_trans_lines = $(this).closest('article').find(`.related-lines[data-trans="${$(this).attr('data-trans')}"]`);
+    if ($(this).is(':checked')) related_trans_lines.show();
+    else related_trans_lines.hide();
+}).each(function(){
+    // Ensure all checkboxes are unchecked on page load
+    $(this).prop('checked', false);
+});
+
+// Add related trans lines to trans lines (e.g. add related translation and transliteration to the transcription lines)
+var transFields = ['transcription', 'translation', 'transliteration'];
+transFields.forEach(function(transField){
+    $(`.corpus-text-detail-content-${transField}-folio-lines-line`).each(function(i, trans){
+        var transMainLineNumbers = $(trans).attr('data-linenumbers').split(',');
+        var transFolio = $(trans).attr('data-folio');
+        transFields.forEach(function(transFieldRelated){
+            if (transField !== transFieldRelated){
+                $(`.corpus-text-detail-content-${transFieldRelated}-folio-lines-line[data-folio="${transFolio}"]`).each(function(i, transRelated){
+                    var transRelatedLineNumbers = $(transRelated).attr('data-linenumbers').split(',');
+                    if (transRelatedLineNumbers.some(transRelatedLineNumber => transMainLineNumbers.includes(transRelatedLineNumber))){
+                        var relatedLineHtml = `<div class="relatedline">${$(transRelated).html()}</div>`;
+                        $(trans).parent().find(`.related-lines[data-trans="${transFieldRelated}"]`).append(relatedLineHtml);
+                    }
+                });
+            }
+        });
+    });
+});
+
+
+//
+// Images
+//
 
 // Rotation (used below for rotating the document image)
 // Degrees by which document images can be rotated
@@ -106,15 +165,18 @@ var panzoomOptions = {
     step: 0.13,
     handleStartEvent: function(e) {
         // The following 2 lines were default but stopped drawing new parts from working
-        // e.preventDefault();
-        // e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
     }
 };
 // Calculate the start scale (e.g. so image width matches container width by default)
 function setPanzoomStartScale(){
-    var imageWidth = $('#corpus-text-detail-images-image-' + panzoomImageId).find('img').width();
-    var imageContainerWidth = $('#corpus-text-detail-images-container').width();
-    var startScale = (imageContainerWidth / imageWidth);
+    var image = $('#corpus-text-detail-images-image-' + panzoomImageId).find('img');
+    var imageContainer = $('#corpus-text-detail-images-container');
+    // If image is taller than it is wide, set start scale by height to fill vertical space
+    if (image.height() > image.width()) var startScale = (imageContainer.height() / image.height());
+    // If image is wider than it is tall (or square), set start scale by height to fill vertical space
+    else var startScale = (imageContainer.width() / image.width());
     panzoomOptions.startScale = startScale;
     // Reset the rotation
     rotationReset($('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer'));
@@ -123,29 +185,18 @@ function setPanzoomStartScale(){
 function setPanzoomOnImage(){
     if (panzoom !== undefined) panzoom.destroy();
     panzoomElement = document.getElementById('corpus-text-detail-images-image-' + panzoomImageId);
-    panzoom = Panzoom(panzoomElement, panzoomOptions);
-    panzoomParent = panzoomElement.parentElement
-    panzoomParent.addEventListener('wheel', panzoom.zoomWithWheel);
-}
-
-// Functions for simplifying interacting with URL parameters
-function getUrlParameter(parameter) {
-    return new URLSearchParams(window.location.search).get(parameter);
-}
-function setUrlParameter(parameter, value) {
-    let urlParams = new URLSearchParams(window.location.search);
-    urlParams.set(parameter, value);
-    history.replaceState(null, null, "?" + urlParams.toString());
+    if ($(`#corpus-text-detail-images-image-${panzoomImageId}`).find('img').attr('src')){
+        panzoom = Panzoom(panzoomElement, panzoomOptions);
+        panzoomParent = panzoomElement.parentElement
+        panzoomParent.addEventListener('wheel', panzoom.zoomWithWheel);
+    }
+    
 }
 
 // Document Image Controls
 
 // Choose image select list (set default value, change event, trigger on load)
-$('#corpus-text-detail-images-controls-chooseimage select').val(
-    getUrlParameter('image') ? getUrlParameter('image') : $('#corpus-text-detail-images-controls-chooseimage select').val()
-).on('change', function(){
-    // Go to the correct tab
-    $('li#details').trigger('click');
+$('#corpus-text-detail-images-controls-chooseimage select').on('change', function(){
     // Reset toggle for allowing to drawer new parts (if it's active)
     // if(canDrawNewDocumentImagePart) $('#transcription-exercise-controls-newdocumentimagepart').trigger('click');
     // Hide any existing dropdown content
@@ -153,12 +204,12 @@ $('#corpus-text-detail-images-controls-chooseimage select').val(
 
     var imageId = $(this).find(":selected").val();
     panzoomImageId = imageId;
-    // Update URL
-    setUrlParameter('image', imageId);
-    // Remove 'active' from existing image (and related content)
-    $('.corpus-text-detail-images-image.active, .detail-controls-item.active, .transcription-exercise.active, .transcription-exercise-coreinfo-difficulty.active, .transcription-exercise-fullsolution-instance.active, .transcription-exercise-instructions-instruction.active, .newdocumentimagepart-form-addafterimagepartid.active, .newdocumentimagepart-form-newline.active, .deletedocumentimagepart-form-deleteimagepartid.active').removeClass('active');
-    // Mark this image (and related content) as 'active'
-    $('#corpus-text-detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-coreinfo-difficulty-' + imageId + ', #transcription-exercise-fullsolution-instance-' + imageId + ', #transcription-exercise-instructions-instruction-' + imageId + ', #newdocumentimagepart-form-addafterimagepartid-' + imageId + ', #newdocumentimagepart-form-newline-' + imageId + ', #deletedocumentimagepart-form-deleteimagepartid-' + imageId).addClass('active');
+    // Remove 'active' from existing image
+    $('.corpus-text-detail-images-image.active').removeClass('active');
+    // Mark this image as 'active'
+    $('#corpus-text-detail-images-image-' + imageId).addClass('active');
+    // Update folio select lists in trans tabs
+    $('.corpus-text-detail-folio-select').val(imageId).trigger('change');
     // Set the 'Download image' link location
     var imageUrl = $('#corpus-text-detail-images-image-' + imageId).find('img').attr('src');
     $('#corpus-text-detail-images-controls-downloadimage a').attr('href', imageUrl);

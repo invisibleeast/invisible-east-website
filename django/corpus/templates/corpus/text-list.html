@@ -145,6 +145,7 @@
                 <div class="corpus-text-list-items-item-has">
                     <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
                     <span{% if object.has_translation %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Translation</span>
+                    <span{% if object.has_transliteration %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transliteration</span>
                 </div>
             </a>
         {% empty %}
