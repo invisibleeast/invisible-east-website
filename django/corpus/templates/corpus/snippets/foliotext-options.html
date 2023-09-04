@@ -1,11 +1,6 @@
-<div class="corpus-text-detail-content-foliotext-options">
-    <div>
-        <select class="corpus-text-detail-folio-select" title="Select a folio"{% if object.count_text_folios < 2 %} disabled{% endif %}>
-            {% for folio in text_folios %}
-                <option value="{{ folio.id }}">{{ folio.name_short }}</option>
-            {% endfor %}
-        </select>
-    </div>
+<div class="corpus-text-detail-content-options">
+
+    {% include "corpus/snippets/folio-select.html" %}
 
     {% if current_tab != 'transcription' and object.has_transcription %}
         <div>
@@ -22,4 +17,30 @@
             <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transliteration"> Show Transliterations</label>
         </div>
     {% endif %}
+
+    <div>
+        <label><input type="checkbox" class="corpus-text-detail-trans-linktranstexttotag-checkbox"> Show Links to Tags</label>
+    </div>
+
+    <div>
+        <button class="corpus-text-detail-trans-linktranstexttotag" data-trans="{{ current_tab }}"><i class="fas fa-hashtag"></i> Link to Tag</button>
+    </div>
+
+    <!--
+        This form has only hidden values (so is invisible)
+        The data is populated when drawing an image and then auto-submitted
+    -->
+    <div>
+        <form class="corpus-text-detail-trans-drawlineonimage-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotranslinedrawnonimage-manage' %}">
+            {% csrf_token %}
+            <input type="hidden" name="text" value="{{ object.id }}">
+            <input type="hidden" name="textfolio" value="">
+            <input type="hidden" name="trans_field" value="{{ current_tab }}">
+            <input type="hidden" name="line_index" value="">
+            <input type="hidden" name="image_part_left" value="">
+            <input type="hidden" name="image_part_top" value="">
+            <input type="hidden" name="image_part_width" value="">
+            <input type="hidden" name="image_part_height" value="">
+        </form>
+    </div>
 </div>

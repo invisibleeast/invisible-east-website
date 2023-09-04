@@ -67,11 +67,11 @@
                                     {% if filter_pre_hs in f.filter_id %}
                                         <label><input type="checkbox" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
                                     {% else %}
-                                        <label for="{{ f.filter_id }}">
+                                        <label>
                                             {{ f.filter_name }}
                                         </label>
                                         <span class="input-clear"><i class="fas fa-times-circle"></i></span>
-                                        <select id="{{ f.filter_id }}"
+                                        <select id="{% if f.filter_id_unique %}{{ f.filter_id_unique }}{% else %}{{ f.filter_id }}{% endif %}"
                                             class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
                                             title="{{ f.filter_name }}"
                                             name="{{ f.filter_id }}"

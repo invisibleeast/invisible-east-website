@@ -1,0 +1,8 @@
+<div>
+    <span>Folio:</span>
+    <select class="corpus-text-detail-folio-select" title="Select a folio"{% if object.count_text_folios < 2 %} disabled{% endif %}>
+        {% for folio in text_folios %}
+            <option value="{{ folio.id }}">{{ folio.name_short }}</option>
+        {% endfor %}
+    </select>
+</div>

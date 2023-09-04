@@ -1,12 +1,14 @@
-from django.views.generic import (DetailView, ListView)
+from django.views.generic import (DetailView, ListView, TemplateView, View)
 from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField, Prefetch)
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from functools import reduce
 from operator import (or_, and_)
+from bs4 import BeautifulSoup
 from . import models
-import datetime
 import json
+import re
 
 
 # Special starts to the values & labels of options in 'filter' select lists
@@ -23,6 +25,20 @@ def clean_date_from_datetime(datetime_obj):
     Return a clean date in format DD/MM/YYYY (e.g. 31/01/2023) from a datetime object
     """
     return datetime_obj.strftime('%m/%d/%Y') if datetime_obj else None
+
+
+def replace_nth(string, sub, wanted, nth):
+    """
+    Replace only the nth instance of a substring in a string
+    """
+
+    where = [m.start() for m in re.finditer(sub, string)][nth]
+    before = string[:where]
+    after = string[where:]
+    after = after.replace(sub, wanted, 1)
+    new_string = before + after
+
+    return new_string
 
 
 def html_details_link_to_text_list_filtered(filter_id, filter_object):
@@ -55,6 +71,16 @@ def html_details_list_items(filter_id, object_list):
     return None
 
 
+def request_post_get_safe(request, name):
+    """
+    Gets a value from a POST request
+    Returns None if an empty value is found
+    """
+
+    value = request.POST.get(name)
+    return value if value and len(value) else None
+
+
 class TextDetailView(DetailView):
     """
     Class-based view for Text detail template
@@ -63,7 +89,7 @@ class TextDetailView(DetailView):
     model = models.Text
 
     def get_queryset(self):
-        queryset = self.model.objects.all() #filter(public_review_approved=True) TODO
+        queryset = self.model.objects.all()  #filter(public_review_approved=True) TODO
 
         # Improve performance
         queryset = queryset.select_related(
@@ -81,7 +107,17 @@ class TextDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['text_folios'] = self.object.text_folios.all().select_related('side', 'open_state')
+        context['text_folios'] = self.object.text_folios.all().select_related(
+            'side',
+            'open_state'
+        ).prefetch_related(
+            Prefetch(
+                'text_folio_tags',
+                models.TextFolioTag.objects.all().select_related('tag__category')
+            )
+        )
+        context['text_folio_tag_categories'] = models.SlTextFolioTagCategory.objects.all().prefetch_related('tags__text_folio_tags')
+        context['text_folio_tags'] = models.SlTextFolioTag.objects.all().select_related('category')
         context['data_items'] = [
 
             # General
@@ -133,18 +169,6 @@ class TextDetailView(DetailView):
                 )
             },
 
-            # Dates
-            {
-                'section_header': 'Dates'
-            },
-            {
-                'label': 'Century',
-                'value': html_details_link_to_text_list_filtered(
-                    f'{filter_pre_fk}century',
-                    self.object.century
-                )
-            },
-
             # Physical Description
             {
                 'section_header': 'Physical Description'
@@ -186,102 +210,23 @@ class TextDetailView(DetailView):
                 'value': self.object.summary_of_content
             },
 
-            # Tags of Terms in Text
-            {'section_header': 'Tags of Terms in Text'},
+            # Dates
             {
-                'label': 'Land Measurement Units',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}land_measurement_units',
-                    self.object.land_measurement_units.all()
+                'section_header': 'Dates'
+            },
+            {
+                'label': 'Century',
+                'value': html_details_link_to_text_list_filtered(
+                    f'{filter_pre_fk}century',
+                    self.object.century
                 )
             },
             {
-                'label': 'People and Processes Involved in Public Administration, Tax, Trade, and Commerce',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}people_and_processes_admins',
-                    self.object.people_and_processes_admins.all()
-                )
-            },
-            {
-                'label': 'People and Processes Involved in Legal and Judiciary System',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}people_and_processes_legal',
-                    self.object.people_and_processes_legal.all()
-                )
-            },
-            {
-                'label': 'Documentations',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}documentations',
-                    self.object.documentations.all()
-                )
-            },
-            {
-                'label': 'Geographic Administrative Units',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}geographic_administrative_units',
-                    self.object.geographic_administrative_units.all()
-                )
-            },
-            {
-                'label': 'Legal and Administrative Stock Phrases',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}legal_and_administrative_stock_phrases',
-                    self.object.legal_and_administrative_stock_phrases.all()
-                )
-            },
-            {
-                'label': 'Finance and Accountancy Phrases',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}finance_and_accountancy_phrases',
-                    self.object.finance_and_accountancy_phrases.all()
-                )
-            },
-            {
-                'label': 'Agricultural Produce',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}agricultural_produce',
-                    self.object.agricultural_produce.all()
-                )
-            },
-            {
-                'label': 'Currencies and Denominations',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}currencies_and_denominations',
-                    self.object.currencies_and_denominations.all()
-                )
-            },
-            {
-                'label': 'Markings',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}markings',
-                    self.object.markings.all()
-                )
-            },
-            {
-                'label': 'Religions',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}religions',
-                    self.object.religions.all()
-                )
-            },
-            {
-                'label': 'Toponyms',
-                'value': html_details_list_items(
-                    f'{filter_pre_mm}toponyms',
-                    self.object.toponyms.all()
-                )
-            },
-            # Metadata
-            {
-                'section_header': 'Metadata'
-            },
-            {
-                'label': 'Added to IE Corpus',
+                'label': 'Date Added to IE Corpus',
                 'value': clean_date_from_datetime(self.object.meta_created_datetime)
             },
             {
-                'label': 'Last Updated in IE Corpus',
+                'label': 'Date Last Updated in IE Corpus',
                 'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
             },
 
@@ -317,7 +262,7 @@ class TextListView(ListView):
 
     def get_queryset(self):
         # Start with all objects
-        queryset = self.model.objects.all() #filter(public_review_approved=True) TODO
+        queryset = self.model.objects.all()  #filter(public_review_approved=True) TODO
 
         # Improve performance
         queryset = queryset.select_related(
@@ -339,6 +284,9 @@ class TextListView(ListView):
             'primary_language__script__name',
             'type__name',
             'summary_of_content',
+            'text_folios__transcription',
+            'text_folios__translation',
+            'text_folios__transliteration',
         ]
         # Set list of search options
         if searches not in [[''], []]:
@@ -508,69 +456,217 @@ class TextListView(ListView):
                     'filter_options': models.SlTextWritingSupport.objects.all()
                 },
             ],
-            # Subjects
+            # Tags
             [
                 {
-                    'filter_id': f'{filter_pre_mm}land_measurement_units',
-                    'filter_name': 'Land Measurement Units',
-                    'filter_options': models.SlTextTagLandMeasurementUnits.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}people_and_processes_admins',
-                    'filter_name': 'People and processes involved in public administration, tax, trade, and commerce',
-                    'filter_options': models.SlTextTagPeopleAndProcessesAdmin.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}people_and_processes_legal',
-                    'filter_name': 'People and processes involved in legal and judiciary system',
-                    'filter_options': models.SlTextTagPeopleAndProcessesLegal.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}documentations',
-                    'filter_name': 'Documentations',
-                    'filter_options': models.SlTextTagDocumentation.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}geographic_administrative_units',
-                    'filter_name': 'Geographic Administrative Units',
-                    'filter_options': models.SlTextTagGeographicAdministrativeUnits.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}legal_and_administrative_stock_phrases',
-                    'filter_name': 'Legal and Administrative Stock Phrases',
-                    'filter_options': models.SlTextTagLegalAndAdministrativeStockPhrases.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}finance_and_accountancy_phrases',
-                    'filter_name': 'Finance and Accountancy Phrases',
-                    'filter_options': models.SlTextTagFinanceAndAccountancyPhrases.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}agricultural_produce',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
                     'filter_name': 'Agricultural Produce',
-                    'filter_options': models.SlTextTagAgriculturalProduce.objects.all()
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural produce')
                 },
                 {
-                    'filter_id': f'{filter_pre_mm}currencies_and_denominations',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
                     'filter_name': 'Currencies and Denominations',
-                    'filter_options': models.SlTextTagCurrenciesAndDenominations.objects.all()
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and denominations')
                 },
                 {
-                    'filter_id': f'{filter_pre_mm}markings',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'Documentations',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentations')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'Finance and Accountancy Phrases',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Finance and accountancy phrases')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'Geographic Administrative Units',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic administrative units')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'Land Measurement Units',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Land measurement units')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'Legal and Administrative Stock Phrases',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Legal and administrative stock phrases')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
                     'filter_name': 'Markings',
-                    'filter_options': models.SlTextTagMarkings.objects.all()
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Markings')
                 },
                 {
-                    'filter_id': f'{filter_pre_mm}religions',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'People and processes involved in legal and judiciary system',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='People and processes involved in legal and judiciary system')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_name': 'People and processes involved in public administration, tax, trade, and commerce',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='People and processes involved in public administration, tax, trade, and commerce')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
                     'filter_name': 'Religions',
-                    'filter_options': models.SlTextTagReligion.objects.all()
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Religions')
                 },
                 {
-                    'filter_id': f'{filter_pre_mm}toponyms',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
                     'filter_name': 'Toponyms',
-                    'filter_options': models.SlTextTagToponym.objects.all()
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Toponyms')
                 },
             ]
         ]
 
         return context
+
+
+class TextFolioTagManageView(View):
+    """
+    Class-based view to manage (create/edit/delete) a TextFolioTag object in the database
+    """
+
+    def post(self, request):
+        """
+        Process the TextFolioTag object and related data objects
+        """
+
+        fail_response = HttpResponseRedirect(reverse('corpus:textfoliotag-failed'))
+
+        try:
+
+            text_folio_id = request_post_get_safe(request, 'textfolio')
+            text_folio_obj = models.TextFolio.objects.get(id=text_folio_id)
+
+            # Get an existing TextFolioTag object to link to a piece of trans text
+            link_trans_text_to_tag = request_post_get_safe(request, 'linktranstexttotag')
+            link_trans_text_to_tag = json.loads(link_trans_text_to_tag) if link_trans_text_to_tag else None
+            if link_trans_text_to_tag and 'textFolioTagExistingId' in link_trans_text_to_tag:
+                text_folio_tag = models.TextFolioTag.objects.get(id=int(link_trans_text_to_tag['textFolioTagExistingId']))
+
+            else:
+                # Get/Create SlTextFolioTag object
+                tag_category_name = request_post_get_safe(request, 'category')
+                tag_existing_id = request_post_get_safe(request, 'tag_existing')
+                tag_new_name = request_post_get_safe(request, 'tag_new')
+                if tag_existing_id:
+                    tag = models.SlTextFolioTag.objects.get(id=tag_existing_id)
+                elif tag_new_name:
+                    tag = models.SlTextFolioTag.objects.create(
+                        name=tag_new_name,
+                        category=models.SlTextFolioTagCategory.objects.get(name=tag_category_name)
+                    )
+                else:
+                    return fail_response
+
+                # Create/Edit a TextFolioTag object
+                text_folio_tag_id = request_post_get_safe(request, 'textfoliotag')
+                # Edit
+                if text_folio_tag_id:
+                    text_folio_tag = models.TextFolioTag.objects.get(id=text_folio_tag_id)
+                # Create
+                elif text_folio_id:
+                    text_folio_tag = models.TextFolioTag.objects.create(
+                        text_folio=text_folio_obj,
+                        tag=tag,
+                        details=request_post_get_safe(request, 'details'),
+                        image_part_left=request_post_get_safe(request, 'image_part_left'),
+                        image_part_top=request_post_get_safe(request, 'image_part_top'),
+                        image_part_width=request_post_get_safe(request, 'image_part_width'),
+                        image_part_height=request_post_get_safe(request, 'image_part_height'),
+                    )
+                else:
+                    return fail_response
+
+            # Set the link to this text folio tag in the trans text, if this data exists
+            if link_trans_text_to_tag:
+                trans_text = getattr(text_folio_obj, link_trans_text_to_tag['textTrans'])
+                trans_text_lines = trans_text.split('</li>')
+                trans_text_line = trans_text_lines[int(link_trans_text_to_tag['textTransLineIndex'])]
+                # Replaces only the required instance of the selected text (in case multiple instances)
+                trans_text_line_new = replace_nth(
+                    trans_text_line,
+                    link_trans_text_to_tag['textSelected'],
+                    f'<var data-textfoliotag="{text_folio_tag.id}">{link_trans_text_to_tag["textSelected"]}</var>',
+                    int(link_trans_text_to_tag['textSelectedInstanceCountInLine'])
+                )
+                trans_text_lines[int(link_trans_text_to_tag['textTransLineIndex'])] = trans_text_line_new
+                trans_text_new = '</li>'.join(trans_text_lines)
+                # Update the TextFolio object with this new link in the trans text
+                setattr(text_folio_obj, link_trans_text_to_tag['textTrans'], trans_text_new)
+                text_folio_obj.save()
+
+            # Return the user to the current page
+            return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[request.POST.get('text')])}?tab=tags")
+
+        except Exception as e:
+            print(e)
+            return fail_response
+
+
+class TextFolioTagFailedTemplateView(TemplateView):
+    """
+    Class based view to show a template that tells user the attempt to save the TextFolioTag failed
+    """
+
+    template_name = 'corpus/textfoliotag-failed.html'
+
+
+class TextFolioTransLineDrawnOnImageManageView(View):
+    """
+    Class-based view to manage (create/edit/delete) a drawing of a line of trans text from a text folio on an image
+    """
+
+    def post(self, request):
+        """
+        Process the drawing on image data for the specified trans field in the TextFolio object
+        """
+
+        fail_response = HttpResponseRedirect(reverse('corpus:textfoliotranslinedrawnonimage-failed'))
+
+        try:
+            # Get data from request
+            text = request_post_get_safe(request, 'text')
+            trans_field = request_post_get_safe(request, 'trans_field')
+            print(trans_field + '\n\n\n')
+            line_index = request_post_get_safe(request, 'line_index')
+            image_part_left = request_post_get_safe(request, 'image_part_left')
+            image_part_top = request_post_get_safe(request, 'image_part_top')
+            image_part_width = request_post_get_safe(request, 'image_part_width')
+            image_part_height = request_post_get_safe(request, 'image_part_height')
+
+            # Get the TextFolio object and specified trans field
+            text_folio_id = request_post_get_safe(request, 'textfolio')
+            text_folio_obj = models.TextFolio.objects.get(id=text_folio_id)
+            text_folio_obj_trans_field = getattr(text_folio_obj, trans_field)
+
+            # Use BS to add data attributes to the chosen li element (i.e. the line of text being drawn)
+            text_folio_obj_trans_field_html = BeautifulSoup(text_folio_obj_trans_field, features="html.parser")
+            trans_line = text_folio_obj_trans_field_html.find_all('li')[int(line_index)]
+            trans_line['data-imagepartleft'] = image_part_left
+            trans_line['data-imageparttop'] = image_part_top
+            trans_line['data-imagepartwidth'] = image_part_width
+            trans_line['data-imagepartheight'] = image_part_height
+
+            # print(text_folio_obj_trans_field_html)
+
+            setattr(text_folio_obj, trans_field, str(text_folio_obj_trans_field_html))
+            text_folio_obj.save()
+
+            # Return the user to the current page
+            return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[text])}?tab={trans_field}")
+
+        except Exception as e:
+            print(e)
+            return fail_response
+
+
+class TextFolioTransLineDrawnOnImageFailedTemplateView(TemplateView):
+    """
+    Class based view to show a template that tells user the attempt to save the drawing of a line of text in a TextFolio failed
+    """
+
+    template_name = 'corpus/textfoliotranslinedrawnonimage-failed.html'

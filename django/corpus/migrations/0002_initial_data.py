@@ -210,305 +210,6 @@ def insert_data_select_list_models(apps, schema_editor):
             century_number=object
         ).save()
 
-    # SlTextTagLandMeasurementUnits
-    for name in [
-        'Mann',
-        'Sitīr',
-        'Qafīz/Qawīz',
-        'Tasū',
-        'Ṭās',
-        'Pāra',
-        'Kharwār',
-        'Paymāna',
-        'Juft',
-        'Tīr'
-        
-    ]:
-        models.SlTextTagLandMeasurementUnits.objects.create(name=name)
-
-    # SlTextTagPeopleAndProcessesAdmin
-    for name in [
-        'Muʿāmala',
-        'Taḥakumāna (ghalla-yi)',
-        'Anbār',
-        'Amīn',
-        'Amīr',
-        'Barzigar',
-        'Khaylbāsh',
-        'Dihqān',
-        'Raʿīs',
-        'Sipahsālār',
-        'Sarhang',
-        'Shiḥna/shiḥnagī',
-        'Mihtar',
-        'Muwakkil',
-        'Mīr',
-        'Muhāṣṣil-i ghalla',
-        'Naqīb',
-        'Nāyib',
-        'Muwakkil',
-        'Dīwān',
-        'ʿAwāriḍ (public expenses)',
-    ]:
-        models.SlTextTagPeopleAndProcessesAdmin.objects.create(name=name)
-
-    # SlTextTagPeopleAndProcessesLegal
-    for name in [
-        'Qāḍī',
-        'Faqīh',
-        'Muḥtasib'
-    ]:
-        models.SlTextTagPeopleAndProcessesLegal.objects.create(name=name)
-
-    # SlTextTagDocumentation
-    for name in [
-        'Qabāla',
-        'Barāt',
-        'Chak',
-        'Ḥujjat',
-        'Ḥisāb/ḥisab',
-        'Mithāl',
-        'Nāma',
-        'Nuskhat',
-        'Nishān',
-        'Ruqʿa',
-        'Risāla'
-    ]:
-        models.SlTextTagDocumentation.objects.create(name=name)
-
-    # SlTextTagGeographicAdministrativeUnits
-    for name in [
-        'Wilāyat',
-        'Badiya',
-        'Dīh',
-        'Qariya',
-        'Qaṣaba',
-        'Zamīn',
-        'Shahr',
-        'Darra',
-        'Ribāṭ',
-        'Sarāy'
-    ]:
-        models.SlTextTagGeographicAdministrativeUnits.objects.create(name=name)
-
-    # SlTextTagLegalAndAdministrativeStockPhrases
-    for name in [
-        'Pious invocations',
-        'Bismillāh (including abbrev)',
-        'In a state of sound body and mind',
-        'Of their own volition and without coercion',
-        'Iqrār opener',
-        'Jawāz (person with legal agency)',
-        'ʿUḍr/ghiflat (excuse or delay)',
-        'Muhlat (extension granted)',
-        'Guwāhī',
-        'Dhimmat (obligation, charge)',
-        'Iʿtimād nimūdan [bar-īn nishān] (trust the seal)',
-        'Gharāmat (fine, debt)',
-        'Ḥīmāyat (protection)',
-        'Ḥaq/Ḥuqūq (obligation, policy, assessed payment)',
-        'Abandoned property',
-        'Tafārīqāt',
-        'Tax collection (bīrun kardan)',
-        'Taxes: Kharāj',
-        'Taxes: ʿUshr',
-        'Taxes: Jizya'
-    ]:
-        models.SlTextTagLegalAndAdministrativeStockPhrases.objects.create(name=name)
-
-    # SlTextTagFinanceAndAccountancyPhrases
-    for name in [
-        'Tafṣīl (itemisation)',
-        'Wajh/wujūh (in account/payment of)',
-        'Bāqī (remainder)',
-        'Wām (-I lāzim) (loan)'
-    ]:
-        models.SlTextTagFinanceAndAccountancyPhrases.objects.create(name=name)
-
-    # SlTextTagAgriculturalProduce
-    for name in [
-        'Ghalla (grain)',
-        'Gandum (wheat)',
-        'Jaw (barley)',
-        'Kāh (straw)',
-        'Sheep',
-        'Oxen',
-        'Donkeys',
-        'Oil',
-        'Seeds',
-        'Plough/plough-share/covers',
-        'Hoe/sickle',
-        'Shovel',
-        'Harvest collecting (bardāshtan, rafʿ kardan)',
-        'ʿĀsiya (mill)',
-    ]:
-        models.SlTextTagAgriculturalProduce.objects.create(name=name)
-
-    # SlTextTagCurrenciesAndDenominations
-    for name in [
-        'ʿAdlī',
-        'Shiyānī',
-        'Sīm (-i nīk, -i rasmī)',
-        'Zar',
-        'Dīnār',
-        'Dilīwār-I sultānī',
-        'Dirham',
-        'Diramsang',
-        'Dāng/dāniq/danānīq (one-sixth)'
-    ]:
-        models.SlTextTagCurrenciesAndDenominations.objects.create(name=name)
-
-    # SlTextTagMarkings
-    for name in [
-        'Oblique stroke (check mark)',
-        'Jaʾiza (cipher)',
-        'Taṣnīf (half-amount stroke above written out number)',
-        'Column format',
-        'Siyāq (accountants’ abbreviations of numbers)',
-    ]:
-        models.SlTextTagMarkings.objects.create(name=name)
-
-    # SlTextTagReligion
-    for name in [
-        'Temple',
-        'Mosque',
-        'Church',
-        'God(s)',
-        'Fatwa/istiftāʿ',
-        'Rituals'
-    ]:
-        models.SlTextTagReligion.objects.create(name=name)
-
-    # SlTextTagToponym
-    for name in [
-        # Bamiyan
-        'Āhangarān, آهنگران',
-        'Āsiyāb, آسیاب',
-        'Āsyāb-i Sar-i Rāh آسیاب سر راه',
-        'ʿAjagak, عجگک',
-        'Andarāba, اندرابه/ اندراب',
-        'Angār. انگار',
-        'Arsaf, ار سف/ سف',
-        'Arsānī/Sānī, ار سانی/ سانی/ شانی/ شایی',
-        'Azraw',
-        'Balkh, بلخی',
-        'Bāmiyān, بامیان',
-        'Band-i Khāsh, بند خاش',
-        'Batajlīz/Batajlīzh, بنجلیز/ بنجلیژ',
-        'Butiyān, بوتیان',
-        'Chākirī, چاکری/ حاکری',
-        'Darra, دره',
-        'Dāwar, داور',
-        'Dupawi, دو پوی/ دو پول',
-        'Durustī, درستی',
-        'Funduqistān, فندقستان',
-        'Ghandak, غندک',
-        'Ghārminj (or Ghārmīkh), عار میح',
-        'Ghūr Karūd [var. Garūd], غور کرود',
-        'Ghūrwand, غوروند',
-        'Īsh, اِیش',
-        'Jawlāh /Jūlāh, جولاه',
-        'Jawqāni, جوقانی',
-        'Kadūr',
-        'Karyān/Kadyān, کریان',
-        'Kafshān/Kāfshān, کاف‌شان',
-        'Karūd',
-        'Kawrij',
-        'Khīsh, حیس',
-        'Khustgān, خستگان',
-        'Miyān shahr, میان شهر',
-        'Naqdī, نقدی',
-        'Naw Bāgh/ Sar-i Bāgh, نو باغ/ سرباغ',
-        'Nāy, نای',
-        'Nayak',
-        'Panjhīr, پنجهیری',
-        'Rāgh, راغ',
-        'Rubāṭ, رباط ',
-        'Rubāṭiyān, رباطیان',
-        'Rubāṭ-i Miyān shahr,رباط میانشهر',
-        'Rasj, رسح مر',
-        'Rīw, ریو',
-        'Sabz bahār, سبزبهار',
-        'Safī, سفی',
-        'Safīd Sang, سفید سنگ',
-        'Skānj, سکانح',
-        'Sagnūl, سگ نول',
-        'Sar-i Khish, سرخیش',
-        'Sar Āsiyā, سر آسیا',
-        'Sar-i Guzar, سری گذر',
-        'Sū/ Shū, سو/ شو',
-        'Surkh Dar, سرخ در',
-        'Surkh Dar, סורך דר',
-        'Sūya/Sūba, سویه/ سوبه',
-        'Sabārghū/Shabārghū, سبارغو/ شبارغو',
-        'Shawāniq, شوانق',
-        'Shawār/Sawār, شوار/ سوار',
-        'Shīngiryān/Sīngiryān, شنگریانی',
-        'Tālīzh, تالیژ',
-        'Ṭabbakhān-i Karūd, طباخان کرود',
-        'Tūlak, تولکی',
-        'Wak, وک',
-        'Warmiyās/Wariyās, ورمیاس/ وری یاس',
-        'Wāshān, درۀ واشان',
-        'Wān.shān, ואנשאן',
-        'Wazāmān/Farāmān/Barāmān, وزامن/ فرامن',
-        'Zīr-i ʿAj, زیر عج',
-        'Zīrdamān, زیر دمان',
-
-        # Firuzkuh
-        'Abdar [var. Andar]',
-        'Anūr-kūh or Anūr-gird',
-        'Arīz',
-        'Asp-qūl',
-        'Barāslīzh',
-        'Bardīz',
-        'Balkh',
-        'Bandalīzh/Bandalīch/Bandānalīch',
-        'Dāmam',
-        'Fīrūzkūh',
-        'Ghandamīn, Ghalmīn',
-        'Ghaznīn [var. Ghaznī]',
-        'Ghūr',
-        'Hind',
-        'Iraq',
-        'Jūzjān',
-        'Kāliyūn',
-        'Khāy',
-        'Khurāsān',
-        'Maymana [var. Mayman]',
-        'Murghāb',
-        'Nala',
-        'Naylanj',
-        'Pūza-yi ʿAliyā',
-        'Rabanjī',
-        'Rāmtak',
-        'Sakūn',
-        'Sanga/Sangeh',
-        'Shāristay',
-        'Siparf',
-        'Suf [var. Suq]',
-        'Ṭāq [var. Tigāb Ṭāq/Tāgh]',
-        'Tufanda',
-        'Tufandī/Tukhandī',
-        'Ṭūs',
-        'Warsīkh',
-        'Waylīzh',
-        '(Wīlīzh?)',
-
-        # PersianKhalili
-        'Istīw, Istiwuy',
-
-        # Bactrian
-        'TODO',
-
-        # Khurasan
-        'TODO',
-
-        # MiddlePersian
-        'TODO',
-    ]:
-        models.SlTextTagToponym.objects.create(name=name)
-
     # SlTextScript
     for name in [
         'Arabic',
@@ -621,21 +322,312 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextFolioOpen.objects.create(name=name)
 
-    # SlTextFolioAnnotationType
+    # SlTextFolioTag and SlTextFolioTagCategory (multiple loops, one for each category)
     for name in [
-        'damage',
-        'mark',
-        'drawing',
-        'word',
-        'symbol',
-        'seal',
-        'sealing',
-        'chord',
-        'hole',
-        'place',
-        'date'
+        'Mann',
+        'Sitīr',
+        'Qafīz/Qawīz',
+        'Tasū',
+        'Ṭās',
+        'Pāra',
+        'Kharwār',
+        'Paymāna',
+        'Juft',
+        'Tīr'
     ]:
-        models.SlTextFolioAnnotationType.objects.create(name=name)
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Land measurement units')[0]
+        )
+    for name in [
+        'Muʿāmala',
+        'Taḥakumāna (ghalla-yi)',
+        'Anbār',
+        'Amīn',
+        'Amīr',
+        'Barzigar',
+        'Khaylbāsh',
+        'Dihqān',
+        'Raʿīs',
+        'Sipahsālār',
+        'Sarhang',
+        'Shiḥna/shiḥnagī',
+        'Mihtar',
+        'Muwakkil',
+        'Mīr',
+        'Muhāṣṣil-i ghalla',
+        'Naqīb',
+        'Nāyib',
+        'Muwakkil',
+        'Dīwān',
+        'ʿAwāriḍ (public expenses)',
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='People and processes involved in public administration, tax, trade, and commerce')[0]
+        )
+    for name in [
+        'Qāḍī',
+        'Faqīh',
+        'Muḥtasib'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='People and processes involved in legal and judiciary system')[0]
+        )
+    for name in [
+        'Qabāla',
+        'Barāt',
+        'Chak',
+        'Ḥujjat',
+        'Ḥisāb/ḥisab',
+        'Mithāl',
+        'Nāma',
+        'Nuskhat',
+        'Nishān',
+        'Ruqʿa',
+        'Risāla'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Documentations')[0]
+        )
+    for name in [
+        'Wilāyat',
+        'Badiya',
+        'Dīh',
+        'Qariya',
+        'Qaṣaba',
+        'Zamīn',
+        'Shahr',
+        'Darra',
+        'Ribāṭ',
+        'Sarāy'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Geographic administrative units')[0]
+        )
+    for name in [
+        'Pious invocations',
+        'Bismillāh (including abbrev)',
+        'In a state of sound body and mind',
+        'Of their own volition and without coercion',
+        'Iqrār opener',
+        'Jawāz (person with legal agency)',
+        'ʿUḍr/ghiflat (excuse or delay)',
+        'Muhlat (extension granted)',
+        'Guwāhī',
+        'Dhimmat (obligation, charge)',
+        'Iʿtimād nimūdan [bar-īn nishān] (trust the seal)',
+        'Gharāmat (fine, debt)',
+        'Ḥīmāyat (protection)',
+        'Ḥaq/Ḥuqūq (obligation, policy, assessed payment)',
+        'Abandoned property',
+        'Tafārīqāt',
+        'Tax collection (bīrun kardan)',
+        'Taxes: Kharāj',
+        'Taxes: ʿUshr',
+        'Taxes: Jizya'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Legal and administrative stock phrases')[0]
+        )
+    for name in [
+        'Tafṣīl (itemisation)',
+        'Wajh/wujūh (in account/payment of)',
+        'Bāqī (remainder)',
+        'Wām (-I lāzim) (loan)'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Finance and accountancy phrases')[0]
+        )
+    for name in [
+        'Ghalla (grain)',
+        'Gandum (wheat)',
+        'Jaw (barley)',
+        'Kāh (straw)',
+        'Sheep',
+        'Oxen',
+        'Donkeys',
+        'Oil',
+        'Seeds',
+        'Plough/plough-share/covers',
+        'Hoe/sickle',
+        'Shovel',
+        'Harvest collecting (bardāshtan, rafʿ kardan)',
+        'ʿĀsiya (mill)',
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Agricultural produce')[0]
+        )
+    for name in [
+        'ʿAdlī',
+        'Shiyānī',
+        'Sīm (-i nīk, -i rasmī)',
+        'Zar',
+        'Dīnār',
+        'Dilīwār-I sultānī',
+        'Dirham',
+        'Diramsang',
+        'Dāng/dāniq/danānīq (one-sixth)'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Currencies and denominations')[0]
+        )
+    for name in [
+        'Oblique stroke (check mark)',
+        'Jaʾiza (cipher)',
+        'Taṣnīf (half-amount stroke above written out number)',
+        'Column format',
+        'Siyāq (accountants’ abbreviations of numbers)',
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Markings')[0]
+        )
+    for name in [
+        'Temple',
+        'Mosque',
+        'Church',
+        'God(s)',
+        'Fatwa/istiftāʿ',
+        'Rituals'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Religions')[0]
+        )
+    for name in [
+        # Bamiyan
+        'Āhangarān, آهنگران',
+        'Āsiyāb, آسیاب',
+        'Āsyāb-i Sar-i Rāh آسیاب سر راه',
+        'ʿAjagak, عجگک',
+        'Andarāba, اندرابه/ اندراب',
+        'Angār. انگار',
+        'Arsaf, ار سف/ سف',
+        'Arsānī/Sānī, ار سانی/ سانی/ شانی/ شایی',
+        'Azraw',
+        'Balkh, بلخی',
+        'Bāmiyān, بامیان',
+        'Band-i Khāsh, بند خاش',
+        'Batajlīz/Batajlīzh, بنجلیز/ بنجلیژ',
+        'Butiyān, بوتیان',
+        'Chākirī, چاکری/ حاکری',
+        'Darra, دره',
+        'Dāwar, داور',
+        'Dupawi, دو پوی/ دو پول',
+        'Durustī, درستی',
+        'Funduqistān, فندقستان',
+        'Ghandak, غندک',
+        'Ghārminj (or Ghārmīkh), عار میح',
+        'Ghūr Karūd [var. Garūd], غور کرود',
+        'Ghūrwand, غوروند',
+        'Īsh, اِیش',
+        'Jawlāh /Jūlāh, جولاه',
+        'Jawqāni, جوقانی',
+        'Kadūr',
+        'Karyān/Kadyān, کریان',
+        'Kafshān/Kāfshān, کاف‌شان',
+        'Karūd',
+        'Kawrij',
+        'Khīsh, حیس',
+        'Khustgān, خستگان',
+        'Miyān shahr, میان شهر',
+        'Naqdī, نقدی',
+        'Naw Bāgh/ Sar-i Bāgh, نو باغ/ سرباغ',
+        'Nāy, نای',
+        'Nayak',
+        'Panjhīr, پنجهیری',
+        'Rāgh, راغ',
+        'Rubāṭ, رباط ',
+        'Rubāṭiyān, رباطیان',
+        'Rubāṭ-i Miyān shahr,رباط میانشهر',
+        'Rasj, رسح مر',
+        'Rīw, ریو',
+        'Sabz bahār, سبزبهار',
+        'Safī, سفی',
+        'Safīd Sang, سفید سنگ',
+        'Skānj, سکانح',
+        'Sagnūl, سگ نول',
+        'Sar-i Khish, سرخیش',
+        'Sar Āsiyā, سر آسیا',
+        'Sar-i Guzar, سری گذر',
+        'Sū/ Shū, سو/ شو',
+        'Surkh Dar, سرخ در',
+        'Surkh Dar, סורך דר',
+        'Sūya/Sūba, سویه/ سوبه',
+        'Sabārghū/Shabārghū, سبارغو/ شبارغو',
+        'Shawāniq, شوانق',
+        'Shawār/Sawār, شوار/ سوار',
+        'Shīngiryān/Sīngiryān, شنگریانی',
+        'Tālīzh, تالیژ',
+        'Ṭabbakhān-i Karūd, طباخان کرود',
+        'Tūlak, تولکی',
+        'Wak, وک',
+        'Warmiyās/Wariyās, ورمیاس/ وری یاس',
+        'Wāshān, درۀ واشان',
+        'Wān.shān, ואנשאן',
+        'Wazāmān/Farāmān/Barāmān, وزامن/ فرامن',
+        'Zīr-i ʿAj, زیر عج',
+        'Zīrdamān, زیر دمان',
+        # Firuzkuh
+        'Abdar [var. Andar]',
+        'Anūr-kūh or Anūr-gird',
+        'Arīz',
+        'Asp-qūl',
+        'Barāslīzh',
+        'Bardīz',
+        'Balkh',
+        'Bandalīzh/Bandalīch/Bandānalīch',
+        'Dāmam',
+        'Fīrūzkūh',
+        'Ghandamīn, Ghalmīn',
+        'Ghaznīn [var. Ghaznī]',
+        'Ghūr',
+        'Hind',
+        'Iraq',
+        'Jūzjān',
+        'Kāliyūn',
+        'Khāy',
+        'Khurāsān',
+        'Maymana [var. Mayman]',
+        'Murghāb',
+        'Nala',
+        'Naylanj',
+        'Pūza-yi ʿAliyā',
+        'Rabanjī',
+        'Rāmtak',
+        'Sakūn',
+        'Sanga/Sangeh',
+        'Shāristay',
+        'Siparf',
+        'Suf [var. Suq]',
+        'Ṭāq [var. Tigāb Ṭāq/Tāgh]',
+        'Tufanda',
+        'Tufandī/Tukhandī',
+        'Ṭūs',
+        'Warsīkh',
+        'Waylīzh',
+        '(Wīlīzh?)',
+        # PersianKhalili
+        'Istīw, Istiwuy',
+        # Bactrian
+        'TODO',
+        # Khurasan
+        'TODO',
+        # MiddlePersian
+        'TODO',
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Toponyms')[0]
+        )
 
     # SlCalendar
     for obj in [

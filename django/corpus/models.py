@@ -141,90 +141,6 @@ class SlTextDocumentSubtype(SlAbstract):
         ordering = [Upper('category__name'), Upper('name'), 'id']
 
 
-class SlTextTagLandMeasurementUnits(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagPeopleAndProcessesAdmin(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagPeopleAndProcessesLegal(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagDocumentation(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagGeographicAdministrativeUnits(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagLegalAndAdministrativeStockPhrases(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagFinanceAndAccountancyPhrases(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagAgriculturalProduce(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagCurrenciesAndDenominations(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagMarkings(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagReligion(SlAbstract):
-    """
-    A Text type related field
-    """
-    pass
-
-
-class SlTextTagToponym(SlAbstract):
-    """
-    A Text type related field. Toponym = place
-    """
-    pass
-
-
 class SlTextWritingSupport(SlAbstract):
     """
     A type of Text
@@ -353,12 +269,19 @@ class SlTextFolioOpen(SlAbstract):
     pass
 
 
-class SlTextFolioAnnotationType(SlAbstract):
+class SlTextFolioTagCategory(SlAbstract):
     """
-    A type of TextFolioAnnotation.
-    E.g. 'damage', 'mark'
+    A category of tags of terms found in text folios
+    E.g. 'Land measurement units', 'Documentations', 'Agricultural produce'
     """
     pass
+
+
+class SlTextFolioTag(SlAbstract):
+    """
+    A tag of terms found in text folios
+    """
+    category = models.ForeignKey('SlTextFolioTagCategory', on_delete=models.RESTRICT, related_name='tags')
 
 
 class SlM2MPersonToPersonRelationshipType(SlAbstract):
@@ -419,19 +342,8 @@ class Text(models.Model):
     # Content
     summary_of_content = RichTextField(blank=True, null=True)
 
-    # Tags of Terms in Text
-    land_measurement_units = models.ManyToManyField('SlTextTagLandMeasurementUnits', blank=True, related_name=related_name, db_index=True)
-    people_and_processes_admins = models.ManyToManyField('SlTextTagPeopleAndProcessesAdmin', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in public administration, tax, trade, and commerce')
-    people_and_processes_legal = models.ManyToManyField('SlTextTagPeopleAndProcessesLegal', blank=True, related_name=related_name, db_index=True, verbose_name='People and processes involved in legal and judiciary system')
-    documentations = models.ManyToManyField('SlTextTagDocumentation', blank=True, related_name=related_name, db_index=True)
-    geographic_administrative_units = models.ManyToManyField('SlTextTagGeographicAdministrativeUnits', blank=True, related_name=related_name, db_index=True)
-    legal_and_administrative_stock_phrases = models.ManyToManyField('SlTextTagLegalAndAdministrativeStockPhrases', blank=True, related_name=related_name, db_index=True)
-    finance_and_accountancy_phrases = models.ManyToManyField('SlTextTagFinanceAndAccountancyPhrases', blank=True, related_name=related_name, db_index=True)
-    agricultural_produce = models.ManyToManyField('SlTextTagAgriculturalProduce', blank=True, related_name=related_name, db_index=True, help_text='Agricultural produce, animals, and farming equipment')
-    currencies_and_denominations = models.ManyToManyField('SlTextTagCurrenciesAndDenominations', blank=True, related_name=related_name, db_index=True)
-    markings = models.ManyToManyField('SlTextTagMarkings', blank=True, related_name=related_name, db_index=True, help_text='Scribal markings, ciphers, abbreviations, para-text, column format')
-    religions = models.ManyToManyField('SlTextTagReligion', blank=True, related_name=related_name, db_index=True)
-    toponyms = models.ManyToManyField('SlTextTagToponym', blank=True, related_name=related_name, db_index=True, help_text='Place names')
+    # Commentary
+    commentary = models.TextField(blank=True, null=True)
 
     # Review & Approve Text to Show on Public Website
     public_review_ready = models.BooleanField(
@@ -491,7 +403,6 @@ class Text(models.Model):
         help_text='Users who have contributed to this Corpus Text (e.g. co-editors, data entry persons, etc.) but are not the principal editor or principal data entry person (these are specified above).<br>',
         verbose_name='contributors'
     )
-    admin_commentary = models.TextField(blank=True, null=True, verbose_name='Commentary')
 
     # Metadata
     meta_created_by = models.ForeignKey(
@@ -549,8 +460,8 @@ class Text(models.Model):
     def list_image(self):
         # Return the first image of a folio, if exists
         for folio in self.text_folios.all():
-                if folio.image:
-                    return folio.image_small
+            if folio.image:
+                return folio.image_small
 
     @property
     def title(self):
@@ -636,7 +547,7 @@ To manually override an automatic line number simply:
         # Ensure the transcription is a HTML ordered list with items
         if '<ol>' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
             html_to_return = ''
-            text_as_html = BeautifulSoup(text_field)
+            text_as_html = BeautifulSoup(text_field, features="html.parser")
             lines = text_as_html.find_all('li')
             line_number = 0
 
@@ -664,12 +575,33 @@ To manually override an automatic line number simply:
                 # Line numbers (e.g. if line number label is 4-6 then line numbers is 4,5,6)
                 line_numbers = ",".join([str(ln) for ln in range(line_number, line_number_range_end + 1)]) if line_number_range_end else line_number
 
+                # Image part data
+                try:
+                    # Get attr values from line li element
+                    image_part_left = line.attrs['data-imagepartleft']
+                    image_part_top = line.attrs['data-imageparttop']
+                    image_part_width = line.attrs['data-imagepartwidth']
+                    image_part_height = line.attrs['data-imagepartheight']
+
+                    # Build new attributes to add to new line div element (if provided)
+                    image_part_left_attr = f' data-imagepartleft="{image_part_left}"' if image_part_left else ''
+                    image_part_top_attr = f' data-imageparttop="{image_part_top}"' if image_part_top else ''
+                    image_part_width_attr = f' data-imagepartwidth="{image_part_width}"' if image_part_width else ''
+                    image_part_height_attr = f' data-imagepartheight="{image_part_height}"' if image_part_height else ''
+                except KeyError:
+                    # Set empty attributes
+                    image_part_left_attr = ''
+                    image_part_top_attr = ''
+                    image_part_width_attr = ''
+                    image_part_height_attr = ''
+
                 # Build HTML for this line
                 html_to_return += f"""
                 <div>
-                    <div class="corpus-text-detail-content-{field_name}-folio-lines-line" data-linenumbers="{line_numbers}" data-folio="{self.id}">
-                        <label>{line_number_label}</label>
-                        <span>{line.get_text()}</span>
+                    <div class="folio-lines-line" data-linenumbers="{line_numbers}" data-lineindex="{line_index}" data-trans="{field_name}" data-folio="{self.id}"{image_part_left_attr}{image_part_top_attr}{image_part_width_attr}{image_part_height_attr}>
+                        <span class="folio-lines-line-number">{line_number_label}</span>
+                        <span class="folio-lines-line-text">{"".join([str(x) for x in line.contents]) }</span>
+                        <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start"> <i class="fas fa-pencil-alt"></i></span>
                     </div>
                 """
                 # Add related lines divs for the other 'trans...' fields.
@@ -689,7 +621,7 @@ To manually override an automatic line number simply:
     @property
     def translation_lines(self):
         return self.text_lines(self.translation, 'translation')
-    
+
     @property
     def transliteration_lines(self):
         return self.text_lines(self.transliteration, 'transliteration')
@@ -726,18 +658,56 @@ To manually override an automatic line number simply:
         verbose_name_plural = verbose_name
 
 
-class TextFolioAnnotation(models.Model):
+class TextFolioTag(models.Model):
     """
-    A note/description of a part of a TextFolio (other than lines of text)
-    e.g. damage, marks, drawings, characters, etc.
+    A tag of a term within a TextFolio, using tags specified in SlTextFolioTag
     """
 
-    related_name = 'text_folio_parts'
+    related_name = 'text_folio_tags'
 
     text_folio = models.ForeignKey('TextFolio', on_delete=models.CASCADE, related_name=related_name)
-    type = models.ForeignKey('SlTextFolioAnnotationType', on_delete=models.CASCADE, related_name=related_name)
-    description = models.TextField(max_length=1000, blank=True, null=True)
-    position_in_image = models.TextField(blank=True, null=True)  # TODO
+    tag = models.ForeignKey('SlTextFolioTag', on_delete=models.CASCADE, related_name=related_name)
+    details = models.TextField(blank=True, null=True)
+    # Image part measurements
+    # left and top are the x,y coordinates of the top-left starting point of the part in the image
+    image_part_left = models.FloatField(blank=True, null=True)
+    image_part_top = models.FloatField(blank=True, null=True)
+    image_part_width = models.FloatField(blank=True, null=True)
+    image_part_height = models.FloatField(blank=True, null=True)
+    # Metadata
+    meta_created_by = models.ForeignKey(
+        User,
+        related_name="textfoliotag_created_by",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        verbose_name="created by"
+    )
+    meta_created_datetime = models.DateTimeField(auto_now_add=True, verbose_name="created")
+    meta_lastupdated_by = models.ForeignKey(
+        User,
+        related_name="textfoliotag_lastupdated_by",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        verbose_name="last updated by"
+    )
+    meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
+
+    @property
+    def is_in_text_folio_transcription(self):
+        return self.text_folio.transcription and f'data-textfoliotag="{self.id}"' in self.text_folio.transcription
+
+    @property
+    def is_in_text_folio_translation(self):
+        return self.text_folio.translation and f'data-textfoliotag="{self.id}"' in self.text_folio.translation
+
+    @property
+    def is_in_text_folio_transliteration(self):
+        return self.text_folio.transliteration and f'data-textfoliotag="{self.id}"' in self.text_folio.transliteration
+
+    class Meta:
+        ordering = ['text_folio', Upper('tag__category__name'), Upper('tag__name'), 'id']
 
 
 class Person(models.Model):

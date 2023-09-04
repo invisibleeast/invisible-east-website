@@ -113,6 +113,14 @@
                             فارسی
                         </a>
                     </li>
+                    {% if user.is_staff %}
+                        <!-- Project -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:index' %}">
+                                Admin
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>

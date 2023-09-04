@@ -11,8 +11,10 @@ html, body {
     /* Variables */
     --color-primary: #007688;
     --color-primary-dark: #005f6e;
+    --color-primary-light: #cce3e7;
     --color-secondary: #c1b98a;
     --color-secondary-dark: #9e976d;
+    --color-secondary-light: #e6e3d0;
 }
 
 a,
@@ -894,7 +896,7 @@ main section {
 
 #corpus-text-detail-content-tabs li.active {
     background: var(--color-secondary);
-    color: white;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 #corpus-text-detail-content-tabs li i {
@@ -904,8 +906,12 @@ main section {
 #corpus-text-detail-content article.tabbed {
     display: none;
     overflow: auto;
-    padding: 1em;
+    padding: 1em 0;
     height: calc(100vh - 13em);
+}
+
+#corpus-text-detail-content article.tabbed.active {
+    display: block;
 }
 
 #corpus-text-detail-content h3 {
@@ -914,6 +920,10 @@ main section {
 
 #corpus-text-detail-content h3:first-of-type {
     margin-top: 1em;
+}
+
+.corpus-text-detail-content-details-datagroup {
+    padding: 0.4em 0.8em;
 }
 
 .corpus-text-detail-content-details-datagroup-dataitem {
@@ -944,9 +954,9 @@ main section {
 }
 
 .corpus-text-detail-content-folios-folio-title {
-    font-weight: 400;
-    font-size: 1.4em;
-    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
 }
 
 .corpus-text-detail-content-folios-folio-imagecontainer {
@@ -955,58 +965,214 @@ main section {
     margin: 1em auto;
 }
 
-.corpus-text-detail-content-folios-folio-textlinks div {
+.corpus-text-detail-content-folios-folio-imagecontainer:hover {
+    outline: 3px solid var(--color-primary);
+}
+
+.corpus-text-detail-content-folios-folio-links div {
+    font-size: 0.9em;
     text-align: center;
     padding: 0.5em 1em 0.3em 1em;
-    margin: 0.5em 0;
+    margin: 1em 0;
     width: 100%;
-    background: #DDD;
-    color: #303030;
+    background: #EEE;
+    color: var(--color-primary);
     cursor: pointer;
 }
 
-.corpus-text-detail-content-folios-folio-textlinks div:hover {
+.corpus-text-detail-content-folios-folio-links div:hover {
     background: var(--color-primary);
     color: white;
 }
 
-.corpus-text-detail-content-folios-folio-textlinks i {
+.corpus-text-detail-content-folios-folio-links i {
     margin-right: 0.3em;
 }
 
-.corpus-text-detail-content-foliotext-options {
-    background: #E4E4E4;
-    padding: 0.5em;
-}
-
-.corpus-text-detail-content-foliotext-options div label {
+.corpus-text-detail-content-options {
+    background: var(--color-secondary);
+    padding: 0 0.2em 0.2em 0.2em;
+    margin-top: -1em;
     font-weight: 400;
-    cursor: pointer;
-    user-select: none;
 }
 
-.corpus-text-detail-content-foliotext-options div {
+.corpus-text-detail-content-options div {
     display: inline-block;
     margin: 0 1em;
 }
 
-.corpus-text-detail-content-transcription-folio-lines,
-.corpus-text-detail-content-translation-folio-lines,
-.corpus-text-detail-content-transliteration-folio-lines {
+.corpus-text-detail-content-options div label {
+    cursor: pointer;
+    user-select: none;
+}
+
+.corpus-text-detail-content-options button {
+    background: var(--color-secondary-light);
+    color: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 0.2em;
+    padding: 0.3em 0.6em;
+}
+
+.corpus-text-detail-content-options .corpus-text-detail-folio-select {
+    display: inline-block;
+    width: 7em;
+}
+
+.corpus-text-detail-content-tags-folio {
+    display: none;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-linktranstexttotag {
+    background: var(--color-primary);
+    color: white;
+    padding: 1em;
+    text-align: center;
+    display: none;
+    margin: 2em;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form {
+    display: block;
+    background: var(--color-secondary-light);
+    margin: 2em auto;
+    padding: 1em;
+    width: 100%;
+    max-width: 60em;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form-title {
+    color: black;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form div {
+    margin: 0.7em 0;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form label {
+    font-weight: bold;
+    display: inline-block;
+    width: 7em;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form select,
+#corpus-text-detail-content-tags-textfoliotag-form input[type="text"] {
+    display: inline-block;
+    width: calc(100% - 7.5em);
+    max-width: 50em;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form button {
+    width: 100%;
+    border: none;
+    border-radius: 0.4em;
+    background: var(--color-secondary);
+    color: rgba(0, 0, 0, 0.7);
+    padding: 0.8em;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form button:hover {
+    opacity: 0.9;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory {
+    margin: 1em 0;
+    padding: 1em 1em 1.3em 1em;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-title {
+    font-weight: 400;
+    font-size: 1.3em;
+    margin-bottom: 0.7em;
+    color: var(--color-primary);
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag {
+    display: block;
+    width: fit-content;
+    padding: 0.6em 0 0.6em 1em;
+    margin: 1em 0;
+    border: 1px solid #DDD;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag.active {
+    outline: 3px solid var(--color-primary);
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag .fa-hashtag {
+    color: #AAA;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag.active .fa-hashtag {
+    color: var(--color-primary);
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-name {
+    font-weight: bold;
+    display: inline-block;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-details {
+    font-style: italic;
+    display: inline-block;
+    margin-left: 1em;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links {
+    display: inline-block;
+    margin-left: 0.8em;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links div {
+    display: inline-block;
+    color: var(--color-primary);
+    font-size: 0.9em;
+    cursor: pointer;
+    margin-right: 1em;
+    padding: 0.5em 1em 0.3em 1em;
+    background: #EEE;
+    height: fit-content;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links div:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+.corpus-text-detail-content-tags-folio-notags {
+    text-align: center;
+    margin: 3em auto;
+    font-size: 1.1em;
+    color: #696969;
+}
+
+.corpus-text-detail-trans-linktranstexttotag {
+    display: none;
+}
+
+.folio-lines {
     margin: 1em 0;
     font-size: 1.2em;
 }
 
-.corpus-text-detail-content-transcription-folio-lines-line,
-.corpus-text-detail-content-translation-folio-lines-line,
-.corpus-text-detail-content-transliteration-folio-lines-line {
+.folio-lines-line {
     padding: 0.5em 0;
     margin: 0.3em 0;
+    border: 2px solid transparent;
 }
 
-.corpus-text-detail-content-transcription-folio-lines label,
-.corpus-text-detail-content-translation-folio-lines label,
-.corpus-text-detail-content-transliteration-folio-lines label {
+.folio-lines-line.active {
+    border: 2px solid var(--color-primary);
+}
+
+.folio-lines-line-number {
     display: inline-block;
     width: 2.7em;
     font-weight: bold;
@@ -1015,12 +1181,31 @@ main section {
     vertical-align: top;
 }
 
-.corpus-text-detail-content-transcription-folio-lines span,
-.corpus-text-detail-content-translation-folio-lines span,
-.corpus-text-detail-content-transliteration-folio-lines span {
+.folio-lines-line-text {
     display: inline-block;
-    width: calc(100% - 4em);
+    width: calc(100% - 7em);
     vertical-align: top;
+}
+
+.related-lines-line .folio-lines-line-draw,
+.folio-lines-line:not(.active) .folio-lines-line-draw {
+    display: none;
+}
+
+.folio-lines-line.active .folio-lines-line-draw {
+    display: inline-block;
+    width: 2em;
+}
+
+.folio-lines-line.active .folio-lines-line-draw i {
+    font-size: 0.9em;
+}
+
+.folio-lines-line-text var.active {
+    padding: 0 0.2em;
+    background: var(--color-secondary);
+    border-radius: 0.2em;
+    cursor: pointer;
 }
 
 .related-lines {
@@ -1028,8 +1213,8 @@ main section {
     display: none;
 }
 
-.relatedline {
-    background: var(--color-secondary);
+.related-lines-line {
+    background: var(--color-secondary-light);
     padding: 0.6em;
     font-size: 0.8em;
 }
@@ -1096,13 +1281,18 @@ main section {
     font-size: 1.4em;
 }
 
+.corpus-text-detail-images-controls-item label {
+    font-weight: 400;
+    margin-left: 0.4em;
+}
+
 .corpus-text-detail-images-controls-item select {
     display: inline-block;
     padding: 0 2em 0 0.3em;
     height: 2em;
     border: 0;
-    width: 8em;
-    margin: 0.4em 0.8em;
+    width: 9.5em;
+    margin: 0.4em 0.4em 0.4em 0.1em;
 }
 
 /* Image - parts */
@@ -1115,29 +1305,31 @@ main section {
 
 .corpus-text-detail-images-image-parts-part {
     display: block;
-    border: 5px solid transparent;
+    border: 3px solid transparent;
     z-index: 10000;
     position: absolute;
 }
 
-.corpus-text-detail-images-image:not(.drawable) .corpus-text-detail-images-image-parts-part.reveal {
-    background: rgba(250, 130, 49, 0.5);
-    cursor: pointer;
-}
-
-.corpus-text-detail-images-image-parts-part.revealall {
-    border: 5px dashed #e056fd;
-    background: rgba(224, 86, 253, 0.1);
+.corpus-text-detail-images-image-parts-part.reveal {
+    border: 1px solid var(--color-secondary-dark);
+    outline: 1px solid var(--color-secondary-light);
 }
 
 .corpus-text-detail-images-image-parts-part.active {
-    border: 5px solid rgb(250, 130, 49);
-    background: transparent;
+    border: 3px solid var(--color-primary);
+    outline: 1px solid var(--color-primary-light);
+    cursor: pointer;
+}
+
+.corpus-text-detail-images-image-parts-part.hidden,
+.corpus-text-detail-images-image-parts-part.reveal.hidden,
+.corpus-text-detail-images-image-parts-part.active.hidden {
+    display: none;
 }
 
 .corpus-text-detail-images-image-parts-part.new {
     cursor: default;
-    border: 5px solid #05c46b;
+    border: 3px solid #05c46b;
     background: transparent;
     position: absolute;
 }

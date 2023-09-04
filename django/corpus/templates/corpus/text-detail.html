@@ -14,7 +14,7 @@
         <ul id="corpus-text-detail-content-tabs">
             <li id="details"><i class="fas fa-align-left"></i> Details</li>
             {% if object.count_text_folios > 1 %}<li id="folios"><i class="fas fa-scroll"></i> Folios</li>{% endif %}
-            <li id="tags"><i class="fas fa-hashtag"></i> Tags of Terms</li>
+            <li id="tags"><i class="fas fa-hashtag"></i> Tags</li>
             {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> Transcriptions</li>{% endif %}
             {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
             {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
@@ -46,39 +46,170 @@
         <article class="tabbed" id="corpus-text-detail-content-folios">
             <div class="tabbed-title">Folios</div>
             {% for text_folio in text_folios %}
-
                 <div class="corpus-text-detail-content-folios-folio" data-folio="{{ text_folio.id }}">
+                    <!-- Title -->
                     <div class="corpus-text-detail-content-folios-folio-title">
-                        Folio {{ forloop.counter }}
+                        {{ forloop.counter }}. {{ text_folio.name_short }}
                     </div>
-                    
                     <!-- Image -->
                     <div class="corpus-text-detail-content-folios-folio-imagecontainer" style="background-image: url({% if text_folio.image_small %}{{ text_folio.image_small.url }}); cursor: pointer;{% else %}{% static 'images/noimagefound.jpg' %});{% endif %} background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
                     </div>
-                    <!-- Info -->
-                    <dl>
-                        {% if text_folio.open_state %}<div><dt>Open State</dt><dd>{{ text_folio.open_state }}</dd></div>{% endif %}
-                        <div><dt>Side</dt><dd>{{ text_folio.side }}</dd></div>
-                    </dl>
-                    <!-- Text links -->
-                    <div class="corpus-text-detail-content-folios-folio-textlinks">
+                    <!-- Links -->
+                    <div class="corpus-text-detail-content-folios-folio-links">
+                        <div data-tab="tags"><i class="fas fa-hashtag"></i> Tags</div>
                         {% if text_folio.transcription %}
-                            <div data-trans="transcription"><i class="fas fa-pen-fancy"></i> Transcription</div>
+                            <div data-tab="transcription"><i class="fas fa-pen-fancy"></i> Transcription</div>
                         {% endif %}
                         {% if text_folio.translation %}
-                            <div data-trans="translation"><i class="fas fa-globe-europe"></i>Translation</div>
+                            <div data-tab="translation"><i class="fas fa-globe-europe"></i>Translation</div>
                         {% endif %}
                         {% if text_folio.transliteration %}
-                            <div data-trans="transliteration"><i class="fas fa-font"></i>Transliteration</div>
+                            <div data-tab="transliteration"><i class="fas fa-font"></i>Transliteration</div>
                         {% endif %}
                     </div>
                 </div>
-
             {% endfor %}
         </article>
 
+        <article class="tabbed" id="corpus-text-detail-content-tags">
+            <div class="tabbed-title">Tags</div>
+
+            <!-- Options -->
+            <div class="corpus-text-detail-content-options">
+                {% include "corpus/snippets/folio-select.html" %}
+
+                {% if user.is_staff %}
+                    <div>
+                        <label><input type="checkbox" id="corpus-text-detail-content-tags-showtagmanager"> Show Tag Manager</label>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if user.is_staff %}
+                <div id="corpus-text-detail-content-tags-textfoliotag-linktranstexttotag">
+                    <!-- Content filled dynamically by JS -->
+                </div>
+
+                <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-manage' %}">
+                    <!-- Security CSRF token -->
+                    {% csrf_token %}
+
+                    <!-- Hidden fields -->
+                    <!-- Text -->
+                    <input type="hidden" name="text" value="{{ object.id }}">
+                    <!-- Text Folio (value set in detail.js) -->
+                    <input type="hidden" name="textfolio" value="">
+                    <!-- Image Cropped (value set in detail.js) -->
+                    <input type="hidden" name="image_part_left" value="">
+                    <input type="hidden" name="image_part_top" value="">
+                    <input type="hidden" name="image_part_width" value="">
+                    <input type="hidden" name="image_part_height" value="">
+                    <!-- Link Trans Text To Tag Data (value set in detail.js) -->
+                    <input type="hidden" name="linktranstexttotag" value="">
+
+                    <!-- Title -->
+                    <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Tag Manager</div>
+                    <!-- Category -->
+                    <div>
+                        <label>Category</label>
+                        <select name="category" required>
+                            {% for category in text_folio_tag_categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Tag (existing) -->
+                    <div>
+                        <label>Tag (existing)</label>
+                        <select name="tag_existing">
+                            <option value="">-- Please select --</option>
+                            {% for tag in text_folio_tags %}
+                                <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Tag (new) -->
+                    <div>
+                        <label>Tag (new)</label>
+                        <input type="text" name="tag_new" title="Tag (new)" placeholder="If no existing tag is suitable, create a new tag here">
+                    </div>
+                    <!-- Details -->
+                    <div>
+                        <label>Details</label>
+                        <input type="text" name="details" title="Details" placeholder="Optional. Provide more details if needed">
+                    </div>
+                    {% if object.has_image %}
+                        <!-- Draw on Image -->
+                        <div>
+                            <label>Draw on Image</label>
+                            <input type="checkbox" id="corpus-text-detail-content-tags-textfoliotag-form-draw-start"> <i class="fas fa-pencil-alt"></i>
+                        </div>
+                    {% endif %}
+                    <!-- Submit form button -->
+                    <button type="submit"><i class="fas fa-check-circle"></i> Save Tag</button>
+                </form>
+            {% endif %}
+
+            {% for text_folio in text_folios %}
+                <div class="corpus-text-detail-content-tags-folio" data-folio="{{ text_folio.id }}">
+                    {% for text_folio_tag in text_folio.text_folio_tags.all %}
+
+                        <!-- Start and finish divs for category when it changes -->
+                        {% ifchanged text_folio_tag.tag.category %}
+                            {% if forloop.counter > 1 %}
+                                </div></div>
+                            {% endif %}
+                            <div class="corpus-text-detail-content-tags-folio-tagcategory" data-tagcategory="{{ tag_category.id }}">
+                                <h3>{{ text_folio_tag.tag.category.name }}</h3>
+                                <div class="corpus-text-detail-content-tags-folio-tagcategory-tags">
+                        {% endifchanged %}
+
+                        <!-- Display each text folio tag -->
+                        <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag" data-textfoliotag="{{ text_folio_tag.id }}">
+                            <!-- Hashtag icon -->
+                            <i class="fas fa-hashtag"></i>
+                            <!-- Name -->
+                            <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-name">
+                                {{ text_folio_tag.tag.name }}
+                            </div>
+                            <!-- Details -->
+                            {% if text_folio_tag.details %}
+                                <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-details">
+                                    {{ text_folio_tag.details }}
+                                </div>
+                            {% endif %}
+                            <!-- Links -->
+                            <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links">
+                                {% if text_folio_tag.is_in_text_folio_transcription %}
+                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link" data-trans="transcription">
+                                        <i class="fas fa-pen-fancy"></i> View in Transcriptions
+                                    </div>
+                                {% endif %}
+                                {% if text_folio_tag.is_in_text_folio_translation %}
+                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link" data-trans="translation">
+                                        <i class="fas fa-globe-europe"></i> View in Translations
+                                    </div>
+                                {% endif %}
+                                {% if text_folio_tag.is_in_text_folio_transliteration %}
+                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link" data-trans="transliteration">
+                                        <i class="fas fa-font"></i> View in Transliterations
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    {% empty %}
+                        <div class="corpus-text-detail-content-tags-folio-notags">
+                            This folio doesn't have any tags yet. Please check back soon.
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+        </article>
+
         {% if object.has_transcription %}
-            <article class="tabbed" id="corpus-text-detail-content-transcription">
+            <article class="tabbed" id="corpus-text-detail-content-transcription" data-trans="transcription">
                 <div class="tabbed-title">Transcription</div>
 
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='transcription' %}
@@ -94,7 +225,7 @@
         {% endif %}
 
         {% if object.has_translation %}
-            <article class="tabbed" id="corpus-text-detail-content-translation">
+            <article class="tabbed" id="corpus-text-detail-content-translation" data-trans="translation">
                 <div class="tabbed-title">Translation</div>
 
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='translation' %}
@@ -110,7 +241,7 @@
         {% endif %}
 
         {% if object.has_transliteration %}
-            <article class="tabbed" id="corpus-text-detail-content-transliteration">
+            <article class="tabbed" id="corpus-text-detail-content-transliteration" data-trans="transliteration">
                 <div class="tabbed-title">Transliteration</div>
 
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='transliteration' %}
@@ -141,25 +272,44 @@
             </article>
         {% endif %}
 
-        <article class="tabbed" id="corpus-text-detail-content-tags">
-            <div class="tabbed-title">Tags</div>
-            <p>
-                Tags
-            </p>
-        </article>
-
     </section><!--
 
     Image
     -->{% if object.has_image %}<section id="corpus-text-detail-images">
         <!-- Image Controls -->
         <div id="corpus-text-detail-images-controls">
-            <!-- Choose Image -->
+            <!-- Choose Folio/Image -->
             <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
+                <label>Folio:</label>
                 <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
                     {% for text_folio in text_folios %}
                         <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
                     {% endfor %}
+                </select>
+            </div>
+            <!-- Only Show Certain Image Parts -->
+            <div id="corpus-text-detail-images-controls-onlyshowcertainimageparts" class="corpus-text-detail-images-controls-item">
+                <label>Only show:</label>
+                <select>
+                    <option value="">-- Please select --</option>
+                    <optgroup label="Lines of Text">
+                        <option value="lines-all">All lines of text</option>
+                        {% if object.has_transcription %}
+                            <option value="lines-transcription">Transcription</option>
+                        {% endif %}
+                        {% if object.has_translation %}
+                            <option value="lines-translation">Translation</option>
+                        {% endif %}
+                        {% if object.has_transliteration %}
+                            <option value="lines-transliteration">Transliteration</option>
+                        {% endif %}
+                    </optgroup>
+                    <optgroup label="Tags">
+                        <option value="tags-all">All tags</option>
+                        {% for category in text_folio_tag_categories %}
+                            <option value="tags-{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </optgroup>
                 </select>
             </div>
             <!-- Reset Viewer -->
@@ -168,8 +318,8 @@
             <div id="corpus-text-detail-images-controls-downloadimage" class="corpus-text-detail-images-controls-item" title="Download Image">
                 <a href="{{ object.default_image.image.url }}" title="Download Image" download><i class="fas fa-download"></i></a>
             </div>
-            <!-- Reveal All Parts -->
-            <div id="corpus-text-detail-images-controls-revealallparts" class="corpus-text-detail-images-controls-item" title="Reveal All Parts on Image"><i class="fas fa-border-none"></i></div>
+            <!-- Show All Parts -->
+            <div id="corpus-text-detail-images-controls-revealparts" class="corpus-text-detail-images-controls-item" title="Reveal Parts on Image"><i class="fas fa-border-none"></i></div>
             <!-- Rotate Image Anticlockwise -->
             <div id="corpus-text-detail-images-controls-rotate-anticlockwise" class="corpus-text-detail-images-controls-item" title="Rotate Image Anticlockwise"><i class="fas fa-undo-alt"></i></div>
             <!-- Rotate Image Clockwise -->
@@ -182,8 +332,14 @@
                         <div class="corpus-text-detail-images-image-rotatelayer">
                             <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
                             <div class="corpus-text-detail-images-image-parts">
-                                {% for annotation in text_folio.textfolioannotation_set.all %}
-                                    <div id="corpus-text-detail-images-image-parts-part-{{ annotation.id }}" class="corpus-text-detail-images-image-parts-part" style="top: {{ annotation.image_cropped_top }}px; left: {{ annotation.image_cropped_left }}px; width: {{ annotation.image_cropped_width }}px; height: {{ annotation.image_cropped_height }}px;"></div>
+                                <!--
+                                    Add TextFolioTag image parts
+                                    Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
+                                -->
+                                {% for tag in text_folio.text_folio_tags.all %}
+                                    {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
+                                        <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

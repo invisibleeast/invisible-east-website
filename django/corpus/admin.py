@@ -87,18 +87,6 @@ admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
 admin.site.register(models.SlTextDocumentSubtypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextCentury, GenericSlAdminView)
-admin.site.register(models.SlTextTagLandMeasurementUnits, GenericSlAdminView)
-admin.site.register(models.SlTextTagPeopleAndProcessesAdmin, GenericSlAdminView)
-admin.site.register(models.SlTextTagPeopleAndProcessesLegal, GenericSlAdminView)
-admin.site.register(models.SlTextTagDocumentation, GenericSlAdminView)
-admin.site.register(models.SlTextTagGeographicAdministrativeUnits, GenericSlAdminView)
-admin.site.register(models.SlTextTagLegalAndAdministrativeStockPhrases, GenericSlAdminView)
-admin.site.register(models.SlTextTagFinanceAndAccountancyPhrases, GenericSlAdminView)
-admin.site.register(models.SlTextTagAgriculturalProduce, GenericSlAdminView)
-admin.site.register(models.SlTextTagCurrenciesAndDenominations, GenericSlAdminView)
-admin.site.register(models.SlTextTagMarkings, GenericSlAdminView)
-admin.site.register(models.SlTextTagReligion, GenericSlAdminView)
-admin.site.register(models.SlTextTagToponym, GenericSlAdminView)
 admin.site.register(models.SlTextCollection, GenericSlAdminView)
 admin.site.register(models.SlTextCorpus, GenericSlAdminView)
 admin.site.register(models.SlTextClassification, GenericSlAdminView)
@@ -110,7 +98,8 @@ admin.site.register(models.SlTextPublication, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
 admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
-admin.site.register(models.SlTextFolioAnnotationType, GenericSlAdminView)
+admin.site.register(models.SlTextFolioTag, GenericSlAdminView)
+admin.site.register(models.SlTextFolioTagCategory, GenericSlAdminView)
 admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
@@ -171,6 +160,7 @@ class TextFolioStackedInline(admin.StackedInline):
     """
     model = models.TextFolio
     extra = 0
+    classes = ['collapse']
     show_change_link = True
     fields = (
         'side',
@@ -184,15 +174,6 @@ class TextFolioStackedInline(admin.StackedInline):
         'transliteration'
     )
     readonly_fields = ('image_small', 'image_medium', 'image_large', 'image_preview')
-
-
-class TextFolioAnnotationTabularInline(admin.TabularInline):
-    """
-    A subform/inline form for TextFolioAnnotation to be used in TextFolioAdminView
-    """
-    model = models.TextFolioAnnotation
-    extra = 1
-    exclude = ('position_in_image',)
 
 
 class M2MPersonToPerson1Inline(admin.TabularInline):
@@ -299,7 +280,6 @@ class TextAdminView(GenericAdminView):
                 'admin_principal_editor',
                 'admin_principal_data_entry_person',
                 'admin_contributors',
-                'admin_commentary',
                 'meta_created_by',
                 'meta_created_datetime',
                 'meta_lastupdated_by',
@@ -336,20 +316,9 @@ class TextAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
-        ('Tags of Terms in Text', {
+        ('Commentary', {
             'fields': (
-                'land_measurement_units',
-                'people_and_processes_admins',
-                'people_and_processes_legal',
-                'documentations',
-                'geographic_administrative_units',
-                'legal_and_administrative_stock_phrases',
-                'finance_and_accountancy_phrases',
-                'agricultural_produce',
-                'currencies_and_denominations',
-                'markings',
-                'religions',
-                'toponyms'
+                'commentary',
             ),
             'classes': ['collapse']
         }),
@@ -361,6 +330,7 @@ class TextAdminView(GenericAdminView):
                 'public_review_approved_by',
                 'public_review_approved_datetime'
             ),
+            'classes': ['collapse']
         }),
     )
     inlines = (
@@ -486,7 +456,6 @@ class TextFolioAdminView(GenericAdminView):
         'transliteration'
     )
     readonly_fields = ('image_small', 'image_medium', 'image_large', 'image_preview')
-    inlines = (TextFolioAnnotationTabularInline,)
 
     # Hide this AdminView from sidebar
     def get_model_perms(self, request):
