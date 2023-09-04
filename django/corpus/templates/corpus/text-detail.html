@@ -154,44 +154,39 @@
                 <div class="corpus-text-detail-content-tags-folio" data-folio="{{ text_folio.id }}">
                     {% for text_folio_tag in text_folio.text_folio_tags.all %}
 
-                        <!-- Start and finish divs for category when it changes -->
+                        <!-- Add category name as subheading when it changes -->
                         {% ifchanged text_folio_tag.tag.category %}
-                            {% if forloop.counter > 1 %}
-                                </div></div>
-                            {% endif %}
-                            <div class="corpus-text-detail-content-tags-folio-tagcategory" data-tagcategory="{{ tag_category.id }}">
-                                <h3>{{ text_folio_tag.tag.category.name }}</h3>
-                                <div class="corpus-text-detail-content-tags-folio-tagcategory-tags">
+                            <h3>{{ text_folio_tag.tag.category.name }}</h3>
                         {% endifchanged %}
 
                         <!-- Display each text folio tag -->
-                        <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag" data-textfoliotag="{{ text_folio_tag.id }}">
+                        <div class="corpus-text-detail-content-tags-folio-tagcategory-tag" data-textfoliotag="{{ text_folio_tag.id }}">
                             <!-- Hashtag icon -->
                             <i class="fas fa-hashtag"></i>
                             <!-- Name -->
-                            <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-name">
+                            <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-name">
                                 {{ text_folio_tag.tag.name }}
                             </div>
                             <!-- Details -->
                             {% if text_folio_tag.details %}
-                                <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-details">
+                                <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-details">
                                     {{ text_folio_tag.details }}
                                 </div>
                             {% endif %}
                             <!-- Links -->
-                            <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links">
+                            <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links">
                                 {% if text_folio_tag.is_in_text_folio_transcription %}
-                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link" data-trans="transcription">
+                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links-link" data-trans="transcription">
                                         <i class="fas fa-pen-fancy"></i> View in Transcriptions
                                     </div>
                                 {% endif %}
                                 {% if text_folio_tag.is_in_text_folio_translation %}
-                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link" data-trans="translation">
+                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links-link" data-trans="translation">
                                         <i class="fas fa-globe-europe"></i> View in Translations
                                     </div>
                                 {% endif %}
                                 {% if text_folio_tag.is_in_text_folio_transliteration %}
-                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link" data-trans="transliteration">
+                                    <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links-link" data-trans="transliteration">
                                         <i class="fas fa-font"></i> View in Transliterations
                                     </div>
                                 {% endif %}
@@ -215,9 +210,9 @@
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='transcription' %}
 
                 {% for text_folio in text_folios %}
-                    {% if text_folio.transcription_lines %}
+                    {% if text_folio.transcription_text_lines %}
                         <div class="corpus-text-detail-content-transcription-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
-                            {{ text_folio.transcription_lines | safe }}
+                            {% include "corpus/snippets/foliotext-lines.html" with trans_text_lines=text_folio.transcription_text_lines %}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -231,9 +226,9 @@
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='translation' %}
 
                 {% for text_folio in text_folios %}
-                    {% if text_folio.translation_lines %}
+                    {% if text_folio.translation_text_lines %}
                         <div class="corpus-text-detail-content-translation-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
-                            {{ text_folio.translation_lines | safe }}
+                            {% include "corpus/snippets/foliotext-lines.html" with trans_text_lines=text_folio.translation_text_lines %}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -247,9 +242,9 @@
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='transliteration' %}
 
                 {% for text_folio in text_folios %}
-                    {% if text_folio.transliteration_lines %}
+                    {% if text_folio.transliteration_text_lines %}
                         <div class="corpus-text-detail-content-transliteration-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
-                            {{ text_folio.transliteration_lines | safe }}
+                            {% include "corpus/snippets/foliotext-lines.html" with trans_text_lines=text_folio.transliteration_text_lines %}
                         </div>
                     {% endif %}
                 {% endfor %}

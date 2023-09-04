@@ -1,0 +1,25 @@
+{% for line in trans_text_lines %}
+    <div>
+
+        <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}>
+            <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+            <span class="folio-lines-line-text">{{ line.text | safe }}</span>
+            {% if user.is_superuser and text_folio.image %}
+                <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start"> <i class="fas fa-pencil-alt"></i></span>
+            {% endif %}
+        </div>
+
+        {% if line.trans != 'transcription' %}
+            <div class="related-lines" data-trans="transcription"></div>
+        {% endif %}
+
+        {% if line.trans != 'translation' %}
+            <div class="related-lines" data-trans="translation"></div>
+        {% endif %}
+
+        {% if line.trans != 'transliteration' %}
+            <div class="related-lines" data-trans="transliteration"></div>
+        {% endif %}
+
+    </div>
+{% endfor %}

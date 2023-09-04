@@ -142,7 +142,7 @@ $('#corpus-text-detail-content-tags-textfoliotag-form input[name="tag_new"]').on
 }).trigger('change');
 
 // Clicking on a tag when linking text will create a link to that tag
-$('.corpus-text-detail-content-tags-folio-tagcategory-tags-tag').on('click', function(){
+$('.corpus-text-detail-content-tags-folio-tagcategory-tag').on('click', function(){
     if (linkTransTextToTagData){
         // Add this text folio tag ID to the data and submit form
         linkTransTextToTagData.textFolioTagExistingId = $(this).attr('data-textfoliotag');
@@ -152,18 +152,18 @@ $('.corpus-text-detail-content-tags-folio-tagcategory-tags-tag').on('click', fun
 });
 
 // Hovering over a tag will highlight it in the tag list and on the image
-$('.corpus-text-detail-content-tags-folio-tagcategory-tags-tag, .corpus-text-detail-images-image-parts-part').on('mouseover', function(){
+$('.corpus-text-detail-content-tags-folio-tagcategory-tag, .corpus-text-detail-images-image-parts-part').on('mouseover', function(){
     let tagId = $(this).attr('data-textfoliotag');
-    $(`.corpus-text-detail-content-tags-folio-tagcategory-tags-tag[data-textfoliotag="${tagId}"], .corpus-text-detail-images-image-parts-part[data-textfoliotag="${tagId}"]`).addClass('active');
+    $(`.corpus-text-detail-content-tags-folio-tagcategory-tag[data-textfoliotag="${tagId}"], .corpus-text-detail-images-image-parts-part[data-textfoliotag="${tagId}"]`).addClass('active');
 }).on('mouseout', function(){
     let tagId = $(this).attr('data-textfoliotag');
-    $(`.corpus-text-detail-content-tags-folio-tagcategory-tags-tag[data-textfoliotag="${tagId}"], .corpus-text-detail-images-image-parts-part[data-textfoliotag="${tagId}"]`).removeClass('active');
+    $(`.corpus-text-detail-content-tags-folio-tagcategory-tag[data-textfoliotag="${tagId}"], .corpus-text-detail-images-image-parts-part[data-textfoliotag="${tagId}"]`).removeClass('active');
 });
 
 // Link from tag in tags tab to tag in trans text
-$('.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links-link').on('click', function(){
+$('.corpus-text-detail-content-tags-folio-tagcategory-tag-links-link').on('click', function(){
     let trans = $(this).attr('data-trans');
-    let textfoliotag = $(this).closest('.corpus-text-detail-content-tags-folio-tagcategory-tags-tag').attr('data-textfoliotag');
+    let textfoliotag = $(this).closest('.corpus-text-detail-content-tags-folio-tagcategory-tag').attr('data-textfoliotag');
     $(`#corpus-text-detail-content-tabs li#${trans}`).trigger('click');
     $(`article[data-trans="${trans}"]`).find('.corpus-text-detail-trans-linktranstexttotag-checkbox').prop('checked', false).trigger('change');
     $(`article[data-trans="${trans}"]`).find(`var[data-textfoliotag="${textfoliotag}"]`).addClass('active');
@@ -310,7 +310,7 @@ $('var[data-textfoliotag]').on('click', function(){
     if ($(this).hasClass('active')){
         let textfoliotag = $(this).attr('data-textfoliotag');
         $('#corpus-text-detail-content-tabs li#tags').trigger('click');
-        $(`.corpus-text-detail-content-tags-folio-tagcategory-tags-tag[data-textfoliotag="${textfoliotag}"]`).trigger('mouseover');
+        $(`.corpus-text-detail-content-tags-folio-tagcategory-tag[data-textfoliotag="${textfoliotag}"]`).trigger('mouseover');
     }
 });
 

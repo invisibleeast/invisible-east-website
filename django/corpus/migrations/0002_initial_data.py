@@ -907,9 +907,9 @@ def insert_data_texts(apps, schema_editor):
                         # Transcription
                         folio_content = folio_div.findall('ab')[folio_index]
                         folio_transcription_id = folio_content.attrib['id']
-                        folio_transcription_lines = folio_content.findall('lb')
+                        folio_transcription_text_lines = folio_content.findall('lb')
                         # Build HTML for transcription text
-                        folio_obj.transcription = folio_lines_html(folio_transcription_lines)
+                        folio_obj.transcription = folio_lines_html(folio_transcription_text_lines)
 
                         # Translation
                         # Get the matching translation block
@@ -921,9 +921,9 @@ def insert_data_texts(apps, schema_editor):
                             folio_translation = body.findall(f'div[@type="translation"]/ab')[0]
                         # If a valid matching translation has been found, add it
                         if folio_translation is not None:
-                            folio_translation_lines = folio_translation.findall('lb')
-                            if len(folio_translation_lines):
-                                folio_obj.translation = folio_lines_html(folio_translation_lines)
+                            folio_translation_text_lines = folio_translation.findall('lb')
+                            if len(folio_translation_text_lines):
+                                folio_obj.translation = folio_lines_html(folio_translation_text_lines)
                         else:
                             print(f'No matching translation found for this transcription: {folio_transcription_id}')
 

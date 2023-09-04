@@ -1021,6 +1021,7 @@ main section {
 
 .corpus-text-detail-content-tags-folio {
     display: none;
+    padding: 0.5em;
 }
 
 #corpus-text-detail-content-tags-textfoliotag-linktranstexttotag {
@@ -1094,7 +1095,7 @@ main section {
     color: var(--color-primary);
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag {
+.corpus-text-detail-content-tags-folio-tagcategory-tag {
     display: block;
     width: fit-content;
     padding: 0.6em 0 0.6em 1em;
@@ -1102,35 +1103,35 @@ main section {
     border: 1px solid #DDD;
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag.active {
+.corpus-text-detail-content-tags-folio-tagcategory-tag.active {
     outline: 3px solid var(--color-primary);
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag .fa-hashtag {
+.corpus-text-detail-content-tags-folio-tagcategory-tag .fa-hashtag {
     color: #AAA;
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag.active .fa-hashtag {
+.corpus-text-detail-content-tags-folio-tagcategory-tag.active .fa-hashtag {
     color: var(--color-primary);
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-name {
+.corpus-text-detail-content-tags-folio-tagcategory-tag-name {
     font-weight: bold;
     display: inline-block;
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-details {
+.corpus-text-detail-content-tags-folio-tagcategory-tag-details {
     font-style: italic;
     display: inline-block;
     margin-left: 1em;
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links {
+.corpus-text-detail-content-tags-folio-tagcategory-tag-links {
     display: inline-block;
     margin-left: 0.8em;
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links div {
+.corpus-text-detail-content-tags-folio-tagcategory-tag-links div {
     display: inline-block;
     color: var(--color-primary);
     font-size: 0.9em;
@@ -1141,7 +1142,7 @@ main section {
     height: fit-content;
 }
 
-.corpus-text-detail-content-tags-folio-tagcategory-tags-tag-links div:hover {
+.corpus-text-detail-content-tags-folio-tagcategory-tag-links div:hover {
     background: var(--color-primary);
     color: white;
 }

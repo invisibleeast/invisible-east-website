@@ -631,7 +631,6 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             # Get data from request
             text = request_post_get_safe(request, 'text')
             trans_field = request_post_get_safe(request, 'trans_field')
-            print(trans_field + '\n\n\n')
             line_index = request_post_get_safe(request, 'line_index')
             image_part_left = request_post_get_safe(request, 'image_part_left')
             image_part_top = request_post_get_safe(request, 'image_part_top')
@@ -650,8 +649,6 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             trans_line['data-imageparttop'] = image_part_top
             trans_line['data-imagepartwidth'] = image_part_width
             trans_line['data-imagepartheight'] = image_part_height
-
-            # print(text_folio_obj_trans_field_html)
 
             setattr(text_folio_obj, trans_field, str(text_folio_obj_trans_field_html))
             text_folio_obj.save()

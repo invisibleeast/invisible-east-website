@@ -533,20 +533,21 @@ To manually override an automatic line number simply:
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     transliteration = RichTextField(blank=True, null=True, help_text='Optional. Only relevant to some Middle Persian texts.')
 
-    def text_lines(self, text_field, field_name):
+    def trans_text_lines(self, text_field, field_name):
         """
-        Takes the specified 'text' field (e.g. one of transcription, translation, transliteration)
-        and generates the HTML needed to display on the public interface
+        Takes the specified trans text field (e.g. one of transcription, translation, transliteration)
+        and generates a list of dictionaries containing data about each line that's necessary
+        to generate the HTML to display on the public interface
 
         Each of these fields should have a related property that calls this method like so:
         @property
-        def transcription_lines(self):
-            return self.text_lines(self.transcription, 'transcription')
+        def transcription_text_lines(self):
+            return self.trans_text_lines(self.transcription, 'transcription')
         """
 
         # Ensure the transcription is a HTML ordered list with items
         if '<ol>' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
-            html_to_return = ''
+            lines_data = []
             text_as_html = BeautifulSoup(text_field, features="html.parser")
             lines = text_as_html.find_all('li')
             line_number = 0
@@ -584,10 +585,10 @@ To manually override an automatic line number simply:
                     image_part_height = line.attrs['data-imagepartheight']
 
                     # Build new attributes to add to new line div element (if provided)
-                    image_part_left_attr = f' data-imagepartleft="{image_part_left}"' if image_part_left else ''
-                    image_part_top_attr = f' data-imageparttop="{image_part_top}"' if image_part_top else ''
-                    image_part_width_attr = f' data-imagepartwidth="{image_part_width}"' if image_part_width else ''
-                    image_part_height_attr = f' data-imagepartheight="{image_part_height}"' if image_part_height else ''
+                    image_part_left_attr = f' data-imagepartleft={image_part_left}' if image_part_left else ''
+                    image_part_top_attr = f' data-imageparttop={image_part_top}' if image_part_top else ''
+                    image_part_width_attr = f' data-imagepartwidth={image_part_width}' if image_part_width else ''
+                    image_part_height_attr = f' data-imagepartheight={image_part_height}' if image_part_height else ''
                 except KeyError:
                     # Set empty attributes
                     image_part_left_attr = ''
@@ -595,36 +596,34 @@ To manually override an automatic line number simply:
                     image_part_width_attr = ''
                     image_part_height_attr = ''
 
-                # Build HTML for this line
-                html_to_return += f"""
-                <div>
-                    <div class="folio-lines-line" data-linenumbers="{line_numbers}" data-lineindex="{line_index}" data-trans="{field_name}" data-folio="{self.id}"{image_part_left_attr}{image_part_top_attr}{image_part_width_attr}{image_part_height_attr}>
-                        <span class="folio-lines-line-number">{line_number_label}</span>
-                        <span class="folio-lines-line-text">{"".join([str(x) for x in line.contents]) }</span>
-                        <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start"> <i class="fas fa-pencil-alt"></i></span>
-                    </div>
-                """
-                # Add related lines divs for the other 'trans...' fields.
-                # e.g. if current field is transcription add related lines div for translation nad transliteration
-                for trans in ['transcription', 'translation', 'transliteration']:
-                    if trans != field_name:
-                        html_to_return += f'<div class="related-lines" data-trans="{trans}"></div>'
-                # Close final div
-                html_to_return += '</div>'
+                # Build dict for this line and add to list of lines data
+                lines_data.append({
+                    'lineNumbers': line_numbers,
+                    'lineIndex': line_index,
+                    'trans': field_name,
+                    'folio': self.id,
+                    'image_part_left_attr': image_part_left_attr,
+                    'image_part_top_attr': image_part_top_attr,
+                    'image_part_width_attr': image_part_width_attr,
+                    'image_part_height_attr': image_part_height_attr,
+                    'lineNumberLabel': line_number_label,
+                    'text': "".join([str(t) for t in line.contents])
 
-            return html_to_return
+                })
+
+            return lines_data
 
     @property
-    def transcription_lines(self):
-        return self.text_lines(self.transcription, 'transcription')
+    def transcription_text_lines(self):
+        return self.trans_text_lines(self.transcription, 'transcription')
 
     @property
-    def translation_lines(self):
-        return self.text_lines(self.translation, 'translation')
+    def translation_text_lines(self):
+        return self.trans_text_lines(self.translation, 'translation')
 
     @property
-    def transliteration_lines(self):
-        return self.text_lines(self.transliteration, 'transliteration')
+    def transliteration_text_lines(self):
+        return self.trans_text_lines(self.transliteration, 'transliteration')
 
     @property
     def image_is_wider_than_tall(self):
