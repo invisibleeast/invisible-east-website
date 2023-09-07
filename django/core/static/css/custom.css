@@ -1025,12 +1025,14 @@ main section {
 }
 
 #corpus-text-detail-content-tags-textfoliotag-linktranstexttotag {
-    background: var(--color-primary);
-    color: white;
+    background: #EEE;
+    color: #505050;
     padding: 1em;
     text-align: center;
     display: none;
-    margin: 2em;
+    margin: 2em auto;
+    width: 100%;
+    max-width: 60em;
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form {

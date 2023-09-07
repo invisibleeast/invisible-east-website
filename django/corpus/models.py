@@ -654,7 +654,7 @@ To manually override an automatic line number simply:
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
         verbose_name = 'Text Folio (including Transcription, Translation, Images, etc.)'
-        verbose_name_plural = verbose_name
+        verbose_name_plural = 'Text Folios (including Transcription, Translation, Images, etc.)'
 
 
 class TextFolioTag(models.Model):
