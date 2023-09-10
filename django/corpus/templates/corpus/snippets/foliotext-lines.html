@@ -1,10 +1,17 @@
 {% for line in trans_text_lines %}
     <div>
 
-        <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}>
+        <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{% if line.trans == 'transcription' %}{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}{% endif %}>
             <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
             <span class="folio-lines-line-text">{{ line.text | safe }}</span>
-            {% if user.is_superuser and text_folio.image %}
+
+            {% comment %}
+                Only allow user to draw lines of text on image if:
+                - they're super user
+                - there's a folio image to draw on
+                - they're drawing the transcription line (other trans lines aren't wanted by project team, but can be easily added back if needed by removing this if statement and the one above for image part attr data)
+            {% endcomment %}
+            {% if user.is_superuser and text_folio.image and line.trans == 'transcription' %}
                 <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start" title="Click to start drawing line of text on image"> <i class="fas fa-pencil-alt"></i></span>
             {% endif %}
         </div>

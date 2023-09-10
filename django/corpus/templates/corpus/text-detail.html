@@ -288,16 +288,7 @@
                 <select>
                     <option value="">-- Please select --</option>
                     <optgroup label="Lines of Text">
-                        <option value="lines-all">All lines of text</option>
-                        {% if object.has_transcription %}
-                            <option value="lines-transcription">Transcription</option>
-                        {% endif %}
-                        {% if object.has_translation %}
-                            <option value="lines-translation">Translation</option>
-                        {% endif %}
-                        {% if object.has_transliteration %}
-                            <option value="lines-transliteration">Transliteration</option>
-                        {% endif %}
+                        <option value="lines-transcription">Transcription</option>
                     </optgroup>
                     <optgroup label="Tags">
                         <option value="tags-all">All tags</option>

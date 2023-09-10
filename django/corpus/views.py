@@ -8,6 +8,7 @@ from operator import (or_, and_)
 from bs4 import BeautifulSoup
 from . import models
 import json
+import datetime
 import re
 
 
@@ -118,6 +119,7 @@ class TextDetailView(DetailView):
         )
         context['text_folio_tag_categories'] = models.SlTextFolioTagCategory.objects.all().prefetch_related('tags__text_folio_tags')
         context['text_folio_tags'] = models.SlTextFolioTag.objects.all().select_related('category')
+        context['permalink'] = self.request.build_absolute_uri().split('?')[0]
         context['data_items'] = [
 
             # General
@@ -230,6 +232,22 @@ class TextDetailView(DetailView):
                 'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
             },
 
+            # Miscellaneous
+            {
+                'section_header': 'Miscellaneous'
+            },
+            {
+                'label': 'Licence',
+                'value': 'tbc'  # TODO
+            },
+            {
+                'label': 'Suggested Citation',
+                'value': f'See the Invisible East Digital Corpus "{self.object.title}": {context["permalink"]},  accessed {clean_date_from_datetime(datetime.datetime.now())}.'
+            },
+            {
+                'label': 'Permalink',
+                'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
+            },
         ]
 
         return context
@@ -603,7 +621,6 @@ class TextFolioTagManageView(View):
             return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[request.POST.get('text')])}?tab=tags")
 
         except Exception as e:
-            print(e)
             return fail_response
 
 
@@ -657,7 +674,6 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[text])}?tab={trans_field}")
 
         except Exception as e:
-            print(e)
             return fail_response
 
 

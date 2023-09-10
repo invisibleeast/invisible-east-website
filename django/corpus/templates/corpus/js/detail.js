@@ -33,9 +33,11 @@ $('#corpus-text-detail-content-tabs li').on('click', function(){
     // Alter the 'only show' image parts select list when opening certain tabs
     let onlyShowSelect = $('#corpus-text-detail-images-controls-onlyshowcertainimageparts select');
     if (activeTabId === 'tags') onlyShowSelect.val('tags-all');
+    // If going to any of the trans tabs, load transcription lines of text in the 'only show'
     else if (activeTabId === 'transcription') onlyShowSelect.val('lines-transcription');
-    else if (activeTabId === 'translation') onlyShowSelect.val('lines-translation');
-    else if (activeTabId === 'transliteration') onlyShowSelect.val('lines-transliteration');
+    else if (activeTabId === 'translation') onlyShowSelect.val('lines-transcription');
+    else if (activeTabId === 'transliteration') onlyShowSelect.val('lines-transcription');
+    else onlyShowSelect.val('');
     onlyShowSelect.trigger('change');
 })
 
@@ -611,6 +613,7 @@ $('.folio-lines-line').each(function(){
     // Attempt to get attribute values
     let folio = $(this).attr('data-folio');
     let lineIndex = $(this).attr('data-lineindex');
+    let lineNumbers = $(this).attr('data-linenumbers');
     let trans = $(this).attr('data-trans');
     let imagePartLeft = $(this).attr('data-imagepartleft');
     let imagePartTop = $(this).attr('data-imageparttop');
@@ -620,7 +623,17 @@ $('.folio-lines-line').each(function(){
     // If all required data attributes provided
     if (imagePartLeft && imagePartTop && imagePartWidth && imagePartHeight){
         $(`#corpus-text-detail-images-image-${folio} .corpus-text-detail-images-image-parts`).append(
-            `<div class="corpus-text-detail-images-image-parts-part" data-folio="${folio}" data-lineindex="${lineIndex}" data-trans="${trans}" style="left: ${imagePartLeft}px; top: ${imagePartTop}px; width: ${imagePartWidth}px; height: ${imagePartHeight}px;"></div>`
+            `<div class="corpus-text-detail-images-image-parts-part" data-folio="${folio}" data-lineindex="${lineIndex}" data-trans="${trans}" style="left: ${imagePartLeft}px; top: ${imagePartTop}px; width: ${imagePartWidth}px; height: ${imagePartHeight}px;"><label>Line ${lineNumbers}</label></div>`
         );
     }
 });
+
+// Click on an image part to show the relevant data
+$('body').on('click', '.corpus-text-detail-images-image-parts-part.active', function(){
+    // Determine tab to go to
+    let tab;
+    if ($(this).attr('data-trans')) tab = 'transcription'
+    else if ($(this).attr('data-textfoliotag')) tab = 'tags'
+    // Go to tab
+    if (tab) $(`#corpus-text-detail-content-tabs li#${tab}:not(.active)`).trigger('click');
+})

@@ -343,7 +343,7 @@ class Text(models.Model):
     summary_of_content = RichTextField(blank=True, null=True)
 
     # Commentary
-    commentary = models.TextField(blank=True, null=True)
+    commentary = RichTextField(blank=True, null=True, help_text='Commentary will not be displayed on the public website. It is for internal project team purposes only.')
 
     # Review & Approve Text to Show on Public Website
     public_review_ready = models.BooleanField(
