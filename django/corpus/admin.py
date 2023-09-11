@@ -119,7 +119,7 @@ class SlTextDocumentSubtypeAdminView(GenericSlAdminView):
 #
 
 
-class PersonInTextTabularInline(admin.TabularInline):
+class PersonInTextForTextTabularInline(admin.TabularInline):
     """
     A subform/inline form for PersonInText to be used in TextAdminView
     """
@@ -127,6 +127,15 @@ class PersonInTextTabularInline(admin.TabularInline):
     extra = 1
     classes = ['collapse']
     autocomplete_fields = ('person', 'person_role_in_text')
+
+
+class PersonInTextForTextPersonTabularInline(admin.TabularInline):
+    """
+    A subform/inline form for PersonInText to be used in TextPersonAdminView
+    """
+    model = models.PersonInText
+    extra = 0
+    autocomplete_fields = ('text', 'person_role_in_text')
 
 
 class TextDateStackedInline(admin.StackedInline):
@@ -336,7 +345,7 @@ class TextAdminView(GenericAdminView):
     inlines = (
         M2MTextToText2Inline,
         M2MTextToText1Inline,
-        PersonInTextTabularInline,
+        PersonInTextForTextTabularInline,
         TextDateStackedInline,
         TextRelatedPublicationStackedInline,
         TextFolioStackedInline
@@ -472,6 +481,7 @@ class TextPersonAdminView(GenericAdminView):
     list_display_links = ('id', 'name')
     search_fields = ('id', 'name')
     inlines = (
+        PersonInTextForTextPersonTabularInline,
         M2MPersonToPerson2Inline,
         M2MPersonToPerson1Inline
     )
