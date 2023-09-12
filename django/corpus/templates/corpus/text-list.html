@@ -22,7 +22,9 @@
         <form method="GET" id="corpus-text-list-options">
 
             <!-- Search (allows for multiple search criteria) -->
-            <div class="corpus-text-list-options-subtitle">Search</div>
+            <div class="corpus-text-list-options-subtitle">
+                <i class="fas fa-search"></i> Search
+            </div>
             <!-- Hidden fields that will have value determined in JS -->
             <input type="hidden" id="corpus-text-list-options-search-values" name="search">
             <input type="hidden" id="corpus-text-list-options-search-operator" name="search_operator">
@@ -31,7 +33,9 @@
             <div id="corpus-text-list-options-search-fields-add"><i class="fas fa-plus"></i> Add search box</div>
 
             <!-- Sort -->
-            <div class="corpus-text-list-options-subtitle">Sort</div>
+            <div class="corpus-text-list-options-subtitle">
+                <i class="fas fa-sort-amount-down-alt"></i> Sort
+            </div>
             <!-- Sort by -->
             <label for="corpus-text-list-options-sort-by">Sort by:</label>
             <select id="corpus-text-list-options-sort-by" name="sort_by">
@@ -57,7 +61,9 @@
 
             <!-- Filter -->
             {% if options_filters|length > 0 %}
-                <div class="corpus-text-list-options-subtitle">Filters</div>
+                <div class="corpus-text-list-options-subtitle">
+                    <i class="fas fa-filter"></i> Filters
+                </div>
                 <div class="corpus-text-list-options-filters">
                     {% for filter_group in options_filters %}
                         <div class="corpus-text-list-options-filters-group">
@@ -98,7 +104,7 @@
 
             <div class="corpus-text-list-options-submitbuttons">
                 <button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary">
-                    <i class="fas fa-search"></i> Search
+                    <i class="fas fa-check-circle"></i> Submit Search
                 </button><!--
                 --><button id="corpus-text-list-options-reset" title="Reset search" class="reset-form corpus-text-list-options-submitbuttons-secondary">
                     <i class="fas fa-redo-alt"></i>

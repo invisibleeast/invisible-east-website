@@ -237,10 +237,6 @@ class TextDetailView(DetailView):
                 'section_header': 'Miscellaneous'
             },
             {
-                'label': 'Licence',
-                'value': 'tbc'  # TODO
-            },
-            {
                 'label': 'Suggested Citation',
                 'value': f'See the Invisible East Digital Corpus "{self.object.title}": {context["permalink"]},  accessed {clean_date_from_datetime(datetime.datetime.now())}.'
             },
@@ -542,9 +538,9 @@ class TextListView(ListView):
         return context
 
 
-class TextFolioTagManageView(View):
+class TextFolioTagCreateView(View):
     """
-    Class-based view to manage (create/edit/delete) a TextFolioTag object in the database
+    Class-based view to create a TextFolioTag object in the database
     """
 
     def post(self, request):
@@ -580,13 +576,8 @@ class TextFolioTagManageView(View):
                 else:
                     return fail_response
 
-                # Create/Edit a TextFolioTag object
-                text_folio_tag_id = request_post_get_safe(request, 'textfoliotag')
-                # Edit
-                if text_folio_tag_id:
-                    text_folio_tag = models.TextFolioTag.objects.get(id=text_folio_tag_id)
-                # Create
-                elif text_folio_id:
+                # Create a TextFolioTag object (if a TextFolio obj is available)
+                if text_folio_obj:
                     text_folio_tag = models.TextFolioTag.objects.create(
                         text_folio=text_folio_obj,
                         tag=tag,
@@ -595,6 +586,7 @@ class TextFolioTagManageView(View):
                         image_part_top=request_post_get_safe(request, 'image_part_top'),
                         image_part_width=request_post_get_safe(request, 'image_part_width'),
                         image_part_height=request_post_get_safe(request, 'image_part_height'),
+                        meta_created_by=request.user
                     )
                 else:
                     return fail_response
@@ -621,6 +613,7 @@ class TextFolioTagManageView(View):
             return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[request.POST.get('text')])}?tab=tags")
 
         except Exception as e:
+            print(e)
             return fail_response
 
 

@@ -102,8 +102,7 @@ $('#corpus-text-list-options-submit').on('click', function(e){
     // Submit the list options form
     $('form#corpus-text-list-options').submit();
 
-    // Show a loading indicator
-    $('.corpus-text-list-options').html('<div class="spinner-container"><div class="spinner"></div><span>Searching...</span></div>')
+    // Disable buttons to prevent repeat clicks
     $('.corpus-text-list-options-submitbuttons button').prop('disabled', true);
 });
 

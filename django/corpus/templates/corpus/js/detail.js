@@ -97,7 +97,7 @@ $('.corpus-text-detail-folio-select').on('change', function(){
     // Show only this folio in the tags tab
     $('.corpus-text-detail-content-tags-folio').hide();
     $(`.corpus-text-detail-content-tags-folio[data-folio="${folioId}"`).show();
-    // Set this as the folio in the tag manager
+    // Set this as the folio in the tag create form
     $('#corpus-text-detail-content-tags-textfoliotag-form input[name="textfolio"]').val(folioId);
     // Show only this folio across all trans tabs
     $('.folio-lines').hide();
@@ -114,11 +114,11 @@ $('.corpus-text-detail-folio-select').on('change', function(){
 // Tags
 //
 
-// Show/hide tag manager
-$('#corpus-text-detail-content-tags-showtagmanager').on('change', function(){
-    let tagManager = $('#corpus-text-detail-content-tags-textfoliotag-form');
-    if ($(this).is(':checked')) tagManager.show();
-    else tagManager.hide();
+// Show/hide 'create a tag' form
+$('#corpus-text-detail-content-tags-showtagcreate').on('change', function(){
+    let tagCreate = $('#corpus-text-detail-content-tags-textfoliotag-form');
+    if ($(this).is(':checked')) tagCreate.show();
+    else tagCreate.hide();
 }).trigger('change');
 
 // Show/hide tags based on their category
@@ -289,8 +289,8 @@ $('.corpus-text-detail-trans-linktranstexttotag').on('click', function(){
     if (linkTransTextToTagData){
         // Go to the 'tags' tab
         $('#corpus-text-detail-content-tabs li#tags').trigger('click');
-        // Show the tag manager and pass the data to its hidden field
-        $('#corpus-text-detail-content-tags-showtagmanager').prop('checked', true).trigger('change');
+        // Show the create a tag and pass the data to its hidden field
+        $('#corpus-text-detail-content-tags-showtagcreate').prop('checked', true).trigger('change');
         $('#corpus-text-detail-content-tags-textfoliotag-form input[name="linktranstexttotag"]').val(JSON.stringify(linkTransTextToTagData));
         // Populate content of the 'linking text to tag' box and show it
         $('#corpus-text-detail-content-tags-textfoliotag-linktranstexttotag').html(`
@@ -298,7 +298,7 @@ $('.corpus-text-detail-trans-linktranstexttotag').on('click', function(){
                 Link a Tag to the ${$(this).attr('data-trans')} text: <strong>&ldquo;${linkTransTextToTagData.textSelected}&rdquo;</strong> from the line <strong>&ldquo;${linkTransTextToTagData.textWholeLine}&rdquo;</strong>
             </p>
             <p>
-                To link a NEW tag, complete the Tag Manager and click Save.
+                To link a NEW tag, complete the 'Create a Tag' form and click Save.
             </p>
             <p>
                 To link an EXISTING tag, simply click on the tag in the list below.

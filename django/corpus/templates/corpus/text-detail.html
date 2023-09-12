@@ -80,7 +80,7 @@
 
                 {% if user.is_staff %}
                     <div>
-                        <label><input type="checkbox" id="corpus-text-detail-content-tags-showtagmanager"> Show Tag Manager</label>
+                        <label><input type="checkbox" id="corpus-text-detail-content-tags-showtagcreate"> Create a Tag</label>
                     </div>
                 {% endif %}
             </div>
@@ -90,7 +90,7 @@
                     <!-- Content filled dynamically by JS -->
                 </div>
 
-                <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-manage' %}">
+                <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}">
                     <!-- Security CSRF token -->
                     {% csrf_token %}
 
@@ -108,7 +108,7 @@
                     <input type="hidden" name="linktranstexttotag" value="">
 
                     <!-- Title -->
-                    <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Tag Manager</div>
+                    <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Create a Tag</div>
                     <!-- Category -->
                     <div>
                         <label>Category</label>
@@ -191,6 +191,10 @@
                                     </div>
                                 {% endif %}
                             </div>
+                            <!-- Manage Tag in Admin Dashbaord (Edit/Delete) -->
+                            <a href="{% url 'admin:corpus_textfoliotag_change' text_folio_tag.id %}" class="corpus-text-detail-content-tags-folio-tagcategory-tag-admin" title="Manage Tag in Admin Dashboard" target="_blank">
+                                <i class="fas fa-cog"></i> Manage
+                            </a>
                         </div>
 
                     {% empty %}

@@ -527,6 +527,11 @@ main section {
     margin-top: 0.5em;
 }
 
+.corpus-text-list-options-subtitle i {
+    font-size: 0.8em;
+    margin-right: 0.2em;
+}
+
 #corpus-text-list-options hr {
     margin: 2em auto 0.7em auto;
     border-top: 1px solid #DDD;
@@ -1147,6 +1152,18 @@ main section {
 .corpus-text-detail-content-tags-folio-tagcategory-tag-links div:hover {
     background: var(--color-primary);
     color: white;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tag-admin {
+    display: none;
+    margin-right: 1em;
+}
+
+.corpus-text-detail-content-tags-folio-tagcategory-tag.active .corpus-text-detail-content-tags-folio-tagcategory-tag-admin {
+    display: inline-block;
+    cursor: pointer;
+    color: var(--color-primary);
+    font-size: 0.9em;
 }
 
 .corpus-text-detail-content-tags-folio-notags {

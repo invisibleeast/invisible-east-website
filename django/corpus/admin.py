@@ -5,6 +5,7 @@ from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import reverse
+from bs4 import BeautifulSoup
 from . import models
 import logging
 
@@ -429,7 +430,7 @@ class TextAdminView(GenericAdminView):
             obj.meta_lastupdated_by = request.user
             obj.meta_lastupdated_datetime = timezone.now()
 
-        obj.save()
+        super().save_model(request, obj, form, change)
 
     class Media:
         js = (
@@ -469,6 +470,61 @@ class TextFolioAdminView(GenericAdminView):
     # Hide this AdminView from sidebar
     def get_model_perms(self, request):
         return {}
+
+
+@admin.register(models.TextFolioTag)
+class TextFolioTagAdminView(GenericAdminView):
+    """
+    Customise the TextFolioTag section of the admin dashboard
+    """
+
+    list_display = ('id', 'text_folio', 'tag', 'details', 'is_drawn_on_text_folio_image')
+    list_display_links = ('id',)
+    search_fields = (
+        'id',
+        'tag__name',
+        'text_folio__text__shelfmark',
+        'details'
+    )
+    readonly_fields = (
+        'image_part_left',
+        'image_part_top',
+        'image_part_width',
+        'image_part_height',
+        'meta_created_datetime',
+        'meta_created_by',
+        'meta_lastupdated_datetime',
+        'meta_lastupdated_by'
+    )
+
+    def save_model(self, request, obj, form, change):
+        # Set meta created data (if adding a new object)
+        if obj.id is None:
+            obj.meta_created_by = request.user
+            # meta_created_datetime default value set in model so not needed here
+        # Set last updated data (if editing existing object)
+        else:
+            obj.meta_lastupdated_by = request.user
+            obj.meta_lastupdated_datetime = timezone.now()
+        super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        # Remove the tag from the trans text
+        for trans in ['transcription', 'translation', 'transliteration']:
+            if getattr(obj, f'is_in_text_folio_{trans}'):
+                trans_field = getattr(obj.text_folio, trans)
+                trans_html = BeautifulSoup(trans_field, features="html.parser")
+                for tag_element in trans_html.find_all('var', {'data-textfoliotag': obj.id}):
+                    # Unwrap element (remove outer tag but leave contents)
+                    # e.g. <var data-textfoliotag="1">XXXX</var> would now be XXXX
+                    tag_element.unwrap()
+                # Set new HTML string of the TextFolio trans field
+                setattr(obj.text_folio, trans, str(trans_html))
+
+        # Save parent TextFolio object
+        obj.text_folio.save()
+        # Delete TextFolioTag object
+        super().delete_model(request, obj)
 
 
 @admin.register(models.Person)

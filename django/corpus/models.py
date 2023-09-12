@@ -694,6 +694,10 @@ class TextFolioTag(models.Model):
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
     @property
+    def is_drawn_on_text_folio_image(self):
+        return self.image_part_left is not None
+
+    @property
     def is_in_text_folio_transcription(self):
         return self.text_folio.transcription and f'data-textfoliotag="{self.id}"' in self.text_folio.transcription
 

@@ -9,7 +9,7 @@ urlpatterns = [
     path('<pk>/', views.TextDetailView.as_view(), name='text-detail'),
 
     # TextFolioTag
-    path('textfoliotag/manage/', views.TextFolioTagManageView.as_view(), name='textfoliotag-manage'),
+    path('textfoliotag/create/', views.TextFolioTagCreateView.as_view(), name='textfoliotag-create'),
     path('textfoliotag/failed/', views.TextFolioTagFailedTemplateView.as_view(), name='textfoliotag-failed'),
 
     # TextFolioTransLineDrawnOnImage
