@@ -29,7 +29,7 @@ admin.site.site_header = 'Invisible East: Admin Dashboard'
 def get_manytomany_fields(model, exclude=[]):
     """
     Returns a list of strings containing the field names of many to many fields of a model
-    To ignore certain fields, provide a list of such fields using the exclude parameter
+    To ignore certain fields, provide a list of such field names (as strings) using the exclude parameter
     """
     return list(f.name for f in model._meta.get_fields() if type(f) == ManyToManyField and f.name not in exclude)
 
@@ -37,7 +37,7 @@ def get_manytomany_fields(model, exclude=[]):
 def get_foreignkey_fields(model, exclude=[]):
     """
     Returns a list of strings containing the field names of foreign key fields of a model
-    To ignore certain fields, provide a list of such fields using the exclude parameter
+    To ignore certain fields, provide a list of such field names (as strings) using the exclude parameter
     """
     return list(f.name for f in model._meta.get_fields() if type(f) == ForeignKey and f.name not in exclude)
 
@@ -69,6 +69,9 @@ class GenericAdminView(admin.ModelAdmin):
         self.filter_horizontal = get_manytomany_fields(self.model)
         # Set all foreign key fields to display the autocomplete widget
         self.autocomplete_fields = get_foreignkey_fields(self.model)
+
+    class Media:
+        css = {'all': ('/static/css/custom_admin.css',)}
 
 
 class GenericSlAdminView(GenericAdminView):
@@ -146,12 +149,6 @@ class TextDateStackedInline(admin.StackedInline):
     model = models.TextDate
     extra = 0
     classes = ['collapse']
-    fields = (
-        'calendar',
-        'date_text',
-        'date',
-        ('date_range_start', 'date_range_end')
-    )
 
 
 class TextRelatedPublicationStackedInline(admin.StackedInline):
@@ -223,7 +220,7 @@ class M2MTextToText1Inline(admin.TabularInline):
     max_num = 0
     extra = 0
     classes = ['collapse']
-    verbose_name = 'Related Texts that have defined a relationship with this Text'
+    verbose_name = 'Related Shelfmarks (that have defined a relationship with this Text)'
     verbose_name_plural = verbose_name
 
 
@@ -236,7 +233,8 @@ class M2MTextToText2Inline(admin.TabularInline):
     extra = 1
     autocomplete_fields = ('text_2', 'relationship_type')
     classes = ['collapse']
-    verbose_name = 'Related Text'
+    verbose_name = 'Related Shelfmarks'
+    verbose_name_plural = verbose_name
 
 
 #
@@ -386,6 +384,29 @@ class TextAdminView(GenericAdminView):
             'type__category'
         )
         return queryset
+    
+    def has_manage_permission(self, request, obj):
+        """
+        Determine if this obj can be managed (edited/deleted) by current user
+        This method must be called in both has_change_permission() and has_delete_permission() below
+        """
+        if obj:
+            # Allow changes if neither Principal Editor and Principal Data Entry Person have been set
+            if not obj.admin_principal_editor and not obj.admin_principal_data_entry_person:
+                return True
+            # Allow changes if a Principal Editor has been set and is the current user
+            elif obj.admin_principal_editor and obj.admin_principal_editor == request.user:
+                return True
+            # Allow changes if a Principal Data Entry has been set and is the current user
+            elif obj.admin_principal_data_entry_person and obj.admin_principal_data_entry_person == request.user:
+                return True
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return self.has_manage_permission(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return self.has_manage_permission(request, obj)
 
     def save_model(self, request, obj, form, change):
         # Get current object, so can access values before this save
@@ -397,7 +418,7 @@ class TextAdminView(GenericAdminView):
             email_link_list = request.build_absolute_uri(reverse('admin:corpus_text_changelist') + f'?admin_principal_editor__id__exact={obj.admin_principal_editor.id}&public_review_ready__exact=1')
             try:
                 send_mail(
-                    'Invisible East: A corpus text is ready to review',
+                    'Invisible East Digital Corpus: A corpus text is ready to review',
                     f"Dear {obj.admin_principal_editor.name},\n\nA corpus text ({str(obj)}) has been marked as ready to review by {request.user.name}.\n\nYou can view this corpus text here: {email_link_obj}\n\nYou are the Principal Editor of this corpus text, meaning you are required to review and approve it. Once approved it will be visible to all users on the public website.\n\nTo approve it, simply go to the above link, scroll to the bottom of the page, tick the 'Approved' box and click save.\n\nYou can also see all corpus texts ready for you to review and approve here: {email_link_list}\n\nThanks,\nInvisible East",  # NOQA
                     settings.DEFAULT_FROM_EMAIL,
                     (obj.admin_principal_editor.email,),
@@ -412,6 +433,19 @@ class TextAdminView(GenericAdminView):
             obj.public_review_approved_by = request.user
             obj.public_review_approved_datetime = timezone.now()
             obj.public_review_ready = False
+            # Email the project team for every 100th approved text (e.g. 100, 200, 300, ...)
+            count_approved_texts = len(self.model.objects.filter(public_review_approved=True)) + 1
+            if count_approved_texts % 100 == 0:
+                try:
+                    send_mail(
+                        f'Invisible East Digital Corpus: The {count_approved_texts}th text has been approved!',
+                        f"A new corpus text ({str(obj)}) has been approved to show on the public website, which marks the {count_approved_texts}th publicly visible text in the Invisible East Digital Corpus!",
+                        settings.DEFAULT_FROM_EMAIL,
+                        (settings.MAIN_CONTACT_EMAIL, settings.ADMINS[0][1]),
+                        fail_silently=False
+                    )
+                except Exception:
+                    logger.exception("Failed to send email")
         # Remove public review approval
         elif obj_old and obj_old.public_review_approved is True and obj.public_review_approved is False:
             obj.public_review_approved_by = None
@@ -431,6 +465,13 @@ class TextAdminView(GenericAdminView):
             obj.meta_lastupdated_datetime = timezone.now()
 
         super().save_model(request, obj, form, change)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all many to many fields to display the filter_horizontal widget
+        self.filter_horizontal = get_manytomany_fields(self.model)
+        # Set all foreign key fields to display the autocomplete widget
+        self.autocomplete_fields = get_foreignkey_fields(model=self.model, exclude=['type', 'document_subtype'])
 
     class Media:
         js = (

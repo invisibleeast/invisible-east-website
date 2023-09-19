@@ -18,7 +18,7 @@ filter_pre_mm = f'{filter_pre}mm_'  # Many to Many relationship
 filter_pre_fk = f'{filter_pre}fk_'  # Foreign Key relationship
 filter_pre_gt = f'{filter_pre}gt_'  # Greater than (or equal to) filter, e.g. "Date (from)"
 filter_pre_lt = f'{filter_pre}lt_'  # Less than (or equal to) filter, e.g. "Date (to)"
-filter_pre_hs = f'{filter_pre}hs_'  # Has content filter, e.g. "Has transcription"
+filter_pre_bl = f'{filter_pre}hs_'  # Boolean, e.g. "Has transcription"
 
 
 def clean_date_from_datetime(datetime_obj):
@@ -82,6 +82,24 @@ def request_post_get_safe(request, name):
     return value if value and len(value) else None
 
 
+def text_initial_queryset(user):
+    """
+    Returns the initially filtered list of Text objects used in get_queryset() methods of views below, e.g. TextDetailView and TextListView
+    """
+
+    return models.Text.objects.all() # TODO - delete this line before live
+
+    # If the user is logged in only show published objects, unless user is the principal editor or data entry person of this Text (so they can preview it)
+    if not user.is_anonymous:
+        text_filter = Q(public_review_approved=True) | Q(admin_principal_editor=user) | Q(admin_principal_data_entry_person=user)
+    # If user is not logged in only show published objects
+    else:
+        text_filter = Q(public_review_approved=True)
+
+    # Return the filtered queryset of Text objects
+    return models.Text.objects.filter(text_filter)
+
+
 class TextDetailView(DetailView):
     """
     Class-based view for Text detail template
@@ -90,7 +108,8 @@ class TextDetailView(DetailView):
     model = models.Text
 
     def get_queryset(self):
-        queryset = self.model.objects.all()  #filter(public_review_approved=True) TODO
+        # Start with the initial queryset of Text objects
+        queryset = text_initial_queryset(self.request.user)
 
         # Improve performance
         queryset = queryset.select_related(
@@ -232,6 +251,30 @@ class TextDetailView(DetailView):
                 'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
             },
 
+            # People
+            {
+                'section_header': 'People'
+            },
+            {
+                'html': self.object.details_html_person_in_text
+            },
+
+            # Publications
+            {
+                'section_header': 'Publications'
+            },
+            {
+                'html': self.object.details_html_publications
+            },
+
+            # Related Shelfmarks
+            {
+                'section_header': 'Related Shelfmarks'
+            },
+            {
+                'html': self.object.details_html_texts
+            },
+
             # Miscellaneous
             {
                 'section_header': 'Miscellaneous'
@@ -244,6 +287,10 @@ class TextDetailView(DetailView):
                 'label': 'Permalink',
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
+            {
+                'label': 'Contact the Principal Editor of this Text',
+                'value': f'<a href="mailto:{self.object.admin_principal_editor.email}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{self.object.admin_principal_editor}, {self.object.admin_principal_editor.email}</a> <em>(Please include the above permalink when contacting the Principal Editor about this Text)</em>' if self.object.admin_principal_editor else None
+            }
         ]
 
         return context
@@ -275,8 +322,8 @@ class TextListView(ListView):
             return CharField  # If it fails, assume it's a CharField by default
 
     def get_queryset(self):
-        # Start with all objects
-        queryset = self.model.objects.all()  #filter(public_review_approved=True) TODO
+        # Start with the initial queryset of Text objects
+        queryset = text_initial_queryset(self.request.user)
 
         # Improve performance
         queryset = queryset.select_related(
@@ -317,6 +364,10 @@ class TextListView(ListView):
         # Filter
         for filter_key in [k for k in list(self.request.GET.keys()) if k.startswith(filter_pre)]:
             filter_value = self.request.GET.get(filter_key, '')
+            # Remove the 'unique' data from the filter name (this is needed for unique id and name for filters that point to the same model)
+            if '___unique_' in filter_key:
+                filter_key = filter_key.split('___unique_')[0]
+            # Perform the filter based on the type
             if filter_value != '':
                 # Many to Many relationship (uses __in comparison and filter_value is a list)
                 if filter_key.startswith(filter_pre_mm):
@@ -334,9 +385,9 @@ class TextListView(ListView):
                 elif filter_key.startswith(filter_pre_lt):
                     filter_field = filter_key.replace(filter_pre_lt, '')
                     queryset = queryset.filter(**{f'{filter_field}__lte': filter_value})
-                # Has content (e.g. field is not null or empty string)
-                elif filter_key.startswith(filter_pre_hs):
-                    filter_field = filter_key.replace(filter_pre_hs, '')
+                # Boolean content (e.g. field is not null or empty string)
+                elif filter_key.startswith(filter_pre_bl):
+                    filter_field = filter_key.replace(filter_pre_bl, '')
                     if filter_value == 'on':
                         queryset = queryset.exclude(**{f'{filter_field}__isnull': True})  # remove null values
                         queryset = queryset.exclude(**{f'{filter_field}__exact': ''})  # remove empty strings
@@ -382,7 +433,7 @@ class TextListView(ListView):
         context['filter_pre'] = filter_pre
         context['filter_pre_gt'] = filter_pre_gt
         context['filter_pre_lt'] = filter_pre_lt
-        context['filter_pre_hs'] = filter_pre_hs
+        context['filter_pre_bl'] = filter_pre_bl
 
         # Options: Sort By
         # Alphabetical
@@ -405,22 +456,22 @@ class TextListView(ListView):
 
         # Filters
         context['options_filters'] = [
-            # Has Content
+            # Booleans
             [
                 {
-                    'filter_id': f'{filter_pre_hs}text_folios__image',
+                    'filter_id': f'{filter_pre_bl}text_folios__image',
                     'filter_name': 'Has an Image'
                 },
                 {
-                    'filter_id': f'{filter_pre_hs}text_folios__transcription',
+                    'filter_id': f'{filter_pre_bl}text_folios__transcription',
                     'filter_name': 'Has a Transcription'
                 },
                 {
-                    'filter_id': f'{filter_pre_hs}text_folios__translation',
+                    'filter_id': f'{filter_pre_bl}text_folios__translation',
                     'filter_name': 'Has a Translation'
                 },
                 {
-                    'filter_id': f'{filter_pre_hs}text_folios__transliteration',
+                    'filter_id': f'{filter_pre_bl}text_folios__transliteration',
                     'filter_name': 'Has a Transliteration'
                 },
             ],
@@ -473,62 +524,65 @@ class TextListView(ListView):
             # Tags
             [
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_group_name': 'Tags',
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ap',
                     'filter_name': 'Agricultural Produce',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural produce')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_cd',
                     'filter_name': 'Currencies and Denominations',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and denominations')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_dm',
                     'filter_name': 'Documentations',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentations')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_fa',
                     'filter_name': 'Finance and Accountancy Phrases',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Finance and accountancy phrases')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ga',
                     'filter_name': 'Geographic Administrative Units',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic administrative units')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lm',
                     'filter_name': 'Land Measurement Units',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Land measurement units')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_la',
                     'filter_name': 'Legal and Administrative Stock Phrases',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Legal and administrative stock phrases')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_mk',
                     'filter_name': 'Markings',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Markings')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lj',
                     'filter_name': 'People and processes involved in legal and judiciary system',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='People and processes involved in legal and judiciary system')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_pa',
                     'filter_name': 'People and processes involved in public administration, tax, trade, and commerce',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='People and processes involved in public administration, tax, trade, and commerce')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_rg',
                     'filter_name': 'Religions',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Religions')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_tp',
                     'filter_name': 'Toponyms',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Toponyms')
                 },

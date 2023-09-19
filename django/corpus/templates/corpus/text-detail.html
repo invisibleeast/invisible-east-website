@@ -7,6 +7,13 @@
 
     <!-- Content -->
     <section id="corpus-text-detail-content"{% if not object.has_image %} class="full"{% endif %}>
+
+        {% if not object.public_review_approved %}
+            <div id="corpus-text-detail-content-notyetapproved">
+                This text is not yet approved and so is not visible to public users. Only the Principal Data Entry Person and the Principal Editor can view this text until it's been approved.
+            </div>
+        {% endif %}
+
         <div id="corpus-text-detail-content-title">
             {{ object.title }}
         </div>
@@ -30,9 +37,13 @@
                     {% if forloop.counter > 1 %}</div>{% endif %}
                     <div class="corpus-text-detail-content-details-datagroup">
                     <h3>{{ data_item.section_header }}</h3>
-                {% endif %}
 
-                {% if data_item.value %}
+                {% elif data_item.html %}
+                    <div class="corpus-text-detail-content-details-datagroup-datahtml">
+                        {{ data_item.html | safe }}
+                    </div>
+
+                {% elif data_item.value %}
                     <div class="corpus-text-detail-content-details-datagroup-dataitem">
                         <label>{{ data_item.label }}</label><span>{{ data_item.value | safe }}</span>
                     </div>

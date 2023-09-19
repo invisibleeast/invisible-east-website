@@ -211,13 +211,25 @@ def insert_data_select_list_models(apps, schema_editor):
         ).save()
 
     # SlTextScript
-    for name in [
-        'Arabic',
-        'Hebrew',
-        'Greek-based',
-        'Ancient Pahlavi'
+    for obj in [
+        {
+            'name': 'Arabic',
+            'is_written_right_to_left': True
+        },
+        {
+            'name': 'Hebrew',
+            'is_written_right_to_left': False
+        },
+        {
+            'name': 'Greek-based',
+            'is_written_right_to_left': False
+        },
+        {
+            'name': 'Ancient Pahlavi',
+            'is_written_right_to_left': False
+        },
     ]:
-        models.SlTextScript.objects.create(name=name)
+        models.SlTextScript.objects.create(**obj)
 
     # SlTextLanguage
     for obj in [

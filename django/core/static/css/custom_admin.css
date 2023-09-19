@@ -1,0 +1,24 @@
+/* Make the submit row (i.e. buttons to save and delete the object) permanently fixed to bottom of screen */
+.change-form .submit-row {
+    position: fixed;
+    bottom: 0;
+    left: 15vw;
+    width: calc(70vw);
+    border-radius: 0;
+    margin: 0;
+    z-index: 1000;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Include a * at the beginning of required field labels to make clearer */
+label.required:before {
+    content: '*';
+}
+
+/* CKEditor (i.e. RichTextField inputs) show a light grey on white background when viewing source HTML in dark mode, which this fixes */
+.django-ckeditor-widget textarea {
+    color: black;
+}

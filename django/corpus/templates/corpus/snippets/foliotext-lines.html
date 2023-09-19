@@ -2,8 +2,16 @@
     <div>
 
         <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{% if line.trans == 'transcription' %}{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}{% endif %}>
-            <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
-            <span class="folio-lines-line-text">{{ line.text | safe }}</span>
+            <!-- Put line number on left if not rtl (so ltr) -->
+            {% if not line.rtl %}
+                <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+            {% endif %}
+            <!-- Line text -->
+            <span class="folio-lines-line-text{% if line.rtl %} rtl" dir="rtl"{% else %}"{% endif %}>{{ line.text | safe }}</span>
+            <!-- Put line number on right if not rtl (so ltr) -->
+            {% if line.rtl %}
+                <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+            {% endif %}
 
             {% comment %}
                 Only allow user to draw lines of text on image if:

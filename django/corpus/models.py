@@ -7,6 +7,7 @@ from io import BytesIO
 from django.db.models.functions import Upper
 from account.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.urls import reverse
 from bs4 import BeautifulSoup
 import os
 import textwrap
@@ -21,6 +22,9 @@ import textwrap
 #
 # 1. Reusable code
 #
+
+
+rich_text_field_help_text = 'Always paste content without formatting (Windows: Ctrl + Shift + P, Mac: Cmd + Shift + P)'
 
 
 class SlAbstract(models.Model):
@@ -185,7 +189,7 @@ class SlTextScript(SlAbstract):
     A script that a Text was originally written in
     E.g. 'Arabic', 'Bactrian', 'New Persian'
     """
-    pass
+    is_written_right_to_left = models.BooleanField(default=False)
 
 
 class SlTextLanguage(SlAbstract):
@@ -340,10 +344,10 @@ class Text(models.Model):
     physical_additional_details = models.TextField(blank=True, null=True)
 
     # Content
-    summary_of_content = RichTextField(blank=True, null=True)
+    summary_of_content = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text)
 
     # Commentary
-    commentary = RichTextField(blank=True, null=True, help_text='Commentary will not be displayed on the public website. It is for internal project team purposes only.')
+    commentary = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text + '<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
 
     # Review & Approve Text to Show on Public Website
     public_review_ready = models.BooleanField(
@@ -464,8 +468,43 @@ class Text(models.Model):
                 return folio.image_small
 
     @property
+    def details_html_person_in_text(self):
+        if len(self.persons_in_texts.all()):
+            html = '<ul>'
+            for person in self.persons_in_texts.all():
+                html += f'<li><strong>{person.person.name}</strong>'
+                html += f' (Known in text as: {person.person_name_in_text})' if person.person_name_in_text else ''
+                html += f' (Role in text: {person.person_role_in_text})' if person.person_role_in_text else ''
+                html += '</li>'
+            html += '</ul>'
+            return html
+
+    @property
+    def details_html_publications(self):
+        if len(self.text_related_publications.all()):
+            html = '<ul>'
+            for publication in self.text_related_publications.all():
+                html += f'<li><strong>{publication.publication}</strong>'
+                html += f' (Pages: {publication.pages})' if publication.pages else ''
+                html += '</li>'
+            html += '</ul>'
+            return html
+
+    @property
+    def details_html_texts(self):
+        if len(self.texts.all()):
+            html = '<ul>'
+            for text in self.texts.all():
+                html += f'<li><a href="{reverse("corpus:text-detail", args=[str(text.id)])}">{text}</a></li>'
+            html += '</ul>'
+            return html
+
+    @property
     def title(self):
         return f"{self.primary_language.name}: {self.collection}, {self.shelfmark}"
+
+    def get_absolute_url(self):
+        return reverse('corpus:text-detail', args=[str(self.id)])
 
     def __str__(self):
         return self.title
@@ -479,7 +518,7 @@ class TextDate(models.Model):
     A date of a Text
     """
 
-    date_help_text = 'Format date as: YYYY-MM-DD - e.g. 0605-01-31'
+    date_help_text = 'Format: "YYYY-MM-DD" e.g. "0608-01-31" (ensure years before 1000 start with 0, e.g. 0608 not 608)'
     related_name = 'text_dates'
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
@@ -508,7 +547,7 @@ class TextFolio(models.Model):
     """
 
     related_name = 'text_folios'
-    text_folio_trans_help_text = """
+    text_folio_trans_help_text = rich_text_field_help_text + """<br>
 To start creating lines of text click the 'numbered list' button
 <br>
 To manually override an automatic line number simply:
@@ -531,7 +570,7 @@ To manually override an automatic line number simply:
 
     transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
-    transliteration = RichTextField(blank=True, null=True, help_text='Optional. Only relevant to some Middle Persian texts.')
+    transliteration = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text + '<br>Optional. Only relevant to some Middle Persian texts.')
 
     def trans_text_lines(self, text_field, field_name):
         """
@@ -546,7 +585,7 @@ To manually override an automatic line number simply:
         """
 
         # Ensure the transcription is a HTML ordered list with items
-        if '<ol>' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
+        if '<ol' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
             lines_data = []
             text_as_html = BeautifulSoup(text_field, features="html.parser")
             lines = text_as_html.find_all('li')
@@ -607,8 +646,8 @@ To manually override an automatic line number simply:
                     'image_part_width_attr': image_part_width_attr,
                     'image_part_height_attr': image_part_height_attr,
                     'lineNumberLabel': line_number_label,
+                    'rtl': self.text.primary_language.script.is_written_right_to_left and field_name == 'transcription',
                     'text': "".join([str(t) for t in line.contents])
-
                 })
 
             return lines_data
@@ -739,8 +778,8 @@ class PersonInText(models.Model):
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     person = models.ForeignKey('Person', on_delete=models.CASCADE, related_name=related_name)
-    person_name_in_text = models.CharField(max_length=1000, blank=True, null=True, help_text='If Person is named differently in Text than in this database then record their name in the Text here')
-    person_role_in_text = models.ForeignKey('SlPersonInTextRole', on_delete=models.RESTRICT, related_name=related_name)
+    person_name_in_text = models.CharField(max_length=1000, blank=True, null=True, help_text='If Person is named differently in Text than in this database then record their name in the Text here', verbose_name='person name (as it appears in this text)')
+    person_role_in_text = models.ForeignKey('SlPersonInTextRole', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
 
     def __str__(self):
         return f'{self.text.title}: {self.person.name} ({self.person_role_in_text.name})'
@@ -755,7 +794,7 @@ class M2MPersonToPerson(models.Model):
     """
     person_1 = models.ForeignKey(Person, related_name='person_1', on_delete=models.CASCADE, verbose_name='person')
     person_2 = models.ForeignKey(Person, related_name='person_2', on_delete=models.CASCADE, verbose_name='person')
-    relationship_type = models.ForeignKey(SlM2MPersonToPersonRelationshipType, on_delete=models.CASCADE)
+    relationship_type = models.ForeignKey(SlM2MPersonToPersonRelationshipType, on_delete=models.SET_NULL, blank=True, null=True)
     relationship_details = models.CharField(max_length=1000, blank=True, null=True)
 
 
@@ -765,5 +804,5 @@ class M2MTextToText(models.Model):
     """
     text_1 = models.ForeignKey(Text, related_name='text_1', on_delete=models.CASCADE, verbose_name='text')
     text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text')
-    relationship_type = models.ForeignKey(SlM2MTextToTextRelationshipType, on_delete=models.CASCADE)
+    relationship_type = models.ForeignKey(SlM2MTextToTextRelationshipType, on_delete=models.SET_NULL, blank=True, null=True)
     relationship_details = models.CharField(max_length=1000, blank=True, null=True)

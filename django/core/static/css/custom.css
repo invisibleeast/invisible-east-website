@@ -15,6 +15,7 @@ html, body {
     --color-secondary: #c1b98a;
     --color-secondary-dark: #9e976d;
     --color-secondary-light: #e6e3d0;
+    --color-red: #c23616;
 }
 
 a,
@@ -232,6 +233,10 @@ i.icon {
     color: white;
 }
 
+.rtl {
+    text-align: right;
+}
+
 /* ---------- Forms ---------- */
 
 form.full-form p {
@@ -271,7 +276,7 @@ form.full-form .helptext {
 }
 
 form.full-form .errorlist {
-    color: #C0392B;
+    color: var(--color-red);
 }
 
 button {
@@ -309,15 +314,15 @@ form.full-form button[type=submit]:hover {
 }
 
 form.full-form button[type=submit].button-danger {
-    background: #C23616;
+    background: var(--color-red);
 }
 
 .field-required.field-invalid {
-    border: 2px solid #E74C3C;
+    border: 2px solid var(--color-red);
 }
 
 .validationmsg {
-    color: #E74C3C;
+    color: var(--color-red);
     font-size: 0.9em;
 }
 
@@ -717,6 +722,13 @@ main section {
     border-top: none;
 }
 
+.corpus-text-list-options-filters-group-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-top: 0.5em;
+    opacity: 0.8;
+}
+
 #corpus-text-list-counts {
     padding: 0;
     margin: 0 2.5em;
@@ -775,21 +787,32 @@ main section {
     margin-bottom: 0;
 }
 
-.corpus-text-list-items-item-has {
+.corpus-text-list-items-item-notyetapproved {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 0.9em;
+    background: var(--color-red);
+    color: white;
+    padding: 0.3em 0.8em;
+    font-weight: 400;
+}
+
+.corpus-text-list-items-item-booleans {
     position: absolute;
     bottom: 0;
     right: 15px;
     font-size: 0.9em;
 }
 
-.corpus-text-list-items-item-has span {
+.corpus-text-list-items-item-booleans span {
     display: inline-block;
     margin-left: 1em;
     color: #606060;
     opacity: 0.5;
 }
 
-.corpus-text-list-items-item-has span.active {
+.corpus-text-list-items-item-booleans span.active {
     color: var(--color-primary);
     opacity: 1;
 }
@@ -872,6 +895,14 @@ main section {
 
 #corpus-text-detail-content.full {
     width: 100%;
+}
+
+#corpus-text-detail-content-notyetapproved {
+    background: var(--color-red);
+    color: white;
+    padding: 0.5em;
+    text-align: center;
+    font-weight: 400;
 }
 
 #corpus-text-detail-content-title {
@@ -1330,13 +1361,13 @@ main section {
 }
 
 .corpus-text-detail-images-image-parts-part.reveal {
-    border: 1px solid var(--color-secondary-dark);
-    outline: 1px solid var(--color-secondary-light);
+    border: 2px solid white;
+    outline: 6px solid var(--color-red);
 }
 
 .corpus-text-detail-images-image-parts-part.active {
-    border: 3px solid var(--color-primary);
-    outline: 1px solid var(--color-primary-light);
+    border: 2px solid white;
+    outline: 6px solid var(--color-primary);
     cursor: pointer;
 }
 
@@ -1460,7 +1491,7 @@ footer {
 }
 
 #footer-content-social-youtube:hover {
-    color: #c4302b;
+    color: var(--color-red);
 }
 
 #footer-content-social-linkedin:hover {

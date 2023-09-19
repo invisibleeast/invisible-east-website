@@ -68,34 +68,37 @@
                     {% for filter_group in options_filters %}
                         <div class="corpus-text-list-options-filters-group">
                             {% for f in filter_group %}
-                                <div class="corpus-text-list-options-filters-group-filter">
+                                {% if f.filter_group_name %}
+                                    <div class="corpus-text-list-options-filters-group-name">{{ f.filter_group_name }}</div>
+                                {% else %}
+                                    <div class="corpus-text-list-options-filters-group-filter">
+                                        {% if filter_pre_bl in f.filter_id %}
+                                            <label><input type="checkbox" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
+                                        {% else %}
+                                            <label>
+                                                {{ f.filter_name }}
+                                            </label>
+                                            <span class="input-clear"><i class="fas fa-times-circle"></i></span>
+                                            <select id="{% if f.filter_id_unique %}{{ f.filter_id_unique }}{% else %}{{ f.filter_id }}{% endif %}"
+                                                class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
+                                                title="{{ f.filter_name }}"
+                                                name="{{ f.filter_id }}"
 
-                                    {% if filter_pre_hs in f.filter_id %}
-                                        <label><input type="checkbox" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
-                                    {% else %}
-                                        <label>
-                                            {{ f.filter_name }}
-                                        </label>
-                                        <span class="input-clear"><i class="fas fa-times-circle"></i></span>
-                                        <select id="{% if f.filter_id_unique %}{{ f.filter_id_unique }}{% else %}{{ f.filter_id }}{% endif %}"
-                                            class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
-                                            title="{{ f.filter_name }}"
-                                            name="{{ f.filter_id }}"
+                                                {# Filter Dependencies #}
+                                                {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
 
-                                            {# Filter Dependencies #}
-                                            {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
-
-                                            {# Data Hierarchy #}
-                                            {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
-                                            {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
-                                            {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
-                                            {% include 'snippets/select-default.html' %}
-                                            {% for o in f.filter_options %}
-                                                <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    {% endif %}
-                                </div>
+                                                {# Data Hierarchy #}
+                                                {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
+                                                {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
+                                                {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
+                                                {% include 'snippets/select-default.html' %}
+                                                {% for o in f.filter_options %}
+                                                    <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     {% endfor %}
@@ -148,11 +151,19 @@
                         </dl>
                     </div>
                 </div>
-                <div class="corpus-text-list-items-item-has">
+                <!-- Booleans -->
+                <div class="corpus-text-list-items-item-booleans">
+                    <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
                     <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
                     <span{% if object.has_translation %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Translation</span>
                     <span{% if object.has_transliteration %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transliteration</span>
                 </div>
+                {% if not object.public_review_approved %}
+                    <!-- Not Yet Approved -->
+                    <div class="corpus-text-list-items-item-notyetapproved" title="This text is not visible to public users">
+                        Not yet approved
+                    </div>
+                {% endif %}
             </a>
         {% empty %}
             <div class="corpus-text-list-items-empty">

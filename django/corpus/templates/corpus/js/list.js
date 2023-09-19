@@ -121,7 +121,7 @@ function setFieldValueFromUrl(formItemID, urlParameter, triggerChange=false) {
     // If a valid value found
     if (value){
         // Checkboxes (check the box)
-        if (urlParameter.startsWith('{{ filter_pre_hs }}')) $('#' + formItemID).prop('checked', 'checked')
+        if (urlParameter.startsWith('{{ filter_pre_bl }}')) $('#' + formItemID).prop('checked', 'checked')
         // Select List (set correct option)
         else $('#' + formItemID).val(value);
     }
