@@ -16,6 +16,11 @@
 
         <div id="corpus-text-detail-content-title">
             {{ object.title }}
+
+            {% if user.is_staff %}
+                <!-- Admin link to this item -->
+                <a id="corpus-text-detail-content-title-adminlink" href="{% url 'admin:corpus_text_change' object.id %}" title="View this Corpus Text in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a>
+            {% endif %}
         </div>
 
         <ul id="corpus-text-detail-content-tabs">
@@ -90,7 +95,7 @@
 
                 {% if user.is_staff %}
                     <div>
-                        <label><input type="checkbox" id="corpus-text-detail-content-tags-showtagcreate"> Create a Tag</label>
+                        <label><input type="checkbox" id="corpus-text-detail-content-tags-showtagcreate"> Tag Manager</label>
                     </div>
                 {% endif %}
             </div>
@@ -118,10 +123,10 @@
                     <input type="hidden" name="linktranstexttotag" value="">
 
                     <!-- Title -->
-                    <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Create a Tag</div>
-                    <!-- Category -->
+                    <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Tag Manager</div>
+                    <!-- Tag Category -->
                     <div>
-                        <label>Category</label>
+                        <label>Tag Category <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
                         <select name="category" required>
                             {% for category in text_folio_tag_categories %}
                                 <option value="{{ category.id }}">{{ category.name }}</option>
@@ -130,7 +135,7 @@
                     </div>
                     <!-- Tag (existing) -->
                     <div>
-                        <label>Tag (existing)</label>
+                        <label>Tag (existing) <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
                         <select name="tag_existing">
                             <option value="">-- Please select --</option>
                             {% for tag in text_folio_tags %}
@@ -201,9 +206,9 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            <!-- Manage Tag in Admin Dashbaord (Edit/Delete) -->
-                            <a href="{% url 'admin:corpus_textfoliotag_change' text_folio_tag.id %}" class="corpus-text-detail-content-tags-folio-tagcategory-tag-admin" title="Manage Tag in Admin Dashboard" target="_blank">
-                                <i class="fas fa-cog"></i> Manage
+                            <!-- View Tag in the admin dashboard (Edit/Delete) -->
+                            <a href="{% url 'admin:corpus_textfoliotag_change' text_folio_tag.id %}" class="corpus-text-detail-content-tags-folio-tagcategory-tag-admin" title="View this Tag in the admin dashboard" target="_blank">
+                                <i class="fas fa-cog"></i>
                             </a>
                         </div>
 

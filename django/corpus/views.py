@@ -622,7 +622,7 @@ class TextFolioTagCreateView(View):
 
             else:
                 # Get/Create SlTextFolioTag object
-                tag_category_name = request_post_get_safe(request, 'category')
+                tag_category = request_post_get_safe(request, 'category')
                 tag_existing_id = request_post_get_safe(request, 'tag_existing')
                 tag_new_name = request_post_get_safe(request, 'tag_new')
                 if tag_existing_id:
@@ -630,7 +630,7 @@ class TextFolioTagCreateView(View):
                 elif tag_new_name:
                     tag = models.SlTextFolioTag.objects.create(
                         name=tag_new_name,
-                        category=models.SlTextFolioTagCategory.objects.get(name=tag_category_name)
+                        category=models.SlTextFolioTagCategory.objects.get(id=tag_category)
                     )
                 else:
                     return fail_response

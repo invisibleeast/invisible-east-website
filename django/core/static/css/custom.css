@@ -656,11 +656,11 @@ main section {
 }
 
 #corpus-text-list-options-search-fields-instance-add {
-    background: var(--color-secondary);
+    background: var(--color-secondary-light);
 }
 
 #corpus-text-list-options-search-fields-instance-add:hover {
-    background: var(--color-secondary-dark);
+    background: var(--color-secondary);
 }
 
 .corpus-text-list-options-search-fields-instance-operator {
@@ -879,6 +879,12 @@ main section {
     color: var(--color-primary);
 }
 
+#corpus-text-detail-content-title-adminlink {
+    color: #CCC;
+    font-size: 0.75em;
+    margin-left: 0.6em;
+}
+
 #corpus-text-detail-content-tabs {
     display: block;
     padding-left: 0;
@@ -1063,14 +1069,18 @@ main section {
 #corpus-text-detail-content-tags-textfoliotag-form label {
     font-weight: bold;
     display: inline-block;
-    width: 7em;
+    width: 8em;
     color: rgba(0, 0, 0, 0.7);
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form label a {
+    color: rgba(0, 0, 0, 0.4);
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form select,
 #corpus-text-detail-content-tags-textfoliotag-form input[type="text"] {
     display: inline-block;
-    width: calc(100% - 7.5em);
+    width: calc(100% - 8.5em);
     max-width: 50em;
 }
 

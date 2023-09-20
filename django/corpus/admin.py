@@ -102,7 +102,6 @@ admin.site.register(models.SlTextPublication, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
 admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
-admin.site.register(models.SlTextFolioTag, GenericSlAdminView)
 admin.site.register(models.SlTextFolioTagCategory, GenericSlAdminView)
 admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
@@ -115,6 +114,16 @@ class SlTextDocumentSubtypeAdminView(GenericSlAdminView):
     """
     Customise the SlTextDocumentSubtype, in addition to GenericSlAdminView
     """
+    search_fields = ('id', 'name', 'category__name')
+
+
+@admin.register(models.SlTextFolioTag)
+class SlTextFolioTagAdminView(GenericSlAdminView):
+    """
+    Customise the SlTextFolioTag, in addition to GenericSlAdminView
+    """
+    list_display = ('id', 'name', 'category')
+    list_filter = ('category',)
     search_fields = ('id', 'name', 'category__name')
 
 
