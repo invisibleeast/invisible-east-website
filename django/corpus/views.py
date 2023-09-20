@@ -87,7 +87,7 @@ def text_initial_queryset(user):
     Returns the initially filtered list of Text objects used in get_queryset() methods of views below, e.g. TextDetailView and TextListView
     """
 
-    return models.Text.objects.all() # TODO - delete this line before live
+    # return models.Text.objects.all() # TODO - delete this line before live
 
     # If the user is logged in only show published objects, unless user is the principal editor or data entry person of this Text (so they can preview it)
     if not user.is_anonymous:
