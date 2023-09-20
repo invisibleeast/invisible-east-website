@@ -48,17 +48,13 @@
         width: calc(100% - 23em);
     }
 
-    #corpus-text-list-options,
-    .corpus-text-list-options-submitbuttons {
-        right: 0;
-    }
-
     #corpus-text-list-options-toggler {
         display: none;
     }
 
     #corpus-text-list-options {
-        height: calc(100vh - 6.82em);
+        right: 0;
+        height: calc(100vh - 4.5em);
     }
 
     #corpus-text-list-counts span {

@@ -512,8 +512,13 @@ class TextListView(ListView):
                 },
                 {
                     'filter_id': f'{filter_pre_fk}type',
-                    'filter_name': 'Type',
+                    'filter_name': 'Type of Text',
                     'filter_options': models.SlTextType.objects.all().select_related('category')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}document_subtype',
+                    'filter_name': 'Document Subtype',
+                    'filter_options': models.SlTextDocumentSubtype.objects.all().select_related('category')
                 },
                 {
                     'filter_id': f'{filter_pre_fk}writing_support',

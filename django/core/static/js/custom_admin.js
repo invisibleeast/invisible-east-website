@@ -26,16 +26,34 @@ $(document).ready(function(){
     // Customise the default option text for select lists (set as an empty string)
     $('select option[value=""]').text('')
 
-    // Limit options in select lists based on value of other input fields
-    // Type > Document subtype
+    // Limit options in "Document Subtype" based on value of "Type"
     $('#id_type').on('change', function(){
-        // Show all subtype options
-        $('#id_document_subtype').val('').find('option').hide();
+        let textType = $(this).find('option:selected').text();
+        let documentSubtype = $('#id_document_subtype');
+        let documentSubtypeContainer = $('.field-document_subtype');
         // If selecting Administrative type
-        if ($(this).find('option:selected').text().startsWith('Administrative')) $('.field-document_subtype').show().find('#id_document_subtype option').filter(function(){return this.textContent.startsWith('Administrative')}).show();
+        if (textType.startsWith('Administrative')){
+            documentSubtypeContainer.show();
+            documentSubtype.find('option').each(function(){
+                if ($(this).text().startsWith('Administrative')) $(this).show();
+                else $(this).hide();
+            });
+            if (!documentSubtype.find('option:selected').text().startsWith('Administrative')) documentSubtype.val('');
+        }
         // If selecting Legal type
-        else if ($(this).find('option:selected').text().startsWith('Legal')) $('.field-document_subtype').show().find('#id_document_subtype option').filter(function(){return this.textContent.startsWith('Legal')}).show();
+        else if (textType.startsWith('Legal')){
+            documentSubtypeContainer.show();
+            documentSubtype.find('option').each(function(){
+                if ($(this).text().startsWith('Legal')) $(this).show();
+                else $(this).hide();
+            });
+            if (!documentSubtype.find('option:selected').text().startsWith('Legal')) documentSubtype.val('');
+        }
         // If selecting none of the above
-        else $('.field-document_subtype').hide();
+        else {
+            documentSubtypeContainer.hide();
+            documentSubtype.val('');
+        }
     }).trigger('change');
+
 });

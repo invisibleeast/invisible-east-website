@@ -30,7 +30,9 @@
             <input type="hidden" id="corpus-text-list-options-search-operator" name="search_operator">
             <!-- Search fields (dynamically filled via JS) -->
             <div id="corpus-text-list-options-search-fields"></div>
-            <div id="corpus-text-list-options-search-fields-add"><i class="fas fa-plus"></i> Add search box</div>
+            <button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary">
+                <i class="fas fa-search"></i> Submit Search
+            </button>
 
             <!-- Sort -->
             <div class="corpus-text-list-options-subtitle">
@@ -71,9 +73,9 @@
                                 {% if f.filter_group_name %}
                                     <div class="corpus-text-list-options-filters-group-name">{{ f.filter_group_name }}</div>
                                 {% else %}
-                                    <div class="corpus-text-list-options-filters-group-filter">
+                                    <div class="corpus-text-list-options-filters-group-filter-container">
                                         {% if filter_pre_bl in f.filter_id %}
-                                            <label><input type="checkbox" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
+                                            <label><input type="checkbox" class="corpus-text-list-options-filters-group-filter" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
                                         {% else %}
                                             <label>
                                                 {{ f.filter_name }}
@@ -104,16 +106,6 @@
                     {% endfor %}
                 </div>
             {% endif %}
-
-            <div class="corpus-text-list-options-submitbuttons">
-                <button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary">
-                    <i class="fas fa-check-circle"></i> Submit Search
-                </button><!--
-                --><button id="corpus-text-list-options-reset" title="Reset search" class="reset-form corpus-text-list-options-submitbuttons-secondary">
-                    <i class="fas fa-redo-alt"></i>
-                </button>
-            </div>
-
         </form>
     </section>
 
@@ -154,7 +146,6 @@
                 <!-- Booleans -->
                 <div class="corpus-text-list-items-item-booleans">
                     <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
-                    <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
                     <span{% if object.has_translation %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Translation</span>
                     <span{% if object.has_transliteration %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transliteration</span>
                 </div>
@@ -168,10 +159,12 @@
         {% empty %}
             <div class="corpus-text-list-items-empty">
                 <div class="corpus-text-list-items-empty-title">
-                    No records found
+                    No Corpus Texts Found
                 </div>
                 <div class="corpus-text-list-items-empty-details">
-                    This may be because no data of this type exists yet or because your search criteria is too narrow
+                    <p>
+                        Try expanding your search criteria or <a class="reset-form" href="#">view all Corpus Texts</a>
+                    </p>
                 </div>
             </div>
         {% endfor %}

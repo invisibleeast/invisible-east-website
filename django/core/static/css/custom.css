@@ -509,7 +509,7 @@ main section {
 #corpus-text-list-options {
     overflow-y: auto;
     height: calc(100vh - 3.5rem);
-    padding: 0.7em 0.7em 3.5rem 0.7em;
+    padding: 0.7em;
     display: block;
     position: fixed;
     top: 4.5rem;
@@ -520,7 +520,6 @@ main section {
     z-index: 800;
     overflow-y: auto;
 }
-
 
 .corpus-text-list-options-subtitle {
     font-size: 1.3em;
@@ -616,58 +615,29 @@ main section {
     100% { transform: rotate(360deg); }
 }
 
-.corpus-text-list-options-submitbuttons {
-    z-index: 850;
+#corpus-text-list-options-submit {
     display: block;
-    position: fixed;
-    bottom: 0;
-    width: 23em;
-    max-width: 100%;
-}
-
-.corpus-text-list-options-submitbuttons button {
-    margin: 0;
-    padding: 1em;
+    margin: 0.8em auto 0 auto;
+    padding: 0.5em 1em 0.4em 1em;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     border: none;
-    border-radius: 0;
+    border-radius: 0.2em;
     color: white;
-    display: inline-block;
-}
-
-.corpus-text-list-options-submitbuttons-primary {
     background: var(--color-primary);
 }
 
-.corpus-text-list-options-submitbuttons-primary:hover {
+#corpus-text-list-options-submit:hover {
     background: var(--color-primary-dark);
-}
-
-.corpus-text-list-options-submitbuttons-primary {
-    width: 80%;
-}
-
-.corpus-text-list-options-submitbuttons-secondary {
-    background: var(--color-secondary);
-    width: 20%;
-}
-
-.corpus-text-list-options-submitbuttons-secondary:hover {
-    background: var(--color-secondary-dark);
 }
 
 #corpus-text-list-options-search-fields .corpus-text-list-options-search-fields-instance input {
     width: calc(100% - 3em);
-    margin: 0 0.5em 0 0;
+    margin: 0.3em 0.5em 0.3em 0;
     padding: 0.35em;
     display: inline-block;
     vertical-align: middle;
-}
-
-#corpus-text-list-options-search-fields .corpus-text-list-options-search-fields-instance:first-of-type input {
-    width: 100%;
 }
 
 .corpus-text-list-options-search-fields-instance span {
@@ -678,35 +648,31 @@ main section {
     font-size: 0.9em;
     display: inline-block;
     vertical-align: middle;
+    border-radius: 0.2em;
 }
 
 .corpus-text-list-options-search-fields-instance span:hover {
     background: #CCC;
 }
 
+#corpus-text-list-options-search-fields-instance-add {
+    background: var(--color-secondary);
+}
+
+#corpus-text-list-options-search-fields-instance-add:hover {
+    background: var(--color-secondary-dark);
+}
+
 .corpus-text-list-options-search-fields-instance-operator {
     cursor: pointer;
     width: fit-content;
     padding: 0.13em 0.6em;
+    background: #DDD;
     border-radius: 0.2em;
     margin: 0.3em 0;
 }
 
 .corpus-text-list-options-search-fields-instance-operator:hover {
-    background: #DDD;
-}
-
-#corpus-text-list-options-search-fields-add {
-    padding: 0.4em 0.8em 0.3em 0.8em;
-    font-size: 0.9em;
-    margin: 0.5em auto 1em auto;
-    width: fit-content;
-    text-align: center;
-    background: #DDD;
-    cursor: pointer;
-}
-
-#corpus-text-list-options-search-fields-add:hover {
     background: #CCC;
 }
 
@@ -942,7 +908,7 @@ main section {
 #corpus-text-detail-content article.tabbed {
     display: none;
     overflow: auto;
-    padding: 1em 0;
+    padding: 1em 0 7em 0;
     height: calc(100vh - 13em);
 }
 

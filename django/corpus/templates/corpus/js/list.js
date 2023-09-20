@@ -2,7 +2,7 @@
 $('#corpus-text-list-options-toggler').on('click', function(){
     // Hide
     if ($(this).hasClass('active')){
-        $('#corpus-text-list-options, .corpus-text-list-options-submitbuttons').animate({'right': '-23em'}, 270, function(){$(this).hide();});
+        $('#corpus-text-list-options').animate({'right': '-23em'}, 270, function(){$(this).hide();});
         $(this).removeClass('active');
         // Icon
         $(this).find('#corpus-text-list-options-toggler-inactive').show();
@@ -10,7 +10,7 @@ $('#corpus-text-list-options-toggler').on('click', function(){
     }
     // Show
     else {
-        $('#corpus-text-list-options, .corpus-text-list-options-submitbuttons').show().animate({'right': '0'}, 270);
+        $('#corpus-text-list-options').show().animate({'right': '0'}, 270);
         $(this).addClass('active');
         // Icon
         $(this).find('#corpus-text-list-options-toggler-inactive').hide();
@@ -25,29 +25,37 @@ $('.reset-form').on('click', function(e){
     window.location.replace(window.location.href.split('?')[0]);
 });
 
-// Reset filters
+// Reset individual filter
 $('#corpus-text-list-options .input-clear').on('click', function(){
     $(this).next('.corpus-text-list-options-filters-group-filter').val('').trigger('change');
 });
 
-// Show reset filter
-$('.corpus-text-list-options-filters-group-filter').on('change', function(){
-    let clearButton = $(this).prev('.input-clear');
-    if ($(this).val() !== '') clearButton.show();
+// Show reset individual filter button
+function showFilterResetButton(filter){
+    let clearButton = filter.prev('.input-clear');
+    if (filter.val() !== '') clearButton.show();
     else clearButton.hide();
-});
+}
 
 // Add a search box
-$('#corpus-text-list-options-search-fields-add').on('click', function(){
+function addSearchBox(){
     let isFirstInstance = Boolean($('.corpus-text-list-options-search-fields-instance').length == 0);
     // Set HTML, but only include operator and remove buttons if this isn't the first instance
-    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Click to toggle 'or'/'and'">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search" placeholder="Search">` + (!isFirstInstance ? `<span title="Remove this search box"><i class="fas fa-minus"></i></span>` : ``) + `</div>`;
+    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Click to toggle 'or'/'and'">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search" placeholder="Search">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<span id="corpus-text-list-options-search-fields-instance-add" title="Add search box"><i class="fas fa-plus"></i></span>`) + `</div>`;
     // Append HTML
     $('#corpus-text-list-options-search-fields').append(searchInputHtml);
-}).trigger('click');
+}
+
+// Add initial search box on page load
+addSearchBox();
+
+// Add search box when clicking button
+$('body').on('click', '#corpus-text-list-options-search-fields-instance-add', function(){
+    addSearchBox();
+});
 
 // Remove a search box
-$('#corpus-text-list-options').on('click', '.corpus-text-list-options-search-fields-instance span', function(){
+$('#corpus-text-list-options').on('click', '.corpus-text-list-options-search-fields-instance-remove', function(){
     $(this).parent().remove();
 });
 
@@ -92,6 +100,11 @@ $('#corpus-text-list-options-submit').on('click', function(e){
     // Set the multiple searches operator (and / or)
     $('#corpus-text-list-options-search-operator').val(multipleSearchesOperator);
 
+    // Remove the document subtype if it's not a child of the text type
+    let textType = $('#filter_fk_type option:selected').text().split(' ')[0];
+    let documentSubtypeCategory = $('#filter_fk_document_subtype option:selected').text().split(': ')[0];
+    if (textType !== documentSubtypeCategory) $('#filter_fk_document_subtype').val('');
+
     // Send multiple searches as a JSON encoded array of strings
     let searchArray = [];
     $('.corpus-text-list-options-search-fields-instance input').each(function(){
@@ -102,8 +115,13 @@ $('#corpus-text-list-options-submit').on('click', function(e){
     // Submit the list options form
     $('form#corpus-text-list-options').submit();
 
-    // Disable buttons to prevent repeat clicks
-    $('.corpus-text-list-options-submitbuttons button').prop('disabled', true);
+    // Disable submit to prevent repeat clicks
+    $(this).prop('disabled', true);
+});
+
+// Submit the form upon change of value of certain form elements
+$('.corpus-text-list-options-filters-group-filter, #corpus-text-list-options-sort-by, #corpus-text-list-options-sort-direction').on('change', function(){
+    $('#corpus-text-list-options-submit').trigger('click');
 });
 
 // If hitting the enter key on an input (e.g. a search box) then trigger above function before submitting
@@ -136,7 +154,7 @@ urlSearchesArray = JSON.parse(urlSearchesStr);
 if (urlSearchesArray){
     urlSearchesArray.forEach(function(searchVal, index){
         // Create a new search box, if this isn't the first item (as there's already 1 by default)
-        if (index > 0) $('#corpus-text-list-options-search-fields-add').trigger('click');
+        if (index > 0) addSearchBox();
         // Set this search value in the most recent search box
         $('.corpus-text-list-options-search-fields-instance input').last().val(searchVal);
     });
@@ -152,79 +170,45 @@ new URL(window.location.href).searchParams.forEach(function(value, key){
 
 
 //
-// Filter dependency: show/hide one filter based on the value of another filter
-// E.g. for 'Graphic Element Type' show the correct select list(s) for each type
+// Filter Relationships (i.e. changing visibility/options in one filter based on value of another filter)
 //
 
-$('select.corpus-text-list-options-filters-group-filter[data-dependencies]').on('change', function(){
-    let dependencies = JSON.parse($(this).attr('data-dependencies'));
-    let selected = $(this).find(':selected').text();
-
-    dependencies.forEach(function(dependency){
-        let dependency_select = $('#' + dependency.id);
-        // Show filter if a valid option chosen and it's matching
-        if (dependency.value === selected && selected !== '') dependency_select.parent().show();
-        // Hide filter if not a match or no valid option chosen
-        else {
-            dependency_select.val('').parent().hide();
-            dependency_select.prev('.input-clear').hide();
-        }
-    });
-});
-
-
-//
-// Hierarchical data filters: selecting a particular value in one list changes available options in another based on related data
-// E.g. Country > Town > Collection. When selecting a Country the options in Town and Collection should filter to only those from that country
-//
-
-// Children (when selecting an parent, limit options in the children)
-$('select.corpus-text-list-options-filters-group-filter[data-hierarchy-children]').on('change', function(){
-    let parentId = $(this).attr('data-hierarchy-id');
-    let parentVal = $(this).val();
-    let children = $(this).attr('data-hierarchy-children').split(' ');
-
-    // Loop through child select lists
-    children.forEach(function(child){
-        let childSelect = 'select.corpus-text-list-options-filters-group-filter[data-hierarchy-id=' + child + ']';
-        // Reset value of child, if not changing to default and the child option is hidden
-        if (parentVal != '') $(childSelect).find(':selected:hidden').parent().val('');
-        // Loop through child select lists' options
-        $(childSelect + ' > option').each(function(){
-            // Get parent data as a JSON object
-            let parents = $(this).attr('data-hierarchy-parents-ids');
-            // If parent & child data exists for this option
-            if (parents && parentVal) {
-                // Convert parents string to JSON object
-                parents = JSON.parse(parents);
-                // Show if this is a child (has a matching parent)
-                if (parents[parentId] == parentVal) $(this).show();
-                else $(this).hide();
-            } else {
-                $(this).show();  // Show by default
-            }
+// 'Type' and 'Document Subtype'
+function filterRelationshipTypeAndDocumentSubtype(){
+    let textType = $('#filter_fk_type').find('option:selected').text();
+    let documentSubtype = $('#filter_fk_document_subtype');
+    let documentSubtypeContainer = $('#filter_fk_document_subtype').closest('.corpus-text-list-options-filters-group-filter-container');
+    // If selecting Administrative type
+    if (textType.startsWith('Administrative')){
+        documentSubtypeContainer.show();
+        documentSubtype.find('option').each(function(){
+            if ($(this).text().startsWith('Administrative')) $(this).removeClass('hidden');
+            else $(this).addClass('hidden');
         });
-    });
-});
-// Parents (when selecting a child, hide the parent)
-$('select.corpus-text-list-options-filters-group-filter[data-hierarchy-parents]').on('change', function(){
-    let childVal = $(this).val();
-    // Loop through parents
-    $(this).attr('data-hierarchy-parents').split(' ').forEach(function(q){ 
-        let parent = $('select.corpus-text-list-options-filters-group-filter[data-hierarchy-id=' + q + ']')
-        let parentClearButton = parent.prev('.input-clear');
-        // Disable parent if a child value provided, else enable parent
-        if (childVal !== ''){
-            parent.val('').attr('disabled', 'disabled');  // Select
-            parent.closest('div').addClass('disabled');  // Container
-            parentClearButton.hide();
-        }
-        else {
-            parent.removeAttr('disabled').trigger('change');  // Select
-            parent.closest('div').removeClass('disabled');  // Container
-        }
-    });
-});
+    }
+    // If selecting Legal type
+    else if (textType.startsWith('Legal')){
+        documentSubtypeContainer.show();
+        documentSubtype.find('option').each(function(){
+            if ($(this).text().startsWith('Legal')) $(this).removeClass('hidden');
+            else $(this).addClass('hidden');
+        });
+    }
+    // If selecting none of the above
+    else {
+        documentSubtypeContainer.hide();
+        documentSubtype.val('');
+    }
+}
 
-// Trigger change on all filters on page load
-$('.corpus-text-list-options-filters-group-filter').trigger('change');
+filterRelationshipTypeAndDocumentSubtype();
+
+
+//
+// Must occur at end of script
+//
+
+// Show/hide all individual filter reset buttons on page load
+$('.corpus-text-list-options-filters-group-filter').each(function(){
+    showFilterResetButton($(this));
+});

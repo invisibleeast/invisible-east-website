@@ -107,15 +107,11 @@
     }
 
     #corpus-text-list-options {
-        top: 3em;
-        right: 0;
-        height: calc(100vh - 6.32em);
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    #corpus-text-list-options,
-    .corpus-text-list-options-submitbuttons {
         right: -23em;
+        top: 4.5em;
+        right: 0;
+        height: calc(100vh - 4.5em);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     #corpus-text-list-counts span {
