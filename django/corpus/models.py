@@ -286,6 +286,11 @@ class SlTextFolioTag(SlAbstract):
     A tag of terms found in text folios
     """
     category = models.ForeignKey('SlTextFolioTagCategory', on_delete=models.RESTRICT, related_name='tags')
+    latitude = models.CharField(max_length=255, blank=True, null=True, help_text='Use if this tag can be located on a map (e.g. is a toponym)')
+    longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Use if this tag can be located on a map (e.g. is a toponym)')
+
+    class Meta:
+        ordering = ['category__name', 'name', 'id']
 
 
 class SlM2MPersonToPersonRelationshipType(SlAbstract):

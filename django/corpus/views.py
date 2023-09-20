@@ -735,3 +735,11 @@ class TextFolioTransLineDrawnOnImageFailedTemplateView(TemplateView):
     """
 
     template_name = 'corpus/textfoliotranslinedrawnonimage-failed.html'
+
+
+class MapTemplateView(TemplateView):
+    """
+    Class based view to show a template that includes an embedded map of the data
+    """
+
+    template_name = 'corpus/map.html'

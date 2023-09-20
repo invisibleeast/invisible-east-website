@@ -14,5 +14,8 @@ urlpatterns = [
 
     # TextFolioTransLineDrawnOnImage
     path('textfoliotranslinedrawnonimage/manage/', views.TextFolioTransLineDrawnOnImageManageView.as_view(), name='textfoliotranslinedrawnonimage-manage'),
-    path('textfoliotranslinedrawnonimage/failed/', views.TextFolioTransLineDrawnOnImageFailedTemplateView.as_view(), name='textfoliotranslinedrawnonimage-failed')
+    path('textfoliotranslinedrawnonimage/failed/', views.TextFolioTransLineDrawnOnImageFailedTemplateView.as_view(), name='textfoliotranslinedrawnonimage-failed'),
+
+    # Map
+    path('map', views.MapTemplateView.as_view(), name='map'),
 ]

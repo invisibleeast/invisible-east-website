@@ -1383,6 +1383,15 @@ main section {
     display: block;
 }
 
+/* ---------- Map ---------- */
+
+#corpus-map-iframe {
+    width: 95vw;
+    margin: 3em auto;
+    height: 80vh;
+    display: block;
+}
+
 /* ---------- Help ---------- */
 
 #help-list-head-search {

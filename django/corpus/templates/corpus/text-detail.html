@@ -30,7 +30,6 @@
             {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> Transcriptions</li>{% endif %}
             {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
             {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
-            <li id="map"><i class="fas fa-map-marker-alt"></i> Map</li>
         </ul>
 
         <article class="tabbed" id="corpus-text-detail-content-details">
@@ -269,13 +268,6 @@
                 {% endfor %}
             </article>
         {% endif %}
-
-        <article class="tabbed" id="corpus-text-detail-content-map">
-            <div class="tabbed-title">Map</div>
-            <p>
-                Map
-            </p>
-        </article>
 
     </section><!--
 

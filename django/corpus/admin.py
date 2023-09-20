@@ -122,9 +122,9 @@ class SlTextFolioTagAdminView(GenericSlAdminView):
     """
     Customise the SlTextFolioTag, in addition to GenericSlAdminView
     """
-    list_display = ('id', 'name', 'category')
+    list_display = ('name', 'category', 'latitude', 'longitude')
     list_filter = ('category',)
-    search_fields = ('id', 'name', 'category__name')
+    search_fields = ('name', 'category__name')
 
 
 #
