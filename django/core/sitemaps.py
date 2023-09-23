@@ -85,4 +85,4 @@ class CorpusTextDetailSitemap(Sitemap):
     priority = 1.0
 
     def items(self):
-        return corpus_models.Text.objects.filter(admin_published=True)
+        return corpus_models.Text.objects.filter(public_review_approved=True)
