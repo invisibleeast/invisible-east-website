@@ -8,10 +8,15 @@ from . import sitemaps
 sitemaps = {
     'static-pages': sitemaps.StaticPagesSitemap,
 
-    # TODO
+    'help:list': sitemaps.HelpItemListSitemap,
+    'help:detail': sitemaps.HelpItemDetailSitemap,
+
+    'corpus:text-list': sitemaps.CorpusTextListSitemap,
+    'corpus:text-detail': sitemaps.CorpusTextDetailSitemap,
 }
 
 urlpatterns = [
+
     # Custom apps
     path('', include('general.urls')),
     path('account/', include('account.urls')),
@@ -26,4 +31,5 @@ urlpatterns = [
 
     # Sitemap
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

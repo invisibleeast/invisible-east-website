@@ -96,6 +96,7 @@
             <p>
                 <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |
                 <a href="https://www.ox.ac.uk/legal" target="_blank">Legal</a> |
+                <a href="{% url 'django.contrib.sitemaps.views.sitemap' %}">Sitemap</a> |
                 <a href="{% url 'general:cookies' %}">Cookies</a> |
                 <a href="{% url 'general:accessibility' %}">Accessibility</a> |
                 {% if user.is_authenticated %}
