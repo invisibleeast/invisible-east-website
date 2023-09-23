@@ -138,4 +138,9 @@
         width: calc(100% - 12em);
     }
 
+    #corpus-text-detail-content-tags-textfoliotag-form {
+        left: 25vw;
+        width: 50vw;
+    }
+
 }

@@ -22,6 +22,8 @@
         <label><input type="checkbox" class="corpus-text-detail-trans-linktranstexttotag-checkbox"> Show Links to Tags</label>
     </div>
 
+    {% include "corpus/snippets/tagmanager-show.html" %}
+
     {% if user.is_superuser %}
         <div>
             <button class="corpus-text-detail-trans-linktranstexttotag" data-trans="{{ current_tab }}"><i class="fas fa-hashtag"></i> Link to Tag</button>

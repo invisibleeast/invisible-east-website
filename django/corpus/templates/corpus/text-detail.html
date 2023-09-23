@@ -91,77 +91,13 @@
             <!-- Options -->
             <div class="corpus-text-detail-content-options">
                 {% include "corpus/snippets/folio-select.html" %}
-
-                {% if user.is_staff %}
-                    <div>
-                        <label><input type="checkbox" id="corpus-text-detail-content-tags-showtagcreate"> Tag Manager</label>
-                    </div>
-                {% endif %}
+                {% include "corpus/snippets/tagmanager-show.html" %}
             </div>
 
             {% if user.is_staff %}
                 <div id="corpus-text-detail-content-tags-textfoliotag-linktranstexttotag">
                     <!-- Content filled dynamically by JS -->
                 </div>
-
-                <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}">
-                    <!-- Security CSRF token -->
-                    {% csrf_token %}
-
-                    <!-- Hidden fields -->
-                    <!-- Text -->
-                    <input type="hidden" name="text" value="{{ object.id }}">
-                    <!-- Text Folio (value set in detail.js) -->
-                    <input type="hidden" name="textfolio" value="">
-                    <!-- Image Cropped (value set in detail.js) -->
-                    <input type="hidden" name="image_part_left" value="">
-                    <input type="hidden" name="image_part_top" value="">
-                    <input type="hidden" name="image_part_width" value="">
-                    <input type="hidden" name="image_part_height" value="">
-                    <!-- Link Trans Text To Tag Data (value set in detail.js) -->
-                    <input type="hidden" name="linktranstexttotag" value="">
-
-                    <!-- Title -->
-                    <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Tag Manager</div>
-                    <!-- Tag Category -->
-                    <div>
-                        <label>Tag Category <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
-                        <select name="category" required>
-                            {% for category in text_folio_tag_categories %}
-                                <option value="{{ category.id }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!-- Tag (existing) -->
-                    <div>
-                        <label>Tag (existing) <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
-                        <select name="tag_existing">
-                            <option value="">-- Please select --</option>
-                            {% for tag in text_folio_tags %}
-                                <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!-- Tag (new) -->
-                    <div>
-                        <label>Tag (new)</label>
-                        <input type="text" name="tag_new" title="Tag (new)" placeholder="If no existing tag is suitable, create a new tag here">
-                    </div>
-                    <!-- Details -->
-                    <div>
-                        <label>Details</label>
-                        <input type="text" name="details" title="Details" placeholder="Optional. Provide more details if needed">
-                    </div>
-                    {% if object.has_image %}
-                        <!-- Draw on Image -->
-                        <div>
-                            <label>Draw on Image</label>
-                            <input type="checkbox" id="corpus-text-detail-content-tags-textfoliotag-form-draw-start" title="Click to start drawing tag on image"> <i class="fas fa-pencil-alt"></i>
-                        </div>
-                    {% endif %}
-                    <!-- Submit form button -->
-                    <button type="submit"><i class="fas fa-check-circle"></i> Save Tag</button>
-                </form>
             {% endif %}
 
             {% for text_folio in text_folios %}
@@ -336,6 +272,71 @@
             {% endfor %}
         </div>
     </section>{% endif %}
+
+    <!-- Tag Manager popup form (only display for authenticated users) -->
+    {% if user.is_staff %}
+        <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}">
+            <!-- Security CSRF token -->
+            {% csrf_token %}
+
+            <!-- Hidden fields -->
+            <!-- Text -->
+            <input type="hidden" name="text" value="{{ object.id }}">
+            <!-- Text Folio (value set in detail.js) -->
+            <input type="hidden" name="textfolio" value="">
+            <!-- Image Cropped (value set in detail.js) -->
+            <input type="hidden" name="image_part_left" value="">
+            <input type="hidden" name="image_part_top" value="">
+            <input type="hidden" name="image_part_width" value="">
+            <input type="hidden" name="image_part_height" value="">
+            <!-- Link Trans Text To Tag Data (value set in detail.js) -->
+            <input type="hidden" name="linktranstexttotag" value="">
+
+            <!-- Close Tag Manager -->
+            <i id="corpus-text-detail-content-tags-textfoliotag-form-close" class="fas fa-times"></i>
+
+            <!-- Title -->
+            <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Tag Manager</div>
+            <!-- Tag Category -->
+            <div>
+                <label>Tag Category <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
+                <select name="category" required>
+                    {% for category in text_folio_tag_categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Tag (existing) -->
+            <div>
+                <label>Tag (existing) <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
+                <select name="tag_existing">
+                    <option value="">-- Please select --</option>
+                    {% for tag in text_folio_tags %}
+                        <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Tag (new) -->
+            <div>
+                <label>Tag (new)</label>
+                <input type="text" name="tag_new" title="Tag (new)" placeholder="If no existing tag is suitable, create a new tag here">
+            </div>
+            <!-- Details -->
+            <div>
+                <label>Details</label>
+                <input type="text" name="details" title="Details" placeholder="Optional. Provide more details if needed">
+            </div>
+            {% if object.has_image %}
+                <!-- Draw on Image -->
+                <div>
+                    <label>Draw on Image</label>
+                    <input type="checkbox" id="corpus-text-detail-content-tags-textfoliotag-form-draw-start" title="Click to start drawing tag on image"> <i class="fas fa-pencil-alt"></i>
+                </div>
+            {% endif %}
+            <!-- Submit form button -->
+            <button type="submit"><i class="fas fa-check-circle"></i> Save Tag</button>
+        </form>
+    {% endif %}
 
 </div>
 
