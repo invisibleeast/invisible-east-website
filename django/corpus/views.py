@@ -3,6 +3,7 @@ from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField, Prefetch)
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.conf import settings
 from functools import reduce
 from operator import (or_, and_)
 from bs4 import BeautifulSoup
@@ -87,17 +88,21 @@ def text_initial_queryset(user):
     Returns the initially filtered list of Text objects used in get_queryset() methods of views below, e.g. TextDetailView and TextListView
     """
 
-    return models.Text.objects.all() # TODO - delete this line before live
+    # Show all Text objects if user can manage all
+    if not user.is_anonymous and user.email in settings.USERS_WHO_CAN_MANAGE_ALL_TEXTS:
+        return models.Text.objects.all()
 
-    # If the user is logged in only show published objects, unless user is the principal editor or data entry person of this Text (so they can preview it)
-    if not user.is_anonymous:
-        text_filter = Q(public_review_approved=True) | Q(admin_principal_editor=user) | Q(admin_principal_data_entry_person=user)
-    # If user is not logged in only show published objects
+    # If user isn't allowed to manage all
     else:
-        text_filter = Q(public_review_approved=True)
+        # If the user is logged in only show published objects, unless user is the principal editor or data entry person of this Text (so they can preview it)
+        if not user.is_anonymous:
+            text_filter = Q(public_review_approved=True) | Q(admin_principal_editor=user) | Q(admin_principal_data_entry_person=user)
+        # If user is not logged in only show published objects
+        else:
+            text_filter = Q(public_review_approved=True)
 
-    # Return the filtered queryset of Text objects
-    return models.Text.objects.filter(text_filter)
+        # Return the filtered queryset of Text objects
+        return models.Text.objects.filter(text_filter)
 
 
 class TextDetailView(DetailView):

@@ -43,6 +43,12 @@ ACCOUNT_CREATE_CODE = 'xxxxx'
 # Provide the email address for the main contact for the project (e.g. the researcher/research team)
 MAIN_CONTACT_EMAIL = '...@uni.ac.uk'
 
+# Specify users (by email address) who can always manage all texts in admin dashboard
+USERS_WHO_CAN_MANAGE_ALL_TEXTS = [
+    '...@uni.ac.uk',
+    '...@uni.ac.uk'
+]
+
 # Email
 if DEBUG is True:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"

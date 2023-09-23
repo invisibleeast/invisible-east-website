@@ -400,8 +400,11 @@ class TextAdminView(GenericAdminView):
         This method must be called in both has_change_permission() and has_delete_permission() below
         """
         if obj:
+            # Specify users (by email address) who can always manage all texts (e.g. software dev + project lead)
+            if request.user.email in settings.USERS_WHO_CAN_MANAGE_ALL_TEXTS:
+                return True
             # Allow changes if neither Principal Editor and Principal Data Entry Person have been set
-            if not obj.admin_principal_editor and not obj.admin_principal_data_entry_person:
+            elif not obj.admin_principal_editor and not obj.admin_principal_data_entry_person:
                 return True
             # Allow changes if a Principal Editor has been set and is the current user
             elif obj.admin_principal_editor and obj.admin_principal_editor == request.user:

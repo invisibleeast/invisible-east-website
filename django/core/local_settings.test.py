@@ -33,6 +33,10 @@ DATABASES = {
 
 MAIN_CONTACT_EMAIL = 'mikeallaway@ahrsoftware.co.uk'
 
+USERS_WHO_CAN_MANAGE_ALL_TEXTS = [
+    'mikeallaway@ahrsoftware.co.uk',
+]
+
 if DEBUG is True:
     EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
