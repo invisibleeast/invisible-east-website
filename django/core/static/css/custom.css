@@ -505,8 +505,8 @@ main section {
     top: 4.5rem;
     width: 23em;
     max-width: 100%;
-    background: #F5F5F5;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    background: #F2F2F2;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
     z-index: 800;
     overflow-y: auto;
 }
@@ -528,7 +528,7 @@ main section {
 
 #corpus-text-list-options hr {
     margin: 2em auto 0.7em auto;
-    border-top: 1px solid #DDD;
+    border-top: 1px solid #CCC;
     width: 100%;
 }
 
@@ -633,7 +633,6 @@ main section {
 .corpus-text-list-options-search-fields-instance span {
     padding: 0.55em 0.8em 0.4em 0.8em;
     text-align: center;
-    background: #DDD;
     cursor: pointer;
     font-size: 0.9em;
     display: inline-block;
@@ -641,29 +640,23 @@ main section {
     border-radius: 0.2em;
 }
 
-.corpus-text-list-options-search-fields-instance span:hover {
-    background: #CCC;
+.corpus-text-list-options-search-fields-instance span,
+.corpus-text-list-options-search-fields-instance-operator {
+    background: var(--color-primary);
+    color: white;
 }
 
-#corpus-text-list-options-search-fields-instance-add {
-    background: var(--color-secondary-light);
-}
-
-#corpus-text-list-options-search-fields-instance-add:hover {
-    background: var(--color-secondary);
+.corpus-text-list-options-search-fields-instance span:hover,
+.corpus-text-list-options-search-fields-instance-operator:hover {
+    background: var(--color-primary-dark);
 }
 
 .corpus-text-list-options-search-fields-instance-operator {
     cursor: pointer;
     width: fit-content;
     padding: 0.13em 0.6em;
-    background: #DDD;
     border-radius: 0.2em;
     margin: 0.3em 0;
-}
-
-.corpus-text-list-options-search-fields-instance-operator:hover {
-    background: #CCC;
 }
 
 .corpus-text-list-options-filters-group {
@@ -755,9 +748,6 @@ main section {
 }
 
 .corpus-text-list-items-item-booleans {
-    position: absolute;
-    bottom: 0;
-    right: 15px;
     font-size: 0.9em;
 }
 
@@ -989,14 +979,7 @@ main section {
 
 .corpus-text-detail-content-options {
     background: var(--color-secondary);
-    padding: 0 0.2em 0.2em 0.2em;
-    margin-top: -1em;
     font-weight: 400;
-}
-
-.corpus-text-detail-content-options div {
-    display: inline-block;
-    margin: 0 1em;
 }
 
 .corpus-text-detail-content-options div label {
@@ -1400,14 +1383,32 @@ main section {
     width: 100%;
     border-top: 1px solid #DDD;
     padding: 0.7em 1em 0.6em 1em;
+    color: #505050;
 }
 
 .help-list-items-item:last-child {
     border-bottom: 1px solid #DDD;
 }
 
+.help-list-items-item:last-child:hover {
+    border-bottom: 1px solid var(--color-primary);
+}
+
 .help-list-items-item:hover {
-    background: #F2F2F2;
+    border-top: 1px solid var(--color-primary);
+    background: var(--color-primary);
+    color: white;
+    text-decoration: none;
+}
+
+.help-list-items-item-title {
+    font-size: 1.2em;
+    font-weight: 400;
+}
+
+.help-list-items-item-details {
+    margin-top: 0.8em;
+    opacity: 0.8;
 }
 
 #help-detail-link {

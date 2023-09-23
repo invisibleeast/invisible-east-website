@@ -98,6 +98,7 @@ admin.site.register(models.SlTextScript, GenericSlAdminView)
 admin.site.register(models.SlTextLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
 admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
+admin.site.register(models.SlTextWritingSupportDetails, GenericSlAdminView)
 admin.site.register(models.SlTextPublication, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
@@ -263,6 +264,8 @@ class TextAdminView(GenericAdminView):
         'collection',
         'primary_language',
         'century',
+        'writing_support_notes',
+        'fold_lines',
         'type',
         'count_text_folios',
         'public_review_ready',
@@ -320,10 +323,10 @@ class TextAdminView(GenericAdminView):
             'fields': (
                 'writing_support',
                 'writing_support_details',
+                'writing_support_notes',
                 'dimensions_height',
                 'dimensions_width',
-                'fold_lines_details',
-                'physical_additional_details'
+                'fold_lines',
             ),
             'classes': ['collapse']
         }),
@@ -393,7 +396,7 @@ class TextAdminView(GenericAdminView):
             'type__category'
         )
         return queryset
-    
+
     def has_manage_permission(self, request, obj):
         """
         Determine if this obj can be managed (edited/deleted) by current user

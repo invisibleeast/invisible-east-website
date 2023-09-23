@@ -24,7 +24,7 @@
 
     {% include "corpus/snippets/tagmanager-show.html" %}
 
-    {% if user.is_superuser %}
+    {% if user.is_admin %}
         <div>
             <button class="corpus-text-detail-trans-linktranstexttotag" data-trans="{{ current_tab }}"><i class="fas fa-hashtag"></i> Link to Tag</button>
         </div>

@@ -629,12 +629,6 @@ def insert_data_select_list_models(apps, schema_editor):
         '(Wīlīzh?)',
         # PersianKhalili
         'Istīw, Istiwuy',
-        # Bactrian
-        'TODO',
-        # Khurasan
-        'TODO',
-        # MiddlePersian
-        'TODO',
     ]:
         models.SlTextFolioTag.objects.create(
             name=name,
@@ -663,7 +657,7 @@ def insert_data_texts(apps, schema_editor):
     """
 
     # User accounts used below
-    account_ed = account_models.User.objects.get(email="edward.shawe-taylor@wolfson.ox.ac.uk")
+    account_ed = account_models.User.objects.get(email="edward.shawe-taylor@ames.ox.ac.uk")
     account_cat = account_models.User.objects.get(email="catherinemcnally@comcast.net")
 
     # Loop through all XML files found in input dir
@@ -745,9 +739,9 @@ def insert_data_texts(apps, schema_editor):
                 # writing_support
                 writing_support = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
                 text_obj.writing_support = models.SlTextWritingSupport.objects.get_or_create(name=writing_support)[0]
-                # writing_support_details
+                # writing_support_notes
                 # Includes tags within e.g. "blah blah <material>blah</material> blah blah" so itertext() will remove the tags
-                text_obj.writing_support_details = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
+                text_obj.writing_support_notes = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
 
                 # Dimensions
                 try:
@@ -770,21 +764,10 @@ def insert_data_texts(apps, schema_editor):
                 # fold_lines
                 try:
                     # Join multiple <p> tag text into single string, separated with new lines
-                    fold_lines_details = '\n\n'.join(
+                    fold_lines = '\n\n'.join(
                         [flcd.text for flcd in ms_desc.findall('physDesc/objectDesc/layoutDesc/p')]
                     )
-                    text_obj.fold_lines_details = fold_lines_details
-                except AttributeError:
-                    pass
-
-                # physical_additional_details
-                try:
-                    # Many were empty strings with just lots of whitespace
-                    physical_additional_details = ms_desc.find('physDesc/additions').text.strip()
-                    # Set empty string values to be null
-                    if not len(physical_additional_details):
-                        physical_additional_details = None
-                    text_obj.physical_additional_details = physical_additional_details
+                    text_obj.fold_lines = fold_lines
                 except AttributeError:
                     pass
  
@@ -801,17 +784,21 @@ def insert_data_texts(apps, schema_editor):
                     # Ed
                     if title_stmt.find('respStmt[@id="EST"]', prefix_map):
                         meta_created_by = account_ed
-                        admin_principal_data_entry_person = account_ed
                     # Cat
                     elif title_stmt.find('respStmt[@id="CM"]'):
                         meta_created_by = account_cat
-                        admin_principal_data_entry_person = account_cat
+                    # Data entry person set to Ed, as Cat leaving project
+                    admin_principal_data_entry_person = account_ed
                     if meta_created_by:
                         text_obj.meta_created_by = meta_created_by
                     if admin_principal_data_entry_person:
                         text_obj.admin_principal_data_entry_person = admin_principal_data_entry_person
                 except AttributeError:
                     pass
+
+                # admin_classification
+                if primary_language == 'Bactrian':
+                    text_obj.admin_classification = models.SlTextClassification.objects.get(name='Gold')
 
                 # Save Text object in db
                 text_obj.save()

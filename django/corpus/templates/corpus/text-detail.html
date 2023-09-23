@@ -10,14 +10,14 @@
 
         {% if not object.public_review_approved %}
             <div id="corpus-text-detail-content-notyetapproved">
-                This text is not yet approved and so is not visible to public users. Only the Principal Data Entry Person and the Principal Editor can view this text until it's been approved.
+                This text is not yet approved, meaning it's not visible to public users. Only the Principal Data Entry Person and the Principal Editor of this text can see this preview.
             </div>
         {% endif %}
 
         <div id="corpus-text-detail-content-title">
             {{ object.title }}
 
-            {% if user.is_staff %}
+            {% if user.is_admin %}
                 <!-- Admin link to this item -->
                 <a id="corpus-text-detail-content-title-adminlink" href="{% url 'admin:corpus_text_change' object.id %}" title="View this Corpus Text in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a>
             {% endif %}
@@ -94,7 +94,7 @@
                 {% include "corpus/snippets/tagmanager-show.html" %}
             </div>
 
-            {% if user.is_staff %}
+            {% if user.is_admin %}
                 <div id="corpus-text-detail-content-tags-textfoliotag-linktranstexttotag">
                     <!-- Content filled dynamically by JS -->
                 </div>
@@ -273,8 +273,8 @@
         </div>
     </section>{% endif %}
 
-    <!-- Tag Manager popup form (only display for authenticated users) -->
-    {% if user.is_staff %}
+    <!-- Tag Manager popup form (only display for admins) -->
+    {% if user.is_admin %}
         <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}">
             <!-- Security CSRF token -->
             {% csrf_token %}

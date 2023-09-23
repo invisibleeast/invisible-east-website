@@ -107,9 +107,8 @@
     }
 
     #corpus-text-list-options {
-        right: -23em;
+        left: -23em;
         top: 4.5em;
-        right: 0;
         height: calc(100vh - 4.5em);
         border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
@@ -133,6 +132,15 @@
         display: block;
         width: 100%;
         padding: 1em;
+    }
+
+    .corpus-text-list-items-item-booleans {
+        margin-bottom: 0.5em;
+    }
+
+    .corpus-text-list-items-item-booleans span {
+        display: block;
+        margin-bottom: 0.5em
     }
 
     .corpus-text-list-pagination-section {
@@ -165,6 +173,16 @@
 
     .corpus-text-detail-content-details-datagroup-dataitem span {
         width: 100%;
+    }
+
+    .corpus-text-detail-content-options {
+        padding: 0.2em 0.7em;
+        margin-top: 0em;
+    }
+
+    .corpus-text-detail-content-options div {
+        display: block;
+        margin: 0.7em 0;
     }
 
     #corpus-text-detail-content-tags-textfoliotag-form {

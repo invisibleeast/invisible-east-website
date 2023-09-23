@@ -2,7 +2,7 @@
 $('#corpus-text-list-options-toggler').on('click', function(){
     // Hide
     if ($(this).hasClass('active')){
-        $('#corpus-text-list-options').animate({'right': '-23em'}, 270, function(){$(this).hide();});
+        $('#corpus-text-list-options').animate({'left': '-23em'}, 270, function(){$(this).hide();});
         $(this).removeClass('active');
         // Icon
         $(this).find('#corpus-text-list-options-toggler-inactive').show();
@@ -10,7 +10,7 @@ $('#corpus-text-list-options-toggler').on('click', function(){
     }
     // Show
     else {
-        $('#corpus-text-list-options').show().animate({'right': '0'}, 270);
+        $('#corpus-text-list-options').show().animate({'left': '0'}, 270);
         $(this).addClass('active');
         // Icon
         $(this).find('#corpus-text-list-options-toggler-inactive').hide();

@@ -46,6 +46,7 @@
 
     #corpus-text-list {
         width: calc(100% - 23em);
+        margin-left: 23em;
     }
 
     #corpus-text-list-options-toggler {
@@ -53,7 +54,7 @@
     }
 
     #corpus-text-list-options {
-        right: 0;
+        left: 0;
         height: calc(100vh - 4.5em);
     }
 
@@ -79,6 +80,12 @@
         vertical-align: top;
         width: calc(100% - 13.5em);
         padding: 0.7em 0.5em;
+    }
+
+    .corpus-text-list-items-item-booleans {
+        position: absolute;
+        bottom: 0;
+        right: 15px;
     }
 
     #corpus-text-list-pagination {
@@ -136,6 +143,16 @@
 
     .corpus-text-detail-content-details-datagroup-dataitem span {
         width: calc(100% - 12em);
+    }
+
+    .corpus-text-detail-content-options {
+        padding: 0 0.2em 0.2em 0.2em;
+        margin-top: -1em;
+    }
+
+    .corpus-text-detail-content-options div {
+        display: inline-block;
+        margin: 0 1em;
     }
 
     #corpus-text-detail-content-tags-textfoliotag-form {

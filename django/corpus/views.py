@@ -124,7 +124,10 @@ class TextDetailView(DetailView):
             'collection',
         ).prefetch_related(
             'text_folios',
-            'texts'
+            'texts',
+            'text_related_publications',
+            'text_dates',
+            'persons_in_texts'
         )
 
         return queryset
@@ -208,7 +211,14 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Writing Support Details',
-                'value': self.object.writing_support_details
+                'value': html_details_list_items(
+                    f'{filter_pre_mm}writing_support_details',
+                    self.object.writing_support_details.all()
+                )
+            },
+            {
+                'label': 'Writing Support Notes',
+                'value': self.object.writing_support_notes
             },
             {
                 'label': 'Height (cm)',
@@ -219,12 +229,8 @@ class TextDetailView(DetailView):
                 'value': self.object.dimensions_width
             },
             {
-                'label': 'Fold Lines Details',
-                'value': self.object.fold_lines_details
-            },
-            {
-                'label': 'Physical Additional Details',
-                'value': self.object.physical_additional_details
+                'label': 'Fold Lines',
+                'value': self.object.fold_lines
             },
 
             # Content
@@ -493,6 +499,27 @@ class TextListView(ListView):
                     'filter_options': filter_queryset_languages
                 },
             ],
+            # Collection
+            [
+                {
+                    'filter_id': f'{filter_pre_fk}collection',
+                    'filter_name': 'Collection',
+                    'filter_options': models.SlTextCollection.objects.all()
+                },
+            ],
+            # Type and subtype
+            [
+                {
+                    'filter_id': f'{filter_pre_fk}type',
+                    'filter_name': 'Type of Text',
+                    'filter_options': models.SlTextType.objects.all().select_related('category')
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}document_subtype',
+                    'filter_name': 'Document Subtype',
+                    'filter_options': models.SlTextDocumentSubtype.objects.all().select_related('category')
+                },
+            ],
             # Dates
             [
                 {
@@ -508,27 +535,17 @@ class TextListView(ListView):
                     'filter_options': filter_queryset_centuries
                 }
             ],
-            # Important Fields
+            # Writing Support
             [
-                {
-                    'filter_id': f'{filter_pre_fk}collection',
-                    'filter_name': 'Collection',
-                    'filter_options': models.SlTextCollection.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}type',
-                    'filter_name': 'Type of Text',
-                    'filter_options': models.SlTextType.objects.all().select_related('category')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}document_subtype',
-                    'filter_name': 'Document Subtype',
-                    'filter_options': models.SlTextDocumentSubtype.objects.all().select_related('category')
-                },
                 {
                     'filter_id': f'{filter_pre_fk}writing_support',
                     'filter_name': 'Writing Support',
                     'filter_options': models.SlTextWritingSupport.objects.all()
+                },
+                {
+                    'filter_id': f'{filter_pre_mm}writing_support_details',
+                    'filter_name': 'Writing Support Details',
+                    'filter_options': models.SlTextWritingSupportDetails.objects.all()
                 },
             ],
             # Tags
@@ -730,7 +747,7 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             # Return the user to the current page
             return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[text])}?tab={trans_field}")
 
-        except Exception as e:
+        except Exception:
             return fail_response
 
 

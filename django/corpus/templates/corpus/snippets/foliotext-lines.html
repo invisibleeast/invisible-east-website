@@ -19,7 +19,7 @@
                 - there's a folio image to draw on
                 - they're drawing the transcription line (other trans lines aren't wanted by project team, but can be easily added back if needed by removing this if statement and the one above for image part attr data)
             {% endcomment %}
-            {% if user.is_superuser and text_folio.image and line.trans == 'transcription' %}
+            {% if user.is_admin and text_folio.image and line.trans == 'transcription' %}
                 <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start" title="Click to start drawing line of text on image"> <i class="fas fa-pencil-alt"></i></span>
             {% endif %}
         </div>

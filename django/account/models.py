@@ -50,6 +50,10 @@ class User(AbstractUser):
             # If no first or last name provided, return first half of email
             return self.username.split('@')[0]  # e.g. mike.allaway in mike.allaway@ox.ac.uk
 
+    @property
+    def is_admin(self):
+        return self.role.name == 'admin'
+
     def __str__(self):
         return self.name
 

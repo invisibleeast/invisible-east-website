@@ -69,22 +69,6 @@ def add_group_permissions(apps,schema_editor):
                             "model_name": "text",
                             "permissions": ['view',]
                         },
-                        {
-                            "model_name": "textfolio",
-                            "permissions": ['view',]
-                        },
-                        {
-                            "model_name": "textfoliotag",
-                            "permissions": ['view',]
-                        },
-                        {
-                            "model_name": "person",
-                            "permissions": ['view',]
-                        },
-                        {
-                            "model_name": "textdate",
-                            "permissions": ['view',]
-                        },
                     ]
                 }
             ]

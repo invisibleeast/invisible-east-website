@@ -147,15 +147,22 @@ class SlTextDocumentSubtype(SlAbstract):
 
 class SlTextWritingSupport(SlAbstract):
     """
-    A type of Text
+    A type of writing surface
     E.g. 'paper', 'ostraca', 'parchment'
+    """
+    pass
+
+
+class SlTextWritingSupportDetails(SlAbstract):
+    """
+    Common details of writing supports
     """
     pass
 
 
 class SlTextCollection(SlAbstract):
     """
-    An collection of Texts
+    A collection of Texts
     E.g. 'NLI', 'Khalili Collection', 'Sam Fogg Rate Books'
     """
     pass
@@ -342,11 +349,11 @@ class Text(models.Model):
 
     # Physical Description
     writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    writing_support_details = models.TextField(blank=True, null=True)
+    writing_support_details = models.ManyToManyField('SlTextWritingSupportDetails', blank=True, related_name=related_name, db_index=True)
+    writing_support_notes = models.TextField(blank=True, null=True)
     dimensions_height = models.FloatField(blank=True, null=True, verbose_name='height (cm)')
     dimensions_width = models.FloatField(blank=True, null=True, verbose_name='width (cm)')
-    fold_lines_details = models.TextField(blank=True, null=True)
-    physical_additional_details = models.TextField(blank=True, null=True)
+    fold_lines = models.TextField(blank=True, null=True)
 
     # Content
     summary_of_content = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text)
