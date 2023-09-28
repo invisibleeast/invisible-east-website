@@ -239,6 +239,30 @@ i.icon {
     text-align: right;
 }
 
+.language-toggle {
+    float: right;
+    width: fit-content;
+    padding: 0.4em 1em;
+    border-radius: 1.3em;
+    margin: 1em;
+    background: var(--color-primary);
+    color: white;
+    font-weight: 400;
+}
+
+.language-toggle-button {
+    cursor: pointer;
+    margin: 0 0.3em;
+}
+
+.language-toggle-button:hover {
+    text-decoration: underline;
+}
+
+.language-content {
+    display: none;
+}
+
 /* ---------- Forms ---------- */
 
 form.full-form p {
@@ -1172,11 +1196,11 @@ main section {
 .folio-lines-line {
     padding: 0.5em 0;
     margin: 0.3em 0;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
 }
 
 .folio-lines-line.active {
-    border: 2px solid var(--color-primary);
+    border: 3px solid var(--color-primary);
 }
 
 .folio-lines-line-number {
@@ -1224,6 +1248,11 @@ main section {
     background: var(--color-secondary-light);
     padding: 0.6em;
     font-size: 0.8em;
+    border: 3px solid transparent;
+}
+
+.related-lines-line.active {
+    border: 3px solid var(--color-primary);
 }
 
 #corpus-text-detail-images-controls-rotate-clockwise.disabled,

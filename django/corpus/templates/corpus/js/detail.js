@@ -218,8 +218,9 @@ transFields.forEach(function(transField){
             if (transField !== transFieldRelated){
                 $(`article[data-trans="${transFieldRelated}"] .folio-lines-line[data-folio="${transFolio}"]`).each(function(i, transRelated){
                     var transRelatedLineNumbers = $(transRelated).attr('data-linenumbers').split(',');
+                    var transRelatedLineIndex = $(transRelated).attr('data-lineindex').split(',');
                     if (transRelatedLineNumbers.some(transRelatedLineNumber => transMainLineNumbers.includes(transRelatedLineNumber))){
-                        var relatedLineHtml = `<div class="related-lines-line">${$(transRelated).html()}</div>`;
+                        var relatedLineHtml = `<div class="related-lines-line" data-trans="${transFieldRelated}" data-folio="${transFolio}" data-lineindex="${transRelatedLineIndex}">${$(transRelated).html()}</div>`;
                         $(trans).parent().find(`.related-lines[data-trans="${transFieldRelated}"]`).append(relatedLineHtml);
                     }
                 });
@@ -229,23 +230,28 @@ transFields.forEach(function(transField){
 });
 
 // Hovering over a line of trans text will highlight it in the trans text section and on the image
-$('body').on('mouseover', '.folio-lines-line, .corpus-text-detail-images-image-parts-part', function(){
+$('body').on('mouseover', '.folio-lines-line[data-trans="transcription"], .related-lines-line[data-trans="transcription"], .corpus-text-detail-images-image-parts-part', function(){
     // Add 'active' class if no others are currently active (can only have 1 at a time)
     if (!$('.folio-lines-line-draw-start.active').length){
         let folio = $(this).attr('data-folio');
         let lineIndex = $(this).attr('data-lineindex');
         let trans = $(this).attr('data-trans');
-        $(`.folio-lines-line[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"], .corpus-text-detail-images-image-parts-part[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"]`).addClass('active');
+        let identifiers = `[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"]`;
+        $(`.folio-lines-line${identifiers}, .related-lines-line${identifiers}, .corpus-text-detail-images-image-parts-part${identifiers}`).addClass('active');
     }
-}).on('mouseout', '.folio-lines-line, .corpus-text-detail-images-image-parts-part', function(){
+}).on('mouseout', '.folio-lines-line[data-trans="transcription"], .related-lines-line[data-trans="transcription"], .corpus-text-detail-images-image-parts-part', function(){
     // If the line isn't being drawn on image then remove the active class
     if (!$(this).find('.folio-lines-line-draw-start').is(':checked')){
         let folio = $(this).attr('data-folio');
         let lineIndex = $(this).attr('data-lineindex');
         let trans = $(this).attr('data-trans');
-        $(`.folio-lines-line[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"], .corpus-text-detail-images-image-parts-part[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"]`).removeClass('active');
+        let identifiers = `[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"]`;
+        $(`.folio-lines-line${identifiers}, .related-lines-line${identifiers}, .corpus-text-detail-images-image-parts-part${identifiers}`).removeClass('active');
     }
 });
+
+// Ensure all folio trans lines draw start checkboxes are unchecked on page load
+$('.folio-lines-line-draw-start').prop('checked', false);
 
 // When admin user highlights/selects text within the trans text
 var linkTransTextToTagData;
@@ -288,12 +294,10 @@ $('.folio-lines').on('mouseup', function(){
         // Show the linktranstexttotag button
         linkTransTextToTag.show();
     }
-    // 
     else {
         linkTransTextToTagData = undefined;
         linkTransTextToTag.hide();
     }
-
 });
 
 // Take user to choose a tag (new or existing) to link the selected text to
@@ -547,8 +551,6 @@ $('#corpus-text-detail-content-tags-textfoliotag-form-draw-start, .folio-lines-l
         panzoomOptions.disablePan = true;
         panzoomOptions.cursor = 'crosshair';
         panzoom.setOptions(panzoomOptions);
-        // Ensure no other of this class are still selected
-        $('.folio-lines-line-draw-start').not(this).prop('checked', false).trigger('mouseout');
         // Reset rotation and disable rotation
         rotationReset($('#detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer'));
         $('#detail-images-controls-rotate, #detail-images-controls-rotate-anticlockwise').hide();

@@ -112,6 +112,7 @@ class SlTextTypeCategory(SlAbstract):
     pass
 
     class Meta:
+        ordering = [Upper('name'), 'id']
         verbose_name_plural = 'sl text type categories'
 
 
@@ -134,6 +135,7 @@ class SlTextDocumentSubtypeCategory(SlAbstract):
     pass
 
     class Meta:
+        ordering = [Upper('name'), 'id']
         verbose_name_plural = 'sl text document subtype categories'
 
 
@@ -190,6 +192,7 @@ class SlTextCorpus(SlAbstract):
     pass
 
     class Meta:
+        ordering = [Upper('name'), 'id']
         verbose_name_plural = 'sl text corpus'
 
 
@@ -274,7 +277,7 @@ class SlTextCentury(SlAbstract):
         return self.century_number
 
     class Meta:
-        ordering = ['century_number']
+        ordering = ['century_number', 'id']
         verbose_name_plural = 'sl text centuries'
 
 
@@ -310,6 +313,7 @@ class SlTextFolioTagCategory(SlAbstract):
     pass
 
     class Meta:
+        ordering = [Upper('name'), 'id']
         verbose_name_plural = 'sl text folio tag categories'
 
 
@@ -322,7 +326,7 @@ class SlTextFolioTag(SlAbstract):
     longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Use if this tag can be located on a map (e.g. is a toponym)')
 
     class Meta:
-        ordering = ['category__name', 'name', 'id']
+        ordering = [Upper('category__name'), Upper('name'), 'id']
 
 
 class SlM2MPersonToPersonRelationshipType(SlAbstract):
@@ -494,6 +498,15 @@ class Text(models.Model):
     @property
     def count_text_folios(self):
         return self.text_folios.count()
+
+    @property
+    def image_permission_statement(self):
+        if self.has_image and self.collection:
+            return f"""Images of this Text displayed on this web page are provided by {self.collection}.
+            <br>
+            © {self.collection}, All rights reserved.
+            <br>
+            If you wish to reproduce these images please contact {self.collection}."""
 
     @property
     def summary_of_content_preview(self):

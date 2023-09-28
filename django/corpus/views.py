@@ -321,9 +321,14 @@ class TextDetailView(DetailView):
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
             {
+                'label': 'Image Permission Statement',
+                'value': self.object.image_permission_statement
+            },
+            {
                 'label': 'Contact Editorial Team',
                 'value': f'<a href="mailto:{settings.MAIN_CONTACT_EMAIL}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{settings.MAIN_CONTACT_EMAIL}</a> <em>(Please include the above permalink when contacting the editorial team about this Text)</em>'
             }
+
         ]
 
         return context
