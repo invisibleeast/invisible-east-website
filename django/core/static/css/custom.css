@@ -16,6 +16,8 @@ html, body {
     --color-secondary-dark: #9e976d;
     --color-secondary-light: #e6e3d0;
     --color-red: #c23616;
+    --color-green: #27ae60;
+    --color-purple: #8e44ad;
 }
 
 a,
@@ -1316,12 +1318,12 @@ main section {
 }
 
 .corpus-text-detail-images-image-parts-part.reveal {
-    border: 2px solid white;
-    outline: 6px solid var(--color-red);
+    border: 3px solid white;
+    outline: 6px solid var(--color-purple);
 }
 
 .corpus-text-detail-images-image-parts-part.active {
-    border: 2px solid white;
+    border: 3px solid white;
     outline: 6px solid var(--color-primary);
     cursor: pointer;
 }
@@ -1334,7 +1336,8 @@ main section {
 
 .corpus-text-detail-images-image-parts-part.new {
     cursor: default;
-    border: 3px solid #05c46b;
+    border: 3px solid white;
+    outline: 6px solid var(--color-red);
     background: transparent;
     position: absolute;
 }

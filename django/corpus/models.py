@@ -201,8 +201,12 @@ class SlTextClassification(SlAbstract):
     description = models.TextField(blank=True, null=True)
     order = models.IntegerField(blank=True, null=True)
 
+    @property
+    def name_full(self):
+        return f'{self.name} ({self.description})'
+
     def __str__(self):
-        return f'{self.order} - {self.name} ({self.description})'
+        return f'{self.order} - {self.name_full}'
 
     class Meta:
         ordering = ['order', Upper('name'), 'id']
@@ -416,7 +420,7 @@ class Text(models.Model):
     )
 
     # Admin
-    admin_classification = models.ForeignKey('SlTextClassification', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name, verbose_name='Classification')
+    admin_classification = models.ForeignKey('SlTextClassification', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name, verbose_name='classification')
     admin_principal_editor = models.ForeignKey(
         User,
         related_name='text_admin_principal_editor',
@@ -521,6 +525,7 @@ class Text(models.Model):
             for publication in self.text_related_publications.all():
                 html += f'<li>{publication.publication}'
                 html += f' (Pages: {publication.pages})' if publication.pages else ''
+                html += f' (Catalogue Number: {publication.catalogue_number})' if publication.catalogue_number else ''
                 html += '</li>'
             html += '</ul>'
             return html
@@ -574,6 +579,7 @@ class TextRelatedPublication(models.Model):
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     publication = models.ForeignKey('SlTextPublication', on_delete=models.RESTRICT, related_name=related_name)
     pages = models.CharField(max_length=1000, blank=True, null=True, help_text='Specify the page number or range of page numbers - e.g. 4, 82-84, etc.')
+    catalogue_number = models.CharField(max_length=1000, blank=True, null=True)
 
 
 class TextFolio(models.Model):
@@ -838,6 +844,6 @@ class M2MTextToText(models.Model):
     Many to many relationship between 2x Text objects
     """
     text_1 = models.ForeignKey(Text, related_name='text_1', on_delete=models.CASCADE, verbose_name='text')
-    text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text')
+    text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text', help_text='Only complete this where multiple separate IE texts originally come from a text.')
     relationship_type = models.ForeignKey(SlM2MTextToTextRelationshipType, on_delete=models.SET_NULL, blank=True, null=True)
     relationship_details = models.CharField(max_length=1000, blank=True, null=True)

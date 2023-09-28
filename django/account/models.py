@@ -87,7 +87,7 @@ class User(AbstractUser):
             if old_role != role_admin and self.role == role_admin:
                 # Send email alert to research team
                 try:
-                    send_mail('Invisible East: New Admin User',
+                    send_mail('Invisible East Digital Corpus: New Admin User',
                               f"A user ({ self.name } - { self.username }) has been made an Admin of the Invisible East database. If you recognise this person then you can ignore this email. If you don't recognise this person then please email: {settings.EMAIL_HOST_USER} immediately.",
                               settings.DEFAULT_FROM_EMAIL,
                               (settings.MAIN_CONTACT_EMAIL,),

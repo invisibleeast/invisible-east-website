@@ -12,7 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-admin.site.site_header = 'Invisible East: Admin Dashboard'
+admin.site.site_header = 'Invisible East Digital Corpus: Admin Dashboard'
 
 # Three main sections:
 # 1. Reusable code
@@ -653,9 +653,9 @@ class TextRelatedPublicationAdminView(GenericAdminView):
     Customise the TextRelatedPublication section of the admin dashboard
     """
 
-    list_display = ('id', 'text', 'publication', 'pages')
+    list_display = ('id', 'text', 'publication', 'pages', 'catalogue_number')
     list_display_links = ('id',)
-    search_fields = ('id', 'text__shelfmark', 'publication__name', 'pages')
+    search_fields = ('id', 'text__shelfmark', 'publication__name', 'pages', 'catalogue_number')
 
     # Hide this AdminView from sidebar
     def get_model_perms(self, request):

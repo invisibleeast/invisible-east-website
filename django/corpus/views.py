@@ -159,7 +159,8 @@ class TextDetailView(DetailView):
                 'section_header': 'Details'
             },
             {
-                'label': 'Shelfmark', 'value': self.object.shelfmark},
+                'label': 'Shelfmark/Title', 'value': self.object.shelfmark
+            },
             {
                 'label': 'Collection',
                 'value': html_details_link_to_text_list_filtered(
@@ -173,6 +174,10 @@ class TextDetailView(DetailView):
                     f'{filter_pre_fk}corpus',
                     self.object.corpus
                 )
+            },
+            {
+                'label': 'Classification',
+                'value': self.object.admin_classification.name_full
             },
             {
                 'label': 'Primary Language',
@@ -316,8 +321,8 @@ class TextDetailView(DetailView):
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
             {
-                'label': 'Contact the Editorial Team',
-                'value': f'<a href="mailto:{settings.MAIN_CONTACT_EMAIL}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{settings.MAIN_CONTACT_EMAIL}</a> <em>(Please include the above permalink when contacting the Editorial Team about this Text)</em>'
+                'label': 'Contact Editorial Team',
+                'value': f'<a href="mailto:{settings.MAIN_CONTACT_EMAIL}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{settings.MAIN_CONTACT_EMAIL}</a> <em>(Please include the above permalink when contacting the editorial team about this Text)</em>'
             }
         ]
 

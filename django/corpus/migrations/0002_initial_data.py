@@ -805,8 +805,10 @@ def insert_data_texts(apps, schema_editor):
                     pass
 
                 # admin_classification
-                if primary_language == 'Bactrian':
+                if primary_language in ['Bactrian', 'Arabic']:
                     text_obj.admin_classification = models.SlTextClassification.objects.get(name='Gold')
+                elif primary_language == 'New Persian':
+                    text_obj.admin_classification = models.SlTextClassification.objects.get(name='Bronze')
 
                 # Save Text object in db
                 text_obj.save()

@@ -19,7 +19,7 @@
             {{ form.username.errors }}
             <label for="{{ form.username.id_for_label }}">Email:</label>
             {{ form.username }}
-            <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East: User has forgotten email address&body=I have forgotten the email address that is associated with my Invisible East account. Please can you remind me. My name is:">Forgot?</a>
+            <a href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=Invisible East Digital Corpus: User has forgotten email address&body=I have forgotten the email address that is associated with my Invisible East account. Please can you remind me. My name is:">Forgot?</a>
         </p>
         <p>
             {{ form.password.errors }}

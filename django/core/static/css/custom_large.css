@@ -137,12 +137,12 @@
         display: inline-block;
         margin-right: 0.5em;
         vertical-align: top;
-        text-align: right;
-        width: 10em;
+        text-align: left;
+        width: 12em;
     }
 
     .corpus-text-detail-content-details-datagroup-dataitem span {
-        width: calc(100% - 12em);
+        width: calc(100% - 14em);
     }
 
     .corpus-text-detail-content-options {
