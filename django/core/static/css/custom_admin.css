@@ -22,3 +22,12 @@ label.required:before {
 .django-ckeditor-widget textarea {
     color: black;
 }
+
+/* Hide the object name in tabular inlines */
+td.original p {
+    visibility: hidden
+}
+
+.inline-group .tabular tr.has_original td {
+    padding-top: 8px;
+}

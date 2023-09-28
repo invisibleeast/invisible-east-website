@@ -203,8 +203,8 @@ def insert_data_select_list_models(apps, schema_editor):
         models.SlTextDocumentSubtype.objects.create(**obj)
 
     # SlTextCentury
-    # e.g. "1st Century CE, 2nd Century CE, ... 21st Century CE"
-    for object in range(1, 22):
+    # e.g. "4th Century CE, 5th Century CE, ... 21st Century CE"
+    for object in range(4, 22):
         models.SlTextCentury(
             name=f'{ordinal_number(object)} Century CE',
             century_number=object
@@ -274,6 +274,14 @@ def insert_data_select_list_models(apps, schema_editor):
         'stone (graves)',
     ]:
         models.SlTextWritingSupport.objects.create(name=name)
+
+    # SlTextFoldLinesAlignment
+    for name in [
+        'horizontal',
+        'vertical',
+        'vertical and horizontal',
+    ]:
+        models.SlTextFoldLinesAlignment.objects.create(name=name)
 
     # SlM2MPersonToPersonRelationshipType
     for name in [
@@ -739,9 +747,9 @@ def insert_data_texts(apps, schema_editor):
                 # writing_support
                 writing_support = ms_desc.find('physDesc/objectDesc/supportDesc').attrib['material']
                 text_obj.writing_support = models.SlTextWritingSupport.objects.get_or_create(name=writing_support)[0]
-                # writing_support_notes
+                # writing_support_details_additional
                 # Includes tags within e.g. "blah blah <material>blah</material> blah blah" so itertext() will remove the tags
-                text_obj.writing_support_notes = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
+                text_obj.writing_support_details_additional = ''.join(ms_desc.find('physDesc/objectDesc/supportDesc/support/p').itertext())
 
                 # Dimensions
                 try:
@@ -761,13 +769,13 @@ def insert_data_texts(apps, schema_editor):
                 except AttributeError:
                     pass
 
-                # fold_lines
+                # fold_lines_details
                 try:
                     # Join multiple <p> tag text into single string, separated with new lines
-                    fold_lines = '\n\n'.join(
+                    fold_lines_details = '\n\n'.join(
                         [flcd.text for flcd in ms_desc.findall('physDesc/objectDesc/layoutDesc/p')]
                     )
-                    text_obj.fold_lines = fold_lines
+                    text_obj.fold_lines_details = fold_lines_details
                 except AttributeError:
                     pass
  

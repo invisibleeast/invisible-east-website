@@ -110,4 +110,4 @@ class User(AbstractUser):
             Group.objects.get(name='collaborator_permissions_group').user_set.add(self)
 
     class Meta:
-        ordering = [Upper('email'), 'id']
+        ordering = [Upper('first_name'), Upper('last_name'), Upper('email'), 'id']

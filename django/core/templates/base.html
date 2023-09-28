@@ -62,7 +62,7 @@
             <a class="navbar-brand" href="{% url 'general:welcome' %}">
                 <h1>
                     <img src="{% static 'images/logos/ie-icon/ie-icon-xsmall.png' %}" alt="Invisible East project icon">
-                    <div>Invisible<br>East</div>
+                    <div>Invisible East<br>Digital Corpus</div>
                 </h1>
             </a>
             <!-- Nav toggle button (for small screens) -->
@@ -78,10 +78,10 @@
                             Welcome
                         </a>
                     </li>
-                    <!-- Corpus -->
+                    <!-- Corpus / Search -->
                     <li class="nav-item">
                         <a class="nav-link{% if "/corpus/" in request.path and '/corpus/map' not in request.path %} active{% endif %}" href="{% url 'corpus:text-list' %}">
-                            Corpus
+                            Search
                         </a>
                     </li>
                     <!-- Map -->

@@ -35,7 +35,7 @@
     }
 
     #welcome-banner-title {
-        font-size: 4.3em;
+        font-size: 4em;
     }
 
     #welcome-banner-tagline {
@@ -45,8 +45,8 @@
     /* ---------- Corpus: List ---------- */
 
     #corpus-text-list {
-        width: calc(100% - 23em);
-        margin-left: 23em;
+        width: calc(100% - 27em);
+        margin-left: 27em;
     }
 
     #corpus-text-list-options-toggler {

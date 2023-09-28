@@ -141,7 +141,7 @@ CKEDITOR_CONFIGS = {
                     '-',
                     'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
                     '-',
-                    'Bold', 'Italic', 'Underline', 'Strike',
+                    'Bold', 'Italic', 'Underline', 'Strike', 'Superscript', 'Subscript',
                     '-',
                     'Undo', 'Redo',
                     '-',
@@ -154,7 +154,7 @@ CKEDITOR_CONFIGS = {
         'format_tags': 'p;h4',
         'tabSpaces': 4,
         'height': '27em',
-        'width': '36.5em',
+        'width': '41em',
         'allowedContent': True
     }
 }

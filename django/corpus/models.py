@@ -24,7 +24,7 @@ import textwrap
 #
 
 
-rich_text_field_help_text = 'Always paste content without formatting (Windows: Ctrl + Shift + P, Mac: Cmd + Shift + P)'
+rich_text_field_help_text = 'Always paste content without formatting (Windows: Ctrl + Shift + V, Mac: Cmd + Shift + V)'
 
 
 class SlAbstract(models.Model):
@@ -111,6 +111,9 @@ class SlTextTypeCategory(SlAbstract):
     """
     pass
 
+    class Meta:
+        verbose_name_plural = 'sl text type categories'
+
 
 class SlTextType(SlAbstract):
     """
@@ -129,6 +132,9 @@ class SlTextDocumentSubtypeCategory(SlAbstract):
     E.g. 'administrative', 'legal'
     """
     pass
+
+    class Meta:
+        verbose_name_plural = 'sl text document subtype categories'
 
 
 class SlTextDocumentSubtype(SlAbstract):
@@ -153,9 +159,17 @@ class SlTextWritingSupport(SlAbstract):
     pass
 
 
-class SlTextWritingSupportDetails(SlAbstract):
+class SlTextWritingSupportDetail(SlAbstract):
     """
     Common details of writing supports
+    """
+    pass
+
+
+class SlTextFoldLinesAlignment(SlAbstract):
+    """
+    How fold lines are aligned
+    E.g. 'vertical', 'horizontal', 'vertical and horizontal'
     """
     pass
 
@@ -163,7 +177,7 @@ class SlTextWritingSupportDetails(SlAbstract):
 class SlTextCollection(SlAbstract):
     """
     A collection of Texts
-    E.g. 'NLI', 'Khalili Collection', 'Sam Fogg Rate Books'
+    E.g. 'National Library of Israel', 'Khalili Collection', 'Sam Fogg Rate Books'
     """
     pass
 
@@ -174,6 +188,9 @@ class SlTextCorpus(SlAbstract):
     E.g. 'Bamiyan Papers', 'Firuzkuh Papers'
     """
     pass
+
+    class Meta:
+        verbose_name_plural = 'sl text corpus'
 
 
 class SlTextClassification(SlAbstract):
@@ -254,6 +271,7 @@ class SlTextCentury(SlAbstract):
 
     class Meta:
         ordering = ['century_number']
+        verbose_name_plural = 'sl text centuries'
 
 
 class SlPersonInTextRole(SlAbstract):
@@ -286,6 +304,9 @@ class SlTextFolioTagCategory(SlAbstract):
     E.g. 'Land measurement units', 'Documentations', 'Agricultural produce'
     """
     pass
+
+    class Meta:
+        verbose_name_plural = 'sl text folio tag categories'
 
 
 class SlTextFolioTag(SlAbstract):
@@ -349,11 +370,13 @@ class Text(models.Model):
 
     # Physical Description
     writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    writing_support_details = models.ManyToManyField('SlTextWritingSupportDetails', blank=True, related_name=related_name, db_index=True)
-    writing_support_notes = models.TextField(blank=True, null=True)
+    writing_support_details = models.ManyToManyField('SlTextWritingSupportDetail', blank=True, related_name=related_name, db_index=True)
+    writing_support_details_additional = models.TextField(blank=True, null=True, verbose_name='additional writing support details')
     dimensions_height = models.FloatField(blank=True, null=True, verbose_name='height (cm)')
     dimensions_width = models.FloatField(blank=True, null=True, verbose_name='width (cm)')
-    fold_lines = models.TextField(blank=True, null=True)
+    fold_lines_count = models.IntegerField(blank=True, null=True)
+    fold_lines_alignment = models.ForeignKey('SlTextFoldLinesAlignment', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
+    fold_lines_details = models.TextField(blank=True, null=True)
 
     # Content
     summary_of_content = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text)
@@ -484,9 +507,9 @@ class Text(models.Model):
         if len(self.persons_in_texts.all()):
             html = '<ul>'
             for person in self.persons_in_texts.all():
-                html += f'<li><strong>{person.person.name}</strong>'
-                html += f' (Known in text as: {person.person_name_in_text})' if person.person_name_in_text else ''
-                html += f' (Role in text: {person.person_role_in_text})' if person.person_role_in_text else ''
+                html += f'<li>{person.person.name}'
+                html += f' ({person.person_name_in_text})' if person.person_name_in_text else ''
+                html += f' ({person.person_role_in_text})' if person.person_role_in_text else ''
                 html += '</li>'
             html += '</ul>'
             return html
@@ -496,7 +519,7 @@ class Text(models.Model):
         if len(self.text_related_publications.all()):
             html = '<ul>'
             for publication in self.text_related_publications.all():
-                html += f'<li><strong>{publication.publication}</strong>'
+                html += f'<li>{publication.publication}'
                 html += f' (Pages: {publication.pages})' if publication.pages else ''
                 html += '</li>'
             html += '</ul>'
@@ -771,7 +794,7 @@ class Person(models.Model):
 
     name = models.CharField(max_length=1000)
     gender = models.ForeignKey('SlPersonGender', on_delete=models.CASCADE, blank=True, null=True)
-    profession = models.CharField(max_length=1000, blank=True, null=True)
+    profession = models.CharField(max_length=1000, blank=True, null=True, verbose_name='profession or professional title')
     persons = models.ManyToManyField('self', through='M2MPersonToPerson', blank=True)
 
     def __str__(self):
@@ -789,7 +812,7 @@ class PersonInText(models.Model):
     related_name = 'persons_in_texts'
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
-    person = models.ForeignKey('Person', on_delete=models.CASCADE, related_name=related_name)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE, related_name=related_name, help_text="Be sure to search the list before adding a new person. We do not want duplicate records.")
     person_name_in_text = models.CharField(max_length=1000, blank=True, null=True, help_text='If Person is named differently in Text than in this database then record their name in the Text here', verbose_name='person name (as it appears in this text)')
     person_role_in_text = models.ForeignKey('SlPersonInTextRole', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
 

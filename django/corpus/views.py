@@ -26,7 +26,7 @@ def clean_date_from_datetime(datetime_obj):
     """
     Return a clean date in format DD/MM/YYYY (e.g. 31/01/2023) from a datetime object
     """
-    return datetime_obj.strftime('%m/%d/%Y') if datetime_obj else None
+    return datetime_obj.strftime('%d/%m/%Y') if datetime_obj else None
 
 
 def replace_nth(string, sub, wanted, nth):
@@ -43,13 +43,18 @@ def replace_nth(string, sub, wanted, nth):
     return new_string
 
 
-def html_details_link_to_text_list_filtered(filter_id, filter_object):
+def html_details_link_to_text_list_filtered(filter_id, filter_object, link_text=None):
     """
     Returns a HTML anchor tag <a> that will link to the Corpus Text List page
     and filter on the object being clicked.
     E.g. if clicking 'Bactrian' in the detail then the user can see all other Bactrian Corpus Texts
+    If link_text is not provided then it will automatically show the object's str as the link text
     """
-    return f'<a href="{reverse("corpus:text-list")}?{filter_id}={filter_object.id}">{filter_object}</a>' if filter_object else None
+    # If no link text is provided, use the object str by default
+    if not link_text:
+        link_text = filter_object
+    # Return the complete HTML anchor tag
+    return f'<a href="{reverse("corpus:text-list")}?{filter_id}={filter_object.id}">{link_text}</a>' if filter_object else None
 
 
 def html_details_list_items(filter_id, object_list):
@@ -187,7 +192,8 @@ class TextDetailView(DetailView):
                 'label': 'Type',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}type',
-                    self.object.type
+                    self.object.type,
+                    self.object.type.name
                 )
             },
             {
@@ -218,7 +224,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Writing Support Notes',
-                'value': self.object.writing_support_notes
+                'value': self.object.writing_support_details_additional
             },
             {
                 'label': 'Height (cm)',
@@ -230,7 +236,18 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Fold Lines',
-                'value': self.object.fold_lines
+                'value': self.object.fold_lines_count
+            },
+            {
+                'label': 'Fold Lines',
+                'value': html_details_link_to_text_list_filtered(
+                    f'{filter_pre_fk}fold_lines_alignment',
+                    self.object.fold_lines_alignment
+                )
+            },
+            {
+                'label': 'Fold Lines',
+                'value': self.object.fold_lines_details
             },
 
             # Content
@@ -286,21 +303,21 @@ class TextDetailView(DetailView):
                 'html': self.object.details_html_texts
             },
 
-            # Miscellaneous
+            # Citations
             {
-                'section_header': 'Miscellaneous'
+                'section_header': 'Citations'
             },
             {
                 'label': 'Suggested Citation',
-                'value': f'See the Invisible East Digital Corpus "{self.object.title}": {context["permalink"]},  accessed {clean_date_from_datetime(datetime.datetime.now())}.'
+                'value': f'<a href="{reverse("general:about-cite")}">See \'How to Cite\'</a>'
             },
             {
                 'label': 'Permalink',
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
             {
-                'label': 'Contact the Principal Editor of this Text',
-                'value': f'<a href="mailto:{self.object.admin_principal_editor.email}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{self.object.admin_principal_editor}, {self.object.admin_principal_editor.email}</a> <em>(Please include the above permalink when contacting the Principal Editor about this Text)</em>' if self.object.admin_principal_editor else None
+                'label': 'Contact the Editorial Team',
+                'value': f'<a href="mailto:{settings.MAIN_CONTACT_EMAIL}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{settings.MAIN_CONTACT_EMAIL}</a> <em>(Please include the above permalink when contacting the Editorial Team about this Text)</em>'
             }
         ]
 
@@ -359,6 +376,7 @@ class TextListView(ListView):
             'text_folios__transcription',
             'text_folios__translation',
             'text_folios__transliteration',
+            'text_folios__text_folio_tags__tag__name'
         ]
         # Set list of search options
         if searches not in [[''], []]:
@@ -545,7 +563,7 @@ class TextListView(ListView):
                 {
                     'filter_id': f'{filter_pre_mm}writing_support_details',
                     'filter_name': 'Writing Support Details',
-                    'filter_options': models.SlTextWritingSupportDetails.objects.all()
+                    'filter_options': models.SlTextWritingSupportDetail.objects.all()
                 },
             ],
             # Tags

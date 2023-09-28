@@ -98,7 +98,7 @@ admin.site.register(models.SlTextScript, GenericSlAdminView)
 admin.site.register(models.SlTextLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
 admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
-admin.site.register(models.SlTextWritingSupportDetails, GenericSlAdminView)
+admin.site.register(models.SlTextWritingSupportDetail, GenericSlAdminView)
 admin.site.register(models.SlTextPublication, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
 admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
@@ -264,8 +264,6 @@ class TextAdminView(GenericAdminView):
         'collection',
         'primary_language',
         'century',
-        'writing_support_notes',
-        'fold_lines',
         'type',
         'count_text_folios',
         'public_review_ready',
@@ -304,8 +302,7 @@ class TextAdminView(GenericAdminView):
                 'meta_created_datetime',
                 'meta_lastupdated_by',
                 'meta_lastupdated_datetime'
-            ),
-            'classes': ['collapse']
+            )
         }),
         ('General', {
             'fields': (
@@ -323,10 +320,12 @@ class TextAdminView(GenericAdminView):
             'fields': (
                 'writing_support',
                 'writing_support_details',
-                'writing_support_notes',
+                'writing_support_details_additional',
                 'dimensions_height',
                 'dimensions_width',
-                'fold_lines',
+                'fold_lines_count',
+                'fold_lines_alignment',
+                'fold_lines_details',
             ),
             'classes': ['collapse']
         }),
@@ -486,7 +485,10 @@ class TextAdminView(GenericAdminView):
         # Set all many to many fields to display the filter_horizontal widget
         self.filter_horizontal = get_manytomany_fields(self.model)
         # Set all foreign key fields to display the autocomplete widget
-        self.autocomplete_fields = get_foreignkey_fields(model=self.model, exclude=['type', 'document_subtype'])
+        self.autocomplete_fields = get_foreignkey_fields(
+            model=self.model,
+            exclude=['type', 'document_subtype', 'fold_lines_alignment']
+        )
 
     class Media:
         js = (
