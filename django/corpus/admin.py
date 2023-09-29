@@ -266,15 +266,15 @@ class TextAdminView(GenericAdminView):
         'century',
         'type',
         'count_text_folios',
-        'public_review_ready',
+        'public_review_reviewer',
         'public_review_approved',
         'public_review_approved_by',
         'admin_classification',
     )
     list_display_links = ('id', 'shelfmark')
     list_filter = (
-        'public_review_ready',
         'public_review_approved',
+        ('public_review_reviewer', RelatedDropdownFilter),
         ('public_review_approved_by', RelatedDropdownFilter),
         ('admin_principal_editor', RelatedDropdownFilter),
         ('admin_principal_data_entry_person', RelatedDropdownFilter),
@@ -343,7 +343,7 @@ class TextAdminView(GenericAdminView):
         }),
         ('Review and Approve to Show this Corpus Text on Public Website', {
             'fields': (
-                'public_review_ready',
+                'public_review_reviewer',
                 'public_review_notes',
                 'public_review_approved',
                 'public_review_approved_by',
@@ -363,7 +363,7 @@ class TextAdminView(GenericAdminView):
 
     def get_readonly_fields(self, request, obj):
         readonly_fields = [
-            'public_review_ready',
+            'public_review_reviewer',
             'public_review_notes',
             'public_review_approved',
             'public_review_approved_by',
@@ -373,12 +373,12 @@ class TextAdminView(GenericAdminView):
             'meta_lastupdated_by',
             'meta_lastupdated_datetime',
         ]
-        # Only allow principal editor to approve (when ready to review)
-        if obj and (request.user == obj.admin_principal_editor and obj.public_review_ready):
+        # Only allow reviewer or approver to add/remove approval
+        if obj and (obj.public_review_reviewer and request.user == obj.public_review_reviewer) or (obj.public_review_approved_by and request.user == obj.public_review_approved_by):
             readonly_fields.remove('public_review_approved')
-        # Once approved, review fields are read only
-        if obj and not obj.public_review_approved and obj.admin_principal_editor is not None:
-            readonly_fields.remove('public_review_ready')
+        # Allow only data entry, principal editor, or the reviewer to modify review fields
+        if obj and request.user in [obj.admin_principal_editor, obj.admin_principal_data_entry_person, obj.public_review_reviewer] and not obj.public_review_approved:
+            readonly_fields.remove('public_review_reviewer')
             readonly_fields.remove('public_review_notes')
         return readonly_fields
 
@@ -426,16 +426,24 @@ class TextAdminView(GenericAdminView):
         # Get current object, so can access values before this save
         obj_old = self.model.objects.filter(id=obj.id).first()
 
-        # If marked as ready to review, email the Principal Editor
-        if ((obj_old and obj_old.public_review_ready is False) or obj_old is None) and obj.public_review_ready is True:
+        # If a new Reviewer has been chosen, email the Reviewer
+        if obj.public_review_reviewer not in [None, obj_old.public_review_reviewer]:
+
+            # Build email body content
             email_link_obj = request.build_absolute_uri(reverse('admin:corpus_text_change', args=[obj.id]))
-            email_link_list = request.build_absolute_uri(reverse('admin:corpus_text_changelist') + f'?admin_principal_editor__id__exact={obj.admin_principal_editor.id}&public_review_ready__exact=1')
+            email_link_list = request.build_absolute_uri(reverse('admin:corpus_text_changelist') + f'?public_review_reviewer__id__exact={obj.public_review_reviewer.id}')
+            email_body = f"Dear {obj.public_review_reviewer.name},\n\n\nA corpus text ({str(obj)}) has been marked as ready to review by {request.user.name}.\n\nYou can view this corpus text here: {email_link_obj}\n\nYou are the Reviewer of this corpus text, meaning you are required to review and approve it. Once approved it will be visible to all users on the public website.\n\nTo approve it, simply go to the above link, scroll to the bottom of the page, tick the 'Approved' box and click save."
+            if len(obj.public_review_notes):
+                email_body += f"\n\nThe current review notes for this corpus text are:\n------------------------------\n{obj.public_review_notes}\n------------------------------"
+            email_body += f"\n\nYou can also see all corpus texts ready for you to review and approve here: {email_link_list}\n\n\nThanks,\nInvisible East Digital Corpus team"
+
+            # Send the email
             try:
                 send_mail(
                     'Invisible East Digital Corpus: A corpus text is ready to review',
-                    f"Dear {obj.admin_principal_editor.name},\n\nA corpus text ({str(obj)}) has been marked as ready to review by {request.user.name}.\n\nYou can view this corpus text here: {email_link_obj}\n\nYou are the Principal Editor of this corpus text, meaning you are required to review and approve it. Once approved it will be visible to all users on the public website.\n\nTo approve it, simply go to the above link, scroll to the bottom of the page, tick the 'Approved' box and click save.\n\nYou can also see all corpus texts ready for you to review and approve here: {email_link_list}\n\nThanks,\nInvisible East",  # NOQA
+                    email_body,
                     settings.DEFAULT_FROM_EMAIL,
-                    (obj.admin_principal_editor.email,),
+                    (obj.public_review_reviewer.email,),
                     fail_silently=False
                 )
             except Exception:
@@ -446,7 +454,7 @@ class TextAdminView(GenericAdminView):
             # Set the user and datetime of the approval
             obj.public_review_approved_by = request.user
             obj.public_review_approved_datetime = timezone.now()
-            obj.public_review_ready = False
+            obj.public_review_reviewer = None
             # Email the project team for every 100th approved text (e.g. 100, 200, 300, ...)
             count_approved_texts = len(self.model.objects.filter(public_review_approved=True)) + 1
             if count_approved_texts % 100 == 0:
@@ -460,8 +468,9 @@ class TextAdminView(GenericAdminView):
                     )
                 except Exception:
                     logger.exception("Failed to send email")
-        # Remove public review approval
+        # If removing public review approval, update relevant fields
         elif obj_old and obj_old.public_review_approved is True and obj.public_review_approved is False:
+            obj.public_review_reviewer = request.user
             obj.public_review_approved_by = None
             obj.public_review_approved_datetime = None
 

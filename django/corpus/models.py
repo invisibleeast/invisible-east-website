@@ -393,10 +393,14 @@ class Text(models.Model):
     commentary = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text + '<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
 
     # Review & Approve Text to Show on Public Website
-    public_review_ready = models.BooleanField(
-        default=False,
-        help_text='Tick this box to mark this Corpus Text as ready to be reviewed by the Principal Editor.<br>If the editor approves it, this Corpus Text will then be visible on the public website.<br>The editor will be notified via email when you tick this box.<br>You can only tick this box if a Principal Editor has been set for this Corpus Text (see the above Admin section).',  # NOQA
-        verbose_name='ready to review'
+    public_review_reviewer = models.ForeignKey(
+        User,
+        related_name="text_public_review_reviewer",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        help_text='You can only change the reviewer if you are the principal data entry person, principal editor, or the existing reviewer of this Corpus Text.',  # NOQA
+        verbose_name='reviewer'
     )
     public_review_notes = models.TextField(
         blank=True,
@@ -406,7 +410,7 @@ class Text(models.Model):
     )
     public_review_approved = models.BooleanField(
         default=False,
-        help_text='Tick to approve this Corpus Text. This will make it visible on the public website. You can only tick this box if you are the Principal Editor and this Corpus Text has been marked as ready to review',
+        help_text='Ticking this box will make this Corpus Text visible on the public website. You can only tick this box if you are the Reviewer of this Corpus Text.<br>Unticking this box will hide this Corpus Text from the public interface. You can only untick this box if you approved this Corpus Text.',
         verbose_name='approved'
     )
     public_review_approved_by = models.ForeignKey(
