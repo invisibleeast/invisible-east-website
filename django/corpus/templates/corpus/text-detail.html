@@ -30,6 +30,7 @@
             {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> Transcriptions</li>{% endif %}
             {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
             {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
+            {% if toponym_tags.count %}<li id="map"><i class="fas fa-map"></i> Map</li>{% endif %}
         </ul>
 
         <article class="tabbed" id="corpus-text-detail-content-details">
@@ -205,6 +206,16 @@
             </article>
         {% endif %}
 
+        {% if toponym_tags.count %}
+            <article class="tabbed" id="corpus-text-detail-content-map">
+                <div class="tabbed-title">Map</div>
+                <p>
+                    This map displays the locations of toponyms tagged within this corpus text. Clicking on a pin on the map will display links to all other corpus texts at these locations. You can also view <a href="{% url 'corpus:map-taggedtexts' %}">a full map of all tagged texts</a>.
+                </p>
+                {% include "corpus/snippets/leaflet.html" with map_id='corpus-text-detail-content-map-taggedtexts' %}
+            </article>
+        {% endif %}
+
     </section><!--
 
     Image
@@ -351,6 +362,7 @@
 <script>
     $(document).ready(function(){
         {% include "corpus/js/detail.js" %}
+        {% include "corpus/js/map.js" with map_id='corpus-text-detail-content-map-taggedtexts' tags_list=toponym_tags %}
     });
 </script>
 

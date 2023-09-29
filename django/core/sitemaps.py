@@ -23,7 +23,9 @@ class StaticPagesSitemap(Sitemap):
             'general:about-technical',
             'general:cookies',
             'general:accessibility',
-            'corpus:map'
+            'corpus:map-taggedtexts',
+            'corpus:map-findspots',
+            'corpus:map-placesintexts',
         ]
 
     def location(self, obj):

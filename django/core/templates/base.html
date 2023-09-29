@@ -84,11 +84,16 @@
                             Search
                         </a>
                     </li>
-                    <!-- Map -->
-                    <li class="nav-item">
-                        <a class="nav-link{% if "/corpus/map" in request.path %} active{% endif %}" href="{% url 'corpus:map' %}">
-                            Map
+                    <!-- Maps -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if "/corpus/map/" in request.path %} active{% endif %}" href="#" id="navbarDropdownMenuLinkMaps" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Maps
                         </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkMaps">
+                            <a class="dropdown-item" href="{% url 'corpus:map-taggedtexts' %}">Tagged Texts in IEDC</a>
+                            <a class="dropdown-item" href="{% url 'corpus:map-findspots' %}">Find Spots</a>
+                            <a class="dropdown-item" href="{% url 'corpus:map-placesintexts' %}">Places Mentioned in Texts</a>
+                        </div>
                     </li>
                     <!-- About -->
                     <li class="nav-item dropdown">

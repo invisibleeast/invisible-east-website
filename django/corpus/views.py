@@ -152,6 +152,18 @@ class TextDetailView(DetailView):
         context['text_folio_tag_categories'] = models.SlTextFolioTagCategory.objects.all().prefetch_related('tags__text_folio_tags')
         context['text_folio_tags'] = models.SlTextFolioTag.objects.all().select_related('category')
         context['permalink'] = self.request.build_absolute_uri().split('?')[0]
+        context['toponym_tags'] = models.SlTextFolioTag.objects.filter(category__name='Toponyms', text_folio_tags__text_folio__text=self.object)\
+            .select_related(
+                'category',
+            ).prefetch_related(
+                Prefetch(
+                    'text_folio_tags',
+                    models.TextFolioTag.objects.all().select_related(
+                        'text_folio__text__primary_language',
+                        'text_folio__text__collection',
+                    )
+                )
+            )
         context['data_items'] = [
 
             # General
@@ -787,9 +799,45 @@ class TextFolioTransLineDrawnOnImageFailedTemplateView(TemplateView):
     template_name = 'corpus/textfoliotranslinedrawnonimage-failed.html'
 
 
-class MapTemplateView(TemplateView):
+class MapTaggedTextsListView(ListView):
     """
-    Class based view to show a template that includes an embedded map of the data
+    Class based view to show a map (of SlTextFolioTag objects) list template
     """
 
-    template_name = 'corpus/map.html'
+    template_name = 'corpus/map-taggedtexts.html'
+    model = models.SlTextFolioTag
+
+    def get_queryset(self):
+        # Start with the initial queryset of SlTextFolioTag objects of category Toponym
+        queryset = self.model.objects.filter(category__name='Toponyms')
+
+        # Improve performance
+        queryset = queryset.select_related(
+            'category',
+        ).prefetch_related(
+            Prefetch(
+                'text_folio_tags',
+                models.TextFolioTag.objects.all().select_related(
+                    'text_folio__text__primary_language',
+                    'text_folio__text__collection',
+                )
+            )
+        )
+
+        return queryset
+
+
+class MapFindSpotTemplateView(TemplateView):
+    """
+    Class based view to show a map (of find spots) template
+    """
+
+    template_name = 'corpus/map-findspots.html'
+
+
+class MapPlacesMentionedInCorpusTextsTemplateView(TemplateView):
+    """
+    Class based view to show a map (of placed mentioned in texts) template
+    """
+
+    template_name = 'corpus/map-placesintexts.html'

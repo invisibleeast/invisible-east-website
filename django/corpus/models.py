@@ -1,6 +1,8 @@
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.utils.html import mark_safe
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 from PIL import Image, ImageOps
 from django.core.files import File
 from io import BytesIO
@@ -322,8 +324,27 @@ class SlTextFolioTag(SlAbstract):
     A tag of terms found in text folios
     """
     category = models.ForeignKey('SlTextFolioTagCategory', on_delete=models.RESTRICT, related_name='tags')
-    latitude = models.CharField(max_length=255, blank=True, null=True, help_text='Use if this tag can be located on a map (e.g. is a toponym)')
-    longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Use if this tag can be located on a map (e.g. is a toponym)')
+    latitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if this tag can be located on a map (e.g. is a toponym)')
+    longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if this tag can be located on a map (e.g. is a toponym)')
+    urls = models.TextField(blank=True, null=True, help_text='Optional. Add URLs that relate to this tag (add one URL per line). Must be a full URL e.g. "https://www.google.com"')
+
+    @property
+    def urls_as_html_links(self):
+        """
+        Converts the URLs in self.urls to html anchor/link tags
+        E.g. https://www.google.com -> <a href="https://www.google.com">https://www.google.com</a>
+        """
+        if self.urls and len(self.urls):
+            url_links = []
+            for url in self.urls.split('\n'):
+                url_clean = url.strip()
+                validator = URLValidator()
+                try:
+                    validator(url_clean)
+                    url_links.append(f'<a href="{url_clean}">{url_clean}</a>')
+                except ValidationError as e:
+                    print(e)
+            return mark_safe('<br>'.join(url_links))
 
     class Meta:
         ordering = [Upper('category__name'), Upper('name'), 'id']
