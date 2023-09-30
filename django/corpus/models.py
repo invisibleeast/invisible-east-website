@@ -341,7 +341,7 @@ class SlTextFolioTag(SlAbstract):
                 validator = URLValidator()
                 try:
                     validator(url_clean)
-                    url_links.append(f'<a href="{url_clean}">{url_clean}</a>')
+                    url_links.append(f'<a class="sltextfoliotag-url" href="{url_clean}">{url_clean}</a>')
                 except ValidationError as e:
                     print(e)
             return mark_safe('<br>'.join(url_links))

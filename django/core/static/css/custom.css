@@ -1431,7 +1431,19 @@ main section {
     font-size: 1.3em;
 }
 
-.leaflet-container a.map-taggedtexts-popup-link {
+.map-taggedtexts-popup-subtitle {
+    display: block;
+    font-weight: 600;
+    margin-top: 1em;
+    font-size: 1.2em;
+}
+
+.leaflet-container a.sltextfoliotag-url {
+    display: inline-block;
+    padding: 0.3em;
+}
+
+.leaflet-container a.map-taggedtexts-popup-text {
     display: block;
     padding: 0.5em 1em;
     background: #F2F2F2;
@@ -1442,7 +1454,7 @@ main section {
     margin: 0.2em 0;
 }
 
-.leaflet-container a.map-taggedtexts-popup-link:hover {
+.leaflet-container a.map-taggedtexts-popup-text:hover {
     background: var(--color-primary);
     color: white;
     text-decoration: none;

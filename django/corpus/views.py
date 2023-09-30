@@ -9,7 +9,6 @@ from operator import (or_, and_)
 from bs4 import BeautifulSoup
 from . import models
 import json
-import datetime
 import re
 
 
@@ -153,9 +152,7 @@ class TextDetailView(DetailView):
         context['text_folio_tags'] = models.SlTextFolioTag.objects.all().select_related('category')
         context['permalink'] = self.request.build_absolute_uri().split('?')[0]
         context['toponym_tags'] = models.SlTextFolioTag.objects.filter(category__name='Toponyms', text_folio_tags__text_folio__text=self.object)\
-            .select_related(
-                'category',
-            ).prefetch_related(
+            .select_related('category').prefetch_related(
                 Prefetch(
                     'text_folio_tags',
                     models.TextFolioTag.objects.all().select_related(
