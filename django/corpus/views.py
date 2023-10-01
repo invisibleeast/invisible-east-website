@@ -486,7 +486,7 @@ class TextListView(ListView):
         context = super().get_context_data(**kwargs)
 
         # Count of all published texts
-        context['count_all_texts'] = self.model.objects.filter(public_review_approved=True).count()
+        context['count_all_texts'] = text_initial_queryset(self.request.user).count()
         # Filter pre values
         context['filter_pre'] = filter_pre
         context['filter_pre_gt'] = filter_pre_gt
@@ -570,13 +570,13 @@ class TextListView(ListView):
             # Gregorian Dates
             [
                 {
-                    'filter_id': f'{filter_pre_gt}gregorian_century__century_number',
+                    'filter_id': f'{filter_pre_gt}gregorian_date_century__century_number',
                     'filter_classes': filter_pre_gt,
                     'filter_name': 'Gregorian Date (from)',
                     'filter_options': filter_queryset_centuries
                 },
                 {
-                    'filter_id': f'{filter_pre_lt}gregorian_century__century_number',
+                    'filter_id': f'{filter_pre_lt}gregorian_date_century__century_number',
                     'filter_classes': filter_pre_lt,
                     'filter_name': 'Gregorian Date (to)',
                     'filter_options': filter_queryset_centuries
