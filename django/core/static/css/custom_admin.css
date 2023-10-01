@@ -31,3 +31,8 @@ td.original p {
 .inline-group .tabular tr.has_original td {
     padding-top: 8px;
 }
+
+/* Inlines headers are written in uppercase, so ensure fieldset headers are too for consistency */
+fieldset.module h2 {
+    text-transform: uppercase;
+}

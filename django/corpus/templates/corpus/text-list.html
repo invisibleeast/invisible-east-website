@@ -139,7 +139,6 @@
                             <div><dt>IEDC ID</dt><dd>{{ object.id }}</dd></div>
                             <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
                             <div><dt>Number of Folios</dt><dd>{{ object.text_folios.count }}</dd></div>
-                            {% if object.century %}<div><dt>Date</dt><dd>{{ object.century }}</dd></div>{% endif %}
                             <div><dt>IEDC Input Date</dt><dd>{{ object.meta_created_datetime | date:"d M o" }}</dd></div>
                         </dl>
                     </div>

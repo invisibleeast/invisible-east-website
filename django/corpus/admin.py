@@ -90,7 +90,7 @@ class GenericSlAdminView(GenericAdminView):
 admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
 admin.site.register(models.SlTextDocumentSubtypeCategory, GenericSlAdminView)
-admin.site.register(models.SlTextCentury, GenericSlAdminView)
+admin.site.register(models.SlTextGregorianCentury, GenericSlAdminView)
 admin.site.register(models.SlTextCollection, GenericSlAdminView)
 admin.site.register(models.SlTextCorpus, GenericSlAdminView)
 admin.site.register(models.SlTextClassification, GenericSlAdminView)
@@ -295,7 +295,6 @@ class TextAdminView(GenericAdminView):
         'shelfmark',
         'collection',
         'primary_language',
-        'century',
         'type',
         'count_text_folios',
         'public_review_reviewer',
@@ -314,7 +313,7 @@ class TextAdminView(GenericAdminView):
         ('collection', RelatedDropdownFilter),
         ('primary_language', RelatedDropdownFilter),
         ('additional_languages', RelatedDropdownFilter),
-        ('century', RelatedDropdownFilter),
+        ('gregorian_date_century', RelatedDropdownFilter),
         ('writing_support', RelatedDropdownFilter),
         ('persons_in_texts__person', RelatedDropdownFilter),
     )
@@ -345,7 +344,6 @@ class TextAdminView(GenericAdminView):
                 'additional_languages',
                 'type',
                 'document_subtype',
-                'century',
             )
         }),
         ('Physical Description', {
@@ -367,6 +365,16 @@ class TextAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
+        ('Gregorian Date (Converted from Original Dates)', {
+            'fields': (
+                'gregorian_date_text',
+                'gregorian_date',
+                'gregorian_date_range_start',
+                'gregorian_date_range_end',
+                'gregorian_date_century',
+            ),
+            'classes': ['collapse']
+        }),
         ('Commentary', {
             'fields': (
                 'commentary',
@@ -385,13 +393,13 @@ class TextAdminView(GenericAdminView):
         }),
     )
     inlines = (
+        TextDateStackedInline,
+        TextFolioStackedInline,
+        TextRelatedPublicationStackedInline,
+        TextSealStackedInline,
+        PersonInTextForTextTabularInline,
         M2MTextToText2Inline,
         M2MTextToText1Inline,
-        PersonInTextForTextTabularInline,
-        TextDateStackedInline,
-        TextRelatedPublicationStackedInline,
-        TextFolioStackedInline,
-        TextSealStackedInline
     )
 
     def get_readonly_fields(self, request, obj):
@@ -425,7 +433,8 @@ class TextAdminView(GenericAdminView):
         queryset = queryset.select_related(
             'collection',
             'primary_language__script',
-            'type__category'
+            'type__category',
+            'document_subtype__category'
         )
         return queryset
 

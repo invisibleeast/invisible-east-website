@@ -27,6 +27,7 @@ import textwrap
 
 
 rich_text_field_help_text = 'Always paste content without formatting (Windows: Ctrl + Shift + V, Mac: Cmd + Shift + V)'
+date_help_text = 'Format: "YYYY-MM-DD" - e.g. "0608-01-31". Please ensure years before 1000 are 4 digits long using 0s at start, e.g. 0608 not 608, 0056 not 56, etc.'
 
 
 class SlAbstract(models.Model):
@@ -275,7 +276,7 @@ class SlCalendar(SlAbstract):
     name_full = models.CharField(max_length=100, blank=True, null=True)
 
 
-class SlTextCentury(SlAbstract):
+class SlTextGregorianCentury(SlAbstract):
     """
     A century in Gregorian calendar CE.
     E.g. 1st Century CE ... 21st Century CE
@@ -430,7 +431,6 @@ class Text(models.Model):
     additional_languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True, help_text="Don't include the primary language. Only include additional languages/scripts that also appear in the text.")
     type = models.ForeignKey('SlTextType', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
     document_subtype = models.ForeignKey('SlTextDocumentSubtype', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name, help_text='If a type of Administrative or Legal is selected for this Corpus Text, please also provide the subtype')
-    century = models.ForeignKey(SlTextCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='Uses the Gregorian calendar. This is used to filter and sort results in the public interface. If only a date range is available then select the century in the middle of the range. More specific data about dates can be found below in the "Text Dates" section of this form.')
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
 
     # Physical Description
@@ -445,6 +445,13 @@ class Text(models.Model):
 
     # Content
     summary_of_content = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text)
+
+    # Converted Gregorian Date (see child TextDate model for original dates)
+    gregorian_date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 11 Feb 1198.<br>For help converting original dates to the Gregorian calendar please see <a href="https://www.muqawwim.com" target="_blank">www.muqawwim.com</a>')
+    gregorian_date = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+    gregorian_date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+    gregorian_date_range_end = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+    gregorian_date_century = models.ForeignKey(SlTextGregorianCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='This century data is only used to filter and sort results in the list of Corpus Texts in the public interface. If the exact century is not known but an approximate date range is available then insert your best estimate (e.g. the middle of the date range) or leave blank if no estimate is available.')
 
     # Commentary
     commentary = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text + '<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
@@ -561,6 +568,26 @@ class Text(models.Model):
         return self.text_folios.count()
 
     @property
+    def gregorian_date_range_str(self):
+        if self.gregorian_date_range_start and self.gregorian_date_range_end:
+            return f'Estimated date range: {self.gregorian_date_range_start}-{self.gregorian_date_range_end}'
+        elif self.gregorian_date_range_start:
+            return f'Estimated date: {self.gregorian_date_range_start}'
+        elif self.gregorian_date_range_end:
+            return f'Estimated date: {self.gregorian_date_range_end}'
+        else:
+            return ''
+
+    @property
+    def gregorian_date_full(self):
+        str = f'The Gregorian calendar: {self.gregorian_date_text}' 
+        if self.gregorian_date:
+            str += f' ({self.gregorian_date})'
+        if len(self.gregorian_date_range_str):
+            str += f' ({self.gregorian_date_range_str})'
+        return str
+
+    @property
     def image_permission_statement(self):
         if self.has_image and self.collection:
             return f"""Images of this Text displayed on this web page are provided by {self.collection}.
@@ -579,6 +606,15 @@ class Text(models.Model):
         for folio in self.text_folios.all():
             if folio.image:
                 return folio.image_small
+
+    @property
+    def details_html_dates(self):
+        if len(self.text_dates.all()):
+            html = '<ul>'
+            for date in self.text_dates.all():
+                html += f'<li>{date}</li>'
+            html += '</ul>'
+            return html
 
     @property
     def details_html_person_in_text(self):
@@ -632,15 +668,37 @@ class TextDate(models.Model):
     A date of a Text
     """
 
-    date_help_text = 'Format: "YYYY-MM-DD" e.g. "0608-01-31" (ensure years before 1000 start with 0, e.g. 0608 not 608)'
     related_name = 'text_dates'
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     calendar = models.ForeignKey('SlCalendar', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 10 Ramaḍān 605, 11 Feb 1198')
+    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 10 Ramaḍān 605')
     date = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     date_range_end = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
+
+    @property
+    def date_range_str(self):
+        if self.date_range_start and self.date_range_end:
+            return f'Estimated date range: {self.date_range_start}-{self.date_range_end}'
+        elif self.date_range_start:
+            return f'Estimated date: {self.date_range_start}'
+        elif self.date_range_end:
+            return f'Estimated date: {self.date_range_end}'
+        else:
+            return ''
+
+    def __str__(self):
+        str = f'{self.calendar.name_full}: {self.date_text}' 
+        if self.date:
+            str += f' ({self.date})'
+        if len(self.date_range_str):
+            str += f' ({self.date_range_str})'
+        return str
+
+    class Meta:
+        verbose_name = 'Date'
+        verbose_name_plural = 'Original Dates'
 
 
 class TextRelatedPublication(models.Model):
@@ -654,6 +712,9 @@ class TextRelatedPublication(models.Model):
     publication = models.ForeignKey('SlTextPublication', on_delete=models.RESTRICT, related_name=related_name)
     pages = models.CharField(max_length=1000, blank=True, null=True, help_text='Specify the page number or range of page numbers - e.g. 4, 82-84, etc.')
     catalogue_number = models.CharField(max_length=1000, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Related Publication'
 
 
 class TextFolio(models.Model):
@@ -808,8 +869,8 @@ To manually override an automatic line number simply:
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
-        verbose_name = 'Text Folio'
-        verbose_name_plural = 'Text Folios (including Transcription, Translation, Images, etc.)'
+        verbose_name = 'Folio'
+        verbose_name_plural = 'Folios (including Transcription, Translation, Images, etc.)'
 
 
 class TextFolioTag(models.Model):
@@ -899,6 +960,10 @@ class PersonInText(models.Model):
 
     def __str__(self):
         return f'{self.text.title}: {self.person.name} ({self.person_role_in_text.name})'
+
+    class Meta:
+        verbose_name = 'Person in Text'
+        verbose_name_plural = 'Persons in Text'
 
 
 class Seal(models.Model):

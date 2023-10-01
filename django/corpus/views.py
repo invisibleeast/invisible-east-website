@@ -124,7 +124,7 @@ class TextDetailView(DetailView):
         queryset = queryset.select_related(
             'primary_language__script',
             'type__category',
-            'century',
+            'gregorian_date_century',
             'collection',
         ).prefetch_related(
             'text_folios',
@@ -183,10 +183,6 @@ class TextDetailView(DetailView):
                     f'{filter_pre_fk}corpus',
                     self.object.corpus
                 )
-            },
-            {
-                'label': 'IEDC ID',
-                'value': self.object.id
             },
             {
                 'label': 'Classification',
@@ -277,24 +273,12 @@ class TextDetailView(DetailView):
                 'value': self.object.summary_of_content
             },
 
-            # Dates
+            # Dates (Gregorian and Original)
             {
                 'section_header': 'Dates'
             },
             {
-                'label': 'Century',
-                'value': html_details_link_to_text_list_filtered(
-                    f'{filter_pre_fk}century',
-                    self.object.century
-                )
-            },
-            {
-                'label': 'Date Added to IE Corpus',
-                'value': clean_date_from_datetime(self.object.meta_created_datetime)
-            },
-            {
-                'label': 'Date Last Updated in IE Corpus',
-                'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
+                'html': f'<ul><li>{self.object.gregorian_date_full}</li></ul>{self.object.details_html_dates}'
             },
 
             # People
@@ -321,6 +305,23 @@ class TextDetailView(DetailView):
                 'html': self.object.details_html_texts
             },
 
+            # IEDC Data
+            {
+                'section_header': 'IEDC Data'
+            },
+            {
+                'label': 'IEDC ID',
+                'value': self.object.id
+            },
+            {
+                'label': 'Date Added to IE Corpus',
+                'value': clean_date_from_datetime(self.object.meta_created_datetime)
+            },
+            {
+                'label': 'Date Last Updated in IE Corpus',
+                'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
+            },
+
             # Citations
             {
                 'section_header': 'Citations'
@@ -337,10 +338,15 @@ class TextDetailView(DetailView):
                 'label': 'Image Permission Statement',
                 'value': self.object.image_permission_statement
             },
+
+            # Contact
+            {
+                'section_header': 'Contact'
+            },
             {
                 'label': 'Contact Editorial Team',
                 'value': f'<a href="mailto:{settings.MAIN_CONTACT_EMAIL}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{settings.MAIN_CONTACT_EMAIL}</a> <em>(Please include the above permalink when contacting the editorial team about this Text)</em>'
-            }
+            },
 
         ]
 
@@ -380,7 +386,7 @@ class TextListView(ListView):
         queryset = queryset.select_related(
             'primary_language__script',
             'type__category',
-            'century',
+            'gregorian_date_century',
             'collection',
         ).prefetch_related(
             'text_folios',
@@ -491,7 +497,7 @@ class TextListView(ListView):
         # Alphabetical
         context['options_sortby_alphabetical'] = [
             {'value': 'shelfmark', 'label': 'Shelfmark'},
-            {'value': 'century__century_number', 'label': 'Date'},
+            {'value': 'gregorian_date_century__century_number', 'label': 'Converted Gregorian Date'},
             {'value': 'meta_created_datetime', 'label': 'IEDC Input Date'}
         ]
         # Numerical
@@ -504,7 +510,7 @@ class TextListView(ListView):
 
         # Reused querysets in below filters (specified here to avoid duplicate SQL queries)
         filter_queryset_languages = models.SlTextLanguage.objects.all().select_related('script')
-        filter_queryset_centuries = models.SlTextCentury.objects.all()
+        filter_queryset_centuries = models.SlTextGregorianCentury.objects.all()
 
         # Filters
         context['options_filters'] = [
@@ -561,18 +567,18 @@ class TextListView(ListView):
                     'filter_options': models.SlTextDocumentSubtype.objects.all().select_related('category')
                 },
             ],
-            # Dates
+            # Gregorian Dates
             [
                 {
-                    'filter_id': f'{filter_pre_gt}century__century_number',
+                    'filter_id': f'{filter_pre_gt}gregorian_century__century_number',
                     'filter_classes': filter_pre_gt,
-                    'filter_name': 'Date (from)',
+                    'filter_name': 'Gregorian Date (from)',
                     'filter_options': filter_queryset_centuries
                 },
                 {
-                    'filter_id': f'{filter_pre_lt}century__century_number',
+                    'filter_id': f'{filter_pre_lt}gregorian_century__century_number',
                     'filter_classes': filter_pre_lt,
-                    'filter_name': 'Date (to)',
+                    'filter_name': 'Gregorian Date (to)',
                     'filter_options': filter_queryset_centuries
                 }
             ],

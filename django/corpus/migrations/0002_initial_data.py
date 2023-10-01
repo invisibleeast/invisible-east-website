@@ -202,10 +202,10 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextDocumentSubtype.objects.create(**obj)
 
-    # SlTextCentury
+    # SlTextGregorianCentury
     # e.g. "4th Century CE, 5th Century CE, ... 21st Century CE"
     for object in range(4, 22):
-        models.SlTextCentury(
+        models.SlTextGregorianCentury(
             name=f'{ordinal_number(object)} Century CE',
             century_number=object
         ).save()
@@ -645,7 +645,6 @@ def insert_data_select_list_models(apps, schema_editor):
 
     # SlCalendar
     for obj in [
-        {'name': 'Gregorian', 'name_full': 'The Gregorian calendar'},
         {'name': 'Hijri', 'name_full': 'The Hijri calendar'},
         {'name': 'Bactrian', 'name_full': 'The calendar of the Bactrian era'}
     ]:
@@ -784,20 +783,29 @@ def insert_data_texts(apps, schema_editor):
                 # (Choices: Arabic, New Persian, Bactrian)
                 primary_language = root.split('/')[-1]
                 text_obj.primary_language = models.SlTextLanguage.objects.get(name=primary_language)
-                # century
+
+                # gregorian_date_... fields
                 try:
-                    gregorian = corresp_action.findall('date[@calendar="#Gregorian"]')[0]
-                    century = None
-                    if 'when' in gregorian.attrib:
-                        century = int(gregorian.attrib['when'][:2]) + 1
-                    elif 'notAfter' in gregorian.attrib:
-                        century = int(gregorian.attrib['notAfter'][:2]) + 1
-                    elif 'notBefore' in gregorian.attrib:
-                        century = int(gregorian.attrib['notBefore'][:2]) + 1
-                    if century:
-                        text_obj.century = models.SlTextCentury.objects.get(century_number=century)
+                    gregorian_date = corresp_action.findall('date[@calendar="#Gregorian"]')[0]
+                    gregorian_date_century = None
+                    try:
+                        text_obj.gregorian_date_text = gregorian_date.text
+                    except AttributeError:
+                        text_obj.gregorian_date_text = None
+                    if 'when' in gregorian_date.attrib:
+                        text_obj.gregorian_date_when = gregorian_date.attrib['when']
+                        gregorian_date_century = int(gregorian_date.attrib['when'][:2]) + 1
+                    if 'notBefore' in gregorian_date.attrib:
+                        text_obj.gregorian_date_range_start = gregorian_date.attrib['notBefore']
+                        gregorian_date_century = int(gregorian_date.attrib['notBefore'][:2]) + 1
+                    if 'notAfter' in gregorian_date.attrib:
+                        text_obj.gregorian_date_range_end = gregorian_date.attrib['notAfter']
+                        gregorian_date_century = int(gregorian_date.attrib['notAfter'][:2]) + 1
+                    if gregorian_date_century:
+                        text_obj.gregorian_date_century = models.SlTextGregorianCentury.objects.get(century_number=gregorian_date_century)
                 except IndexError:
                     pass
+
                 # summary_of_content
                 text_obj.summary_of_content = '\n\n'.join(
                     [summary_of_content.text for summary_of_content in profile_desc.findall('particDesc/p')]
@@ -914,31 +922,33 @@ def insert_data_texts(apps, schema_editor):
                 for date in corresp_action.findall('date'):
                     # Define values
                     calendar = date.attrib['calendar'].replace('#', '')
-                    try:
-                        date_when = date.attrib['when']
-                    except KeyError:
-                        date_when = None
-                    try:
-                        date_range_start = date.attrib['notBefore']
-                    except KeyError:
-                        date_range_start = None
-                    try:
-                        date_range_end = date.attrib['notAfter']
-                    except KeyError:
-                        date_range_end = None
-                    try:
-                        date_text = date.text
-                    except AttributeError:
-                        date_text = None
-                    # Create the object
-                    models.TextDate.objects.create(
-                        text=text_obj,
-                        calendar=models.SlCalendar.objects.get_or_create(name=calendar)[0],
-                        date=date_when,
-                        date_range_start=date_range_start,
-                        date_range_end=date_range_end,
-                        date_text=date_text
-                    )
+                    # Ignore 'Gregorian' calendar, as this is inserted directly within Text above
+                    if calendar != 'Gregorian':
+                        try:
+                            date_when = date.attrib['when']
+                        except KeyError:
+                            date_when = None
+                        try:
+                            date_range_start = date.attrib['notBefore']
+                        except KeyError:
+                            date_range_start = None
+                        try:
+                            date_range_end = date.attrib['notAfter']
+                        except KeyError:
+                            date_range_end = None
+                        try:
+                            date_text = date.text
+                        except AttributeError:
+                            date_text = None
+                        # Create the object
+                        models.TextDate.objects.create(
+                            text=text_obj,
+                            calendar=models.SlCalendar.objects.get_or_create(name=calendar)[0],
+                            date_text=date_text,
+                            date=date_when,
+                            date_range_start=date_range_start,
+                            date_range_end=date_range_end,
+                        )
 
                 # Text Folios
                 # Loop through original (i.e. transcription) texts
