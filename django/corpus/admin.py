@@ -105,6 +105,9 @@ admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
 admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
 admin.site.register(models.SlTextFolioTagCategory, GenericSlAdminView)
 admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
+admin.site.register(models.SlSealDescription, GenericSlAdminView)
+admin.site.register(models.SlSealColour, GenericSlAdminView)
+admin.site.register(models.SlSealImprint, GenericSlAdminView)
 admin.site.register(models.SlPersonGender, GenericSlAdminView)
 admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
 admin.site.register(models.SlM2MTextToTextRelationshipType, GenericSlAdminView)
@@ -191,6 +194,35 @@ class TextFolioStackedInline(admin.StackedInline):
         'transliteration'
     )
     readonly_fields = ('image_small', 'image_medium', 'image_large', 'image_preview')
+
+
+class TextSealStackedInline(admin.StackedInline):
+    """
+    A subform/inline form for Seal to be used in TextAdminView
+    """
+    model = models.Seal
+    extra = 0
+    classes = ['collapse']
+    show_change_link = True
+    fields = (
+        'type',
+        'details',
+        'inscription',
+        'measurements',
+        'descriptions',
+        'colours',
+        'imprints',
+        'image',
+        'image_preview',
+    )
+    readonly_fields = ('image_small', 'image_preview')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all many to many fields to display the filter_horizontal widget
+        self.filter_horizontal = get_manytomany_fields(self.model)
+        # Set all foreign key fields to display the autocomplete widget
+        self.autocomplete_fields = get_foreignkey_fields(self.model)
 
 
 class M2MPersonToPerson1Inline(admin.TabularInline):
@@ -358,7 +390,8 @@ class TextAdminView(GenericAdminView):
         PersonInTextForTextTabularInline,
         TextDateStackedInline,
         TextRelatedPublicationStackedInline,
-        TextFolioStackedInline
+        TextFolioStackedInline,
+        TextSealStackedInline
     )
 
     def get_readonly_fields(self, request, obj):

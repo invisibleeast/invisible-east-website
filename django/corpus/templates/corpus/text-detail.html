@@ -31,6 +31,7 @@
             {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
             {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
             {% if toponym_tags.count %}<li id="map"><i class="fas fa-map"></i> Map</li>{% endif %}
+            {% if object.seals %}<li id="seals"><i class="fas fa-stamp"></i> Seals</li>{% endif %}
         </ul>
 
         <article class="tabbed" id="corpus-text-detail-content-details">
@@ -213,6 +214,46 @@
                     This map displays the locations of toponyms tagged within this corpus text. Clicking on a pin on the map will display links to all other corpus texts at these locations. You can also view <a href="{% url 'corpus:map-taggedtexts' %}">a full map of all tagged texts</a>.
                 </p>
                 {% include "corpus/snippets/leaflet.html" with map_id='corpus-text-detail-content-map-taggedtexts' %}
+            </article>
+        {% endif %}
+
+        {% if object.seals %}
+            <article class="tabbed" id="corpus-text-detail-content-seals">
+                <div class="tabbed-title">Seals</div>
+                {% for seal in object.seals.all %}
+                    <div class="corpus-text-detail-content-seals">
+                        <!-- Title -->
+                        <div class="corpus-text-detail-content-seals-title">Seal {{ forloop.counter }}</div>
+                        <!-- Image -->
+                        {% if seal.image %}
+                            <a href="{{ seal.image.url }}" class="corpus-text-detail-content-seals-imagecontainer">
+                                <img src="{{ seal.image_small.url }}" alt="Photograph of this seal">
+                            </a>
+                        {% endif %}
+                        <!-- Data -->
+                        {% if seal.type %}
+                            <label>Type</label><div>{{ seal.type }}</div>
+                        {% endif %}
+                        {% if seal.details %}
+                            <label>Details</label><div>{{ seal.details | safe | linebreaks }}</div>
+                        {% endif %}
+                        {% if seal.inscription %}
+                            <label>Inscription</label><div>{{ seal.inscription | safe | linebreaks }}</div>
+                        {% endif %}
+                        {% if seal.measurements %}
+                            <label>Measurements</label><div>{{ seal.measurements | safe | linebreaks }}</div>
+                        {% endif %}
+                        {% if seal.descriptions_html_list %}
+                            <label>Descriptions</label><div>{{ seal.descriptions_html_list | safe }}</div>
+                        {% endif %}
+                        {% if seal.colours_html_list %}
+                            <label>Colours</label><div>{{ seal.colours_html_list | safe }}</div>
+                        {% endif %}
+                        {% if seal.imprints_html_list %}
+                            <label>Seal Imprints</label><div>{{ seal.imprints_html_list | safe }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </article>
         {% endif %}
 

@@ -185,6 +185,10 @@ class TextDetailView(DetailView):
                 )
             },
             {
+                'label': 'IEDC ID',
+                'value': self.object.id
+            },
+            {
                 'label': 'Classification',
                 'value': self.object.admin_classification.name_full
             },
@@ -379,7 +383,7 @@ class TextListView(ListView):
             'century',
             'collection',
         ).prefetch_related(
-            'text_folios'
+            'text_folios',
         )
 
         # Search
@@ -488,7 +492,7 @@ class TextListView(ListView):
         context['options_sortby_alphabetical'] = [
             {'value': 'shelfmark', 'label': 'Shelfmark'},
             {'value': 'century__century_number', 'label': 'Date'},
-            {'value': 'meta_created_datetime', 'label': 'IE Input Date'}
+            {'value': 'meta_created_datetime', 'label': 'IEDC Input Date'}
         ]
         # Numerical
         context['options_sortby_numerical'] = [

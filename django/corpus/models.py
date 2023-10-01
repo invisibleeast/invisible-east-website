@@ -101,6 +101,18 @@ def image_is_wider_than_tall(image_field):
             pass
 
 
+def queryset_to_html_list(queryset):
+    """
+    Returns a HTML list element (i.e. <ul></ul>), with each obj in queryset as a <li> item
+    """
+    if len(queryset):
+        html = '<ul>'
+        for obj in queryset:
+            html += f'<li>{str(obj)}</li>'
+        html += '</ul>'
+        return html
+
+
 #
 # 2. Select List models (all inherit from above SlAbstract class, with some extending with additional fields, etc.)
 #
@@ -370,6 +382,30 @@ class SlPersonGender(SlAbstract):
     """
     A gender of a person.
     E.g. 'male', 'female'
+    """
+    pass
+
+
+class SlSealDescription(SlAbstract):
+    """
+    A description/tag of a seal.
+    E.g. 'bearded', 'stag'
+    """
+    pass
+
+
+class SlSealColour(SlAbstract):
+    """
+    A colour of a seal.
+    E.g. 'red', 'orange'
+    """
+    pass
+
+
+class SlSealImprint(SlAbstract):
+    """
+    A category/imprint of a seal.
+    E.g. 'animals', 'busts'
     """
     pass
 
@@ -759,7 +795,8 @@ To manually override an automatic line number simply:
         return f'{self.text}: Folio ({self.name_short})'
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # Must save now, so image is saved before working with it
+        # Must save now, so image is saved before working with it
+        super().save(*args, **kwargs)
 
         # Create small, medium, and large versions of the original image
         # Update the object (must use update() not save() to avoid unique ID error)
@@ -771,7 +808,7 @@ To manually override an automatic line number simply:
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
-        verbose_name = 'Text Folio (including Transcription, Translation, Images, etc.)'
+        verbose_name = 'Text Folio'
         verbose_name_plural = 'Text Folios (including Transcription, Translation, Images, etc.)'
 
 
@@ -862,6 +899,56 @@ class PersonInText(models.Model):
 
     def __str__(self):
         return f'{self.text.title}: {self.person.name} ({self.person_role_in_text.name})'
+
+
+class Seal(models.Model):
+    """
+    Lerner Seals
+    """
+
+    related_name = 'seals'
+
+    text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
+    type = models.CharField(max_length=1000, blank=True, null=True)
+    details = models.TextField(blank=True, null=True)
+    inscription = models.TextField(blank=True, null=True)
+    measurements = models.CharField(max_length=1000, blank=True, null=True, verbose_name='measurements (mm)', help_text='e.g. 28 x 23 x 16; 13 x 12')
+    descriptions = models.ManyToManyField('SlSealDescription', blank=True)
+    colours = models.ManyToManyField('SlSealColour', blank=True)
+    imprints = models.ManyToManyField('SlSealImprint', blank=True)
+    image = models.ImageField(upload_to='corpus/seals__original', blank=True, null=True)
+    image_small = models.ImageField(upload_to='corpus/seals__small', blank=True, null=True)
+
+    @property
+    def descriptions_html_list(self):
+        return queryset_to_html_list(self.descriptions.all())
+
+    @property
+    def colours_html_list(self):
+        return queryset_to_html_list(self.colours.all())
+
+    @property
+    def imprints_html_list(self):
+        return queryset_to_html_list(self.imprints.all())
+
+    @property
+    def image_preview(self):
+        return mark_safe(f'<img src="{self.image_small.url}" alt="image of this seal" />')
+
+    def save(self, *args, **kwargs):
+        # Must save now, so image is saved before working with it
+        super().save(*args, **kwargs)
+
+        # Create small versions of the original image
+        # Update the object (must use update() not save() to avoid unique ID error)
+        Seal.objects.filter(id=self.id).update(
+            image_small=image_compress(self.image, self.image_small, 1000)
+        )
+
+    class Meta:
+        ordering = ['text', 'type', 'id']
+        verbose_name = 'Seal'
+        verbose_name_plural = 'Seals (only applicable to Bactrian texts)'
 
 
 # Many to Many Relationships

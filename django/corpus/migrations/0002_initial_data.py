@@ -658,6 +658,68 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlPersonGender.objects.create(name=name)
 
+    # SlSealDescription
+    for name in [
+        'bearded',
+        'cross',
+        'griffin',
+        'bird',
+        'inscription',
+        'fingernail',
+        'camel',
+        'stag',
+        'boarbeardless',
+        'standing',
+        'sitting',
+        'hunt',
+        'diadem',
+        'winged',
+        'serpent',
+        'hydra',
+        'swastika',
+        'tamga',
+        'trident',
+        'peacock',
+        'headdress',
+        'inscription',
+        'pearl',
+        'necklace',
+        'earring(s)',
+        'lion',
+        'bull',
+        'hare',
+        'wolf'
+    ]:
+        models.SlSealDescription.objects.create(name=name)
+
+    # SlSealColour
+    for name in [
+        'black',
+        'brown',
+        'dun',
+        'grey',
+        'orange',
+        'pink',
+        'red',
+        'tan',
+        'white',
+        'yellow',
+    ]:
+        models.SlSealColour.objects.create(name=name)
+
+    # SlSealImprint
+    for name in [
+        'complete male figure',
+        'complete female figure',
+        'animals',
+        'busts',
+        'fingernails',
+        'inscriptions',
+        'symbols',
+        'indeterminate'
+    ]:
+        models.SlSealImprint.objects.create(name=name)
+
 
 def insert_data_texts(apps, schema_editor):
     """
