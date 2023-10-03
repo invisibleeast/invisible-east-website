@@ -145,7 +145,7 @@ CKEDITOR_CONFIGS = {
                     '-',
                     'Undo', 'Redo',
                     '-',
-                    'Maximize',
+                    'Maximize', 'Table'
                 ]
             },
         ],

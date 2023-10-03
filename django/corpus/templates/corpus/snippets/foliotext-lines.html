@@ -1,6 +1,13 @@
 {% for line in trans_text_lines %}
     <div>
 
+        {% if line.table %}
+            <div>
+                <div>Witnesses</div>
+                {{ line.table | safe }}
+            </div>
+        {% endif %}
+
         <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{% if line.trans == 'transcription' %}{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}{% endif %}>
             <!-- Put line number on left if not rtl (so ltr) -->
             {% if not line.rtl %}

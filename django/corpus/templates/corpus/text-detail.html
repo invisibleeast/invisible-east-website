@@ -403,7 +403,10 @@
 <script>
     $(document).ready(function(){
         {% include "corpus/js/detail.js" %}
-        {% include "corpus/js/map.js" with map_id='corpus-text-detail-content-map-taggedtexts' tags_list=toponym_tags %}
+
+        {% if toponym_tags %}
+            {% include "corpus/js/map.js" with map_id='corpus-text-detail-content-map-taggedtexts' tags_list=toponym_tags %}
+        {% endif %}
     });
 </script>
 
