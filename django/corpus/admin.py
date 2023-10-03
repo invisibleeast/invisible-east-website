@@ -415,7 +415,7 @@ class TextAdminView(GenericAdminView):
             'meta_lastupdated_datetime',
         ]
         # Only allow reviewer or approver to add/remove approval
-        if obj and (obj.public_review_reviewer and request.user == obj.public_review_reviewer) or (obj.public_review_approved_by and request.user == obj.public_review_approved_by):
+        if (obj and obj.public_review_reviewer and request.user == obj.public_review_reviewer) or (obj and obj.public_review_approved_by and request.user == obj.public_review_approved_by):
             readonly_fields.remove('public_review_approved')
         # Allow only data entry, principal editor, or the reviewer to modify review fields
         if obj and request.user in [obj.admin_principal_editor, obj.admin_principal_data_entry_person, obj.public_review_reviewer] and not obj.public_review_approved:
