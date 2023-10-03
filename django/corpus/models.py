@@ -580,7 +580,7 @@ class Text(models.Model):
 
     @property
     def gregorian_date_full(self):
-        str = f'The Gregorian calendar: {self.gregorian_date_text}' 
+        str = f'The Gregorian calendar: {self.gregorian_date_text}'
         if self.gregorian_date:
             str += f' ({self.gregorian_date})'
         if len(self.gregorian_date_range_str):
@@ -689,7 +689,7 @@ class TextDate(models.Model):
             return ''
 
     def __str__(self):
-        str = f'{self.calendar.name_full}: {self.date_text}' 
+        str = f'{self.calendar.name_full}: {self.date_text}'
         if self.date:
             str += f' ({self.date})'
         if len(self.date_range_str):
