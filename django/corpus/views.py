@@ -775,6 +775,7 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             image_part_top = request_post_get_safe(request, 'image_part_top')
             image_part_width = request_post_get_safe(request, 'image_part_width')
             image_part_height = request_post_get_safe(request, 'image_part_height')
+            delete_image_part = request_post_get_safe(request, 'delete_image_part')
 
             # Get the TextFolio object and specified trans field
             text_folio_id = request_post_get_safe(request, 'textfolio')
@@ -789,11 +790,21 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             # If the line being drawn is from the witness table (so is a <tr> tag), update the index to account for normal li lines above it
             elif line_html_tag == 'tr':
                 line_index = line_index - len(text_folio_obj_trans_field_html.find_all('li'))
+
+            # Manage (add/edit/delete) the data for this trans line
             trans_line = text_folio_obj_trans_field_html.find_all(line_html_tag)[line_index]
-            trans_line['data-imagepartleft'] = image_part_left
-            trans_line['data-imageparttop'] = image_part_top
-            trans_line['data-imagepartwidth'] = image_part_width
-            trans_line['data-imagepartheight'] = image_part_height
+            # If the image part drawing is being deleted submitDrawLineOnImageForm(deleteImagePartDrawing=false);
+            if delete_image_part:
+                del trans_line['data-imagepartleft']
+                del trans_line['data-imageparttop']
+                del trans_line['data-imagepartwidth']
+                del trans_line['data-imagepartheight']
+            # If the image part drawing is being added/edited
+            else:
+                trans_line['data-imagepartleft'] = image_part_left
+                trans_line['data-imageparttop'] = image_part_top
+                trans_line['data-imagepartwidth'] = image_part_width
+                trans_line['data-imagepartheight'] = image_part_height
 
             setattr(text_folio_obj, trans_field, str(text_folio_obj_trans_field_html))
             text_folio_obj.save()

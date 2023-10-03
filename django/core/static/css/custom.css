@@ -1220,7 +1220,7 @@ div.folio-lines-line.active {
 
 .folio-lines-line-text {
     display: inline-block;
-    width: calc(100% - 7em);
+    width: calc(100% - 9em);
     vertical-align: top;
 }
 
@@ -1231,11 +1231,17 @@ div.folio-lines-line.active {
 
 .folio-lines-line.active .folio-lines-line-draw {
     display: inline-block;
-    width: 2em;
+    width: 4em;
 }
 
 .folio-lines-line.active .folio-lines-line-draw i {
     font-size: 0.9em;
+}
+
+.folio-lines-line.active .folio-lines-line-draw-delete {
+    margin-left: 1em;
+    cursor: pointer;
+    color: var(--color-red);
 }
 
 .folio-lines-line-text var.active {
@@ -1283,6 +1289,10 @@ div.folio-lines-line.active {
 .folio-witnesses-table th {
     border: none;
     vertical-align: top;
+}
+
+.folio-witnesses-table td.folio-lines-line-draw-container {
+    width: 4em;
 }
 
 .folio-witnesses-table tr.folio-lines-line.active {

@@ -232,9 +232,49 @@ transFields.forEach(function(transField){
 // Ensure witness table has correct content (e.g. append the drawing checkbox if relevant)
 if ($('.folio-lines-line-draw').length){
     $('tr.folio-lines-line').each(function(){
-        $(this).append(`<td><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this witness line on image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></td>`);
+        $(this).append(`<td class="folio-lines-line-draw-container"><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this witness line on image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></td>`);
     });
 }
+
+// Add a delete drawing button to all folio-lines-line that have an existing drawing
+$('.folio-lines-line').each(function(){
+    if (typeof $(this).attr('data-imagepartheight') !== 'undefined') $(this).find('.folio-lines-line-draw').append(' <i class="folio-lines-line-draw-delete fas fa-times-circle" title="Delete the drawing of this line on the image"></i>')
+});
+
+function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
+    if ($('.folio-lines-line.active').length){
+        let form = $('article.tabbed.active #corpus-text-detail-trans-drawlineonimage-form');
+        // Set text folio
+        let textFolio = $('#corpus-text-detail-images-controls-chooseimage select').val();
+        form.find('input[name="textfolio"]').val(textFolio);
+        // Set line index
+        let line_index = $('.folio-lines-line.active').attr('data-lineindex');
+        form.find('input[name="line_index"]').val(line_index);
+        // Set line html tag (e.g. li for normal lines or tr for witnesses)
+        let line_html_tag = $('.folio-lines-line.active').get(0).tagName.toLowerCase();
+        form.find('input[name="line_html_tag"]').val(line_html_tag);
+
+        // Either add image part position data or delete the image part
+        if (deleteImagePartDrawing){
+            // Set delete image part as true
+            form.find('input[name="delete_image_part"]').val(true);
+        }
+        else {
+            // Set image part position data
+            form.find('input[name="image_part_left"]').val(newTextFolioImagePartPosition.left);
+            form.find('input[name="image_part_top"]').val(newTextFolioImagePartPosition.top);
+            form.find('input[name="image_part_width"]').val(newTextFolioImagePartPosition.width);
+            form.find('input[name="image_part_height"]').val(newTextFolioImagePartPosition.height);
+        }
+        // Submit the form
+        form.submit();
+    }
+}
+
+// Delete a drawing of a line 
+$('body').on('click', '.folio-lines-line-draw-delete', function(){
+    submitDrawLineOnImageForm(deleteImagePartDrawing=true);
+});
 
 // Hovering over a line of trans text will highlight it in the trans text section and on the image
 $('body').on('mouseover', '.folio-lines-line[data-trans="transcription"], .related-lines-line[data-trans="transcription"], .corpus-text-detail-images-image-parts-part', function(){
@@ -598,29 +638,10 @@ $('.corpus-text-detail-images-image').on('mouseup', function(){
         isDrawingNewTextFolioImagePart = false;
 
         // drawlineonimage form
-        if ($('.folio-lines-line-draw-start.active').length){
-            let form = $('article.tabbed.active .corpus-text-detail-trans-drawlineonimage-form');
-            // Set text folio
-            let textFolio = $('#corpus-text-detail-images-controls-chooseimage select').val();
-            form.find('input[name="textfolio"]').val(textFolio);
-            // Set line index
-            let line_index = $('.folio-lines-line.active').attr('data-lineindex');
-            form.find('input[name="line_index"]').val(line_index);
-            // Set line html tag (e.g. li for normal lines or tr for witnesses)
-            let line_html_tag = $('.folio-lines-line.active').get(0).tagName.toLowerCase();
-            alert(line_html_tag)
-            form.find('input[name="line_html_tag"]').val(line_html_tag);
-            // Set image part position data
-            form.find('input[name="image_part_left"]').val(newTextFolioImagePartPosition.left);
-            form.find('input[name="image_part_top"]').val(newTextFolioImagePartPosition.top);
-            form.find('input[name="image_part_width"]').val(newTextFolioImagePartPosition.width);
-            form.find('input[name="image_part_height"]').val(newTextFolioImagePartPosition.height);
-            // Submit the form
-            form.submit();
-        }
+        submitDrawLineOnImageForm(deleteImagePartDrawing=false);
 
         // textfoliotag form
-        else if ($('#corpus-text-detail-content-tags-textfoliotag-form-draw-start').is(':checked')){
+        if ($('#corpus-text-detail-content-tags-textfoliotag-form-draw-start').is(':checked')){
             // Set image part position data
             $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_left"]').val(newTextFolioImagePartPosition.left);
             $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_top"]').val(newTextFolioImagePartPosition.top);

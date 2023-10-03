@@ -35,7 +35,7 @@
         The data is populated when drawing an image and then auto-submitted
     -->
     <div>
-        <form class="corpus-text-detail-trans-drawlineonimage-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotranslinedrawnonimage-manage' %}">
+        <form id="corpus-text-detail-trans-drawlineonimage-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotranslinedrawnonimage-manage' %}">
             {% csrf_token %}
             <input type="hidden" name="text" value="{{ object.id }}">
             <input type="hidden" name="textfolio" value="">
@@ -46,6 +46,7 @@
             <input type="hidden" name="image_part_top" value="">
             <input type="hidden" name="image_part_width" value="">
             <input type="hidden" name="image_part_height" value="">
+            <input type="hidden" name="delete_image_part" value="">
         </form>
     </div>
 </div>

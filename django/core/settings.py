@@ -137,7 +137,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'NumberedList', 'PasteText', 'Source',
+                    'NumberedList', 'Table', 'PasteText', 'Source',
                     '-',
                     'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
                     '-',
@@ -145,7 +145,7 @@ CKEDITOR_CONFIGS = {
                     '-',
                     'Undo', 'Redo',
                     '-',
-                    'Maximize', 'Table'
+                    'Maximize'
                 ]
             },
         ],
@@ -154,10 +154,11 @@ CKEDITOR_CONFIGS = {
         'format_tags': 'p;h4',
         'tabSpaces': 4,
         'height': '27em',
-        'width': '41em',
+        'width': '43em',
         'allowedContent': True,
         'entities_greek': False,
-        'entities_latin': False
+        'entities_latin': False,
+        'allowedContent': True
     }
 }
 

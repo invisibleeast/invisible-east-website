@@ -595,16 +595,7 @@ class TextFolioTagAdminView(GenericAdminView):
         'text_folio__text__shelfmark',
         'details'
     )
-    readonly_fields = (
-        'image_part_left',
-        'image_part_top',
-        'image_part_width',
-        'image_part_height',
-        'meta_created_datetime',
-        'meta_created_by',
-        'meta_lastupdated_datetime',
-        'meta_lastupdated_by'
-    )
+    readonly_fields = ('meta_created_datetime', 'meta_created_by', 'meta_lastupdated_datetime', 'meta_lastupdated_by')
 
     def save_model(self, request, obj, form, change):
         # Set meta created data (if adding a new object)
