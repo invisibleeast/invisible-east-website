@@ -155,7 +155,9 @@ CKEDITOR_CONFIGS = {
         'tabSpaces': 4,
         'height': '27em',
         'width': '41em',
-        'allowedContent': True
+        'allowedContent': True,
+        'entities_greek': False,
+        'entities_latin': False
     }
 }
 
