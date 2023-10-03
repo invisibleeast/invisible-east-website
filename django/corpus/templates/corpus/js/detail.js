@@ -229,6 +229,13 @@ transFields.forEach(function(transField){
     });
 });
 
+// Ensure witness table has correct content (e.g. append the drawing checkbox if relevant)
+if ($('.folio-lines-line-draw').length){
+    $('tr.folio-lines-line').each(function(){
+        $(this).append(`<td><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this witness line on image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></td>`);
+    });
+}
+
 // Hovering over a line of trans text will highlight it in the trans text section and on the image
 $('body').on('mouseover', '.folio-lines-line[data-trans="transcription"], .related-lines-line[data-trans="transcription"], .corpus-text-detail-images-image-parts-part', function(){
     // Add 'active' class if no others are currently active (can only have 1 at a time)
@@ -599,6 +606,10 @@ $('.corpus-text-detail-images-image').on('mouseup', function(){
             // Set line index
             let line_index = $('.folio-lines-line.active').attr('data-lineindex');
             form.find('input[name="line_index"]').val(line_index);
+            // Set line html tag (e.g. li for normal lines or tr for witnesses)
+            let line_html_tag = $('.folio-lines-line.active').get(0).tagName.toLowerCase();
+            alert(line_html_tag)
+            form.find('input[name="line_html_tag"]').val(line_html_tag);
             // Set image part position data
             form.find('input[name="image_part_left"]').val(newTextFolioImagePartPosition.left);
             form.find('input[name="image_part_top"]').val(newTextFolioImagePartPosition.top);
@@ -628,6 +639,7 @@ $('.folio-lines-line').each(function(){
     let folio = $(this).attr('data-folio');
     let lineIndex = $(this).attr('data-lineindex');
     let lineNumbers = $(this).attr('data-linenumbers');
+    let lineNumbersLabel = (lineNumbers ? `<label>Line ${lineNumbers}</label>` : '');
     let trans = $(this).attr('data-trans');
     let imagePartLeft = $(this).attr('data-imagepartleft');
     let imagePartTop = $(this).attr('data-imageparttop');
@@ -637,7 +649,7 @@ $('.folio-lines-line').each(function(){
     // If all required data attributes provided
     if (imagePartLeft && imagePartTop && imagePartWidth && imagePartHeight){
         $(`#corpus-text-detail-images-image-${folio} .corpus-text-detail-images-image-parts`).append(
-            `<div class="corpus-text-detail-images-image-parts-part" data-folio="${folio}" data-lineindex="${lineIndex}" data-trans="${trans}" style="left: ${imagePartLeft}px; top: ${imagePartTop}px; width: ${imagePartWidth}px; height: ${imagePartHeight}px;"><label>Line ${lineNumbers}</label></div>`
+            `<div class="corpus-text-detail-images-image-parts-part" data-folio="${folio}" data-lineindex="${lineIndex}" data-trans="${trans}" style="left: ${imagePartLeft}px; top: ${imagePartTop}px; width: ${imagePartWidth}px; height: ${imagePartHeight}px;">${lineNumbersLabel}</div>`
         );
     }
 });
@@ -650,4 +662,4 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
     else if ($(this).attr('data-textfoliotag')) tab = 'tags'
     // Go to tab
     if (tab) $(`#corpus-text-detail-content-tabs li#${tab}:not(.active)`).trigger('click');
-})
+});

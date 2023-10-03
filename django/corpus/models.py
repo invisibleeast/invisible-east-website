@@ -826,6 +826,7 @@ To manually override an automatic line number simply:
                     'text': "".join([str(t) for t in line.contents])
                 })
 
+            # Build witnesses table HTML
             if '<table' in text_field:
                 table = text_as_html.find('table')
                 for tr_index, tr in enumerate(table.find_all('tr')):
@@ -834,7 +835,7 @@ To manually override an automatic line number simply:
                     tr['data-lineindex'] = tr_index + len(lines)
                     tr['data-trans'] = field_name
                     tr['data-folio'] = self.id
-                table_html = f'<table>{"".join([str(tag) for tag in table])}</table>'
+                table_html = f'<table class="folio-witnesses-table">{"".join([str(tag) for tag in table])}</table>'
                 lines_data.append({'table': table_html})
 
             return lines_data

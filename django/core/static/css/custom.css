@@ -1205,7 +1205,7 @@ main section {
     border: 3px solid transparent;
 }
 
-.folio-lines-line.active {
+div.folio-lines-line.active {
     border: 3px solid var(--color-primary);
 }
 
@@ -1259,6 +1259,34 @@ main section {
 
 .related-lines-line.active {
     border: 3px solid var(--color-primary);
+}
+
+.folio-witnesses {
+    margin-top: 2em;
+    padding: 0 0.5em;
+}
+
+.folio-witnesses-title {
+    font-weight: 600;
+    font-size: 1.2em;
+    color: var(--color-primary);
+    margin-bottom: 0.5em;
+}
+
+.folio-witnesses-table {
+    border-collapse: collapse;
+    border-spacing: 1em;
+    width: 100%;
+}
+
+.folio-witnesses-table td,
+.folio-witnesses-table th {
+    border: none;
+    vertical-align: top;
+}
+
+.folio-witnesses-table tr.folio-lines-line.active {
+    outline: 3px solid var(--color-primary);
 }
 
 .corpus-text-detail-content-seals {

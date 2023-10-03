@@ -769,7 +769,8 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             # Get data from request
             text = request_post_get_safe(request, 'text')
             trans_field = request_post_get_safe(request, 'trans_field')
-            line_index = request_post_get_safe(request, 'line_index')
+            line_index = int(request_post_get_safe(request, 'line_index'))
+            line_html_tag = request_post_get_safe(request, 'line_html_tag')
             image_part_left = request_post_get_safe(request, 'image_part_left')
             image_part_top = request_post_get_safe(request, 'image_part_top')
             image_part_width = request_post_get_safe(request, 'image_part_width')
@@ -782,7 +783,13 @@ class TextFolioTransLineDrawnOnImageManageView(View):
 
             # Use BS to add data attributes to the chosen li element (i.e. the line of text being drawn)
             text_folio_obj_trans_field_html = BeautifulSoup(text_folio_obj_trans_field, features="html.parser")
-            trans_line = text_folio_obj_trans_field_html.find_all('li')[int(line_index)]
+            # Convert line tags from div to li (stored as li in database but presented as divs on public interface)
+            if line_html_tag == 'div':
+                line_html_tag = 'li'
+            # If the line being drawn is from the witness table (so is a <tr> tag), update the index to account for normal li lines above it
+            elif line_html_tag == 'tr':
+                line_index = line_index - len(text_folio_obj_trans_field_html.find_all('li'))
+            trans_line = text_folio_obj_trans_field_html.find_all(line_html_tag)[line_index]
             trans_line['data-imagepartleft'] = image_part_left
             trans_line['data-imageparttop'] = image_part_top
             trans_line['data-imagepartwidth'] = image_part_width
@@ -794,7 +801,8 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             # Return the user to the current page
             return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[text])}?tab={trans_field}")
 
-        except Exception:
+        except Exception as e:
+            print(e)
             return fail_response
 
 
