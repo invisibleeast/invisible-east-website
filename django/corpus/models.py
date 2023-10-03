@@ -723,7 +723,7 @@ class TextFolio(models.Model):
     """
 
     related_name = 'text_folios'
-    text_folio_trans_help_text = rich_text_field_help_text + """<br>
+    text_folio_trans_help_text = rich_text_field_help_text + """<br><br>Lines of text:<br>
 To start creating lines of text click the 'numbered list' button
 <br>
 To manually override an automatic line number simply:
@@ -733,6 +733,15 @@ To manually override an automatic line number simply:
 &nbsp;&nbsp;&nbsp;&nbsp;2. Add a value to the <em>&lt;li&gt;</em>. E.g. change <em>&lt;li&gt;</em> to <em>&lt;li value="4"&gt;</em>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;3. If last line is a range (e.g. 8-9) add <em>'data-range-end'</em>. E.g. <em>&lt;li data-range-end="9"&gt;</em>
+<br>
+<br>
+Witnesses table:
+<br>
+To add a Witnesses table (only relevant to Legal Documents), click on the table button
+<br>
+Ensure the Witnesses table is inserted below the list of lines of text and that you only add 1 table (additional tables will be ignored)
+<br>
+You can edit an existing Witnesses table (e.g. add/remove a row/column) by right clicking the table
 """
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
