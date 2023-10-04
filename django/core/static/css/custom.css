@@ -1047,17 +1047,32 @@ main section {
     max-width: 60em;
 }
 
+#corpus-text-detail-content-tags-textfoliotag-form-show {
+    position: fixed;
+    bottom: 0;
+    left: 1em;
+    background: var(--color-secondary);
+    padding: 0.7em 1.3em 0.5em 1.3em;
+    border-radius: 0.5em 0.5em 0 0;
+    font-weight: 400;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
 #corpus-text-detail-content-tags-textfoliotag-form {
     display: none;
     position: fixed;
     bottom: 0;
+    left: 1em;
+    width: 40em;
+    max-width: calc(100% - 2em);
     background: var(--color-secondary-light);
     padding: 1em;
     z-index: 1000;
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form-close {
-    float: right;
+    float: left;
     cursor: pointer;
     color: rgba(0, 0, 0, 0.7);
     font-size: 1.3em;
@@ -1074,7 +1089,11 @@ main section {
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form div {
-    margin: 0.7em 0;
+    margin: 0.3em 0;
+}
+
+#corpus-text-detail-content-tags-textfoliotag-form div.fieldgroup {
+    margin: 1.5em 0;
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form label {
@@ -1096,12 +1115,14 @@ main section {
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form button {
-    width: 100%;
+    display: block;
+    width: fit-content;
+    margin: 1.3em auto 0 auto;
     border: none;
-    border-radius: 0.4em;
+    border-radius: 0.3em;
     background: var(--color-secondary);
     color: rgba(0, 0, 0, 0.7);
-    padding: 0.8em;
+    padding: 0.8em 3em;
 }
 
 #corpus-text-detail-content-tags-textfoliotag-form button:hover {

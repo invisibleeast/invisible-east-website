@@ -114,31 +114,56 @@ $('.corpus-text-detail-folio-select').on('change', function(){
 // Tags
 //
 
-// Show/hide Tag Manager form
-$('.corpus-text-detail-content-tags-showtagmanager').on('change', function(){
-    let tagManager = $('#corpus-text-detail-content-tags-textfoliotag-form');
-    if ($(this).is(':checked')){
-        tagManager.slideDown();
-        $('.corpus-text-detail-content-tags-showtagmanager').prop('checked', true);
-    }
-    else {
-        tagManager.slideUp();
-        $('.corpus-text-detail-content-tags-showtagmanager').prop('checked', false);
-    }
-}).trigger('change');
+// Show Tag Manager form
+$('#corpus-text-detail-content-tags-textfoliotag-form-show').on('click', function(){
+    $('#corpus-text-detail-content-tags-textfoliotag-form').slideDown();
+});
 
-// Hide the Tag Manager form
+// Hide Tag Manager form
 $('#corpus-text-detail-content-tags-textfoliotag-form-close').on('click', function(){
-    // Uncheck the first instance of the 'show tag manager' checkbox and trigger its above change function
-    $('.corpus-text-detail-content-tags-showtagmanager').first().prop('checked', false).trigger('change');
+    $('#corpus-text-detail-content-tags-textfoliotag-form').slideUp();
 });
 
 // Show/hide tags based on their category
 $('#corpus-text-detail-content-tags-textfoliotag-form select[name="category"]').on('change', function(){
     let tagExistingSelect = $('#corpus-text-detail-content-tags-textfoliotag-form select[name="tag_existing"]');
-    tagExistingSelect.val('').trigger('change');
-    tagExistingSelect.find('option:not(:first)').hide();
-    tagExistingSelect.find(`option[data-tagcategory="${$(this).val()}"]`).show();
+    let tagSearch = $('#corpus-text-detail-content-tags-textfoliotag-form input[name="tag_search"]');
+    // If a category is chosen, show only options belonging to it
+    if ($(this).val() !== ''){
+        tagExistingSelect.val('').trigger('change');
+        tagExistingSelect.find('option:not(:first)').hide();
+        tagExistingSelect.find(`option[data-tagcategory="${$(this).val()}"]`).show();
+        tagSearch.parent().hide();
+    }
+    // If no category is chosen, show all options
+    else {
+        tagExistingSelect.find(`option`).show();
+        tagSearch.parent().show();
+    }
+    
+}).trigger('change');
+
+// Search for an existing tag in the tag manager
+$('#corpus-text-detail-content-tags-textfoliotag-form input[name="tag_search"]').on('input', function(){
+    let tagSearchVal = $(this).val().toUpperCase();
+    let tagCategory = $('#corpus-text-detail-content-tags-textfoliotag-form select[name="category"]');
+    let tagExisting = $('#corpus-text-detail-content-tags-textfoliotag-form select[name="tag_existing"]');
+    let tagNew = $('#corpus-text-detail-content-tags-textfoliotag-form input[name="tag_new"]');
+
+    // Filter the options of existing tags
+    if (tagSearchVal !== ''){
+        tagCategory.val('').parent().hide();
+        tagExisting.find('option:not(hidden)').each(function(){
+            if ($(this).text().toUpperCase().indexOf(tagSearchVal) != -1) $(this).show();
+            else $(this).hide();
+        });
+        tagNew.val('').parent().hide();
+    }
+    else {
+        tagNew.parent().show();
+        tagCategory.parent().show();
+        tagExisting.find('option').show();
+    }
 }).trigger('change');
 
 // Show/hide the new tag input if an existing tag is chosen
@@ -150,9 +175,16 @@ $('#corpus-text-detail-content-tags-textfoliotag-form select[name="tag_existing"
 
 // Show/hide the existing tag select if the new tag text field has content
 $('#corpus-text-detail-content-tags-textfoliotag-form input[name="tag_new"]').on('input', function(){
+    let tagSearch = $('#corpus-text-detail-content-tags-textfoliotag-form input[name="tag_search"]');
     let tagExisting = $('#corpus-text-detail-content-tags-textfoliotag-form select[name="tag_existing"]');
-    if ($(this).val() !== '') tagExisting.val('').parent().hide();
-    else tagExisting.parent().show();
+    if ($(this).val() !== ''){
+        tagExisting.val('').parent().hide();
+        tagSearch.val('').parent().hide();
+    }
+    else {
+        tagExisting.parent().show();
+        tagSearch.parent().show();
+    }
 }).trigger('change');
 
 // Clicking on a tag when linking text will create a link to that tag
@@ -353,7 +385,7 @@ $('.corpus-text-detail-trans-linktranstexttotag').on('click', function(){
         // Go to the 'tags' tab
         $('#corpus-text-detail-content-tabs li#tags').trigger('click');
         // Show the tag manager and pass the data to its hidden field
-        $('.corpus-text-detail-content-tags-showtagmanager').prop('checked', true).trigger('change');
+        $('#corpus-text-detail-content-tags-textfoliotag-form-show').trigger('click');
         $('#corpus-text-detail-content-tags-textfoliotag-form input[name="linktranstexttotag"]').val(JSON.stringify(linkTransTextToTagData));
         // Populate content of the 'linking text to tag' box and show it
         $('#corpus-text-detail-content-tags-textfoliotag-linktranstexttotag').html(`
@@ -681,6 +713,21 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
     let tab;
     if ($(this).attr('data-trans')) tab = 'transcription'
     else if ($(this).attr('data-textfoliotag')) tab = 'tags'
+
     // Go to tab
     if (tab) $(`#corpus-text-detail-content-tabs li#${tab}:not(.active)`).trigger('click');
+
+    // Scroll to relevant element (e.g. tag or line of text) within tab
+    // Tag
+    if (tab === 'tags'){
+        $('#corpus-text-detail-content-tags').animate({
+            scrollTop: $('.corpus-text-detail-content-tags-folio-tagcategory-tag.active').first().offset().top
+        });
+    }
+    // Line of Text
+    else if (tab === 'transcription'){
+        $('#corpus-text-detail-content-transcription').animate({
+            scrollTop: $('.folio-lines-line.active').first().offset().top
+        });
+    }
 });

@@ -93,7 +93,6 @@
             <!-- Options -->
             <div class="corpus-text-detail-content-options">
                 {% include "corpus/snippets/folio-select.html" %}
-                {% include "corpus/snippets/tagmanager-show.html" %}
             </div>
 
             {% if user.is_admin %}
@@ -325,8 +324,14 @@
         </div>
     </section>{% endif %}
 
-    <!-- Tag Manager popup form (only display for admins) -->
     {% if user.is_admin %}
+
+        <!-- Tag Manager (only display for admins) -->
+        <!-- Show -->
+        <div id="corpus-text-detail-content-tags-textfoliotag-form-show">
+            <i class="fas fa-hashtag"></i> Tag Manager
+        </div>
+        <!-- Form -->
         <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}">
             <!-- Security CSRF token -->
             {% csrf_token %}
@@ -348,35 +353,50 @@
             <i id="corpus-text-detail-content-tags-textfoliotag-form-close" class="fas fa-times"></i>
 
             <!-- Title -->
-            <div id="corpus-text-detail-content-tags-textfoliotag-form-title">Tag Manager</div>
-            <!-- Tag Category -->
-            <div>
-                <label>Tag Category <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
-                <select name="category" required>
-                    {% for category in text_folio_tag_categories %}
-                        <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
+            <div id="corpus-text-detail-content-tags-textfoliotag-form-title">
+                <i class="fas fa-hashtag"></i> Tag Manager
             </div>
-            <!-- Tag (existing) -->
-            <div>
-                <label>Tag (existing) <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
-                <select name="tag_existing">
-                    <option value="">-- Please select --</option>
-                    {% for tag in text_folio_tags %}
-                        <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
+
+            <div class="fieldgroup">
+                <!-- Tag Category -->
+                <div>
+                    <label>Tag Category <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
+                    <select name="category" required>
+                        <option value="">-- Please select --</option>
+                        {% for category in text_folio_tag_categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Tag Search -->
+                <div>
+                    <label>Tag Search</label>
+                    <input type="text" name="tag_search" title="Search" placeholder="Search for an existing tag in the below list">
+                </div>
             </div>
-            <!-- Tag (new) -->
-            <div>
-                <label>Tag (new)</label>
-                <input type="text" name="tag_new" title="Tag (new)" placeholder="If no existing tag is suitable, create a new tag here">
+
+            <div class="fieldgroup">
+                <!-- Tag (existing) -->
+                <div>
+                    <label>Tag <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
+                    <select name="tag_existing">
+                        <option value="">-- Please select --</option>
+                        {% for tag in text_folio_tags %}
+                            <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Tag (new) -->
+                <div>
+                    <label><span class="hidden">Create a new tag</span></label>
+                    <input type="text" name="tag_new" title="Create a new tag" placeholder="If no existing tag is suitable, type a new tag here to create it">
+                </div>
             </div>
-            <!-- Details -->
+
+            <!-- Tag Details -->
             <div>
-                <label>Details</label>
-                <input type="text" name="details" title="Details" placeholder="Optional. Provide more details if needed">
+                <label>Tag Details</label>
+                <input type="text" name="details" title="Tag Details" placeholder="Optional. Provide more details about this tag if needed">
             </div>
             {% if object.has_image %}
                 <!-- Draw on Image -->
