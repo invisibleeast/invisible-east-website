@@ -18,7 +18,7 @@ urlpatterns = [
     path('textfoliotranslinedrawnonimage/failed/', views.TextFolioTransLineDrawnOnImageFailedTemplateView.as_view(), name='textfoliotranslinedrawnonimage-failed'),
 
     # Maps
-    path('map/tagged-texts/', views.MapTaggedTextsListView.as_view(), name='map-taggedtexts'),
+    path('map/texts/', views.MapTextsListView.as_view(), name='map-iedctoponyms'),
     path('map/find-spots/', views.MapFindSpotTemplateView.as_view(), name='map-findspots'),
     path('map/places-in-texts/', views.MapPlacesMentionedInCorpusTextsTemplateView.as_view(), name='map-placesintexts'),
 

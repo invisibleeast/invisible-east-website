@@ -13,42 +13,40 @@ L.tileLayer(
     }
 ).addTo(map);
 
-// Loop through toponym tags that have coordinates data, adding popup markers containing links to all texts
-{% for tag in tags_list %}
-    {% if tag.latitude and tag.longitude %}
+// Loop through toponyms that have coordinates data, adding popup markers containing details of each toponym (e.g. urls and links to all texts)
+{% for toponym in toponyms_list %}
+    {% if toponym.latitude and toponym.longitude %}
 
         // Start popup html with the tag name
-        var markerPopupHtml = `<div class="map-taggedtexts-popup-title">{{ tag.name }}</div>`;
+        var markerPopupHtml = `<div class="map-iedctoponyms-popup-title">{{ toponym.name }}</div>`;
 
-        // Add urls html (if exists)
-        {% if tag.urls_as_html_links %}
-            markerPopupHtml += '<div class="map-taggedtexts-popup-subtitle">Links</div>{{ tag.urls_as_html_links }}';
+        // Add alternative readings
+        {% if toponym.alternative_readings %}
+            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Alternative Readings</div>{{ toponym.alternative_readings }}';
         {% endif %}
 
-        // Loop through all Text Folio Tags and add their grandparent Text to list of texts
-        var texts = [];
-        {% for text_folio_tag in tag.text_folio_tags.all %}
-            text_obj = {
-                'id': '{{ text_folio_tag.text_folio.text.id }}',
-                'label': '{{ text_folio_tag.text_folio.text }}'
-            }
-            texts.push(text_obj);
-        {% endfor %}
+        // Add alternative pronunciations
+        {% if toponym.alternative_pronunciations %}
+            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Alternative Pronunciations</div>{{ toponym.alternative_pronunciations }}';
+        {% endif %}
 
-        // Tidy list:
-        texts = texts.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i)  // Remove duplicates
-        texts.sort((a, b) => a.label.localeCompare(b.label));  // Sort by label
+        // Add urls html (if exists)
+        {% if toponym.urls_as_html_links %}
+            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Links</div>{{ toponym.urls_as_html_links }}';
+        {% endif %}
 
-        // Add subtitle for texts, if there are any
-        if (texts.length) markerPopupHtml += '<div class="map-taggedtexts-popup-subtitle">Texts</div>';
+        // Add texts
+        {% if toponym.texts.all %}
+            // Add subtitle for texts, if there are any
+            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Texts</div>';
+            // Loop through all Texts to build list of texts
+            {% for text in toponym.texts.all %}
+                markerPopupHtml += `<a href="/corpus/{{ text.id }}/" class="map-iedctoponyms-popup-text">{{ text }}</a>`;
+            {% endfor %}
+        {% endif %}
 
-        // Create and append popup html for each text
-        texts.forEach(function(text){
-            markerPopupHtml += `<a href="/corpus/${text.id}/" class="map-taggedtexts-popup-text">${text.label}</a>`;
-        });
-
-        // Add a marker for this toponym tag on the map, with a popup containing the HTML created above
-        L.marker([{{ tag.latitude }}, {{ tag.longitude }}]).addTo(map).bindPopup(markerPopupHtml);
+        // Inject a marker for this toponym on the map, with a popup containing the HTML created above
+        L.marker([{{ toponym.latitude }}, {{ toponym.longitude }}]).addTo(map).bindPopup(markerPopupHtml);
 
     {% endif %}
 {% endfor %}

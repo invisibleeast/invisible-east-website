@@ -260,6 +260,44 @@ class SlTranslationLanguage(SlAbstract):
     pass
 
 
+class SlTextToponym(SlAbstract):
+    """
+    A toponym (aka place name) that appears in a Text
+    E.g. 'Ariz', 'Balkh'
+    """
+    alternative_readings = models.CharField(max_length=1000, blank=True, null=True)
+    alternative_pronunciations = models.CharField(max_length=1000, blank=True, null=True)
+    latitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if you want this toponym to appear on maps in the public interface.')
+    longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if you want this toponym to appear on maps in the public interface.')
+    urls = models.TextField(blank=True, null=True, help_text='Optional. Add URLs that relate to this toponym (add one URL per line). Must be a full URL e.g. "https://www.google.com"')
+
+    @property
+    def urls_as_html_links(self):
+        """
+        Converts the URLs in self.urls to html anchor/link tags
+        E.g. https://www.google.com -> <a href="https://www.google.com">https://www.google.com</a>
+        """
+        if self.urls and len(self.urls):
+            url_links = []
+            for url in self.urls.split('\n'):
+                url_clean = url.strip()
+                validator = URLValidator()
+                try:
+                    validator(url_clean)
+                    url_links.append(f'<a class="sltextfoliotag-url" href="{url_clean}">{url_clean}</a>')
+                except ValidationError as e:
+                    print(e)
+            return mark_safe('<br>'.join(url_links))
+
+    def __str__(self):
+        str = self.name
+        if self.alternative_readings:
+            str += f' ({self.alternative_readings})'
+        if self.alternative_pronunciations:
+            str += f' ({self.alternative_pronunciations})'
+        return str
+
+
 class SlTextPublication(SlAbstract):
     """
     A statement about who has published a Text
@@ -337,27 +375,6 @@ class SlTextFolioTag(SlAbstract):
     A tag of terms found in text folios
     """
     category = models.ForeignKey('SlTextFolioTagCategory', on_delete=models.RESTRICT, related_name='tags')
-    latitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if this tag can be located on a map (e.g. is a toponym)')
-    longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if this tag can be located on a map (e.g. is a toponym)')
-    urls = models.TextField(blank=True, null=True, help_text='Optional. Add URLs that relate to this tag (add one URL per line). Must be a full URL e.g. "https://www.google.com"')
-
-    @property
-    def urls_as_html_links(self):
-        """
-        Converts the URLs in self.urls to html anchor/link tags
-        E.g. https://www.google.com -> <a href="https://www.google.com">https://www.google.com</a>
-        """
-        if self.urls and len(self.urls):
-            url_links = []
-            for url in self.urls.split('\n'):
-                url_clean = url.strip()
-                validator = URLValidator()
-                try:
-                    validator(url_clean)
-                    url_links.append(f'<a class="sltextfoliotag-url" href="{url_clean}">{url_clean}</a>')
-                except ValidationError as e:
-                    print(e)
-            return mark_safe('<br>'.join(url_links))
 
     class Meta:
         ordering = [Upper('category__name'), Upper('name'), 'id']
@@ -432,6 +449,7 @@ class Text(models.Model):
     type = models.ForeignKey('SlTextType', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
     document_subtype = models.ForeignKey('SlTextDocumentSubtype', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name, help_text='If a type of Administrative or Legal is selected for this Corpus Text, please also provide the subtype')
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
+    toponyms = models.ManyToManyField('SlTextToponym', blank=True, related_name=related_name, db_index=True)
 
     # Physical Description
     writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)

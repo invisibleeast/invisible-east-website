@@ -23,7 +23,7 @@ class StaticPagesSitemap(Sitemap):
             'general:about-technical',
             'general:cookies',
             'general:accessibility',
-            'corpus:map-taggedtexts',
+            'corpus:map-iedctoponyms',
             'corpus:map-findspots',
             'corpus:map-placesintexts',
         ]

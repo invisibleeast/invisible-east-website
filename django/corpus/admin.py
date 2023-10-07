@@ -16,8 +16,8 @@ admin.site.site_header = 'Invisible East Digital Corpus: Admin Dashboard'
 
 # Three main sections:
 # 1. Reusable code
-# 2. Select List Models
-# 3. Inlines
+# 2. Inlines
+# 3. Select List Models
 # 4. Main model admin views
 
 
@@ -83,56 +83,7 @@ class GenericSlAdminView(GenericAdminView):
 
 
 #
-# 2. Select List admin views
-#
-
-# Register Select List models (most use GenericSlAdminView)
-admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
-admin.site.register(models.SlTextType, GenericSlAdminView)
-admin.site.register(models.SlTextDocumentSubtypeCategory, GenericSlAdminView)
-admin.site.register(models.SlTextGregorianCentury, GenericSlAdminView)
-admin.site.register(models.SlTextCollection, GenericSlAdminView)
-admin.site.register(models.SlTextCorpus, GenericSlAdminView)
-admin.site.register(models.SlTextClassification, GenericSlAdminView)
-admin.site.register(models.SlTextScript, GenericSlAdminView)
-admin.site.register(models.SlTextLanguage, GenericSlAdminView)
-admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
-admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
-admin.site.register(models.SlTextWritingSupportDetail, GenericSlAdminView)
-admin.site.register(models.SlTextPublication, GenericSlAdminView)
-admin.site.register(models.SlCalendar, GenericSlAdminView)
-admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
-admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
-admin.site.register(models.SlTextFolioTagCategory, GenericSlAdminView)
-admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
-admin.site.register(models.SlSealDescription, GenericSlAdminView)
-admin.site.register(models.SlSealColour, GenericSlAdminView)
-admin.site.register(models.SlSealImprint, GenericSlAdminView)
-admin.site.register(models.SlPersonGender, GenericSlAdminView)
-admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
-admin.site.register(models.SlM2MTextToTextRelationshipType, GenericSlAdminView)
-
-
-@admin.register(models.SlTextDocumentSubtype)
-class SlTextDocumentSubtypeAdminView(GenericSlAdminView):
-    """
-    Customise the SlTextDocumentSubtype, in addition to GenericSlAdminView
-    """
-    search_fields = ('id', 'name', 'category__name')
-
-
-@admin.register(models.SlTextFolioTag)
-class SlTextFolioTagAdminView(GenericSlAdminView):
-    """
-    Customise the SlTextFolioTag, in addition to GenericSlAdminView
-    """
-    list_display = ('name', 'category', 'latitude', 'longitude', 'urls_as_html_links')
-    list_filter = ('category',)
-    search_fields = ('name', 'category__name', 'urls')
-
-
-#
-# 3. Inlines
+# 2. Inlines
 #
 
 
@@ -279,6 +230,77 @@ class M2MTextToText2Inline(admin.TabularInline):
     verbose_name_plural = verbose_name
 
 
+class M2MSlToponymToTextInline(admin.TabularInline):
+    """
+    A subform/inline form for Text 1 to be used in TextAdminView
+    Data is read only, to show relationships set in the related text
+    """
+    model = models.Text.toponyms.through
+    extra = 0
+    verbose_name = 'Texts that this Toponym appears in'
+    verbose_name_plural = verbose_name
+
+
+#
+# 3. Select List admin views
+#
+
+# Register Select List models (most use GenericSlAdminView)
+admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
+admin.site.register(models.SlTextType, GenericSlAdminView)
+admin.site.register(models.SlTextDocumentSubtypeCategory, GenericSlAdminView)
+admin.site.register(models.SlTextGregorianCentury, GenericSlAdminView)
+admin.site.register(models.SlTextCollection, GenericSlAdminView)
+admin.site.register(models.SlTextCorpus, GenericSlAdminView)
+admin.site.register(models.SlTextClassification, GenericSlAdminView)
+admin.site.register(models.SlTextScript, GenericSlAdminView)
+admin.site.register(models.SlTextLanguage, GenericSlAdminView)
+admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
+admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
+admin.site.register(models.SlTextWritingSupportDetail, GenericSlAdminView)
+admin.site.register(models.SlTextPublication, GenericSlAdminView)
+admin.site.register(models.SlCalendar, GenericSlAdminView)
+admin.site.register(models.SlTextFolioSide, GenericSlAdminView)
+admin.site.register(models.SlTextFolioOpen, GenericSlAdminView)
+admin.site.register(models.SlTextFolioTagCategory, GenericSlAdminView)
+admin.site.register(models.SlPersonInTextRole, GenericSlAdminView)
+admin.site.register(models.SlSealDescription, GenericSlAdminView)
+admin.site.register(models.SlSealColour, GenericSlAdminView)
+admin.site.register(models.SlSealImprint, GenericSlAdminView)
+admin.site.register(models.SlPersonGender, GenericSlAdminView)
+admin.site.register(models.SlM2MPersonToPersonRelationshipType, GenericSlAdminView)
+admin.site.register(models.SlM2MTextToTextRelationshipType, GenericSlAdminView)
+
+
+@admin.register(models.SlTextDocumentSubtype)
+class SlTextDocumentSubtypeAdminView(GenericSlAdminView):
+    """
+    Customise the SlTextDocumentSubtype, in addition to GenericSlAdminView
+    """
+    search_fields = ('id', 'name', 'category__name')
+
+
+@admin.register(models.SlTextFolioTag)
+class SlTextFolioTagAdminView(GenericSlAdminView):
+    """
+    Customise the SlTextFolioTag, in addition to GenericSlAdminView
+    """
+    list_display = ('name', 'category')
+    list_filter = ('category',)
+    search_fields = ('name', 'category__name')
+
+
+@admin.register(models.SlTextToponym)
+class SlTextToponymAdminView(GenericSlAdminView):
+    """
+    Customise the SlTextToponym, in addition to GenericSlAdminView
+    """
+    list_display = ('name', 'alternative_readings', 'alternative_pronunciations', 'latitude', 'longitude', 'urls_as_html_links')
+    search_fields = ('name', 'alternative_readings', 'alternative_pronunciations', 'urls')
+    fields = ('name', 'alternative_readings', 'alternative_pronunciations', 'latitude', 'longitude', 'urls')
+    inlines = (M2MSlToponymToTextInline,)
+
+
 #
 # 4. Main model admin views
 #
@@ -344,6 +366,7 @@ class TextAdminView(GenericAdminView):
                 'additional_languages',
                 'type',
                 'document_subtype',
+                'toponyms',
             )
         }),
         ('Physical Description', {

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<div class="container">
+    <h2>Toponyms in the Invisible East Digital Corpus</h2>
+    <p>
+        Brief description of map
+    </p>
+</div>
+
+{% include "corpus/snippets/leaflet.html" with map_id='map-iedctoponyms' %}
+
+<script>
+$(document).ready(function(){
+    {% include "corpus/js/map.js" with map_id='map-iedctoponyms' toponyms_list=object_list %}
+});
+</script>
+
+{% endblock %}

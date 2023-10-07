@@ -30,7 +30,7 @@
             {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> Transcriptions</li>{% endif %}
             {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
             {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
-            {% if toponym_tags %}<li id="map"><i class="fas fa-map"></i> Map</li>{% endif %}
+            {% if object.toponyms.all %}<li id="map"><i class="fas fa-map"></i> Map</li>{% endif %}
             {% if object.seals.all %}<li id="seals"><i class="fas fa-stamp"></i> Seals</li>{% endif %}
         </ul>
 
@@ -206,13 +206,13 @@
             </article>
         {% endif %}
 
-        {% if toponym_tags %}
+        {% if object.toponyms.all %}
             <article class="tabbed" id="corpus-text-detail-content-map">
                 <div class="tabbed-title">Map</div>
                 <p>
-                    This map displays the locations of toponyms tagged within this corpus text. Clicking on a pin on the map will display links to all other corpus texts at these locations. You can also view <a href="{% url 'corpus:map-taggedtexts' %}">a full map of all tagged texts</a>.
+                    This map displays the the toponyms related to this corpus text. Clicking on a pin on the map will display more information about each toponym, including links to all related corpus texts. You can also view <a href="{% url 'corpus:map-iedctoponyms' %}">a full map of all toponyms within the Invisible East Digital Corpus</a>.
                 </p>
-                {% include "corpus/snippets/leaflet.html" with map_id='corpus-text-detail-content-map-taggedtexts' %}
+                {% include "corpus/snippets/leaflet.html" with map_id='corpus-text-detail-content-map-iedctoponyms' %}
             </article>
         {% endif %}
 
@@ -424,8 +424,8 @@
     $(document).ready(function(){
         {% include "corpus/js/detail.js" %}
 
-        {% if toponym_tags %}
-            {% include "corpus/js/map.js" with map_id='corpus-text-detail-content-map-taggedtexts' tags_list=toponym_tags %}
+        {% if object.toponyms.all %}
+            {% include "corpus/js/map.js" with map_id='corpus-text-detail-content-map-iedctoponyms' toponyms_list=object.toponyms.all %}
         {% endif %}
     });
 </script>

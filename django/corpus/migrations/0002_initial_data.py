@@ -522,6 +522,8 @@ def insert_data_select_list_models(apps, schema_editor):
             name=name,
             category=models.SlTextFolioTagCategory.objects.get_or_create(name='Religions')[0]
         )
+
+    # SlTextToponym
     for name in [
         # Bamiyan
         'Āhangarān, آهنگران',
@@ -638,9 +640,8 @@ def insert_data_select_list_models(apps, schema_editor):
         # PersianKhalili
         'Istīw, Istiwuy',
     ]:
-        models.SlTextFolioTag.objects.create(
+        models.SlTextToponym.objects.create(
             name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Toponyms')[0]
         )
 
     # SlCalendar

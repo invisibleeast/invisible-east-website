@@ -131,7 +131,11 @@ class TextDetailView(DetailView):
             'texts',
             'text_related_publications',
             'text_dates',
-            'persons_in_texts'
+            'toponyms',
+            Prefetch(
+                'persons_in_texts',
+                models.PersonInText.objects.all().select_related('person_role_in_text')
+            )
         )
 
         return queryset
@@ -151,16 +155,6 @@ class TextDetailView(DetailView):
         context['text_folio_tag_categories'] = models.SlTextFolioTagCategory.objects.all().prefetch_related('tags__text_folio_tags')
         context['text_folio_tags'] = models.SlTextFolioTag.objects.all().select_related('category')
         context['permalink'] = self.request.build_absolute_uri().split('?')[0]
-        context['toponym_tags'] = models.SlTextFolioTag.objects.filter(category__name='Toponyms', text_folio_tags__text_folio__text=self.object)\
-            .select_related('category').prefetch_related(
-                Prefetch(
-                    'text_folio_tags',
-                    models.TextFolioTag.objects.all().select_related(
-                        'text_folio__text__primary_language',
-                        'text_folio__text__collection',
-                    )
-                )
-            )
         context['data_items'] = [
 
             # General
@@ -215,6 +209,13 @@ class TextDetailView(DetailView):
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}document_subtype',
                     self.object.document_subtype
+                )
+            },
+            {
+                'label': 'Toponyms',
+                'value': html_details_list_items(
+                    f'{filter_pre_mm}toponyms',
+                    self.object.toponyms.all()
                 )
             },
 
@@ -541,7 +542,7 @@ class TextListView(ListView):
                     'filter_options': filter_queryset_languages
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}additional_languages',
+                    'filter_id': f'{filter_pre_mm}additional_languages',
                     'filter_name': 'Additional Languages',
                     'filter_options': filter_queryset_languages
                 },
@@ -565,6 +566,14 @@ class TextListView(ListView):
                     'filter_id': f'{filter_pre_fk}document_subtype',
                     'filter_name': 'Document Subtype',
                     'filter_options': models.SlTextDocumentSubtype.objects.all().select_related('category')
+                },
+            ],
+            # Toponyms
+            [
+                {
+                    'filter_id': f'{filter_pre_mm}toponyms',
+                    'filter_name': 'Toponyms',
+                    'filter_options': models.SlTextToponym.objects.all()
                 },
             ],
             # Gregorian Dates
@@ -654,11 +663,6 @@ class TextListView(ListView):
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_rg',
                     'filter_name': 'Religions',
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Religions')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_tp',
-                    'filter_name': 'Toponyms',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Toponyms')
                 },
             ]
         ]
@@ -825,27 +829,25 @@ class TextFolioTransLineDrawnOnImageFailedTemplateView(TemplateView):
     template_name = 'corpus/textfoliotranslinedrawnonimage-failed.html'
 
 
-class MapTaggedTextsListView(ListView):
+class MapTextsListView(ListView):
     """
-    Class based view to show a map (of SlTextFolioTag objects) list template
+    Class based view to show a map (of SlTextToponym objects) list template
     """
 
-    template_name = 'corpus/map-taggedtexts.html'
-    model = models.SlTextFolioTag
+    template_name = 'corpus/map-iedctoponyms.html'
+    model = models.SlTextToponym
 
     def get_queryset(self):
-        # Start with the initial queryset of SlTextFolioTag objects of category Toponym
-        queryset = self.model.objects.filter(category__name='Toponyms')
+        # Start with the initial queryset of SlTextToponym objects that have coordinates data
+        queryset = self.model.objects.filter(latitude__isnull=False, longitude__isnull=False)
 
         # Improve performance
-        queryset = queryset.select_related(
-            'category',
-        ).prefetch_related(
+        queryset = queryset.prefetch_related(
             Prefetch(
-                'text_folio_tags',
-                models.TextFolioTag.objects.all().select_related(
-                    'text_folio__text__primary_language',
-                    'text_folio__text__collection',
+                'texts',
+                models.Text.objects.all().select_related(
+                    'primary_language',
+                    'collection',
                 )
             )
         )
