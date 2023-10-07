@@ -787,8 +787,8 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             # Convert line tags from div to li (stored as li in database but presented as divs on public interface)
             if line_html_tag == 'div':
                 line_html_tag = 'li'
-            # If the line being drawn is from the witness table (so is a <tr> tag), update the index to account for normal li lines above it
-            elif line_html_tag == 'tr':
+            # If the line being drawn is from the witness table (so is a <td> tag), update the index to account for normal li lines above it
+            elif line_html_tag == 'td':
                 line_index = line_index - len(text_folio_obj_trans_field_html.find_all('li'))
 
             # Manage (add/edit/delete) the data for this trans line

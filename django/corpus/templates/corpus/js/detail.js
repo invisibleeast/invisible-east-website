@@ -263,8 +263,8 @@ transFields.forEach(function(transField){
 
 // Ensure witness table has correct content (e.g. append the drawing checkbox if relevant)
 if ($('.folio-lines-line-draw').length){
-    $('tr.folio-lines-line').each(function(){
-        $(this).append(`<td class="folio-lines-line-draw-container"><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this witness line on image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></td>`);
+    $('td.folio-lines-line').each(function(){
+        $(this).append(`<span class="folio-lines-line-draw-container"><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this witness line on image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></span>`);
     });
 }
 

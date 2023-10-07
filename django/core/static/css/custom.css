@@ -1312,11 +1312,17 @@ div.folio-lines-line.active {
     vertical-align: top;
 }
 
-.folio-witnesses-table td.folio-lines-line-draw-container {
+.folio-witnesses-table span.folio-lines-line-draw-container {
     width: 4em;
+    display: inline-block;
+    margin-left: 1em;
 }
 
-.folio-witnesses-table tr.folio-lines-line.active {
+.folio-witnesses-table td.folio-lines-line {
+    padding: 0.3em;
+}
+
+.folio-witnesses-table td.folio-lines-line.active {
     outline: 3px solid var(--color-primary);
 }
 

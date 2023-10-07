@@ -838,12 +838,14 @@ You can edit an existing Witnesses table (e.g. add/remove a row/column) by right
             # Build witnesses table HTML
             if '<table' in text_field:
                 table = text_as_html.find('table')
-                for tr_index, tr in enumerate(table.find_all('tr')):
-                    tr['class'] = 'folio-lines-line'
-                    tr['data-linenumbers'] = ''
-                    tr['data-lineindex'] = tr_index + len(lines)
-                    tr['data-trans'] = field_name
-                    tr['data-folio'] = self.id
+                # Each <td> tag in table can be drawn on image, so need to store additional data for each td cell in table
+                for td_index, td in enumerate(table.find_all('td')):
+                    td['class'] = 'folio-lines-line'
+                    td['data-linenumbers'] = ''
+                    td['data-lineindex'] = td_index + len(lines)
+                    td['data-trans'] = field_name
+                    td['data-folio'] = self.id
+                # Wrap the table contents in a <table> tag with appropriate class name
                 table_html = f'<table class="folio-witnesses-table">{"".join([str(tag) for tag in table])}</table>'
                 lines_data.append({'table': table_html})
 
