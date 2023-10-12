@@ -799,5 +799,6 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
 });
 
 // Apply the select list image controls once page is loaded
-$('#corpus-text-detail-images-controls-chooseimage select').val(getUrlParameter('textfolio')).trigger('change');
+if (getUrlParameter('textfolio')) $('#corpus-text-detail-images-controls-chooseimage select').val(getUrlParameter('textfolio'));
+$('#corpus-text-detail-images-controls-chooseimage select').trigger('change');
 $('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').trigger('change');

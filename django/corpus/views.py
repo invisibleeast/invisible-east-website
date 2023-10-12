@@ -814,7 +814,7 @@ class TextFolioTransLineDrawnOnImageManageView(View):
             text_folio_obj.save()
 
             # Return the user to the current page
-            return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[text])}?tab={trans_field}")
+            return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[text])}?tab={trans_field}&textfolio={text_folio_id}")
 
         except Exception as e:
             print(e)
