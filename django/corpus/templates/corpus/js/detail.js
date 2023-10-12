@@ -672,7 +672,7 @@ $('.corpus-text-detail-images-image-drawlayer').on('mousedown', function(e){
         newImagePartDrawData.startX = rotateImagePartDrawPosition('x', (e.pageX - $(this).offset().left) / panzoom.getScale());
         newImagePartDrawData.startY = rotateImagePartDrawPosition('y', (e.pageY - $(this).offset().top) / panzoom.getScale());
         // Create and append the new rectangle
-        let newTextFolioImagePartHtml = `<div class="corpus-text-detail-images-image-parts-part new" style="height: 2px; width: 2px;"></div>`;
+        let newTextFolioImagePartHtml = '<div class="corpus-text-detail-images-image-parts-part new" style="height: 2px; width: 2px; visibility: hidden;"></div>';
         $(this).find('.corpus-text-detail-images-image-parts').first().append(newTextFolioImagePartHtml);
         // Activate drawing boolean
         isDrawingNewTextFolioImagePart = true;
@@ -721,6 +721,7 @@ $('.corpus-text-detail-images-image-drawlayer').on('mousemove', function(e){
         // Update CSS to move/resize the shape as it's being drawn
         $('.corpus-text-detail-images-image-parts-part.new').first().css(
             {
+                'visibility': 'visible',
                 'left': newImagePartDrawData.left + 'px',
                 'top': newImagePartDrawData.top + 'px',
                 'height': newImagePartDrawData.height + 'px',
@@ -752,7 +753,7 @@ $('.corpus-text-detail-images-image-drawlayer').on('mouseup', function(){
 // Stop the Text Folio image img object from dragging/selecting when trying to draw a rectangle
 $('.corpus-text-detail-images-image').bind('dragstart', function(){ return false; });
 
-// Draw the Text Folio lines of text image parts
+// Inject the Text Folio lines of text image parts
 $('.folio-lines-line').each(function(){
     // Attempt to get attribute values
     let folio = $(this).attr('data-folio');
