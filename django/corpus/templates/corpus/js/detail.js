@@ -566,7 +566,9 @@ $('#corpus-text-detail-images-controls-chooseimage select').on('change', functio
     // Set Panzoom
     setPanzoomStartScale();
     setPanzoomOnImage();
-}).trigger('change');  // Show the first image by default on page load
+    // Set URL parameter
+    setUrlParameter('textfolio', imageId);
+});
 
 // Only Show Certain Image Parts
 $('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').on('change', function(){
@@ -796,5 +798,6 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
     }
 });
 
-// Apply the limit of image parts to show once page is loaded
+// Apply the select list image controls once page is loaded
+$('#corpus-text-detail-images-controls-chooseimage select').val(getUrlParameter('textfolio')).trigger('change');
 $('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').trigger('change');

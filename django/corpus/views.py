@@ -742,7 +742,7 @@ class TextFolioTagCreateView(View):
                 text_folio_obj.save()
 
             # Return the user to the current page
-            return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[request.POST.get('text')])}?tab=tags")
+            return HttpResponseRedirect(f"{reverse('corpus:text-detail', args=[request.POST.get('text')])}?tab=tags&textfolio={text_folio_id}")
 
         except Exception as e:
             print(e)
