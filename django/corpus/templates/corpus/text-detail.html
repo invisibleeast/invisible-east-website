@@ -305,17 +305,19 @@
                 {% if text_folio.image %}
                     <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
                         <div class="corpus-text-detail-images-image-rotatelayer">
-                            <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
-                            <div class="corpus-text-detail-images-image-parts">
-                                <!--
-                                    Add TextFolioTag image parts
-                                    Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
-                                -->
-                                {% for tag in text_folio.text_folio_tags.all %}
-                                    {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
-                                        <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
-                                    {% endif %}
-                                {% endfor %}
+                            <div class="corpus-text-detail-images-image-drawlayer">
+                                <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
+                                <div class="corpus-text-detail-images-image-parts">
+                                    <!--
+                                        Add TextFolioTag image parts
+                                        Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
+                                    -->
+                                    {% for tag in text_folio.text_folio_tags.all %}
+                                        {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
+                                            <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -293,10 +293,10 @@ function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
         }
         else {
             // Set image part position data
-            form.find('input[name="image_part_left"]').val(newTextFolioImagePartPosition.left);
-            form.find('input[name="image_part_top"]').val(newTextFolioImagePartPosition.top);
-            form.find('input[name="image_part_width"]').val(newTextFolioImagePartPosition.width);
-            form.find('input[name="image_part_height"]').val(newTextFolioImagePartPosition.height);
+            form.find('input[name="image_part_left"]').val(newImagePartDrawData.left);
+            form.find('input[name="image_part_top"]').val(newImagePartDrawData.top);
+            form.find('input[name="image_part_width"]').val(newImagePartDrawData.width);
+            form.find('input[name="image_part_height"]').val(newImagePartDrawData.height);
         }
         // Submit the form
         form.submit();
@@ -429,18 +429,22 @@ $('var[data-textfoliotag]').on('mouseover', function(){
 // Degrees by which Text Folio images can be rotated
 const ROTATIONS = [0, 90, 180, 270];
 
-// Reset the rotation (i.e. remove all rotation classes) of the specified DOM object
-function rotationReset(objectToRotate){
+// Reset the rotation (i.e. remove all rotation classes) of the Image's rotation layer
+function imageRotationReset(){
     for (rotationIndex in ROTATIONS){
-        rotationClass = `rotate-${ROTATIONS[rotationIndex]}`;
-        objectToRotate.removeClass(rotationClass);
+        let imageRotationLayer = $('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer');
+        // Remove class
+        imageRotationLayer.removeClass(`rotate-${ROTATIONS[rotationIndex]}`);
+        // Reset data-rotate
+        imageRotationLayer.data('rotate', 0);
     }
 }
 
-// Set the rotation (i.e. add the correct rotation class) of the specified DOM object
-function rotationSet(objectToRotate, clockwise=false){
+// Set the rotation (i.e. add the correct rotation class) of the Image
+function imageRotationSet(clockwise=false){
     for (let rotationIndex in ROTATIONS){
         let rotationClass = `rotate-${ROTATIONS[rotationIndex]}`;
+        let imageRotationLayer = $('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer');
 
         // Choose next rotation (clockwise vs anticlockwise
         let newRotationIndex = 0;
@@ -457,18 +461,45 @@ function rotationSet(objectToRotate, clockwise=false){
         let newRotationClass = `rotate-${ROTATIONS[newRotationIndex]}`;
 
         // Apply new rotation
-        if (objectToRotate.hasClass(rotationClass)){
-            objectToRotate.removeClass(rotationClass).addClass(newRotationClass);
+        if (imageRotationLayer.hasClass(rotationClass)){
+            imageRotationLayer.removeClass(rotationClass).addClass(newRotationClass);
+            imageRotationLayer.data('rotate', ROTATIONS[newRotationIndex]);
             break;
         }
         // If reached end of loop and hasn't found rotation, then apply default rotation (e.g. 90 clockwise, 270 anticlockwise)
         else if (parseInt(rotationIndex) + 1 === ROTATIONS.length){
-            // Clockwise default (2nd rotation, e.g. 90)
-            if (clockwise) objectToRotate.addClass(`rotate-${ROTATIONS[1]}`);
-            // Anticlockwise default (last rotation, e.g. 270)
-            else objectToRotate.addClass(`rotate-${ROTATIONS[ROTATIONS.length - 1]}`);
+            // Clockwise default (2nd rotation, e.g. 90) or Anticlockwise default (last rotation, e.g. 270)
+            let rotationDefault = (clockwise ? ROTATIONS[1] : ROTATIONS[ROTATIONS.length - 1]);
+            imageRotationLayer.addClass(`rotate-${rotationDefault}`);
+            imageRotationLayer.data('rotate', rotationDefault);
         }
     }
+}
+
+// Rotate positions of the Image Part drawn on an image (e.g. tag or line of text)
+// When the image is rotated the drawing positions need to be rotated to match
+function rotateImagePartDrawPosition(axis, position){
+    let activeImageContainer = $('#corpus-text-detail-images-image-' + panzoomImageId);
+    let vertical = activeImageContainer.find('img').height();
+    let horizontal = activeImageContainer.find('img').width();
+    let rotate = activeImageContainer.find('.corpus-text-detail-images-image-rotatelayer').data('rotate');
+
+    if (rotate == 0){
+        return position;
+    }
+    else if (rotate == 90){
+        if (axis == 'x') return vertical - position;
+        else if (axis == 'y') return position;
+    }
+    else if (rotate == 180){
+        if (axis == 'x') return horizontal - position;
+        else if (axis == 'y') return vertical - position;
+    }
+    else if (rotate == 270){
+        if (axis == 'x') return position;
+        else if (axis == 'y') return horizontal - position;
+    }
+    return position;
 }
 
 // Panzoom
@@ -496,11 +527,11 @@ function setPanzoomStartScale(){
     var imageContainer = $('#corpus-text-detail-images-container');
     // If image is taller than it is wide, set start scale by height to fill vertical space
     if (image.height() > image.width()) var startScale = (imageContainer.height() / image.height());
-    // If image is wider than it is tall (or square), set start scale by height to fill vertical space
+    // If image is wider than it is tall (or square), set start scale by width to fill horizontal space
     else var startScale = (imageContainer.width() / image.width());
     panzoomOptions.startScale = startScale;
-    // Reset the rotation
-    rotationReset($('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer'));
+    // Reset the image rotation
+    imageRotationReset();
 }
 
 // Activate Panzoom on the current panzoomImageId image
@@ -585,25 +616,19 @@ $('#corpus-text-detail-images-controls-reset').on('click', function(){
 
 // Rotate image (anticlockwise)
 $('#corpus-text-detail-images-controls-rotate-anticlockwise').on('click', function(){
-    rotationSet(
-        objectToRotate=$('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer'),
-        clockwise=false
-    );
+    imageRotationSet(clockwise=false);
 });
 
 // Rotate image (clockwise)
 $('#corpus-text-detail-images-controls-rotate-clockwise').on('click', function(){
-    rotationSet(
-        objectToRotate=$('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer'),
-        clockwise=true
-    );
+    imageRotationSet(clockwise=true);
 });
 
 // Text Folio Image Part controls (e.g. add, delete)
 
 var canDrawNewTextFolioImagePart = false;
 var isDrawingNewTextFolioImagePart = false;  // User is in the process of drawing (mousedown starts, mouseup ends)
-var newTextFolioImagePartPosition;  // Top, left, width, height values of the new part
+var newImagePartDrawData;  // top, left, width, height values of the new part
 
 // Can start drawing rectangle
 $('#corpus-text-detail-content-tags-textfoliotag-form-draw-start, .folio-lines-line-draw-start').on('change', function(){
@@ -630,25 +655,22 @@ $('#corpus-text-detail-content-tags-textfoliotag-form-draw-start, .folio-lines-l
         panzoomOptions.disablePan = true;
         panzoomOptions.cursor = 'crosshair';
         panzoom.setOptions(panzoomOptions);
-        // Reset rotation and disable rotation
-        rotationReset($('#detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer'));
-        $('#detail-images-controls-rotate, #detail-images-controls-rotate-anticlockwise').hide();
     }
 });
 
 // Start drawing rectangle
-$('.corpus-text-detail-images-image').on('mousedown', function(e){
+$('.corpus-text-detail-images-image-drawlayer').on('mousedown', function(e){
     // Only allow to draw a rectangle if a current annotation isn't already happening
     if(canDrawNewTextFolioImagePart){
         // Remove existing new parts, if any exist
         $('.corpus-text-detail-images-image-parts-part.new').remove();
         // Reset position values
-        newTextFolioImagePartPosition = {left: 0, top: 0, width: 0, height: 0}
+        newImagePartDrawData = {left: 0, top: 0, width: 0, height: 0}
         // Set new position values
-        newTextFolioImagePartPosition.left = (e.pageX - $(this).offset().left) / panzoom.getScale();
-        newTextFolioImagePartPosition.top = (e.pageY - $(this).offset().top) / panzoom.getScale();
+        newImagePartDrawData.startX = rotateImagePartDrawPosition('x', (e.pageX - $(this).offset().left) / panzoom.getScale());
+        newImagePartDrawData.startY = rotateImagePartDrawPosition('y', (e.pageY - $(this).offset().top) / panzoom.getScale());
         // Create and append the new rectangle
-        let newTextFolioImagePartHtml = `<div class="corpus-text-detail-images-image-parts-part new" style="height: 2px; width: 2px; left: ` + newTextFolioImagePartPosition.left + `px; top: ` + newTextFolioImagePartPosition.top + `px;"></div>`;
+        let newTextFolioImagePartHtml = `<div class="corpus-text-detail-images-image-parts-part new" style="height: 2px; width: 2px;"></div>`;
         $(this).find('.corpus-text-detail-images-image-parts').first().append(newTextFolioImagePartHtml);
         // Activate drawing boolean
         isDrawingNewTextFolioImagePart = true;
@@ -656,16 +678,58 @@ $('.corpus-text-detail-images-image').on('mousedown', function(e){
 });
 
 // Drawing size of rectangle
-$('.corpus-text-detail-images-image').on('mousemove', function(e){
+$('.corpus-text-detail-images-image-drawlayer').on('mousemove', function(e){
     if (isDrawingNewTextFolioImagePart){
-        newTextFolioImagePartPosition.width = ((e.pageX - $(this).offset().left) / panzoom.getScale()) - newTextFolioImagePartPosition.left;
-        newTextFolioImagePartPosition.height = ((e.pageY - $(this).offset().top) / panzoom.getScale()) - newTextFolioImagePartPosition.top;
-        $('.corpus-text-detail-images-image-parts-part.new').first().css({'height': newTextFolioImagePartPosition.height + 'px', 'width': newTextFolioImagePartPosition.width + 'px'})
+
+        // Get current X Y positions of cursor as it's moving
+        newImagePartDrawData.currentX = rotateImagePartDrawPosition('x', (e.pageX - $(this).offset().left) / panzoom.getScale());
+        newImagePartDrawData.currentY = rotateImagePartDrawPosition('y', (e.pageY - $(this).offset().top) / panzoom.getScale());
+
+        // Set horizontal points (left, width)
+        // Dragging right
+        if (newImagePartDrawData.currentX > newImagePartDrawData.startX){
+            newImagePartDrawData.left = newImagePartDrawData.startX;
+            newImagePartDrawData.width = newImagePartDrawData.currentX - newImagePartDrawData.startX;
+        }
+        // Dragging left
+        else {
+            newImagePartDrawData.left = newImagePartDrawData.currentX;
+            newImagePartDrawData.width = newImagePartDrawData.startX - newImagePartDrawData.currentX;
+        }
+
+        // Set vertical points (top, height)
+        // Dragging down
+        if (newImagePartDrawData.currentY > newImagePartDrawData.startY){
+            newImagePartDrawData.top = newImagePartDrawData.startY;
+            newImagePartDrawData.height = newImagePartDrawData.currentY - newImagePartDrawData.startY;
+        }
+        // Dragging up
+        else {
+            newImagePartDrawData.top = newImagePartDrawData.currentY;
+            newImagePartDrawData.height = newImagePartDrawData.startY - newImagePartDrawData.currentY;
+        }
+
+        // Rotation (switch top/left and width/height values if rotating on the side, e.g. 90/270 degrees)
+        let rotate = $('#corpus-text-detail-images-image-' + panzoomImageId + ' .corpus-text-detail-images-image-rotatelayer').data('rotate');
+        if (rotate == 90 || rotate == 270){
+            [newImagePartDrawData.left, newImagePartDrawData.top] = [newImagePartDrawData.top, newImagePartDrawData.left];
+            [newImagePartDrawData.height, newImagePartDrawData.width] = [newImagePartDrawData.width, newImagePartDrawData.height];
+        }
+
+        // Update CSS to move/resize the shape as it's being drawn
+        $('.corpus-text-detail-images-image-parts-part.new').first().css(
+            {
+                'left': newImagePartDrawData.left + 'px',
+                'top': newImagePartDrawData.top + 'px',
+                'height': newImagePartDrawData.height + 'px',
+                'width': newImagePartDrawData.width + 'px'
+            }
+        );
     }
 });
 
 // Finish drawing rectangle
-$('.corpus-text-detail-images-image').on('mouseup', function(){
+$('.corpus-text-detail-images-image-drawlayer').on('mouseup', function(){
     if (isDrawingNewTextFolioImagePart){
         isDrawingNewTextFolioImagePart = false;
 
@@ -675,10 +739,10 @@ $('.corpus-text-detail-images-image').on('mouseup', function(){
         // textfoliotag form
         if ($('#corpus-text-detail-content-tags-textfoliotag-form-draw-start').is(':checked')){
             // Set image part position data
-            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_left"]').val(newTextFolioImagePartPosition.left);
-            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_top"]').val(newTextFolioImagePartPosition.top);
-            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_width"]').val(newTextFolioImagePartPosition.width);
-            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_height"]').val(newTextFolioImagePartPosition.height);
+            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_left"]').val(newImagePartDrawData.left);
+            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_top"]').val(newImagePartDrawData.top);
+            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_width"]').val(newImagePartDrawData.width);
+            $('#corpus-text-detail-content-tags-textfoliotag-form input[name="image_part_height"]').val(newImagePartDrawData.height);
         }
     }
 });
@@ -731,3 +795,6 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
         });
     }
 });
+
+// Apply the limit of image parts to show once page is loaded
+$('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').trigger('change');
