@@ -492,7 +492,7 @@ class TextAdminView(GenericAdminView):
         obj_old = self.model.objects.filter(id=obj.id).first()
 
         # If a new Reviewer has been chosen, email the Reviewer
-        if obj.public_review_reviewer not in [None, obj_old.public_review_reviewer]:
+        if (obj and not obj_old and obj.public_review_reviewer) or (obj and obj_old and obj.public_review_reviewer not in [None, obj_old.public_review_reviewer]):
 
             # Build email body content
             email_link_obj = request.build_absolute_uri(reverse('admin:corpus_text_change', args=[obj.id]))
