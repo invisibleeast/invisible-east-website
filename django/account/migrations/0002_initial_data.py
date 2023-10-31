@@ -17,6 +17,7 @@ This data migration adds default data for the following models:
 - Group (collaborator_permissions_group)
 - Permissions
 - UserRoles
+- User
 
 Note that they must come in this order due to dependencies
 """

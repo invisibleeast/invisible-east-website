@@ -18,11 +18,6 @@ label.required:before {
     content: '*';
 }
 
-/* CKEditor (i.e. RichTextField inputs) show a light grey on white background when viewing source HTML in dark mode, which this fixes */
-.django-ckeditor-widget textarea {
-    color: black;
-}
-
 /* Hide the object name in tabular inlines */
 td.original p {
     visibility: hidden

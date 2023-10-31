@@ -180,7 +180,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Classification',
-                'value': self.object.admin_classification.name_full
+                'value': self.object.admin_classification.name_full if self.object.admin_classification else None
             },
             {
                 'label': 'Primary Language',
@@ -201,7 +201,7 @@ class TextDetailView(DetailView):
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}type',
                     self.object.type,
-                    self.object.type.name
+                    self.object.type.name if self.object.type else None
                 )
             },
             {
