@@ -7,6 +7,7 @@ html, body {
     color: black;
     margin: 0;
     font-weight: 300;
+    text-align: initial;
 
     /* Variables */
     --color-primary: #007688;
@@ -72,7 +73,8 @@ h3 {
 h4 {
     line-height: 1em;
     font-size: 1.2em;
-    padding: 0.8em 0 0.1em 0;
+    padding: 1em 0 0.3em 0;
+    font-weight: 500;
 }
 
 hr {
@@ -138,7 +140,7 @@ td.align-right {
 
 p {
     margin: 0.5em 0;
-    line-height: 1.7em;
+    line-height: 1.5em;
 }
 
 select {
@@ -192,6 +194,14 @@ i.icon {
     margin: 1em auto;
 }
 
+ul.bullet-image {
+    list-style-image: url('../images/bullet-image.png');
+}
+
+li {
+    line-height: 1.5em;
+}
+
 .hidden {
     display: none;
 }
@@ -236,7 +246,7 @@ i.icon {
 }
 
 .rtl {
-    text-align: right;
+    direction: rtl !important;
 }
 
 .language-toggle {

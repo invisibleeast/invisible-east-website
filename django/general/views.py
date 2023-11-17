@@ -36,11 +36,11 @@ class AboutGlossaryTemplateView(TemplateView):
     template_name = 'general/about-glossary.html'
 
 
-class AboutResourcesTemplateView(TemplateView):
+class AboutSearchTemplateView(TemplateView):
     """
-    Class-based view to show the about-resources template
+    Class-based view to show the about-search template
     """
-    template_name = 'general/about-resources.html'
+    template_name = 'general/about-search.html'
 
 
 class AboutTechnicalTemplateView(TemplateView):

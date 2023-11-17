@@ -26,7 +26,6 @@ import textwrap
 #
 
 
-rich_text_field_help_text = 'Always paste content without formatting (Windows: Ctrl + Shift + V, Mac: Cmd + Shift + V)'
 date_help_text = 'Format: "YYYY-MM-DD" - e.g. "0608-01-31". Please ensure years before 1000 are 4 digits long using 0s at start, e.g. 0608 not 608, 0056 not 56, etc.'
 
 
@@ -266,10 +265,11 @@ class SlTextToponym(SlAbstract):
     E.g. 'Ariz', 'Balkh'
     """
     alternative_readings = models.CharField(max_length=1000, blank=True, null=True)
-    alternative_pronunciations = models.CharField(max_length=1000, blank=True, null=True)
+    other_attested_forms = models.CharField(max_length=1000, blank=True, null=True)
     latitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if you want this toponym to appear on maps in the public interface.')
     longitude = models.CharField(max_length=255, blank=True, null=True, help_text='Optional. Use if you want this toponym to appear on maps in the public interface.')
     urls = models.TextField(blank=True, null=True, help_text='Optional. Add URLs that relate to this toponym (add one URL per line). Must be a full URL e.g. "https://www.google.com"')
+    notes = models.TextField(blank=True, null=True, help_text='Optional. Notes included here are only visible in admin dashboard, not on public interface.')
 
     @property
     def urls_as_html_links(self):
@@ -293,8 +293,8 @@ class SlTextToponym(SlAbstract):
         str = self.name
         if self.alternative_readings:
             str += f' ({self.alternative_readings})'
-        if self.alternative_pronunciations:
-            str += f' ({self.alternative_pronunciations})'
+        if self.other_attested_forms:
+            str += f' ({self.other_attested_forms})'
         return str
 
 
@@ -462,7 +462,7 @@ class Text(models.Model):
     fold_lines_details = models.TextField(blank=True, null=True)
 
     # Content
-    summary_of_content = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text)
+    summary_of_content = RichTextField(blank=True, null=True)
 
     # Converted Gregorian Date (see child TextDate model for original dates)
     gregorian_date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 11 Feb 1198.<br>For help converting original dates to the Gregorian calendar please see <a href="https://www.muqawwim.com" target="_blank">www.muqawwim.com</a>')
@@ -472,7 +472,7 @@ class Text(models.Model):
     gregorian_date_century = models.ForeignKey(SlTextGregorianCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='This century data is only used to filter and sort results in the list of Corpus Texts in the public interface. If the exact century is not known but an approximate date range is available then insert your best estimate (e.g. the middle of the date range) or leave blank if no estimate is available.')
 
     # Commentary
-    commentary = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text + '<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
+    commentary = RichTextField(blank=True, null=True, help_text='<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
 
     # Review & Approve Text to Show on Public Website
     public_review_reviewer = models.ForeignKey(
@@ -690,7 +690,23 @@ class TextDate(models.Model):
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
     calendar = models.ForeignKey('SlCalendar', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
-    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 10 Ramaḍān 605')
+    date_text = models.CharField(max_length=1000, blank=True, null=True, help_text="""Format date as free text - e.g. 10 Ramaḍān 605
+    <br><br><br>
+    <table>
+        <tr><th>Number</th><th>Hebrew Month</th><th>Islamic Month</th></tr>
+        <tr><td>1</td><td dir="rtl">תשרי (Tishrei)</td><td dir="rtl">محرم (al-Muḥarram)</td></tr>
+        <tr><td>2</td><td dir="rtl">חשון (Cheshvan)</td><td dir="rtl">صفر (Ṣafar)</td></tr>
+        <tr><td>3</td><td dir="rtl">כסלו (Kislev)</td><td dir="rtl">ربيع الأول (Rabīʿ al-Awwal)</td></tr>
+        <tr><td>4</td><td dir="rtl">טבת (Tevet)</td><td dir="rtl">ربيع الثاني (Rabīʿ al-Thānī)</td></tr>
+        <tr><td>5</td><td dir="rtl">שבט (Shevat)</td><td dir="rtl">جمادى الأولى (Jumādā al-Ūlā)</td></tr>
+        <tr><td>6</td><td dir="rtl">אדר (Adar)</td><td dir="rtl">جمادى الثانية (Jumādā al-Thānī)</td></tr>
+        <tr><td>7</td><td dir="rtl">ניסן (Nisan)</td><td dir="rtl">رجب (Rajab)</td></tr>
+        <tr><td>8</td><td dir="rtl">אייר (Iyar)</td><td dir="rtl">شعبان (Shaʿbān)</td></tr>
+        <tr><td>9</td><td dir="rtl">סיון (Sivan)</td><td dir="rtl">رمضان (Ramaḍān)</td></tr>
+        <tr><td>10</td><td dir="rtl">תמוז (Tammuz)</td><td dir="rtl">شوال (Shawwāl)</td></tr>
+        <tr><td>11</td><td dir="rtl">אב (Av)</td><td dir="rtl">ذو القعدة (Dhū al-Qiʿdah)</td></tr>
+        <tr><td>12</td><td dir="rtl">אלול (Elul)</td><td dir="rtl">ذو الحجة (Dhū al-Ḥijjah)</td></tr>
+    </table>""")
     date = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     date_range_end = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
@@ -741,7 +757,7 @@ class TextFolio(models.Model):
     """
 
     related_name = 'text_folios'
-    text_folio_trans_help_text = rich_text_field_help_text + """<br><br>Lines of text:<br>
+    text_folio_trans_help_text = """<br><br>Lines of text:<br>
 To start creating lines of text click the 'numbered list' button
 <br>
 To manually override an automatic line number simply:
@@ -773,7 +789,7 @@ You can edit an existing Witnesses table (e.g. add/remove a row/column) by right
 
     transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
-    transliteration = RichTextField(blank=True, null=True, help_text=rich_text_field_help_text + '<br>Optional. Only relevant to some Middle Persian texts.')
+    transliteration = RichTextField(blank=True, null=True, help_text='<br>Optional. Only relevant to some Middle Persian texts.')
 
     def trans_text_lines(self, text_field, field_name):
         """

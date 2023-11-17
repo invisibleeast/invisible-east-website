@@ -92,7 +92,6 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkMaps">
                             <a class="dropdown-item" href="{% url 'corpus:map-iedctoponyms' %}">IEDC Toponyms</a>
                             <a class="dropdown-item" href="{% url 'corpus:map-findspots' %}">Find Spots</a>
-                            <a class="dropdown-item" href="{% url 'corpus:map-placesintexts' %}">Places Mentioned in Texts</a>
                         </div>
                     </li>
                     <!-- About -->
@@ -101,12 +100,12 @@
                             About
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkAbout">
+                            <a class="dropdown-item" href="{% url 'general:about-search' %}">How to Search</a>
                             <a class="dropdown-item" href="{% url 'general:about-cite' %}">How to Cite</a>
                             <a class="dropdown-item" href="{% url 'general:about-faqs' %}">FAQs</a>
                             <a class="dropdown-item" href="{% url 'general:about-glossary' %}">Glossary</a>
                             <a class="dropdown-item" href="{% url 'general:about-technical' %}">Technical/Software</a>
                             <a class="dropdown-item" href="{% url 'general:about-credits' %}">Credits</a>
-                            <a class="dropdown-item" href="{% url 'general:about-resources' %}">Resources</a>
                         </div>
                     </li>
                     <!-- Help -->

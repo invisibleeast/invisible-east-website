@@ -10,7 +10,7 @@ urlpatterns = [
     path('about/credits/', views.AboutCreditsTemplateView.as_view(), name='about-credits'),
     path('about/faqs/', views.AboutFaqsTemplateView.as_view(), name='about-faqs'),
     path('about/glossary/', views.AboutGlossaryTemplateView.as_view(), name='about-glossary'),
-    path('about/resources/', views.AboutResourcesTemplateView.as_view(), name='about-resources'),
+    path('about/search/', views.AboutSearchTemplateView.as_view(), name='about-search'),
     path('about/technical/', views.AboutTechnicalTemplateView.as_view(), name='about-technical'),
 
     path('accessibility/', views.AccessibilityTemplateView.as_view(), name='accessibility'),

@@ -73,11 +73,13 @@
 
     #welcome-banner-title {
         font-size: 3em;
+        line-height: 1.2em;
     }
 
     #welcome-banner-tagline {
         width: 100%;
         font-size: 1.2em;
+        line-height: 1.2em;
     }
 
     /* ---------- Corpus: List ---------- */

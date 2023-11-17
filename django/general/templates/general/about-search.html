@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<section class="container">
+    <h2>How to Search</h2>
+    <p>
+        At IEDC, our search tools are designed to be user-friendly, catering to both beginners and experts. Here's a step-by-step guide to help you navigate the Invisible East Digital Corpus
+        effectively:
+    </p>
+
+    <h3>Basic Search</h3>
+    <ul class="bullet-image">
+        <li>Type a word or phrase into the search box, in English or the original language.</li>
+        <li>Press "+" to add another search field.</li>
+        <li>Use "or" for terms containing either entry, and "and" for texts containing both (click to toggle between them).</li>
+    </ul>
+
+    <h3>Sort By</h3>
+    <p>
+        Choose how to sort your results by:
+    </p>
+    <ul class="bullet-image">
+        <li>Shelfmark: Organised alphanumerically by the holding institution or library.</li>
+        <li>Converted Gregorian Date: The document's production date in the Gregorian calendar.</li>
+        <li>IEDC Input Date: Date of upload onto the Invisible East Digital Corpus.</li>
+        <li>Number of folios: The number of folios in a given text.</li>
+    </ul>
+
+    <h3>Filters</h3>
+    <p>
+        There are numerous filters which can be used to help refine searches and navigate the IEDC's extensive corpus. If you were only interested in documents written in New Persian, for example, you can select 'New Persian (Arabic Script)' from the 'primary language' drop-down menu. The filters are as follows:
+    </p>
+    <ul class="bullet-image">
+        <li>Has an Image</li>
+        <li>Has a Transcription</li>
+        <li>Has a Translation</li>
+        <li>Has a Transliteration</li>
+        <li>Primary Language</li>
+        <li>Additional Languages</li>
+        <li>Collection</li>
+        <li>Type of Text</li>
+        <li>Toponyms</li>
+        <li>Gregorian Date (from)</li>
+        <li>Gregorian Date (to)</li>
+        <li>Writing Support</li>
+        <li>Writing Support Details</li>
+    </ul>
+
+    <h3>Tags</h3>
+    <p>
+        The IEDC also uses numerous tags. These are arranged by category and highlight specific historical details. These have been organised into various categories:
+    </p>
+    <ul class="bullet-image">
+        <li>Agricultural Produce</li>
+        <li>Currencies and Denominations</li>
+        <li>Documentations</li>
+        <li>Finance and Accountancy Phrases</li>
+        <li>Geographic Administrative Units</li>
+        <li>Land Measurement Units</li>
+        <li>Legal and Administrative Stock Phrases</li>
+        <li>Markings</li>
+        <li>People and processes involved in legal and judiciary system</li>
+        <li>People and processes involved in public administration, tax, trade, and commerce</li>
+        <li>Religions</li>
+    </ul>
+</section>
+
+{% include 'snippets/footer.html' %}
+
+{% endblock %}

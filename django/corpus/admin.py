@@ -295,9 +295,8 @@ class SlTextToponymAdminView(GenericSlAdminView):
     """
     Customise the SlTextToponym, in addition to GenericSlAdminView
     """
-    list_display = ('name', 'alternative_readings', 'alternative_pronunciations', 'latitude', 'longitude', 'urls_as_html_links')
-    search_fields = ('name', 'alternative_readings', 'alternative_pronunciations', 'urls')
-    fields = ('name', 'alternative_readings', 'alternative_pronunciations', 'latitude', 'longitude', 'urls')
+    list_display = ('name', 'alternative_readings', 'other_attested_forms', 'latitude', 'longitude', 'urls_as_html_links')
+    search_fields = ('name', 'alternative_readings', 'other_attested_forms', 'urls')
     inlines = (M2MSlToponymToTextInline,)
 
 
@@ -459,7 +458,18 @@ class TextAdminView(GenericAdminView):
             'type__category',
             'document_subtype__category'
         )
-        return queryset
+
+        # TODO - temp for tests, replace below block with `return queryset` when tests done
+        if request.user.email in [
+            'mike@mike.com',
+            'ahrsoftware@ahrsoftware.co.uk',
+            'edward.shawe-taylor@ames.ox.ac.uk',
+            'silvia.ferreri@ames.ox.ac.uk',
+            'arezou.azad@ames.ox.ac.uk'
+        ]:
+            return queryset
+        else:
+            return queryset.filter(meta_created_by=request.user)
 
     def has_manage_permission(self, request, obj):
         """
@@ -482,10 +492,12 @@ class TextAdminView(GenericAdminView):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return self.has_manage_permission(request, obj)
+        # return self.has_manage_permission(request, obj)
+        return True if obj and request.user == obj.meta_created_by else False  # TODO - temp during tets, uncomment above line when tests done
 
     def has_delete_permission(self, request, obj=None):
-        return self.has_manage_permission(request, obj)
+        # return self.has_manage_permission(request, obj)
+        return False  # TODO - temp during tests, uncomment above line when tests done
 
     def save_model(self, request, obj, form, change):
         # Get current object, so can access values before this save

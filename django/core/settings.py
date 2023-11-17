@@ -137,7 +137,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'NumberedList', 'Table', 'PasteText', 'Source',
+                    'NumberedList', 'Table', 'Source',
                     '-',
                     'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
                     '-',
@@ -151,10 +151,10 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar': 'CustomToolbarConfig',
         'enterMode': 2,
-        'format_tags': 'p;h4',
+        'forcePasteAsPlainText': True,
         'tabSpaces': 4,
         'height': '27em',
-        'width': '43em',
+        'width': '100%',
         'allowedContent': True,
         'entities_greek': False,
         'entities_latin': False,

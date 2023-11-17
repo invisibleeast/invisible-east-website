@@ -1,7 +1,7 @@
 // Create a map object
 var map = L.map(
     '{{ map_id }}', {scrollWheelZoom: false, attributionControl: false}
-).setView(['32.1331', '49.0672'], 6);
+).setView(['33.54778917059949', '65.21297408494867'], 6);
 
 // Set tile layer style
 L.tileLayer(
@@ -26,8 +26,8 @@ L.tileLayer(
         {% endif %}
 
         // Add alternative pronunciations
-        {% if toponym.alternative_pronunciations %}
-            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Alternative Pronunciations</div>{{ toponym.alternative_pronunciations }}';
+        {% if toponym.other_attested_forms %}
+            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Other Attested Forms</div>{{ toponym.other_attested_forms }}';
         {% endif %}
 
         // Add urls html (if exists)

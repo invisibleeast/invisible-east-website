@@ -1,0 +1,59 @@
+{% load static %}
+
+<!-- Footer -->
+<footer id="footer" class="container-fluid">
+    <!-- Content -->
+    <div id="footer-content" class="container-fluid">
+
+        <div id="footer-content-logos">
+            <!-- Oxford -->
+            <a href="https://www.ox.ac.uk/" target="_blank"><img src="{% static 'images/logos/oxford-logo.png' %}" alt="Oxford University logo"></a>
+            <!-- AHRC -->
+            <a href="https://www.ukri.org/councils/ahrc/" target="_blank"><img src="{% static 'images/logos/ahrc-logo.png' %}" alt="Arts and Humanities Research Council logo"></a>
+            <!-- ERC -->
+            <a href="https://erc.europa.eu/homepage" target="_blank"><img src="{% static 'images/logos/erc-logo.png' %}" alt="European Research Council logo"></a>
+            <!-- Alexander von Humboldt Foundation -->
+            <a href="https://www.humboldt-foundation.de/en/" target="_blank"><img src="{% static 'images/logos/avhs-logo.png' %}" alt="Alexander von Humboldt Foundation"></a>
+        </div>
+
+        <div id="footer-content-social">
+            <a title="instagram" id="footer-content-social-instagram" href="https://www.instagram.com/invisible_east/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a title="facebook" id="footer-content-social-facebook" href="https://www.facebook.com/InvisibleEast.Official" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a title="twitter" id="footer-content-social-twitter" href="https://twitter.com/invisible_east" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a title="youtube" id="footer-content-social-youtube" href="https://www.youtube.com/channel/UC-sicCra2ugvOyjOL9VP_BQ" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a title="linkedin" id="footer-content-social-linkedin" href="https://www.linkedin.com/company/invisible-east" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+
+        <div id="footer-content-text">
+            <p>
+                Invisible East is a research project led by <a href="https://www.ames.ox.ac.uk/people/arezou-azad" target="_blank">Arezou Azad</a> within the
+                
+                <a href="https://www.ames.ox.ac.uk/" target="_blank">Faculty of Asian and Middle Eastern Studies</a>, University of Oxford
+            </p>
+            <p>
+                Invisible East Offices, Room 17, St Antony’s College, 62 Woodstock Road, Oxford OX2 6JF
+            </p>
+            <p>
+                This project has received funding from the European Research Council (ERC)
+                <br>
+                under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 851607)
+            </p>
+            <p>
+                <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |
+                <a href="https://www.ox.ac.uk/legal" target="_blank">Legal</a> |
+                <a href="{% url 'django.contrib.sitemaps.views.sitemap' %}">Sitemap</a> |
+                <a href="{% url 'general:cookies' %}">Cookies</a> |
+                <a href="{% url 'general:accessibility' %}">Accessibility</a> |
+                {% if user.is_authenticated %}
+                    <a href="{% url 'account:account' %}">Account</a>
+                {% else %}
+                    <a href="{% url 'account:login' %}">Login</a>
+                {% endif %}
+            </p>
+            <p>
+                © University of Oxford {% now "Y" %}
+            </p>
+        </div>
+
+    </div>
+</footer>

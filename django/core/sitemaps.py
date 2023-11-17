@@ -19,13 +19,12 @@ class StaticPagesSitemap(Sitemap):
             'general:about-credits',
             'general:about-faqs',
             'general:about-glossary',
-            'general:about-resources',
+            'general:about-search',
             'general:about-technical',
             'general:cookies',
             'general:accessibility',
             'corpus:map-iedctoponyms',
             'corpus:map-findspots',
-            'corpus:map-placesintexts',
         ]
 
     def location(self, obj):

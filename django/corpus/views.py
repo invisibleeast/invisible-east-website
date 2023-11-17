@@ -861,11 +861,3 @@ class MapFindSpotTemplateView(TemplateView):
     """
 
     template_name = 'corpus/map-findspots.html'
-
-
-class MapPlacesMentionedInCorpusTextsTemplateView(TemplateView):
-    """
-    Class based view to show a map (of placed mentioned in texts) template
-    """
-
-    template_name = 'corpus/map-placesintexts.html'

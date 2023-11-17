@@ -523,127 +523,6 @@ def insert_data_select_list_models(apps, schema_editor):
             category=models.SlTextFolioTagCategory.objects.get_or_create(name='Religions')[0]
         )
 
-    # SlTextToponym
-    for name in [
-        # Bamiyan
-        'Āhangarān, آهنگران',
-        'Āsiyāb, آسیاب',
-        'Āsyāb-i Sar-i Rāh آسیاب سر راه',
-        'ʿAjagak, عجگک',
-        'Andarāba, اندرابه/ اندراب',
-        'Angār. انگار',
-        'Arsaf, ار سف/ سف',
-        'Arsānī/Sānī, ار سانی/ سانی/ شانی/ شایی',
-        'Azraw',
-        'Balkh, بلخی',
-        'Bāmiyān, بامیان',
-        'Band-i Khāsh, بند خاش',
-        'Batajlīz/Batajlīzh, بنجلیز/ بنجلیژ',
-        'Butiyān, بوتیان',
-        'Chākirī, چاکری/ حاکری',
-        'Darra, دره',
-        'Dāwar, داور',
-        'Dupawi, دو پوی/ دو پول',
-        'Durustī, درستی',
-        'Funduqistān, فندقستان',
-        'Ghandak, غندک',
-        'Ghārminj (or Ghārmīkh), عار میح',
-        'Ghūr Karūd [var. Garūd], غور کرود',
-        'Ghūrwand, غوروند',
-        'Īsh, اِیش',
-        'Jawlāh /Jūlāh, جولاه',
-        'Jawqāni, جوقانی',
-        'Kadūr',
-        'Karyān/Kadyān, کریان',
-        'Kafshān/Kāfshān, کاف‌شان',
-        'Karūd',
-        'Kawrij',
-        'Khīsh, حیس',
-        'Khustgān, خستگان',
-        'Miyān shahr, میان شهر',
-        'Naqdī, نقدی',
-        'Naw Bāgh/ Sar-i Bāgh, نو باغ/ سرباغ',
-        'Nāy, نای',
-        'Nayak',
-        'Panjhīr, پنجهیری',
-        'Rāgh, راغ',
-        'Rubāṭ, رباط ',
-        'Rubāṭiyān, رباطیان',
-        'Rubāṭ-i Miyān shahr,رباط میانشهر',
-        'Rasj, رسح مر',
-        'Rīw, ریو',
-        'Sabz bahār, سبزبهار',
-        'Safī, سفی',
-        'Safīd Sang, سفید سنگ',
-        'Skānj, سکانح',
-        'Sagnūl, سگ نول',
-        'Sar-i Khish, سرخیش',
-        'Sar Āsiyā, سر آسیا',
-        'Sar-i Guzar, سری گذر',
-        'Sū/ Shū, سو/ شو',
-        'Surkh Dar, سرخ در',
-        'Surkh Dar, סורך דר',
-        'Sūya/Sūba, سویه/ سوبه',
-        'Sabārghū/Shabārghū, سبارغو/ شبارغو',
-        'Shawāniq, شوانق',
-        'Shawār/Sawār, شوار/ سوار',
-        'Shīngiryān/Sīngiryān, شنگریانی',
-        'Tālīzh, تالیژ',
-        'Ṭabbakhān-i Karūd, طباخان کرود',
-        'Tūlak, تولکی',
-        'Wak, وک',
-        'Warmiyās/Wariyās, ورمیاس/ وری یاس',
-        'Wāshān, درۀ واشان',
-        'Wān.shān, ואנשאן',
-        'Wazāmān/Farāmān/Barāmān, وزامن/ فرامن',
-        'Zīr-i ʿAj, زیر عج',
-        'Zīrdamān, زیر دمان',
-        # Firuzkuh
-        'Abdar [var. Andar]',
-        'Anūr-kūh or Anūr-gird',
-        'Arīz',
-        'Asp-qūl',
-        'Barāslīzh',
-        'Bardīz',
-        'Balkh',
-        'Bandalīzh/Bandalīch/Bandānalīch',
-        'Dāmam',
-        'Fīrūzkūh',
-        'Ghandamīn, Ghalmīn',
-        'Ghaznīn [var. Ghaznī]',
-        'Ghūr',
-        'Hind',
-        'Iraq',
-        'Jūzjān',
-        'Kāliyūn',
-        'Khāy',
-        'Khurāsān',
-        'Maymana [var. Mayman]',
-        'Murghāb',
-        'Nala',
-        'Naylanj',
-        'Pūza-yi ʿAliyā',
-        'Rabanjī',
-        'Rāmtak',
-        'Sakūn',
-        'Sanga/Sangeh',
-        'Shāristay',
-        'Siparf',
-        'Suf [var. Suq]',
-        'Ṭāq [var. Tigāb Ṭāq/Tāgh]',
-        'Tufanda',
-        'Tufandī/Tukhandī',
-        'Ṭūs',
-        'Warsīkh',
-        'Waylīzh',
-        '(Wīlīzh?)',
-        # PersianKhalili
-        'Istīw, Istiwuy',
-    ]:
-        models.SlTextToponym.objects.create(
-            name=name,
-        )
-
     # SlCalendar
     for obj in [
         {'name': 'Hijri', 'name_full': 'The Hijri calendar'},
@@ -719,6 +598,138 @@ def insert_data_select_list_models(apps, schema_editor):
         'indeterminate'
     ]:
         models.SlSealImprint.objects.create(name=name)
+
+
+def insert_data_toponyms(apps, schema_editor):
+    """
+    Inserts data into the SlTextToponym model
+    """
+
+    toponyms = [
+        ["Toponym", "Other Attested Forms (one place, different writings)", "Alternative Readings (one place, different readings)", "Latitude", "Longitude", "Geonames link", "Comments"],
+        ["Āhangarān", "", "", "34.80907", "67.91612", "http://www.geonames.org/1149302/dahan-e-ahangaran.html ", ""],
+        ["ʿAjagak", "Hajigak (modern)", "", "34.0614", "67.31196", "http://www.geonames.org/1140359/hajigak.html", "Present-day Ḥājjigak? (34.0614, 67.31196; http://www.geonames.org/1140359/hajigak.html)"],
+        ["Amber", "", "", "", "", "", ""],
+        ["Andar", "", "Anwar", "", "", "", "Same place as Anwar-gird?"],
+        ["Andarāba", "", "Andarāb", "35.62405", "69.17861", "http://www.geonames.org/7052857/andarab.html ", ""],
+        ["Angār", "", "", "35.39726", "68.33866", "http://www.geonames.org/1148653/angar.html ", ""],
+        ["Anwar-gird", "", "Andar-gird", "", "", "", "Same place as Anwar?"],
+        ["Arsaf", "", "", "", "", "", "Doubtful reading"],
+        ["Asp-qūl", "", "", "", "", "", ""],
+        ["Azraw", "", "", "34.17355", "69.64573", "http://www.geonames.org/1147851/hukumati-azrah.html ", ""],
+        ["Balkh", "", "", "36.75635", "66.8972", "http://www.geonames.org/1147290/balkh.html ", ""],
+        ["Bāmiyān", "", "", "34.82156", "67.82734", "http://www.geonames.org/1147242/bamyan.html ", ""],
+        ["Bandālīzh", "Bandānlīzh, Bandālīch, Bandān Līch, Band-i ʿAlī (?, modern)", "Band-i Alīzh, Band-i Ilīzh", "34.52397", "65.4381", "", "Present-day Band-i ʿAlī? (34.52397, 65.4381; http://www.geonames.org/1147204/band-e-ali.html)"],
+        ["Band-i Khāsh", "Darra-yi Khāsh (?, modern)", "", "36.90561", "70.75941", "http://www.geonames.org/1136859/darah-ye-khash.html ", "A settlement by the name of Darra-yi Khāsh is situated in Badakhshān province (36.90561, 70.75941; http://www.geonames.org/1136859/darah-ye-khash.html ). However, it is unlikely that it is the same place mentioned in this document."],
+        ["Barāslīzh", "", "", "", "", "", "Written ىراسلیژ. The lack of diacritics provided further reading possibilities."],
+        ["Bardīz", "", "", "35.02256", "65.37386", "https://www.geonames.org/1147001/bardayz.html", ""],
+        ["Būtiyān", "Botiyan (modern), Botyan (modern)", "", "34.92251", "68.36194", "http://www.geonames.org/1455442/dahan-e-botyan.html ", ""],
+        ["Chākarī", "Chākarī (modern)", "Chāgarī, Jākar, Jāgarī", "35.99866", "69.64595", "https://www.geonames.org/1145604/chakari.html", "A settlement called Chākarī is situated in Baghlān province (35.99866, 69.64595; https://www.geonames.org/1145604/chakari.html). The connection to Jāghurī in Ghazni province seems less likely (33.14341, 67.46384; http://www.geonames.org/7052958/jaghuri.html)."],
+        ["Chawqānī", "", "Jawqānī", "35.60195", "68.90153", "http://www.geonames.org/1469969/chowgani.html ", ""],
+        ["Dāmam", "", "", "", "", "", ""],
+        ["Dar Ṭakh", "Takht (?, modern)", "", "34.99825", "65.77522", "", "Present-day Takht? (34.99825, 65.77522; http://www.geonames.org/1123188/takht.html )"],
+        ["Dāwar", "", "", "", "", "", ""],
+        ["Dupawi", "", "", "", "", "", ""],
+        ["Durustī", "", "", "35.01667", "69.31667", "http://www.geonames.org/1142828/dorosti.html ", ""],
+        ["Farāmān", "", "Warāman, Wazāmān", "", "", "", ""],
+        ["Firūzān", "", "", "", "", "", ""],
+        ["Fīrūzkūh", "Jām (modern)", "", "34.39642", "64.51687", "http://www.geonames.org/1460029/pay-monar.html ", ""],
+        ["Funduqistān", "Fondukistan (modern)", "", "34.98978", "68.90007", "https://www.geonames.org/9199798/fondukistan.html", ""],
+        ["Garokan", "", "", "", "", "", ""],
+        ["Gaz", "", "", "", "", "", ""],
+        ["Ghandamīn", "Ghalmin (?, modern)", "", "", "", "", "Present-day Ghalmīn? (34.8701, 65.31396;http://www.geonames.org/1144000/darah-ye-ghalmin.html)"],
+        ["Ghandaq", "Ghandak (modern)", "", "34.99267", "68.01635", "http://www.geonames.org/1141452/ghandak.html", "Present-day Ghandak? (34.99267, 68.01635; http://www.geonames.org/1141452/ghandak.html)"],
+        ["Ghandar", "", "", "", "", "", ""],
+        ["Ghārmīkh", "", "Ghārminj, Ghārmikh", "", "", "", ""],
+        ["Ghūr Karūd", "", "Ghūr Garūd", "", "", "", ""],
+        ["Ghūrwand", "", "", "35.01039", "68.78769", "http://www.geonames.org/7054044/siyahgird-ghorband.html ", ""],
+        ["Golg", "", "", "", "", "", ""],
+        ["Gozgan", "", "", "", "", "", ""],
+        ["Īsh", "", "Līzh", "", "", "", "Appears as a nisba (Īshī, ایشی or Līzhī, لیژی). The form Līzh (or Līch) is common in toponyms in Afghanistan, while the form Ēsh/Īsh is attested only in two places in Badakhshān, which is remote from Bamiyan: 1. Dasht-i Ēsh (37.92158, 70.53517; http://www.geonames.org/7096560/dasht-e-esh.html) 2. Kham-i Īsh Darra (37.98354, 70.47729; http://www.geonames.org/1467272/kham-e-ish-darah.html)"],
+        ["Istīw", "Istīb", "", "", "", "", ""],
+        ["Izīr", "", "", "34.78693", "65.35062", "https://www.geonames.org/1471119/izir.html", ""],
+        ["Jawlāh", "", "Jūlāh, Chawlāh, Chūlāh", "34.800661", "68.145964", "", ""],
+        ["Kadagstan", "", "", "", "", "", ""],
+        ["Kadūr", "", "", "", "", "", ""],
+        ["Kāfshān", "Kafshān", "Kāwshān, Kāf Shān", "35.0636", "69.06669", "http://www.geonames.org/1423313/dahan-e-kafshan.html ", "See also Haim 2019: 74-75"],
+        ["Kāliyūn", "", "Kālyūn", "", "", "", ""],
+        ["Karūd", "", "", "", "", "", ""],
+        ["Kasūf", "", "", "", "", "", ""],
+        ["Kawrīj", "", "Kūrīj", "", "", "", "Written کورىج. The lack of diacritics provided further reading possibilities."],
+        ["Khāy", "", "", "35.02931", "65.20355", "http://www.geonames.org/1425662/kotal-e-khay.html ", ""],
+        ["Khīsh", "", "", "34.71135", "68.37493", "http://www.geonames.org/1455529/qol-e-khesh.html ", ""],
+        ["Khustgān", "", "", "35.39408", "68.32742", "http://www.geonames.org/1428820/khostgan.html ", ""],
+        ["Kiriyān", "", "Kadyān, Karyān", "35.94433", "69.53873", "http://www.geonames.org/1143466/deh-e-kirian.html ", ""],
+        ["Lāmtak", "", "", "", "", "", ""],
+        ["Lizag", "", "", "", "", "", ""],
+        ["Lizg", "", "", "", "", "", ""],
+        ["Madr", "", "", "", "", "", ""],
+        ["Miyān Shahr", "", "", "36.02024", "69.52179", "https://www.geonames.org/1132575/mian-shahr.html", "Present-day Miyān Shahr in Khust-o Firing district of Baghlān province? (36.02024, 69.52179; https://www.geonames.org/1132575/mian-shahr.html). Two settlements are also called Miyān Shahr (in Takhār and Badakhshān). However, it is less likely that they should identified with the toponym appearing in the Bamiyan Papers. Another possibility is that Miyān Shar is in fact the town of Maydān Shahr in present-day Wardak province (34.39561, 68.86618; https://www.geonames.org/1456960/maydanshakhr.html). "],
+        ["Murghāb", "", "", "34.96944", "65.62178", "http://www.geonames.org/1132772/murghab.html ", "Appears as part of the toponym Ṭāq-i Murghāb"],
+        ["Nala", "", "", "", "", "", ""],
+        ["Nāy", "Nay Qalʿa (?, modern)", "", "34.81138", "68.18428", "http://www.geonames.org/1455934/nay-qal-ah.html", "Present-day Nay Qalʿa? (34.81138, 68.18428; http://www.geonames.org/1455934/nay-qal-ah.html). In Bāmiyān and its surroundings, there are many names with suffixes or prefixes of Nay and Nāy."],
+        ["Nayak", "", "Himak, Nimak", "34.7295", "66.95501", "http://www.geonames.org/1457791/nayak.html ", ""],
+        ["Nīlinj", "Nilinj (modern)", "", "35.07262", "65.14814", "http://www.geonames.org/1132408/nalinj.html ", ""],
+        ["Pūza-yi ʿUlyā", "Pūza-yi Līch-i ʿUlyā (?, modern)", "", "34.53323", "65.32883", "", "Present-day Pūza-yi Līch-i ʿUlyā? (34.53323, 65.32883; http://www.geonames.org/1130299/pozah-ye-lich-e-ulya.html)"],
+        ["Rabanjī", "", "", "", "", "", "The lack of diacritics provided further reading possibilities."],
+        ["Rāq", "Kūh-i Rāq", "", "35.73831", "66.21102", "", "Near present-day Kūh-i Rāq? (35.73831, 66.21102; https://www.geonames.org/1427015/koh-e-raq.html)"],
+        ["Rīw", "Riwah (?, modern)", "Zīr", "35.06529", "68.94578", "https://www.geonames.org/1128357/riwah.html", "Present-day Riwah (روه)? (35.06529, 68.94578; https://www.geonames.org/1128357/riwah.html)"],
+        ["Rizm", "", "", "", "", "", ""],
+        ["Rob", "", "", "", "", "", ""],
+        ["Rubāṭ", "Āq Rabāṭ (?, modern)", "", "34.93505", "67.65657", "http://www.geonames.org/1148522/aq-rabat.html", "Present-day Aq Rubāṭ? (34.93505, 67.65657; http://www.geonames.org/1148522/aq-rabat.html). In Afghanistan, there are tens of places containing the form Rubāt."],
+        ["Rubāṭ-i Miyān Shahr", "", "", "36.02024", "69.52179", "http://www.geonames.org/1132575/mian-shahr.html ", ""],
+        ["Rubāṭiyān", "", "Ribāṭ Shār", "", "", "", "Rubātiyān may mean 'the people of Rubāṭ'. Therefore, the name of the village may be Rubāt."],
+        ["Sabz Bahār", "", "", "", "", "", ""],
+        ["Safī", "", "Saqī", "", "", "", ""],
+        ["Sagnūl", "", "", "", "", "", "Probably the same place as sgnwl (סגנול) mentioned in archive of Yehuda ben Daniel (first half of the 11th century, Bamiyan)."],
+        ["Sakūn", "", "", "", "", "", ""],
+        ["Samangān", "", "", "", "", "", ""],
+        ["Samingan", "", "Samangān", "", "", "", ""],
+        ["Sandaran", "", "", "", "", "", ""],
+        ["Sanga", "", "", "", "", "", ""],
+        ["Sānī", "", "Shānī", "", "", "", "The lack of diacritics provided further reading possibilities."],
+        ["Sar-i Āsiyā", "", "", "34.81279", "67.82151", "http://www.geonames.org/1457317/sar-asyab.html ", ""],
+        ["Sarī Gudhar", "", "", "35.00749", "68.68418", "http://www.geonames.org/1126981/sar-guzar.html ", ""],
+        ["Sar-i Khīsh", "Qūl-i Khīsh (?, modern)", "", "34.71135", "68.37493", "http://www.geonames.org/1455529/qol-e-khesh.html", "Present-day Qūl-i Khīsh? (34.71135, 68.37493; http://www.geonames.org/1455529/qol-e-khesh.html). See also Sims-Williams and Vaissière 2011: 40-41."],
+        ["Shangaryān", "", "Shingiryān", "34.950112", "68.508819", "", ""],
+        ["Shāristay", "Sharestay (modern)", "", "34.82953", "65.28906", "http://www.geonames.org/7537162/sharistay.html ", ""],
+        ["Shawāniq", "", "", "", "", "", ""],
+        ["Shawār", "", "", "", "", "", "Possibly related to šʾwrbhʾr (שאורבהאר) mentioned in archive of Yehuda ben Daniel (first half of the 11th century, Bamiyan)"],
+        ["Shibārghū", "", "Sibārghū", "", "", "", ""],
+        ["Skānj", "", "", "", "", "", ""],
+        ["Sozargan", "", "", "", "", "", ""],
+        ["Sparf", "Isparf (modern)", "", "35.0062", "65.80053", "http://www.geonames.org/1142382/darah-ye-isparf.html ", ""],
+        ["Sū", "", "Shū, Safī, Saqī", "", "", "", ""],
+        ["Suf", "Tagaw-e Suf (modern)", "Suq", "35.0266", "65.30474", "http://www.geonames.org/1123391/tagaw-e-suf.html", "Present-day Tagāb-i Suf? (35.0266, 65.30474; http://www.geonames.org/1123391/tagaw-e-suf.html)"],
+        ["Surkh Dar", "", "", "34.848033", "67.758083", "", ""],
+        ["Sūya", "Kūtal-i Ṣūba", "Shūya, Sūba", "34.67311", "67.95436", "http://www.geonames.org/1457381/kotal-e-sobah.html", "Present-day Kūtal-i Ṣūba (کوتل صوبه)? (34.67311, 67.95436; http://www.geonames.org/1457381/kotal-e-sobah.html)"],
+        ["Tag Āb-i Kurgī", "Kurgin (?, modern)", "Tag Āb-i Kurgīn", "35.08905", "65.30647", "https://www.geonames.org/1135218/kurgin.html", "Present-day Kurgīn? (35.08905, 65.30647; https://www.geonames.org/1135218/kurgin.html)"],
+        ["Tālīzh", "", "", "", "", "", ""],
+        ["Ṭāq", "Tāgh, Ṭāq-i Murghāb, Tagaw-e Taq (modern)", "", "35.05164", "65.25941", "https://www.geonames.org/1123407/tagaw-e-taq.html ", ""],
+        ["Tufandih", "Tukhundī (?, modern)", "", "35.16412", "64.74925", "https://www.geonames.org/1123130/takhundi-kuhnah.html", "Present-day Tukhundī? (35.16412, 64.74925; https://www.geonames.org/1123130/takhundi-kuhnah.html)"],
+        ["Wak", "", "", "", "", "", ""],
+        ["Warmiyās", "", "", "", "", "", ""],
+        ["Warzīkh", "", "", "", "", "", ""],
+        ["Wāshān", "", "Wānshān", "", "", "", "Probably the valley of Wānshān (drh wʾnšʾn, דרה ואנשאן), mentioned in archive of Yehuda ben Daniel (first half of the 11th century, Bamiyan)"],
+        ["Wīlīzh", "", "Waylīzh", "", "", "", ""],
+        ["Yaskarāgh", "", "", "", "", "", ""],
+        ["Yaskin", "", "", "", "", "", ""],
+        ["Yunavo (?)", "", "", "", "", "", ""],
+        ["Zīr Damān", "", "Zīr-i Damān", "", "", "", ""],
+        ["Zuwer", "", "", "", "", "", ""],
+        ["رسحر مں (؟)", "", "", "", "", "", "The lack of diacritics prevents us from suggesting a plausible reading."]
+    ]
+
+    for toponym in toponyms:
+        models.SlTextToponym.objects.create(
+            name=toponym[0],
+            other_attested_forms=toponym[1],
+            alternative_readings=toponym[2],
+            latitude=toponym[3],
+            longitude=toponym[4],
+            urls=toponym[5],
+            notes=toponym[6],
+        )
 
 
 def insert_data_texts(apps, schema_editor):
@@ -1012,67 +1023,6 @@ def insert_data_texts(apps, schema_editor):
                         # Save the folio object once the transcription + translation data has been added
                         folio_obj.save()
 
-                # M2M relationships
-                # (some only have 1 instance in XML but field is M2M for future flexibility):
-
-                # toponyms (place/location)
-                try:
-                    toponym = profile_desc.findall('textClass/keywords/term[@type="location"]')[0].text
-                    text_obj.toponyms.add(
-                        models.SlTextTagToponym.objects.get_or_create(name=toponym)[0]
-                    )
-                except (AttributeError, IndexError):
-                    pass
-
-
-def insert_data_texts_fk(apps, schema_editor):
-    """
-    Inserts data for foreign key fields in the Text model
-    """
-
-    with open(os.path.join(PATH_OLD_DATA, "data_texts_fk.txt"), 'r') as file:
-        set_related_values(file, models.Text, 'fk')
-
-
-def insert_data_texts_m2m(apps, schema_editor):
-    """
-    Inserts data for many to many fields in the Text model
-    """
-
-    with open(os.path.join(PATH_OLD_DATA, "data_texts_m2m.txt"), 'r') as file:
-        set_related_values(file, models.Text, 'm2m')
-
-
-def insert_data_textimages(apps, schema_editor):
-    """
-    Inserts data into the Text Image model
-    """
-
-    # Delete thumbnail directory and the existing images in them, to start fresh
-    try:
-        shutil.rmtree(os.path.join(settings.BASE_DIR, f"media/palaeography/textimages-thumbnails"))
-    except FileNotFoundError:
-        pass  # it's ok if can't find dir, will just skip it
-
-    with open(os.path.join(PATH_OLD_DATA, "data_textimages.txt"), 'r') as file:
-        for object in literal_eval(file.read()):
-
-            # Tidy custom_instructions data
-            object['custom_instructions'] = strip_html_tags(object['custom_instructions'])
-
-            # Save object
-            models.TextImage.objects.create(**object)
-
-
-def insert_data_textimageparts(apps, schema_editor):
-    """
-    Inserts data into the Text Image Part model
-    """
-
-    with open(os.path.join(PATH_OLD_DATA, "data_textimageparts.txt"), 'r') as file:
-        for object in literal_eval(file.read()):
-            models.TextImagePart.objects.create(**object)
-
 
 class Migration(migrations.Migration):
 
@@ -1082,5 +1032,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(insert_data_select_list_models),
+        migrations.RunPython(insert_data_toponyms),
         migrations.RunPython(insert_data_texts)
     ]
