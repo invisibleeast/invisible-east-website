@@ -37,32 +37,6 @@ class UserAdmin(UserAdmin):
         ),
     )
 
-    def has_view_permission(self, request, obj=None):
-        # TODO remove this entire method when test is over
-        if request.user.email in [
-            'mike@mike.com',
-            'ahrsoftware@ahrsoftware.co.uk',
-            'edward.shawe-taylor@ames.ox.ac.uk',
-            'silvia.ferreri@ames.ox.ac.uk',
-            'arezou.azad@ames.ox.ac.uk'
-        ]:
-            return True
-        else:
-            return False
-
-    def has_change_permission(self, request, obj=None):
-        # TODO remove this entire method when test is over
-        if request.user.email in [
-            'mike@mike.com',
-            'ahrsoftware@ahrsoftware.co.uk',
-            'edward.shawe-taylor@ames.ox.ac.uk',
-            'silvia.ferreri@ames.ox.ac.uk',
-            'arezou.azad@ames.ox.ac.uk'
-        ]:
-            return True
-        else:
-            return False
-
     def has_add_permission(self, request, obj=None):
         return False
 
