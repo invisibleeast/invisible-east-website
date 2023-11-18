@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
 from django.db.models import ManyToManyField, ForeignKey
+from django.db.models import Prefetch
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 from django.conf import settings
 from django.core.mail import send_mail
@@ -449,10 +450,15 @@ class TextAdminView(GenericAdminView):
         queryset = super().get_queryset(request)
         # Prefetch related (multiple related data)
         queryset = queryset.prefetch_related(
+            Prefetch(
+                'additional_languages',
+                models.SlTextLanguage.objects.all().select_related('script')
+            ),
             'text_folios',
         )
         # Select related (single related data)
         queryset = queryset.select_related(
+            'admin_classification',
             'collection',
             'primary_language__script',
             'type__category',

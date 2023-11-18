@@ -8,6 +8,19 @@ $(document).ready(function(){
     // and Arabic (etc) will be right to left (rtl)
     $('input, textarea').attr('dir', 'auto');
 
+    function setCKEditorContentDirAuto(){
+        // Set the direction of ckeditor text input p tags as auto,
+        // so each paragraph in the textarea can be left or right depending on language
+        $('.cke_wysiwyg_frame').each(function(){
+            $(this).contents().find('p, ul, ol, span, td, li, tr').attr('dir', 'auto');
+        });
+    }
+
+    // After 1 second (enough time for ckeditor iframes to load)
+    setTimeout(function(){
+        setCKEditorContentDirAuto();
+    }, 1000);
+
     // Warn users when they're leaving the page if there are any unsaved changes to the data
     var formHasSubmitted = false;
     function warnUsersLeavingActiveForm(){

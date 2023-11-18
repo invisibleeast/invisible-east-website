@@ -806,6 +806,7 @@ You can edit/delete an existing table (e.g. add/remove a row/column) by right cl
             lines_data = []
             soup = BeautifulSoup(text_field, features="html.parser")
             lines = soup.find_all(['li', 'table'])
+            rtl = self.text.primary_language.script.is_written_right_to_left and field_name == 'transcription'
             line_number = 0
             line_index = -1
 
@@ -870,7 +871,7 @@ You can edit/delete an existing table (e.g. add/remove a row/column) by right cl
                         'image_part_width_attr': image_part_width_attr,
                         'image_part_height_attr': image_part_height_attr,
                         'lineNumberLabel': line_number_label,
-                        'rtl': self.text.primary_language.script.is_written_right_to_left and field_name == 'transcription',
+                        'rtl': rtl,
                         'text': "".join([str(t) for t in line.contents])
                     })
 
@@ -882,16 +883,18 @@ You can edit/delete an existing table (e.g. add/remove a row/column) by right cl
                         line_index += 1
                         # Assign
                         td['class'] = 'folio-lines-line'
+                        td['dir'] = 'auto'
                         td['data-linenumbers'] = ''
                         td['data-lineindex'] = line_index
                         td['data-trans'] = field_name
                         td['data-folio'] = self.id
-                    # Add a line number at the start of each row
+                    # Add a new td containing the line number at the start of each row
                     for tr_index, tr in enumerate(line.find_all('tr')):
-                        new_td = soup.new_tag('td', **{'class': 'line-number'})
+                        line_number_td = soup.new_tag('td', **{'class': 'line-number'})
                         tr_number = int(str(lines_data[-1]['lineNumbers']).split(',')[-1]) + 1 + tr_index if len(lines_data) else 1 + tr_index
-                        new_td.string = str(tr_number)
-                        tr.insert(0, new_td)
+                        line_number_td.string = str(tr_number)
+                        # If rtl insert end of row, if ltr insert start of row
+                        tr.insert(-1 if rtl else 0, line_number_td)
 
                     # Build the html for the table and add it to lines_data
                     table_html = f'<table class="folio-table">{"".join([str(tag) for tag in line])}</table>'
