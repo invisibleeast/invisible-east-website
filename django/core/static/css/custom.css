@@ -1298,16 +1298,15 @@ div.folio-lines-line.active {
     border: 3px solid var(--color-primary);
 }
 
-.folio-witnesses {
-    margin-top: 2em;
-    padding: 0 0.5em;
-}
-
 .folio-table {
-    margin: 1em 1em 1em 1.7em;
+    margin: 1em 1.7em 1em 1.7em;
     border-collapse: collapse;
     border-spacing: 1em;
     width: calc(100% - 2.7em);
+}
+
+.folio-table.rtl {
+    width: calc(100% - 7.7em);
 }
 
 .folio-table td.line-number {

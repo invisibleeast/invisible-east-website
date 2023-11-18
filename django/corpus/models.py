@@ -893,11 +893,10 @@ You can edit/delete an existing table (e.g. add/remove a row/column) by right cl
                         line_number_td = soup.new_tag('td', **{'class': 'line-number'})
                         tr_number = int(str(lines_data[-1]['lineNumbers']).split(',')[-1]) + 1 + tr_index if len(lines_data) else 1 + tr_index
                         line_number_td.string = str(tr_number)
-                        # If rtl insert end of row, if ltr insert start of row
-                        tr.insert(-1 if rtl else 0, line_number_td)
+                        tr.insert(0, line_number_td)
 
                     # Build the html for the table and add it to lines_data
-                    table_html = f'<table class="folio-table">{"".join([str(tag) for tag in line])}</table>'
+                    table_html = f'<table class="folio-table{(" rtl" if rtl else "")}">{"".join([str(tag) for tag in line])}</table>'
 
                     # Add related lines
                     if field_name != 'transcription':
