@@ -261,10 +261,10 @@ transFields.forEach(function(transField){
     });
 });
 
-// Ensure witness table has correct content (e.g. append the drawing checkbox if relevant)
+// Ensure td in folio tables have correct content (e.g. append the drawing checkbox if relevant)
 if ($('.folio-lines-line-draw').length){
     $('td.folio-lines-line').each(function(){
-        $(this).append(`<span class="folio-lines-line-draw-container"><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this witness line on image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></span>`);
+        $(this).append(`<span class="folio-lines-line-draw-container"><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this part of the table on the image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></span>`);
     });
 }
 
@@ -274,7 +274,8 @@ $('.folio-lines-line').each(function(){
 });
 
 function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
-    if ($('.folio-lines-line.active').length){
+    // If there's an active line and the position data is valid (to prevent accidental form submission)
+    if ($('.folio-lines-line.active').length && newImagePartDrawData.left != 0 && newImagePartDrawData.top != 0 && newImagePartDrawData.width != 0 && newImagePartDrawData.height != 0){
         let form = $('article.tabbed.active #corpus-text-detail-trans-drawlineonimage-form');
         // Set text folio
         let textFolio = $('#corpus-text-detail-images-controls-chooseimage select').val();
@@ -282,9 +283,6 @@ function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
         // Set line index
         let line_index = $('.folio-lines-line.active').attr('data-lineindex');
         form.find('input[name="line_index"]').val(line_index);
-        // Set line html tag (e.g. li for normal lines or tr for witnesses)
-        let line_html_tag = $('.folio-lines-line.active').get(0).tagName.toLowerCase();
-        form.find('input[name="line_html_tag"]').val(line_html_tag);
 
         // Either add image part position data or delete the image part
         if (deleteImagePartDrawing){
@@ -794,7 +792,7 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
     // Line of Text
     else if (tab === 'transcription'){
         $('#corpus-text-detail-content-transcription').animate({
-            scrollTop: $('.folio-lines-line.active').first().offset().top
+            scrollTop: $('.folio-lines-line.active').first().offset().top - 300
         });
     }
 });

@@ -493,7 +493,7 @@ class TextAdminView(GenericAdminView):
 
     def has_change_permission(self, request, obj=None):
         # return self.has_manage_permission(request, obj)
-        return True if obj and request.user == obj.meta_created_by else False  # TODO - temp during tets, uncomment above line when tests done
+        return True #if obj and request.user == obj.meta_created_by else False  # TODO - temp during tets, uncomment above line when tests done
 
     def has_delete_permission(self, request, obj=None):
         # return self.has_manage_permission(request, obj)

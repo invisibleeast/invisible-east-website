@@ -7,7 +7,7 @@ from ast import literal_eval
 from html.parser import HTMLParser
 from io import StringIO
 from account import models as account_models
-import os, shutil, re
+import os
 
 
 # Reusable functions/variables
@@ -619,7 +619,7 @@ def insert_data_toponyms(apps, schema_editor):
         ["Azraw", "", "", "34.17355", "69.64573", "http://www.geonames.org/1147851/hukumati-azrah.html ", ""],
         ["Balkh", "", "", "36.75635", "66.8972", "http://www.geonames.org/1147290/balkh.html ", ""],
         ["Bāmiyān", "", "", "34.82156", "67.82734", "http://www.geonames.org/1147242/bamyan.html ", ""],
-        ["Bandālīzh", "Bandānlīzh, Bandālīch, Bandān Līch, Band-i ʿAlī (?, modern)", "Band-i Alīzh, Band-i Ilīzh", "34.52397", "65.4381", "", "Present-day Band-i ʿAlī? (34.52397, 65.4381; http://www.geonames.org/1147204/band-e-ali.html)"],
+        ["Bandālīzh", "Bandānlīzh, Bandālīch, Bandān Līch, Band-i ʿAlī (?, modern)", "Band-i Alīzh, Band-i Ilīzh", "34.52397", "65.4381", "http://www.geonames.org/1147204/band-e-ali.html", "Present-day Band-i ʿAlī? (34.52397, 65.4381; http://www.geonames.org/1147204/band-e-ali.html)"],
         ["Band-i Khāsh", "Darra-yi Khāsh (?, modern)", "", "36.90561", "70.75941", "http://www.geonames.org/1136859/darah-ye-khash.html ", "A settlement by the name of Darra-yi Khāsh is situated in Badakhshān province (36.90561, 70.75941; http://www.geonames.org/1136859/darah-ye-khash.html ). However, it is unlikely that it is the same place mentioned in this document."],
         ["Barāslīzh", "", "", "", "", "", "Written ىراسلیژ. The lack of diacritics provided further reading possibilities."],
         ["Bardīz", "", "", "35.02256", "65.37386", "https://www.geonames.org/1147001/bardayz.html", ""],
@@ -627,7 +627,7 @@ def insert_data_toponyms(apps, schema_editor):
         ["Chākarī", "Chākarī (modern)", "Chāgarī, Jākar, Jāgarī", "35.99866", "69.64595", "https://www.geonames.org/1145604/chakari.html", "A settlement called Chākarī is situated in Baghlān province (35.99866, 69.64595; https://www.geonames.org/1145604/chakari.html). The connection to Jāghurī in Ghazni province seems less likely (33.14341, 67.46384; http://www.geonames.org/7052958/jaghuri.html)."],
         ["Chawqānī", "", "Jawqānī", "35.60195", "68.90153", "http://www.geonames.org/1469969/chowgani.html ", ""],
         ["Dāmam", "", "", "", "", "", ""],
-        ["Dar Ṭakh", "Takht (?, modern)", "", "34.99825", "65.77522", "", "Present-day Takht? (34.99825, 65.77522; http://www.geonames.org/1123188/takht.html )"],
+        ["Dar Ṭakh", "Takht (?, modern)", "", "34.99825", "65.77522", "http://www.geonames.org/1123188/takht.html", "Present-day Takht? (34.99825, 65.77522; http://www.geonames.org/1123188/takht.html )"],
         ["Dāwar", "", "", "", "", "", ""],
         ["Dupawi", "", "", "", "", "", ""],
         ["Durustī", "", "", "35.01667", "69.31667", "http://www.geonames.org/1142828/dorosti.html ", ""],
@@ -637,7 +637,7 @@ def insert_data_toponyms(apps, schema_editor):
         ["Funduqistān", "Fondukistan (modern)", "", "34.98978", "68.90007", "https://www.geonames.org/9199798/fondukistan.html", ""],
         ["Garokan", "", "", "", "", "", ""],
         ["Gaz", "", "", "", "", "", ""],
-        ["Ghandamīn", "Ghalmin (?, modern)", "", "", "", "", "Present-day Ghalmīn? (34.8701, 65.31396;http://www.geonames.org/1144000/darah-ye-ghalmin.html)"],
+        ["Ghandamīn", "Ghalmin (?, modern)", "", "34.8701", "65.31396", "http://www.geonames.org/1144000/darah-ye-ghalmin.html", "Present-day Ghalmīn? (34.8701, 65.31396;http://www.geonames.org/1144000/darah-ye-ghalmin.html)"],
         ["Ghandaq", "Ghandak (modern)", "", "34.99267", "68.01635", "http://www.geonames.org/1141452/ghandak.html", "Present-day Ghandak? (34.99267, 68.01635; http://www.geonames.org/1141452/ghandak.html)"],
         ["Ghandar", "", "", "", "", "", ""],
         ["Ghārmīkh", "", "Ghārminj, Ghārmikh", "", "", "", ""],
@@ -670,9 +670,9 @@ def insert_data_toponyms(apps, schema_editor):
         ["Nāy", "Nay Qalʿa (?, modern)", "", "34.81138", "68.18428", "http://www.geonames.org/1455934/nay-qal-ah.html", "Present-day Nay Qalʿa? (34.81138, 68.18428; http://www.geonames.org/1455934/nay-qal-ah.html). In Bāmiyān and its surroundings, there are many names with suffixes or prefixes of Nay and Nāy."],
         ["Nayak", "", "Himak, Nimak", "34.7295", "66.95501", "http://www.geonames.org/1457791/nayak.html ", ""],
         ["Nīlinj", "Nilinj (modern)", "", "35.07262", "65.14814", "http://www.geonames.org/1132408/nalinj.html ", ""],
-        ["Pūza-yi ʿUlyā", "Pūza-yi Līch-i ʿUlyā (?, modern)", "", "34.53323", "65.32883", "", "Present-day Pūza-yi Līch-i ʿUlyā? (34.53323, 65.32883; http://www.geonames.org/1130299/pozah-ye-lich-e-ulya.html)"],
+        ["Pūza-yi ʿUlyā", "Pūza-yi Līch-i ʿUlyā (?, modern)", "", "34.53323", "65.32883", "http://www.geonames.org/1130299/pozah-ye-lich-e-ulya.html", "Present-day Pūza-yi Līch-i ʿUlyā? (34.53323, 65.32883; http://www.geonames.org/1130299/pozah-ye-lich-e-ulya.html)"],
         ["Rabanjī", "", "", "", "", "", "The lack of diacritics provided further reading possibilities."],
-        ["Rāq", "Kūh-i Rāq", "", "35.73831", "66.21102", "", "Near present-day Kūh-i Rāq? (35.73831, 66.21102; https://www.geonames.org/1427015/koh-e-raq.html)"],
+        ["Rāq", "Kūh-i Rāq", "", "35.73831", "66.21102", "https://www.geonames.org/1427015/koh-e-raq.html", "Near present-day Kūh-i Rāq? (35.73831, 66.21102; https://www.geonames.org/1427015/koh-e-raq.html)"],
         ["Rīw", "Riwah (?, modern)", "Zīr", "35.06529", "68.94578", "https://www.geonames.org/1128357/riwah.html", "Present-day Riwah (روه)? (35.06529, 68.94578; https://www.geonames.org/1128357/riwah.html)"],
         ["Rizm", "", "", "", "", "", ""],
         ["Rob", "", "", "", "", "", ""],

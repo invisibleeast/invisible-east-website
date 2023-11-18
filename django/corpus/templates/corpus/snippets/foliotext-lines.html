@@ -1,47 +1,45 @@
 {% for line in trans_text_lines %}
     <div>
 
+        <!-- If this 'line' is a table, then insert the HTML generated in models.py for this table -->
         {% if line.table %}
-            <div class="folio-witnesses">
-                <div class="folio-witnesses-title">Witnesses</div>
-                {{ line.table | safe }}
+            {{ line.table | safe }}
+
+        <!-- Standard line (e.g. originally an <li> tag in original data input) -->
+        {% else %}
+            <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{% if line.trans == 'transcription' %}{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}{% endif %}>
+                <!-- Put line number on left if not rtl (so ltr) -->
+                {% if not line.rtl %}
+                    <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+                {% endif %}
+                <!-- Line text -->
+                <span class="folio-lines-line-text{% if line.rtl %} rtl" dir="rtl"{% else %}"{% endif %}>{{ line.text | safe }}</span>
+                <!-- Put line number on right if not rtl (so ltr) -->
+                {% if line.rtl %}
+                    <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+                {% endif %}
+
+                {% comment %}
+                    Only allow user to draw lines of text on image if:
+                    - they're super user
+                    - there's a folio image to draw on
+                    - they're drawing the transcription line (other trans lines aren't wanted by project team, but can be easily added back if needed by removing this if statement and the one above for image part attr data)
+                {% endcomment %}
+                {% if user.is_admin and text_folio.image and line.trans == 'transcription' %}
+                    <!-- Note that this is only for lines of text. For lines/rows in tables these checkboxes are inserted dynamically in detail.js -->
+                    <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start" title="Click to start drawing line of text on image"> <i class="fas fa-pencil-alt"></i></span>
+                {% endif %}
             </div>
-        {% endif %}
-
-        <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{% if line.trans == 'transcription' %}{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}{% endif %}>
-            <!-- Put line number on left if not rtl (so ltr) -->
-            {% if not line.rtl %}
-                <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+            <!-- Related lines -->
+            {% if line.trans != 'transcription' %}
+                <div class="related-lines" data-trans="transcription"></div>
             {% endif %}
-            <!-- Line text -->
-            <span class="folio-lines-line-text{% if line.rtl %} rtl" dir="rtl"{% else %}"{% endif %}>{{ line.text | safe }}</span>
-            <!-- Put line number on right if not rtl (so ltr) -->
-            {% if line.rtl %}
-                <span class="folio-lines-line-number">{{ line.lineNumberLabel }}</span>
+            {% if line.trans != 'translation' %}
+                <div class="related-lines" data-trans="translation"></div>
             {% endif %}
-
-            {% comment %}
-                Only allow user to draw lines of text on image if:
-                - they're super user
-                - there's a folio image to draw on
-                - they're drawing the transcription line (other trans lines aren't wanted by project team, but can be easily added back if needed by removing this if statement and the one above for image part attr data)
-            {% endcomment %}
-            {% if user.is_admin and text_folio.image and line.trans == 'transcription' %}
-                <!-- Note that this is only for lines of text. For lines/rows in witness table these checkboxes are inserted dynamically in detail.js -->
-                <span class="folio-lines-line-draw"><input type="checkbox" class="folio-lines-line-draw-start" title="Click to start drawing line of text on image"> <i class="fas fa-pencil-alt"></i></span>
+            {% if line.trans != 'transliteration' %}
+                <div class="related-lines" data-trans="transliteration"></div>
             {% endif %}
-        </div>
-
-        {% if line.trans != 'transcription' %}
-            <div class="related-lines" data-trans="transcription"></div>
-        {% endif %}
-
-        {% if line.trans != 'translation' %}
-            <div class="related-lines" data-trans="translation"></div>
-        {% endif %}
-
-        {% if line.trans != 'transliteration' %}
-            <div class="related-lines" data-trans="transliteration"></div>
         {% endif %}
 
     </div>

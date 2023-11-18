@@ -1303,36 +1303,37 @@ div.folio-lines-line.active {
     padding: 0 0.5em;
 }
 
-.folio-witnesses-title {
-    font-weight: 600;
-    font-size: 1.2em;
-    color: var(--color-primary);
-    margin-bottom: 0.5em;
-}
-
-.folio-witnesses-table {
+.folio-table {
+    margin: 1em 1em 1em 1.7em;
     border-collapse: collapse;
     border-spacing: 1em;
-    width: 100%;
+    width: calc(100% - 2.7em);
 }
 
-.folio-witnesses-table td,
-.folio-witnesses-table th {
+.folio-table td.line-number {
+    font-weight: bold;
     border: none;
-    vertical-align: top;
+    width: 2.3em;
 }
 
-.folio-witnesses-table span.folio-lines-line-draw-container {
+.folio-table td,
+.folio-table th {
+    border: 1px solid #AAA;
+    vertical-align: top;
+    width: fit-content;
+}
+
+.folio-table span.folio-lines-line-draw-container {
     width: 4em;
     display: inline-block;
     margin-left: 1em;
 }
 
-.folio-witnesses-table td.folio-lines-line {
+.folio-table td.folio-lines-line {
     padding: 0.3em;
 }
 
-.folio-witnesses-table td.folio-lines-line.active {
+.folio-table td.folio-lines-line.active {
     outline: 3px solid var(--color-primary);
 }
 

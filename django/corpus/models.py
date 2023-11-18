@@ -337,7 +337,7 @@ class SlTextGregorianCentury(SlAbstract):
 class SlPersonInTextRole(SlAbstract):
     """
     A type of person within a text.
-    E.g. 'promisor', 'promisee', 'witness', 'sender', 'receiver'
+    E.g. 'promisor', 'promisee', 'sender', 'receiver'
     """
     pass
 
@@ -769,13 +769,11 @@ To manually override an automatic line number simply:
 &nbsp;&nbsp;&nbsp;&nbsp;3. If last line is a range (e.g. 8-9) add <em>'data-range-end'</em>. E.g. <em>&lt;li data-range-end="9"&gt;</em>
 <br>
 <br>
-Witnesses table:
+Tables:
 <br>
-To add a Witnesses table (only relevant to Legal Documents), click on the table button
+To add a table, click on the table button in the toolbar
 <br>
-Ensure the Witnesses table is inserted below the list of lines of text and that you only add 1 table (additional tables will be ignored)
-<br>
-You can edit an existing Witnesses table (e.g. add/remove a row/column) by right clicking the table
+You can edit/delete an existing table (e.g. add/remove a row/column) by right clicking the table and choosing the appropriate option
 """
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
@@ -806,82 +804,107 @@ You can edit an existing Witnesses table (e.g. add/remove a row/column) by right
         # Ensure the transcription is a HTML ordered list with items
         if '<ol' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
             lines_data = []
-            text_as_html = BeautifulSoup(text_field, features="html.parser")
-            lines = text_as_html.find_all('li')
+            soup = BeautifulSoup(text_field, features="html.parser")
+            lines = soup.find_all(['li', 'table'])
             line_number = 0
+            line_index = -1
 
-            for line_index, line in enumerate(lines):
+            for line in lines:
 
-                # Line number
-                try:
-                    line_number = int(line.attrs['value'])
-                except KeyError:
-                    line_number += 1
-                # Line number range end
-                try:
-                    # If the next line has a value attribute that's greater than 1 more than current line count then
-                    next_line_number = int(lines[line_index + 1].attrs['value'])
-                    if line_number < (next_line_number - 1):
-                        line_number_range_end = next_line_number - 1
-                except (IndexError, KeyError):
+                # Lines that are <li> elements (aka list items in a <ol> element, aka standard lines of text)
+                if str(line).startswith('<li'):
+
+                    # Increase the line index for each line
+                    line_index += 1
+
+                    # Line number
                     try:
-                        # Try getting the current line's 'data-range-end' attribute (valid if this is the last line)
-                        line_number_range_end = int(line.attrs['data-range-end'])
+                        line_number = int(line.attrs['value'])
                     except KeyError:
-                        line_number_range_end = None
-                # Line number label
-                line_number_label = f'{line_number}-{line_number_range_end}' if line_number_range_end else str(line_number)
-                # Line numbers (e.g. if line number label is 4-6 then line numbers is 4,5,6)
-                line_numbers = ",".join([str(ln) for ln in range(line_number, line_number_range_end + 1)]) if line_number_range_end else line_number
+                        line_number += 1
+                    # Line number range end
+                    try:
+                        # If the next line has a value attribute that's greater than 1 more than current line count then
+                        next_line_number = int(lines[line_index + 1].attrs['value'])
+                        if line_number < (next_line_number - 1):
+                            line_number_range_end = next_line_number - 1
+                    except (IndexError, KeyError):
+                        try:
+                            # Try getting the current line's 'data-range-end' attribute (valid if this is the last line)
+                            line_number_range_end = int(line.attrs['data-range-end'])
+                        except KeyError:
+                            line_number_range_end = None
+                    # Line number label
+                    line_number_label = f'{line_number}-{line_number_range_end}' if line_number_range_end else str(line_number)
+                    # Line numbers (e.g. if line number label is 4-6 then line numbers is 4,5,6)
+                    line_numbers = ','.join([str(ln) for ln in range(line_number, line_number_range_end + 1)]) if line_number_range_end else line_number
 
-                # Image part data
-                try:
-                    # Get attr values from line li element
-                    image_part_left = line.attrs['data-imagepartleft']
-                    image_part_top = line.attrs['data-imageparttop']
-                    image_part_width = line.attrs['data-imagepartwidth']
-                    image_part_height = line.attrs['data-imagepartheight']
+                    # Image part data
+                    try:
+                        # Get attr values from line li element
+                        image_part_left = line.attrs['data-imagepartleft']
+                        image_part_top = line.attrs['data-imageparttop']
+                        image_part_width = line.attrs['data-imagepartwidth']
+                        image_part_height = line.attrs['data-imagepartheight']
 
-                    # Build new attributes to add to new line div element (if provided)
-                    image_part_left_attr = f' data-imagepartleft={image_part_left}' if image_part_left else ''
-                    image_part_top_attr = f' data-imageparttop={image_part_top}' if image_part_top else ''
-                    image_part_width_attr = f' data-imagepartwidth={image_part_width}' if image_part_width else ''
-                    image_part_height_attr = f' data-imagepartheight={image_part_height}' if image_part_height else ''
-                except KeyError:
-                    # Set empty attributes
-                    image_part_left_attr = ''
-                    image_part_top_attr = ''
-                    image_part_width_attr = ''
-                    image_part_height_attr = ''
+                        # Build new attributes to add to new line div element (if provided)
+                        image_part_left_attr = f' data-imagepartleft={image_part_left}' if image_part_left else ''
+                        image_part_top_attr = f' data-imageparttop={image_part_top}' if image_part_top else ''
+                        image_part_width_attr = f' data-imagepartwidth={image_part_width}' if image_part_width else ''
+                        image_part_height_attr = f' data-imagepartheight={image_part_height}' if image_part_height else ''
+                    except KeyError:
+                        # Set empty attributes
+                        image_part_left_attr = ''
+                        image_part_top_attr = ''
+                        image_part_width_attr = ''
+                        image_part_height_attr = ''
 
-                # Build dict for this line and add to list of lines data
-                lines_data.append({
-                    'lineNumbers': line_numbers,
-                    'lineIndex': line_index,
-                    'trans': field_name,
-                    'folio': self.id,
-                    'image_part_left_attr': image_part_left_attr,
-                    'image_part_top_attr': image_part_top_attr,
-                    'image_part_width_attr': image_part_width_attr,
-                    'image_part_height_attr': image_part_height_attr,
-                    'lineNumberLabel': line_number_label,
-                    'rtl': self.text.primary_language.script.is_written_right_to_left and field_name == 'transcription',
-                    'text': "".join([str(t) for t in line.contents])
-                })
+                    # Build dict for this line and add to list of lines data
+                    lines_data.append({
+                        'lineNumbers': line_numbers,
+                        'lineIndex': line_index,
+                        'trans': field_name,
+                        'folio': self.id,
+                        'image_part_left_attr': image_part_left_attr,
+                        'image_part_top_attr': image_part_top_attr,
+                        'image_part_width_attr': image_part_width_attr,
+                        'image_part_height_attr': image_part_height_attr,
+                        'lineNumberLabel': line_number_label,
+                        'rtl': self.text.primary_language.script.is_written_right_to_left and field_name == 'transcription',
+                        'text': "".join([str(t) for t in line.contents])
+                    })
 
-            # Build witnesses table HTML
-            if '<table' in text_field:
-                table = text_as_html.find('table')
-                # Each <td> tag in table can be drawn on image, so need to store additional data for each td cell in table
-                for td_index, td in enumerate(table.find_all('td')):
-                    td['class'] = 'folio-lines-line'
-                    td['data-linenumbers'] = ''
-                    td['data-lineindex'] = td_index + len(lines)
-                    td['data-trans'] = field_name
-                    td['data-folio'] = self.id
-                # Wrap the table contents in a <table> tag with appropriate class name
-                table_html = f'<table class="folio-witnesses-table">{"".join([str(tag) for tag in table])}</table>'
-                lines_data.append({'table': table_html})
+                # Lines that are a <table> element (e.g. witness tables, etc.)
+                elif str(line).startswith('<table'):
+                    # Process all <td> elements in table
+                    for td in line.find_all('td'):
+                        # Increase the line index for each td, as each td is considered a 'line' (i.e. can draw each td on an image and highlight each td on hover)
+                        line_index += 1
+                        # Assign
+                        td['class'] = 'folio-lines-line'
+                        td['data-linenumbers'] = ''
+                        td['data-lineindex'] = line_index
+                        td['data-trans'] = field_name
+                        td['data-folio'] = self.id
+                    # Add a line number at the start of each row
+                    for tr_index, tr in enumerate(line.find_all('tr')):
+                        new_td = soup.new_tag('td', **{'class': 'line-number'})
+                        tr_number = int(str(lines_data[-1]['lineNumbers']).split(',')[-1]) + 1 + tr_index if len(lines_data) else 1 + tr_index
+                        new_td.string = str(tr_number)
+                        tr.insert(0, new_td)
+
+                    # Build the html for the table and add it to lines_data
+                    table_html = f'<table class="folio-table">{"".join([str(tag) for tag in line])}</table>'
+
+                    # Add related lines
+                    if field_name != 'transcription':
+                        table_html += '<div class="related-lines" data-trans="transcription"></div>'
+                    if field_name != 'translation':
+                        table_html += '<div class="related-lines" data-trans="translation"></div>'
+                    if field_name != 'transliteration':
+                        table_html += '<div class="related-lines" data-trans="transliteration"></div>'
+
+                    lines_data.append({'table': table_html})
 
             return lines_data
 
