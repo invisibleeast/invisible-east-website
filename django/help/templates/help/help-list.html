@@ -26,11 +26,8 @@
             <div class="help-list-items-item-details" data-description="{{ object.description }}">{{ object.list_details | safe }}</div>
         </a>
     {% empty %}
-        <div class="help-list-items-empty">
-            <div class="help-list-items-empty-title">No help items</div>
-            <div class="help-list-items-empty-details">
-                There are no help items to show yet. Please check back soon.
-            </div>
+        <div id="help-list-items-empty">
+            There are no help items to show yet. Please check back soon.
         </div>
     {% endfor %}
 </section>

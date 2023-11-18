@@ -1615,6 +1615,13 @@ div.folio-lines-line.active {
     opacity: 0.8;
 }
 
+#help-list-items-empty {
+    text-align: center;
+    margin-top: 2em;
+    opacity: 0.5;
+    font-size: 1.3em;
+}
+
 #help-detail-link {
     text-align: center;
     font-size: 1.1em;
