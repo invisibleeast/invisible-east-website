@@ -472,12 +472,13 @@ class TextAdminView(GenericAdminView):
         Determine if this obj can be managed (edited/deleted) by current user
         This method must be called in both has_change_permission() and has_delete_permission() below
         """
-        if obj:
-            # Specify users (by email address) who can always manage all texts (e.g. software dev + project lead)
-            if request.user.email in settings.USERS_WHO_CAN_MANAGE_ALL_TEXTS:
-                return True
+
+        # Specify users (by email address) who can always manage all texts (e.g. software dev + project lead)
+        if request.user.email in settings.USERS_WHO_CAN_MANAGE_ALL_TEXTS:
+            return True
+        elif obj:
             # Allow changes if neither Principal Editor and Principal Data Entry Person have been set
-            elif not obj.admin_principal_editor and not obj.admin_principal_data_entry_person:
+            if not obj.admin_principal_editor and not obj.admin_principal_data_entry_person:
                 return True
             # Allow changes if a Principal Editor has been set and is the current user
             elif obj.admin_principal_editor and obj.admin_principal_editor == request.user:
@@ -485,7 +486,8 @@ class TextAdminView(GenericAdminView):
             # Allow changes if a Principal Data Entry has been set and is the current user
             elif obj.admin_principal_data_entry_person and obj.admin_principal_data_entry_person == request.user:
                 return True
-        return False
+        else:
+            return False
 
     def has_change_permission(self, request, obj=None):
         return self.has_manage_permission(request, obj)
