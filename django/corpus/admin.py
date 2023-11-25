@@ -32,7 +32,7 @@ def get_manytomany_fields(model, exclude=[]):
     Returns a list of strings containing the field names of many to many fields of a model
     To ignore certain fields, provide a list of such field names (as strings) using the exclude parameter
     """
-    return list(f.name for f in model._meta.get_fields() if type(f) == ManyToManyField and f.name not in exclude)
+    return list(f.name for f in model._meta.get_fields() if type(f) is ManyToManyField and f.name not in exclude)
 
 
 def get_foreignkey_fields(model, exclude=[]):
@@ -40,7 +40,7 @@ def get_foreignkey_fields(model, exclude=[]):
     Returns a list of strings containing the field names of foreign key fields of a model
     To ignore certain fields, provide a list of such field names (as strings) using the exclude parameter
     """
-    return list(f.name for f in model._meta.get_fields() if type(f) == ForeignKey and f.name not in exclude)
+    return list(f.name for f in model._meta.get_fields() if type(f) is ForeignKey and f.name not in exclude)
 
 
 class GenericAdminView(admin.ModelAdmin):
@@ -465,7 +465,6 @@ class TextAdminView(GenericAdminView):
             'document_subtype__category'
         )
         return queryset
-
 
     def has_manage_permission(self, request, obj):
         """

@@ -890,8 +890,16 @@ You can edit/delete an existing table (e.g. add/remove a row/column) by right cl
                         td['data-folio'] = self.id
                     # Add a new td containing the line number at the start of each row
                     for tr_index, tr in enumerate(line.find_all('tr')):
-                        line_number_td = soup.new_tag('td', **{'class': 'line-number'})
-                        tr_number = int(str(lines_data[-1]['lineNumbers']).split(',')[-1]) + 1 + tr_index if len(lines_data) else 1 + tr_index
+                        line_number_td = soup.new_tag('td', **{'class': 'line-number', 'dir': f'{"rtl" if rtl else "auto"}'})
+                        # Line number: if this <table> is first element in whole trans text
+                        if len(lines_data) == 0:
+                            tr_number = 1 + tr_index
+                        # Line number: if previous item in lines_data is a <li>
+                        elif 'lineNumbers' in lines_data[-1]:
+                            tr_number = int(str(lines_data[-1]['lineNumbers']).split(',')[-1]) + 1 + tr_index
+                        # Line number: all other cases (e.g. if previous item in lines_data is another table)
+                        else:
+                            tr_number += 1
                         line_number_td.string = str(tr_number)
                         tr.insert(0, line_number_td)
 
