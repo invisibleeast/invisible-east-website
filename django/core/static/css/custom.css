@@ -476,10 +476,16 @@ main section {
     text-align: center;
 }
 
+#welcome-banner-tagline a,
+#welcome-banner-tagline a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
 #welcome-banner-icon {
     height: 25vh;
     display: block;
-    margin: 7vh auto;
+    margin: 5vh auto 3vh auto;
 }
 
 #welcome-banner-title {

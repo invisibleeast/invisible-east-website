@@ -108,12 +108,15 @@
                             <a class="dropdown-item" href="{% url 'general:about-credits' %}">Credits</a>
                         </div>
                     </li>
-                    <!-- Help -->
-                    <li class="nav-item">
-                        <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="{% url 'help:list' %}">
-                            Help
-                        </a>
-                    </li>
+                    {% comment %}
+                        {# this is temporarily hidden until the team has content to add to the help section, then it can be shown again #}
+                        <!-- Help -->
+                        <li class="nav-item">
+                            <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="{% url 'help:list' %}">
+                                Help
+                            </a>
+                        </li>
+                    {% endcomment %}
                     <!-- Project -->
                     <li class="nav-item">
                         <a class="nav-link" href="https://invisibleeast.web.ox.ac.uk/" target="_blank">

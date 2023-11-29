@@ -31,7 +31,7 @@
 
     #welcome-banner {
         min-height: calc(100vh - 4rem);
-        padding: 2rem;
+        padding: 1rem;
     }
 
     #welcome-banner-title {
@@ -39,7 +39,7 @@
     }
 
     #welcome-banner-tagline {
-        font-size: 1.6em;
+        font-size: 1.5em;
     }
 
     /* ---------- Corpus: List ---------- */

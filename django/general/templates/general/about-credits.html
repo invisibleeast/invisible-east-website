@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static settings_value %}
 
 {% block main %}
 
 <section class="container">
     <h2>Credits</h2>
-    <h3>Invisible East Digital Corpus v1.x</h3>
+    <h3>Invisible East Digital Corpus (v{% settings_value 'VERSION' %})</h3>
 
     <h4>PI (Research Lead)</h4>
     <p>Arezou Azad</p>
