@@ -344,22 +344,36 @@ def insert_data_select_list_models(apps, schema_editor):
 
     # SlTextFolioTag and SlTextFolioTagCategory (multiple loops, one for each category)
     for name in [
-        'Mann',
-        'Sitīr',
-        'Qafīz/Qawīz',
-        'Tasū',
-        'Ṭās',
-        'Pāra',
-        'Kharwār',
-        'Paymāna',
-        'Juft',
-        'Tīr'
-    ]:
-        models.SlTextFolioTag.objects.create(
-            name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Land measurement units')[0]
-        )
-    for name in [
+        'Tafṣīl (itemisation)',
+        'Wajh/wujūh (in account/payment of)',
+        'Bāqī (remainder)',
+        'Wām (-I lāzim) (loan)',
+
+        'Pious invocations',
+        'Bismillāh (including abbrev)',
+        'In a state of sound body and mind',
+        'Of their own volition and without coercion',
+        'Iqrār opener',
+        'Jawāz (person with legal agency)',
+        'ʿUḍr/ghiflat (excuse or delay)',
+        'Muhlat (extension granted)',
+        'Guwāhī',
+        'Dhimmat (obligation, charge)',
+        'Iʿtimād nimūdan [bar-īn nishān] (trust the seal)',
+        'Gharāmat (fine, debt)',
+        'Ḥīmāyat (protection)',
+        'Ḥaq/Ḥuqūq (obligation, policy, assessed payment)',
+        'Abandoned property',
+        'Tafārīqāt',
+        'Tax collection (bīrun kardan)',
+        'Taxes: Kharāj',
+        'Taxes: ʿUshr',
+        'Taxes: Jizya',
+
+        'Qāḍī',
+        'Faqīh',
+        'Muḥtasib',
+
         'Muʿāmala',
         'Taḥakumāna (ghalla-yi)',
         'Anbār',
@@ -384,85 +398,7 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextFolioTag.objects.create(
             name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='People and processes involved in public administration, tax, trade, and commerce')[0]
-        )
-    for name in [
-        'Qāḍī',
-        'Faqīh',
-        'Muḥtasib'
-    ]:
-        models.SlTextFolioTag.objects.create(
-            name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='People and processes involved in legal and judiciary system')[0]
-        )
-    for name in [
-        'Qabāla',
-        'Barāt',
-        'Chak',
-        'Ḥujjat',
-        'Ḥisāb/ḥisab',
-        'Mithāl',
-        'Nāma',
-        'Nuskhat',
-        'Nishān',
-        'Ruqʿa',
-        'Risāla'
-    ]:
-        models.SlTextFolioTag.objects.create(
-            name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Documentations')[0]
-        )
-    for name in [
-        'Wilāyat',
-        'Badiya',
-        'Dīh',
-        'Qariya',
-        'Qaṣaba',
-        'Zamīn',
-        'Shahr',
-        'Darra',
-        'Ribāṭ',
-        'Sarāy'
-    ]:
-        models.SlTextFolioTag.objects.create(
-            name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Geographic administrative units')[0]
-        )
-    for name in [
-        'Pious invocations',
-        'Bismillāh (including abbrev)',
-        'In a state of sound body and mind',
-        'Of their own volition and without coercion',
-        'Iqrār opener',
-        'Jawāz (person with legal agency)',
-        'ʿUḍr/ghiflat (excuse or delay)',
-        'Muhlat (extension granted)',
-        'Guwāhī',
-        'Dhimmat (obligation, charge)',
-        'Iʿtimād nimūdan [bar-īn nishān] (trust the seal)',
-        'Gharāmat (fine, debt)',
-        'Ḥīmāyat (protection)',
-        'Ḥaq/Ḥuqūq (obligation, policy, assessed payment)',
-        'Abandoned property',
-        'Tafārīqāt',
-        'Tax collection (bīrun kardan)',
-        'Taxes: Kharāj',
-        'Taxes: ʿUshr',
-        'Taxes: Jizya'
-    ]:
-        models.SlTextFolioTag.objects.create(
-            name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Legal and administrative stock phrases')[0]
-        )
-    for name in [
-        'Tafṣīl (itemisation)',
-        'Wajh/wujūh (in account/payment of)',
-        'Bāqī (remainder)',
-        'Wām (-I lāzim) (loan)'
-    ]:
-        models.SlTextFolioTag.objects.create(
-            name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Finance and accountancy phrases')[0]
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Administrative, Military and Legal Titles, Offices and Processes')[0]
         )
     for name in [
         'Ghalla (grain)',
@@ -482,7 +418,7 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextFolioTag.objects.create(
             name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Agricultural produce')[0]
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Agricultural Terms')[0]
         )
     for name in [
         'ʿAdlī',
@@ -497,7 +433,40 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlTextFolioTag.objects.create(
             name=name,
-            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Currencies and denominations')[0]
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Currencies and Denominations')[0]
+        )
+    for name in [
+        'Qabāla',
+        'Barāt',
+        'Chak',
+        'Ḥujjat',
+        'Ḥisāb/ḥisab',
+        'Mithāl',
+        'Nāma',
+        'Nuskhat',
+        'Nishān',
+        'Ruqʿa',
+        'Risāla'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Documentation Terms')[0]
+        )
+    for name in [
+        'Wilāyat',
+        'Badiya',
+        'Dīh',
+        'Qariya',
+        'Qaṣaba',
+        'Zamīn',
+        'Shahr',
+        'Darra',
+        'Ribāṭ',
+        'Sarāy'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Geographic Administrative Units')[0]
         )
     for name in [
         'Oblique stroke (check mark)',
@@ -509,6 +478,22 @@ def insert_data_select_list_models(apps, schema_editor):
         models.SlTextFolioTag.objects.create(
             name=name,
             category=models.SlTextFolioTagCategory.objects.get_or_create(name='Markings')[0]
+        )
+    for name in [
+        'Mann',
+        'Sitīr',
+        'Qafīz/Qawīz',
+        'Tasū',
+        'Ṭās',
+        'Pāra',
+        'Kharwār',
+        'Paymāna',
+        'Juft',
+        'Tīr'
+    ]:
+        models.SlTextFolioTag.objects.create(
+            name=name,
+            category=models.SlTextFolioTagCategory.objects.get_or_create(name='Measurement Units')[0]
         )
     for name in [
         'Temple',

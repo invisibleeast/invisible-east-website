@@ -210,7 +210,10 @@
             <article class="tabbed" id="corpus-text-detail-content-map">
                 <div class="tabbed-title">Map</div>
                 <p>
-                    This map displays the the toponyms related to this corpus text. Clicking on a pin on the map will display more information about each toponym, including links to all related corpus texts. You can also view <a href="{% url 'corpus:map-iedctoponyms' %}">a full map of all toponyms within the Invisible East Digital Corpus</a>.
+                    This map displays the place names identified by the Invisible East Team related to this corpus text. If you click on a pin, you can see all the texts in our corpus which mention this toponym. Please bear in mind that the exact geographical location of origin is not always possible to establish. It is, therefore, only an approximation.
+                </p>
+                <p>
+                    You can also view <a href="{% url 'corpus:map-iedctoponyms' %}">a full map of all toponyms within the Invisible East Digital Corpus</a>.
                 </p>
                 {% include "corpus/snippets/leaflet.html" with map_id='corpus-text-detail-content-map-iedctoponyms' %}
             </article>

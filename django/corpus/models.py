@@ -11,6 +11,7 @@ from account.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from bs4 import BeautifulSoup
+from unidecode import unidecode
 import os
 import textwrap
 
@@ -36,13 +37,18 @@ class SlAbstract(models.Model):
     """
 
     name = models.CharField(max_length=1000, db_index=True)
+    name_unidecode = models.CharField(max_length=1000, db_index=True, blank=True, null=True)
 
     def __str__(self):
         return self.name if self.name and self.name != "" else f"#{self.id}"
 
+    def save(self, *args, **kwargs):
+        self.name_unidecode = unidecode(self.name)
+        super().save(*args, **kwargs)
+
     class Meta:
         abstract = True
-        ordering = [Upper('name'), 'id']
+        ordering = [Upper('name_unidecode'), 'id']
 
 
 def image_compress(image_field_original, image_field_compressed, image_size):
@@ -465,7 +471,7 @@ class Text(models.Model):
     summary_of_content = RichTextField(blank=True, null=True)
 
     # Converted Gregorian Date (see child TextDate model for original dates)
-    gregorian_date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. 11 Feb 1198.<br>For help converting original dates to the Gregorian calendar please see <a href="https://www.muqawwim.com" target="_blank">www.muqawwim.com</a>')
+    gregorian_date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. "11 February 1198" or "January-February 1162".<br>For help converting original dates to the Gregorian calendar please see <a href="https://www.muqawwim.com" target="_blank">www.muqawwim.com</a>')
     gregorian_date = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     gregorian_date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     gregorian_date_range_end = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
@@ -693,7 +699,7 @@ class TextDate(models.Model):
     date_text = models.CharField(max_length=1000, blank=True, null=True, help_text="""Format date as free text - e.g. 10 Ramaḍān 605
     <br><br><br>
     <table>
-        <tr><th>Number</th><th>Hebrew Month</th><th>Islamic Month</th></tr>
+        <tr><th>Number</th><th>Hebrew Month</th><th>Hijri Month</th></tr>
         <tr><td>1</td><td dir="rtl">תשרי (Tishrei)</td><td dir="rtl">محرم (al-Muḥarram)</td></tr>
         <tr><td>2</td><td dir="rtl">חשון (Cheshvan)</td><td dir="rtl">صفر (Ṣafar)</td></tr>
         <tr><td>3</td><td dir="rtl">כסלו (Kislev)</td><td dir="rtl">ربيع الأول (Rabīʿ al-Awwal)</td></tr>
@@ -704,8 +710,8 @@ class TextDate(models.Model):
         <tr><td>8</td><td dir="rtl">אייר (Iyar)</td><td dir="rtl">شعبان (Shaʿbān)</td></tr>
         <tr><td>9</td><td dir="rtl">סיון (Sivan)</td><td dir="rtl">رمضان (Ramaḍān)</td></tr>
         <tr><td>10</td><td dir="rtl">תמוז (Tammuz)</td><td dir="rtl">شوال (Shawwāl)</td></tr>
-        <tr><td>11</td><td dir="rtl">אב (Av)</td><td dir="rtl">ذو القعدة (Dhū al-Qiʿdah)</td></tr>
-        <tr><td>12</td><td dir="rtl">אלול (Elul)</td><td dir="rtl">ذو الحجة (Dhū al-Ḥijjah)</td></tr>
+        <tr><td>11</td><td dir="rtl">אב (Av)</td><td dir="rtl">ذو القعدة (Dhū al-Qaʿda)</td></tr>
+        <tr><td>12</td><td dir="rtl">אלול (Elul)</td><td dir="rtl">ذو الحجة (Dhū al-Ḥijja)</td></tr>
     </table>""")
     date = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
@@ -774,6 +780,8 @@ Tables:
 To add a table, click on the table button in the toolbar
 <br>
 You can edit/delete an existing table (e.g. add/remove a row/column) by right clicking the table and choosing the appropriate option
+<br>
+If you add a new list of line numbers below a table, please note that you'll need to set the line number by adding the value attribute to the first <em>&lt;li&gt;</em> as described above (e.g. <em>&lt;li value="4"&gt;</em>)
 """
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
@@ -1025,6 +1033,7 @@ class Person(models.Model):
     """
 
     name = models.CharField(max_length=1000)
+    name_unidecode = models.CharField(max_length=1000, blank=True, null=True)
     gender = models.ForeignKey('SlPersonGender', on_delete=models.CASCADE, blank=True, null=True)
     profession = models.CharField(max_length=1000, blank=True, null=True, verbose_name='profession or professional title')
     persons = models.ManyToManyField('self', through='M2MPersonToPerson', blank=True)
@@ -1032,8 +1041,12 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        self.name_unidecode = unidecode(self.name)
+        super().save(*args, **kwargs)
+
     class Meta:
-        ordering = [Upper('name'), 'id']
+        ordering = [Upper('name_unidecode'), 'id']
 
 
 class PersonInText(models.Model):
@@ -1124,6 +1137,6 @@ class M2MTextToText(models.Model):
     Many to many relationship between 2x Text objects
     """
     text_1 = models.ForeignKey(Text, related_name='text_1', on_delete=models.CASCADE, verbose_name='text')
-    text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text', help_text='Only complete this where multiple separate IE texts originally come from a text.')
+    text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text', help_text='For use when separate shelfmarks are used for the recto and verso of the same document, or to link multiple dispersed folios from a single codex.')
     relationship_type = models.ForeignKey(SlM2MTextToTextRelationshipType, on_delete=models.SET_NULL, blank=True, null=True)
     relationship_details = models.CharField(max_length=1000, blank=True, null=True)

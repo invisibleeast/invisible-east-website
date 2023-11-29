@@ -1,4 +1,4 @@
-{% load static %}
+{% load static settings_value %}
 
 <!-- Footer -->
 <footer id="footer" class="container-fluid">
@@ -37,6 +37,9 @@
                 This project has received funding from the European Research Council (ERC)
                 <br>
                 under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 851607)
+            </p>
+            <p>
+                This is version {% settings_value 'VERSION' %} of the Invisible East Digital Corpus (IEDC)
             </p>
             <p>
                 <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |

@@ -56,7 +56,8 @@ class GenericAdminView(admin.ModelAdmin):
     list_display = ('name',)
     list_display_links = ('name',)
     list_per_page = 100
-    search_fields = ('name',)
+    search_fields = ('name', 'name_unidecode')
+    exclude = ('name_unidecode',)
 
     def get_actions(self, request):
         actions = super().get_actions(request)
@@ -98,9 +99,9 @@ class PersonInTextForTextTabularInline(admin.TabularInline):
     autocomplete_fields = ('person', 'person_role_in_text')
 
 
-class PersonInTextForTextPersonTabularInline(admin.TabularInline):
+class PersonInTextForPersonTabularInline(admin.TabularInline):
     """
-    A subform/inline form for PersonInText to be used in TextPersonAdminView
+    A subform/inline form for PersonInText to be used in PersonAdminView
     """
     model = models.PersonInText
     extra = 0
@@ -658,16 +659,16 @@ class TextFolioTagAdminView(GenericAdminView):
 
 
 @admin.register(models.Person)
-class TextPersonAdminView(GenericAdminView):
+class PersonAdminView(GenericAdminView):
     """
-    Customise the TextPerson section of the admin dashboard
+    Customise the Person section of the admin dashboard
     """
 
     list_display = ('id', 'name', 'gender', 'profession')
     list_display_links = ('id', 'name')
-    search_fields = ('id', 'name')
+    search_fields = ('id', 'name', 'name_unidecode')
     inlines = (
-        PersonInTextForTextPersonTabularInline,
+        PersonInTextForPersonTabularInline,
         M2MPersonToPerson2Inline,
         M2MPersonToPerson1Inline
     )

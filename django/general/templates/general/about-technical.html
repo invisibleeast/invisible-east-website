@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static settings_value %}
 
 {% block main %}
 
 <section class="container">
     <h2>Technical</h2>
     <p>
-        The Invisible East Digital Corpus is a web application developed using the following technologies:
+        The Invisible East Digital Corpus (version {% settings_value 'VERSION' %}) is a web application developed using the following technologies:
         <ul class="bullet-image">
             <li>Django</li>
             <li>Python</li>

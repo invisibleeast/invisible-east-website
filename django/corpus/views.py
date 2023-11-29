@@ -610,39 +610,29 @@ class TextListView(ListView):
                     'filter_group_name': 'Tags',
                 },
                 {
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_fa',
+                    'filter_name': 'Administrative, Military and Legal Titles, Offices and Processes',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Administrative, Military and Legal Titles, Offices and Processes')
+                },
+                {
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ap',
-                    'filter_name': 'Agricultural Produce',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural produce')
+                    'filter_name': 'Agricultural Terms',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural Terms')
                 },
                 {
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_cd',
                     'filter_name': 'Currencies and Denominations',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and denominations')
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and Denominations')
                 },
                 {
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_dm',
-                    'filter_name': 'Documentations',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentations')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_fa',
-                    'filter_name': 'Finance and Accountancy Phrases',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Finance and accountancy phrases')
+                    'filter_name': 'Documentation Terms',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentation Terms')
                 },
                 {
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ga',
                     'filter_name': 'Geographic Administrative Units',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic administrative units')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lm',
-                    'filter_name': 'Land Measurement Units',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Land measurement units')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_la',
-                    'filter_name': 'Legal and Administrative Stock Phrases',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Legal and administrative stock phrases')
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic Administrative Units')
                 },
                 {
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_mk',
@@ -650,14 +640,9 @@ class TextListView(ListView):
                     'filter_options': models.SlTextFolioTag.objects.filter(category__name='Markings')
                 },
                 {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lj',
-                    'filter_name': 'People and processes involved in legal and judiciary system',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='People and processes involved in legal and judiciary system')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_pa',
-                    'filter_name': 'People and processes involved in public administration, tax, trade, and commerce',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='People and processes involved in public administration, tax, trade, and commerce')
+                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lm',
+                    'filter_name': 'Measurement Units',
+                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Measurement Units')
                 },
                 {
                     'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_rg',
