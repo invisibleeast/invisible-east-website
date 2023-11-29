@@ -123,14 +123,8 @@
                             Project
                         </a>
                     </li>
-                    <!-- About Project (Persian) -->
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-persian" href="https://invisibleeast.web.ox.ac.uk/about-persian" target="_blank">
-                            فارسی
-                        </a>
-                    </li>
                     {% if user.is_admin %}
-                        <!-- Project -->
+                        <!-- Admin -->
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">
                                 Admin
