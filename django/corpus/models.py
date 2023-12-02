@@ -1137,6 +1137,6 @@ class M2MTextToText(models.Model):
     Many to many relationship between 2x Text objects
     """
     text_1 = models.ForeignKey(Text, related_name='text_1', on_delete=models.CASCADE, verbose_name='text')
-    text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text', help_text='For use when separate shelfmarks are used for the recto and verso of the same document, or to link multiple dispersed folios from a single codex.')
+    text_2 = models.ForeignKey(Text, related_name='text_2', on_delete=models.CASCADE, verbose_name='text')
     relationship_type = models.ForeignKey(SlM2MTextToTextRelationshipType, on_delete=models.SET_NULL, blank=True, null=True)
     relationship_details = models.CharField(max_length=1000, blank=True, null=True)

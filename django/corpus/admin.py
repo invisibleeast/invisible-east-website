@@ -228,7 +228,7 @@ class M2MTextToText2Inline(admin.TabularInline):
     extra = 1
     autocomplete_fields = ('text_2', 'relationship_type')
     classes = ['collapse']
-    verbose_name = 'Related Shelfmarks'
+    verbose_name = 'Related Shelfmarks (when separate shelfmarks are used for recto and verso of same document, or to link multiple dispersed folios from a single codex)'
     verbose_name_plural = verbose_name
 
 
