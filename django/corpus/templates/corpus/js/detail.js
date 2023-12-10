@@ -273,9 +273,10 @@ $('.folio-lines-line').each(function(){
     if (typeof $(this).attr('data-imagepartheight') !== 'undefined') $(this).find('.folio-lines-line-draw').append(' <i class="folio-lines-line-draw-delete fas fa-times-circle" title="Delete the drawing of this line on the image"></i>')
 });
 
+// Submit form to add or delete a part on the image. To delete set deleteImagePartDrawing to true
 function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
-    // If there's an active line and the position data is valid (to prevent accidental form submission)
-    if ($('.folio-lines-line.active').length && newImagePartDrawData.left != 0 && newImagePartDrawData.top != 0 && newImagePartDrawData.width != 0 && newImagePartDrawData.height != 0){
+    // If there's an active line
+    if ($('.folio-lines-line.active').length){
         let form = $('article.tabbed.active #corpus-text-detail-trans-drawlineonimage-form');
         // Set text folio
         let textFolio = $('#corpus-text-detail-images-controls-chooseimage select').val();
@@ -284,20 +285,21 @@ function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
         let line_index = $('.folio-lines-line.active').attr('data-lineindex');
         form.find('input[name="line_index"]').val(line_index);
 
-        // Either add image part position data or delete the image part
+        // Delete image part
         if (deleteImagePartDrawing){
-            // Set delete image part as true
             form.find('input[name="delete_image_part"]').val(true);
+            form.submit();
         }
-        else {
+
+        // Add image part position data (if the position data is valid, to prevent accidental form submission)
+        else if (newImagePartDrawData && newImagePartDrawData.left != 0 && newImagePartDrawData.top != 0 && newImagePartDrawData.width != 0 && newImagePartDrawData.height != 0){
             // Set image part position data
             form.find('input[name="image_part_left"]').val(newImagePartDrawData.left);
             form.find('input[name="image_part_top"]').val(newImagePartDrawData.top);
             form.find('input[name="image_part_width"]').val(newImagePartDrawData.width);
             form.find('input[name="image_part_height"]').val(newImagePartDrawData.height);
+            form.submit();
         }
-        // Submit the form
-        form.submit();
     }
 }
 
