@@ -319,10 +319,10 @@ $('body').on('mouseover', '.folio-lines-line[data-trans="transcription"], .relat
         $(`.folio-lines-line${identifiers}, .related-lines-line${identifiers}, .corpus-text-detail-images-image-parts-part${identifiers}`).addClass('active');
     }
 }).on('mouseout', '.folio-lines-line[data-trans="transcription"], .related-lines-line[data-trans="transcription"], .corpus-text-detail-images-image-parts-part', function(){
-    // If the line isn't being drawn on image then remove the active class
-    if (!$(this).find('.folio-lines-line-draw-start').is(':checked')){
+    // Remove 'active' class if the part isn't being edited/redrawn
+    let lineIndex = $(this).attr('data-lineindex');
+    if (!$(`.folio-lines-line[data-lineindex="${lineIndex}"]`).find('.folio-lines-line-draw-start').is(':checked')){
         let folio = $(this).attr('data-folio');
-        let lineIndex = $(this).attr('data-lineindex');
         let trans = $(this).attr('data-trans');
         let identifiers = `[data-folio="${folio}"][data-lineindex="${lineIndex}"][data-trans="${trans}"]`;
         $(`.folio-lines-line${identifiers}, .related-lines-line${identifiers}, .corpus-text-detail-images-image-parts-part${identifiers}`).removeClass('active');
