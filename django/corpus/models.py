@@ -1062,7 +1062,10 @@ class PersonInText(models.Model):
     person_role_in_text = models.ForeignKey('SlPersonInTextRole', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
 
     def __str__(self):
-        return f'{self.text.title}: {self.person.name} ({self.person_role_in_text.name})'
+        str = f'{self.text.title}: {self.person.name}'
+        if self.person_role_in_text:
+            str += f' ({self.person_role_in_text.name})'
+        return str
 
     class Meta:
         verbose_name = 'Person in Text'
