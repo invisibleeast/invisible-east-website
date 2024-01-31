@@ -809,8 +809,8 @@ If you add a new list of line numbers below a table, please note that you'll nee
             return self.trans_text_lines(self.transcription, 'transcription')
         """
 
-        # Ensure the transcription is a HTML ordered list with items
-        if '<ol' in text_field and '</li>' in text_field and field_name in ['transcription', 'translation', 'transliteration']:
+        # Ensure the text field includes a HTML ordered list with items or a table
+        if (('<ol' in text_field and '</li>' in text_field) or '<table' in text_field) and field_name in ['transcription', 'translation', 'transliteration']:
             lines_data = []
             soup = BeautifulSoup(text_field, features="html.parser")
             lines = soup.find_all(['li', 'table'])
@@ -959,11 +959,14 @@ If you add a new list of line numbers below a table, please note that you'll nee
 
         # Create small, medium, and large versions of the original image
         # Update the object (must use update() not save() to avoid unique ID error)
-        TextFolio.objects.filter(id=self.id).update(
-            image_small=image_compress(self.image, self.image_small, 640),
-            image_medium=image_compress(self.image, self.image_medium, 1920),
-            image_large=image_compress(self.image, self.image_large, 5000)
-        )
+        try:
+            TextFolio.objects.filter(id=self.id).update(
+                image_small=image_compress(self.image, self.image_small, 640),
+                image_medium=image_compress(self.image, self.image_medium, 1920),
+                image_large=image_compress(self.image, self.image_large, 5000)
+            )
+        except FileNotFoundError as f:
+            print(f)
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
