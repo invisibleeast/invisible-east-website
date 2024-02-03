@@ -166,7 +166,7 @@
 
                 {% for text_folio in text_folios %}
                     {% if text_folio.transcription_text_lines %}
-                        <div class="corpus-text-detail-content-transcription-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
+                        <div class="corpus-text-detail-content-transcription-folio-lines folio-lines" data-folio="{{ text_folio.id }}" data-showfoliolinedraw="{% if user.is_admin and text_folio.image %}1{% else %}0{% endif %}">
                             {% include "corpus/snippets/foliotext-lines.html" with trans_text_lines=text_folio.transcription_text_lines %}
                         </div>
                     {% endif %}
