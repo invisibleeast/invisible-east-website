@@ -261,12 +261,12 @@ transFields.forEach(function(transField){
     });
 });
 
-// Ensure td in folio tables have correct content (e.g. append the drawing checkbox if relevant)
-if ($('.folio-lines-line-draw').length){
-    $('td.folio-lines-line').each(function(){
+// Add a drawing button to all folio-lines-line within transcription (if permitted)
+$('#corpus-text-detail-content-transcription .corpus-text-detail-content-transcription-folio-lines[data-showfoliolinedraw="1"]').each(function(){
+    $(this).find('.folio-lines-line').each(function(){
         $(this).append(`<span class="folio-lines-line-draw-container"><span class="folio-lines-line-draw"><input class="folio-lines-line-draw-start" title="Click to start drawing this part of the table on the image" type="checkbox"/> <i class="fas fa-pencil-alt"></i></span></span>`);
     });
-}
+});
 
 // Add a delete drawing button to all folio-lines-line that have an existing drawing
 $('.folio-lines-line').each(function(){
