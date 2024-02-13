@@ -3,7 +3,7 @@ import sys
 
 
 # Version of this project (see: https://semver.org/)
-VERSION = '1.0.5'
+VERSION = '1.0.6'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
