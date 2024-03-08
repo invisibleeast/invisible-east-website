@@ -337,7 +337,7 @@
             <i class="fas fa-hashtag"></i> Tag Manager
         </div>
         <!-- Form -->
-        <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}">
+        <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}" novalidate>
             <!-- Security CSRF token -->
             {% csrf_token %}
 
