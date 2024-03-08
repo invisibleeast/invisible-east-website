@@ -3,7 +3,7 @@ import sys
 
 
 # Version of this project (see: https://semver.org/)
-VERSION = '1.0.6'
+VERSION = '1.0.7'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -166,6 +166,7 @@ CKEDITOR_CONFIGS = {
         'allowedContent': True
     }
 }
+SILENCED_SYSTEM_CHECKS = ["ckeditor.W001"]
 
 
 # Import local_settings.py

@@ -140,7 +140,6 @@ $('#corpus-text-detail-content-tags-textfoliotag-form select[name="category"]').
         tagExistingSelect.find(`option`).show();
         tagSearch.parent().show();
     }
-    
 }).trigger('change');
 
 // Search for an existing tag in the tag manager
