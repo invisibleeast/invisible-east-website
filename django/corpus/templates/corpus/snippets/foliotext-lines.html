@@ -5,6 +5,10 @@
         {% if line.table %}
             {{ line.table | safe }}
 
+        <!-- If this 'line' is a h1, then insert the HTML generated in models.py for this h1 -->
+        {% elif line.h1 %}
+            {{ line.h1 | safe }}
+
         <!-- Standard line (e.g. originally an <li> tag in original data input) -->
         {% else %}
             <div class="folio-lines-line" data-linenumbers="{{ line.lineNumbers }}" data-lineindex="{{ line.lineIndex }}" data-trans="{{ line.trans }}" data-folio="{{ line.folio }}"{% if line.trans == 'transcription' %}{{ line.image_part_left_attr }}{{ line.image_part_top_attr }}{{ line.image_part_width_attr }}{{ line.image_part_height_attr }}{% endif %}>

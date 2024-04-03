@@ -782,6 +782,17 @@ To add a table, click on the table button in the toolbar
 You can edit/delete an existing table (e.g. add/remove a row/column) by right clicking the table and choosing the appropriate option
 <br>
 If you add a new list of line numbers below a table, please note that you'll need to set the line number by adding the value attribute to the first <em>&lt;li&gt;</em> as described above (e.g. <em>&lt;li value="4"&gt;</em>)
+<br>
+<br>
+Headings:
+<br>
+To add a heading in between lists you must ensure the text is marked as a 'Heading 1' either by:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1. Using the 'Format' button in the toolbar to select Heading 1
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2. Clicking the 'Source' button and adding the manual HTML like so: <em>&lt;h1&gt;Heading Text Here&lt;/h1&gt;</em>
+<br>
+Please note that the heading text must appear outside of a list and not as a numbered item in a list, otherwise it will be duplicated on the public interface.
 """
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
@@ -810,10 +821,10 @@ If you add a new list of line numbers below a table, please note that you'll nee
         """
 
         # Ensure the text field includes a HTML ordered list with items or a table
-        if (('<ol' in text_field and '</li>' in text_field) or '<table' in text_field) and field_name in ['transcription', 'translation', 'transliteration']:
+        if (('<ol' in text_field and '</li>' in text_field) or '<table' in text_field or '<h1' in text_field) and field_name in ['transcription', 'translation', 'transliteration']:
             lines_data = []
             soup = BeautifulSoup(text_field, features="html.parser")
-            lines = soup.find_all(['li', 'table'])
+            lines = soup.find_all(['li', 'table', 'h1'])
             rtl = self.text.primary_language.script.is_written_right_to_left and field_name == 'transcription'
             line_number = 0
             line_index = -1
@@ -832,6 +843,7 @@ If you add a new list of line numbers below a table, please note that you'll nee
                     except KeyError:
                         line_number += 1
                     # Line number range end
+                    line_number_range_end = None
                     try:
                         # If the next line has a value attribute that's greater than 1 more than current line count then
                         next_line_number = int(lines[line_index + 1].attrs['value'])
@@ -923,6 +935,11 @@ If you add a new list of line numbers below a table, please note that you'll nee
                         table_html += '<div class="related-lines" data-trans="transliteration"></div>'
 
                     lines_data.append({'table': table_html})
+
+                # Lines that are a <h1> element (e.g. subtitles)
+                elif str(line).startswith('<h1'):
+                    line_index += 1
+                    lines_data.append({'h1': str(line)})
 
             return lines_data
 

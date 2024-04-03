@@ -3,7 +3,7 @@ import sys
 
 
 # Version of this project (see: https://semver.org/)
-VERSION = '1.0.8'
+VERSION = '1.0.9'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -142,7 +142,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'NumberedList', 'Table', 'Source',
+                    'NumberedList', 'Table', 'Format', 'Source',
                     '-',
                     'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
                     '-',
@@ -154,6 +154,7 @@ CKEDITOR_CONFIGS = {
                 ]
             },
         ],
+        'format_tags': 'h1',
         'toolbar': 'CustomToolbarConfig',
         'enterMode': 2,
         'forcePasteAsPlainText': True,
