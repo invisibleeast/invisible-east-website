@@ -142,7 +142,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'NumberedList', 'Table', 'Source',
+                    'NumberedList', 'Table', 'Format', 'Source',
                     '-',
                     'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
                     '-',
@@ -154,6 +154,7 @@ CKEDITOR_CONFIGS = {
                 ]
             },
         ],
+        'format_tags': 'h1',
         'toolbar': 'CustomToolbarConfig',
         'enterMode': 2,
         'forcePasteAsPlainText': True,
