@@ -17,9 +17,10 @@ admin.site.site_header = 'Invisible East Digital Corpus: Admin Dashboard'
 
 # Three main sections:
 # 1. Reusable code
-# 2. Inlines
-# 3. Select List Models
-# 4. Main model admin views
+# 2. Actions
+# 3. Inlines
+# 4. Select List model admin views
+# 5. Main model admin views
 
 
 #
@@ -41,6 +42,17 @@ def get_foreignkey_fields(model, exclude=[]):
     To ignore certain fields, provide a list of such field names (as strings) using the exclude parameter
     """
     return list(f.name for f in model._meta.get_fields() if type(f) is ForeignKey and f.name not in exclude)
+
+
+def set_hide_image_for_all_text_folio_images_in_texts(text_queryset, image_hide_val):
+    """
+    Used within the below actions "hide_text_folio_images" and "show_text_folio_images"
+    Sets the image_hide field to True/False for all related TextFolio object of all selected Text objects in queryset
+    """
+    for text in text_queryset:
+        # Strongly recommended to do as update() to skip the save() method of TextFolio,
+        # which processes images and so will take a long time to run on many objects
+        text.text_folios.all().update(image_hide=image_hide_val)
 
 
 class GenericAdminView(admin.ModelAdmin):
@@ -85,7 +97,30 @@ class GenericSlAdminView(GenericAdminView):
 
 
 #
-# 2. Inlines
+# 2. Actions
+#
+
+
+def hide_text_folio_images(modeladmin, request, queryset):
+    """
+    Hides all images in this text in the public interface
+    """
+    set_hide_image_for_all_text_folio_images_in_texts(queryset, True)
+
+hide_text_folio_images.short_description = "Hide all text folio images of selected texts on the public website"
+
+
+def show_text_folio_images(modeladmin, request, queryset):
+    """
+    Shows all images in this text in the public interface
+    """
+    set_hide_image_for_all_text_folio_images_in_texts(queryset, False)
+
+show_text_folio_images.short_description = "Show all text folio images of selected texts on the public website"
+
+
+#
+# 3. Inlines
 #
 
 
@@ -142,6 +177,7 @@ class TextFolioStackedInline(admin.StackedInline):
         'image_small',
         'image_medium',
         'image_large',
+        'image_hide',
         'image_preview',
         ('transcription', 'translation'),
         'transliteration'
@@ -244,7 +280,7 @@ class M2MSlToponymToTextInline(admin.TabularInline):
 
 
 #
-# 3. Select List admin views
+# 4. Select List admin views
 #
 
 # Register Select List models (most use GenericSlAdminView)
@@ -303,7 +339,7 @@ class SlTextToponymAdminView(GenericSlAdminView):
 
 
 #
-# 4. Main model admin views
+# 5. Main model admin views
 #
 
 
@@ -345,6 +381,7 @@ class TextAdminView(GenericAdminView):
         'collection__name',
         'shelfmark',
     )
+    actions = (hide_text_folio_images, show_text_folio_images)
     fieldsets = (
         ('Admin', {
             'fields': (
@@ -605,6 +642,7 @@ class TextFolioAdminView(GenericAdminView):
         'image_small',
         'image_medium',
         'image_large',
+        'image_hide',
         'image_preview',
         ('transcription', 'translation'),
         'transliteration'

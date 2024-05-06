@@ -564,6 +564,12 @@ class Text(models.Model):
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
     @property
+    def has_textfoliotag(self):
+        for folio in self.text_folios.all():
+            if len(folio.text_folio_tags.all()):
+                return True
+
+    @property
     def has_transcription(self):
         for folio in self.text_folios.all():
             if folio.transcription is not None and len(folio.transcription):
@@ -628,7 +634,7 @@ class Text(models.Model):
     def list_image(self):
         # Return the first image of a folio, if exists
         for folio in self.text_folios.all():
-            if folio.image:
+            if folio.image and not folio.image_hide:
                 return folio.image_small
 
     @property
@@ -803,6 +809,7 @@ Please note that the heading text must appear outside of a list and not as a num
     image_small = models.ImageField(upload_to='corpus/text_folios__small', blank=True, null=True)
     image_medium = models.ImageField(upload_to='corpus/text_folios__medium', blank=True, null=True)
     image_large = models.ImageField(upload_to='corpus/text_folios__large', blank=True, null=True)
+    image_hide = models.BooleanField(default=False, verbose_name='Hide image on public website', help_text="e.g. if you don't have permission to share the image publicly")
 
     transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
     translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
