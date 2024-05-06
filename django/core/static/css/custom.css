@@ -1397,8 +1397,15 @@ div.folio-lines-line.active {
 
 #corpus-text-detail-images-container {
     overflow: auto;
-    height: calc(100vh - 9em);
+    height: calc(100vh - 9.7em);
     background: #DDD;
+}
+
+#corpus-text-detail-images-credit {
+    color: #606060;
+    font-size: 0.9em;
+    text-align: right;
+    margin-top: 0.2em;
 }
 
 .corpus-text-detail-images-image {
@@ -1409,6 +1416,15 @@ div.folio-lines-line.active {
 
 .corpus-text-detail-images-image.active {
     display: block;
+}
+
+.corpus-text-detail-images-image-hidden {
+    position: relative;
+    padding-top: 20vh;
+    width: calc(50vw - 2em);
+    text-align: center;
+    color: #808080;
+    font-size: 1.1em;
 }
 
 .corpus-text-detail-images-image-rotatelayer {
