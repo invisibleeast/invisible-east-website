@@ -235,26 +235,32 @@
                             </a>
                         {% endif %}
                         <!-- Data -->
-                        {% if seal.type %}
-                            <label>Type</label><div>{{ seal.type }}</div>
-                        {% endif %}
-                        {% if seal.details %}
-                            <label>Details</label><div>{{ seal.details | safe | linebreaks }}</div>
-                        {% endif %}
-                        {% if seal.inscription %}
-                            <label>Inscription</label><div>{{ seal.inscription | safe | linebreaks }}</div>
-                        {% endif %}
-                        {% if seal.measurements %}
-                            <label>Measurements</label><div>{{ seal.measurements | safe | linebreaks }}</div>
-                        {% endif %}
-                        {% if seal.descriptions_html_list %}
-                            <label>Descriptions</label><div>{{ seal.descriptions_html_list | safe }}</div>
-                        {% endif %}
-                        {% if seal.colours_html_list %}
-                            <label>Colours</label><div>{{ seal.colours_html_list | safe }}</div>
-                        {% endif %}
-                        {% if seal.imprints_html_list %}
-                            <label>Seal Imprints</label><div>{{ seal.imprints_html_list | safe }}</div>
+                        {#
+                            Temporarily hide Bactrian seals data until team are ready to show this (based on emails from Ed, May 2024).
+                            Simply from the below if condition when team are ready to show this data.
+                        #}
+                        {% if object.primary_language.name != 'Bactrian' %}
+                            {% if seal.type %}
+                                <label>Type</label><div>{{ seal.type }}</div>
+                            {% endif %}
+                            {% if seal.details %}
+                                <label>Details</label><div>{{ seal.details | safe | linebreaks }}</div>
+                            {% endif %}
+                            {% if seal.inscription %}
+                                <label>Inscription</label><div>{{ seal.inscription | safe | linebreaks }}</div>
+                            {% endif %}
+                            {% if seal.measurements %}
+                                <label>Measurements</label><div>{{ seal.measurements | safe | linebreaks }}</div>
+                            {% endif %}
+                            {% if seal.descriptions_html_list %}
+                                <label>Descriptions</label><div>{{ seal.descriptions_html_list | safe }}</div>
+                            {% endif %}
+                            {% if seal.colours_html_list %}
+                                <label>Colours</label><div>{{ seal.colours_html_list | safe }}</div>
+                            {% endif %}
+                            {% if seal.imprints_html_list %}
+                                <label>Seal Imprints</label><div>{{ seal.imprints_html_list | safe }}</div>
+                            {% endif %}
                         {% endif %}
                     </div>
                 {% endfor %}
