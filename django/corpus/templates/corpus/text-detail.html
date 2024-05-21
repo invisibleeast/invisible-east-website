@@ -235,10 +235,6 @@
                             </a>
                         {% endif %}
                         <!-- Data -->
-                        {#
-                            Temporarily hide Bactrian seals data until team are ready to show this (based on emails from Ed, May 2024).
-                            Simply from the below if condition when team are ready to show this data.
-                        #}
                         {% if object.primary_language.name != 'Bactrian' %}
                             {% if seal.type %}
                                 <label>Type</label><div>{{ seal.type }}</div>
