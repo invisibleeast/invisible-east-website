@@ -98,9 +98,12 @@ def text_initial_queryset(user):
 
     # If user isn't allowed to manage all
     else:
-        # If the user is logged in only show published objects, unless user is the principal editor or data entry person of this Text (so they can preview it)
+        # If the user is logged in only show published objects, unless user is either the principal editor, data entry person, or reviewer of this Text
         if not user.is_anonymous:
-            text_filter = Q(public_review_approved=True) | Q(admin_principal_editor=user) | Q(admin_principal_data_entry_person=user)
+            text_filter = Q(public_review_approved=True)\
+                | Q(admin_principal_editor=user)\
+                | Q(admin_principal_data_entry_person=user)\
+                | Q(public_review_reviewer=user)
         # If user is not logged in only show published objects
         else:
             text_filter = Q(public_review_approved=True)
