@@ -906,15 +906,21 @@ Please note that the heading text must appear outside of a list and not as a num
                 elif str(line).startswith('<table'):
                     # Process all <td> elements in table
                     for td in line.find_all('td'):
-                        # Increase the line index for each td, as each td is considered a 'line' (i.e. can draw each td on an image and highlight each td on hover)
-                        line_index += 1
-                        # Assign
-                        td['class'] = 'folio-lines-line'
-                        td['dir'] = 'auto'
-                        td['data-linenumbers'] = ''
-                        td['data-lineindex'] = line_index
-                        td['data-trans'] = field_name
-                        td['data-folio'] = self.id
+                        # If the cell has a valid value (is not empty)
+                        if len(td.text.strip()):
+                            # Increase the line index for each td, as each td is considered a 'line'
+                            # (i.e. can draw each td on an image and highlight each td on hover)
+                            line_index += 1
+                            # Assign
+                            td['class'] = 'folio-lines-line'
+                            td['dir'] = 'auto'
+                            td['data-linenumbers'] = ''
+                            td['data-lineindex'] = line_index
+                            td['data-trans'] = field_name
+                            td['data-folio'] = self.id
+                        # Ignore empty cells
+                        else:
+                            td['class'] = 'empty'
                     # Add a new td containing the line number at the start of each row
                     for tr_index, tr in enumerate(line.find_all('tr')):
                         line_number_td = soup.new_tag('td', **{'class': 'line-number', 'dir': f'{"rtl" if rtl else "auto"}'})
@@ -945,7 +951,6 @@ Please note that the heading text must appear outside of a list and not as a num
 
                 # Lines that are a <h1> element (e.g. subtitles)
                 elif str(line).startswith('<h1'):
-                    line_index += 1
                     lines_data.append({'h1': str(line)})
 
             return lines_data

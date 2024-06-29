@@ -1254,6 +1254,10 @@ main section {
     border: 3px solid transparent;
 }
 
+.folio-table td.empty {
+    border: none;
+}
+
 div.folio-lines-line.active {
     border: 3px solid var(--color-primary);
 }
