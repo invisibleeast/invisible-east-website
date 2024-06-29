@@ -906,9 +906,10 @@ Please note that the heading text must appear outside of a list and not as a num
                 elif str(line).startswith('<table'):
                     # Process all <td> elements in table
                     for td in line.find_all('td'):
-                        # If the cell has a valid value
+                        # If the cell has a valid value (is not empty)
                         if len(td.text.strip()):
-                            # Increase the line index for each td, as each td is considered a 'line' (i.e. can draw each td on an image and highlight each td on hover)
+                            # Increase the line index for each td, as each td is considered a 'line'
+                            # (i.e. can draw each td on an image and highlight each td on hover)
                             line_index += 1
                             # Assign
                             td['class'] = 'folio-lines-line'
