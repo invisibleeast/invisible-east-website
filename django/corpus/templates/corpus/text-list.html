@@ -134,7 +134,7 @@
                 <div class="corpus-text-list-items-item-text">
                     <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
                     <div class="corpus-text-list-items-item-text-details">
-                        <div class="corpus-text-list-items-item-text-details-summary">{{ object.summary_of_content_preview }}</div>
+                        <div class="corpus-text-list-items-item-text-details-summary">{{ object.summary_of_content_preview | safe }}</div>
                         <dl>
                             <div><dt>IEDC ID</dt><dd>{{ object.id }}</dd></div>
                             <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
