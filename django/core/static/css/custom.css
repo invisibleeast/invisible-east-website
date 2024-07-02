@@ -777,6 +777,7 @@ main section {
     font-size: 0.9em;
     padding-top: 0.2em;
     opacity: 0.8;
+    font-family: 'Arial', sans-serif;
 }
 
 .corpus-text-list-items-item-text-details dl {
