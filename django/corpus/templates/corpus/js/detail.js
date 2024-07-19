@@ -281,8 +281,8 @@ function submitDrawLineOnImageForm(deleteImagePartDrawing=false){
         let textFolio = $('#corpus-text-detail-images-controls-chooseimage select').val();
         form.find('input[name="textfolio"]').val(textFolio);
         // Set line index
-        let line_index = $('.folio-lines-line.active').attr('data-lineindex');
-        form.find('input[name="line_index"]').val(line_index);
+        let lineIndex = $('.folio-lines-line.active').attr('data-lineindex');
+        form.find('input[name="line_index"]').val(lineIndex);
 
         // Delete image part
         if (deleteImagePartDrawing){

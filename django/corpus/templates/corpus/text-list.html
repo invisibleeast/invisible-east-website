@@ -20,6 +20,7 @@
         </div>
 
         <form method="GET" id="corpus-text-list-options">
+            <a id="corpus-text-list-options-helplink" href="{% url 'general:about-search' %}" target="_blank">How to Search</a>
 
             <!-- Search (allows for multiple search criteria) -->
             <div class="corpus-text-list-options-subtitle">
@@ -134,7 +135,7 @@
                 <div class="corpus-text-list-items-item-text">
                     <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
                     <div class="corpus-text-list-items-item-text-details">
-                        <div class="corpus-text-list-items-item-text-details-summary">{{ object.summary_of_content_preview | safe }}</div>
+                        <div class="corpus-text-list-items-item-text-details-summary">{{ object.summary_of_content_preview }}</div>
                         <dl>
                             <div><dt>IEDC ID</dt><dd>{{ object.id }}</dd></div>
                             <div><dt>Type</dt><dd>{{ object.type }}</dd></div>

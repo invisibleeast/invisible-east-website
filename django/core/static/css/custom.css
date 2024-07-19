@@ -558,10 +558,15 @@ main section {
     overflow-y: auto;
 }
 
+#corpus-text-list-options-helplink {
+    float: right;
+    font-size: 0.9em;
+}
+
 .corpus-text-list-options-subtitle {
     font-size: 1.3em;
     font-weight: bold;
-    margin: 2em 0 0.2em 0;
+    margin: 1.5em 0 0.2em 0;
 }
 
 .corpus-text-list-options-subtitle:first-child {
