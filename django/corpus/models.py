@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from unidecode import unidecode
 import os
 import textwrap
+import re
 
 
 # Three main sections:
@@ -26,8 +27,18 @@ import textwrap
 # 1. Reusable code
 #
 
-
 date_help_text = 'Format: "YYYY-MM-DD" - e.g. "0608-01-31". Please ensure years before 1000 are 4 digits long using 0s at start, e.g. 0608 not 608, 0056 not 56, etc.'
+CLEANR = re.compile('<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
+
+
+def clean_html(raw_html):
+    """
+    Removes HTML tags from provided raw_html, e.g. <strong>Example</strong> --> Example
+    """
+    # Manual replacements
+    raw_html = raw_html.replace('&rsquo;', "'").replace('&lsquo;', "'")
+    # Regex to strip out remaining HTML
+    return re.sub(CLEANR, '', raw_html) if raw_html else None
 
 
 class SlAbstract(models.Model):
@@ -594,6 +605,12 @@ class Text(models.Model):
                 return True
 
     @property
+    def has_toponym_coordinates(self):
+        for toponym in self.toponyms.all():
+            if toponym.latitude and toponym.longitude:
+                return True
+
+    @property
     def count_text_folios(self):
         return self.text_folios.count()
 
@@ -628,7 +645,7 @@ class Text(models.Model):
 
     @property
     def summary_of_content_preview(self):
-        return textwrap.shorten(self.summary_of_content, width=350, placeholder="...")
+        return clean_html(textwrap.shorten(self.summary_of_content, width=350, placeholder="..."))
 
     @property
     def list_image(self):
@@ -906,11 +923,11 @@ Please note that the heading text must appear outside of a list and not as a num
                 elif str(line).startswith('<table'):
                     # Process all <td> elements in table
                     for td in line.find_all('td'):
+                        # Increase the line index for each td, as each td is considered a 'line'
+                        # (i.e. can draw each td on an image and highlight each td on hover)
+                        line_index += 1
                         # If the cell has a valid value (is not empty)
                         if len(td.text.strip()):
-                            # Increase the line index for each td, as each td is considered a 'line'
-                            # (i.e. can draw each td on an image and highlight each td on hover)
-                            line_index += 1
                             # Assign
                             td['class'] = 'folio-lines-line'
                             td['dir'] = 'auto'
