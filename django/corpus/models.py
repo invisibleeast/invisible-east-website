@@ -36,7 +36,7 @@ def clean_html(raw_html):
     Removes HTML tags from provided raw_html, e.g. <strong>Example</strong> --> Example
     """
     # Manual replacements
-    raw_html = raw_html.replace('&rsquo;', "'").replace('&lsquo;', "'")
+    raw_html = raw_html.replace('&rsquo;', "'").replace('&lsquo;', "'").replace('&nbsp;', ' ')
     # Regex to strip out remaining HTML
     return re.sub(CLEANR, '', raw_html) if raw_html else None
 
