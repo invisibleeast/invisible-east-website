@@ -107,6 +107,7 @@ def hide_text_folio_images(modeladmin, request, queryset):
     """
     set_hide_image_for_all_text_folio_images_in_texts(queryset, True)
 
+
 hide_text_folio_images.short_description = "Hide all text folio images of selected texts on the public website"
 
 
@@ -115,6 +116,7 @@ def show_text_folio_images(modeladmin, request, queryset):
     Shows all images in this text in the public interface
     """
     set_hide_image_for_all_text_folio_images_in_texts(queryset, False)
+
 
 show_text_folio_images.short_description = "Show all text folio images of selected texts on the public website"
 
@@ -295,6 +297,7 @@ admin.site.register(models.SlTextScript, GenericSlAdminView)
 admin.site.register(models.SlTextLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
 admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
+admin.site.register(models.SlTextSourceOfData, GenericSlAdminView)
 admin.site.register(models.SlTextWritingSupportDetail, GenericSlAdminView)
 admin.site.register(models.SlTextPublication, GenericSlAdminView)
 admin.site.register(models.SlCalendar, GenericSlAdminView)
@@ -353,6 +356,7 @@ class TextAdminView(GenericAdminView):
         'id',
         'shelfmark',
         'collection',
+        'corpus',
         'primary_language',
         'type',
         'count_text_folios',
@@ -370,6 +374,7 @@ class TextAdminView(GenericAdminView):
         ('admin_principal_data_entry_person', RelatedDropdownFilter),
         ('admin_classification', RelatedDropdownFilter),
         ('collection', RelatedDropdownFilter),
+        ('corpus', RelatedDropdownFilter),
         ('primary_language', RelatedDropdownFilter),
         ('additional_languages', RelatedDropdownFilter),
         ('gregorian_date_century', RelatedDropdownFilter),
@@ -379,6 +384,8 @@ class TextAdminView(GenericAdminView):
     search_fields = (
         'id',
         'collection__name',
+        'corpus__name',
+        'primary_language__name',
         'shelfmark',
     )
     actions = (hide_text_folio_images, show_text_folio_images)
@@ -405,6 +412,7 @@ class TextAdminView(GenericAdminView):
                 'type',
                 'document_subtype',
                 'toponyms',
+                'image_credit_custom',
             )
         }),
         ('Physical Description', {
@@ -498,6 +506,7 @@ class TextAdminView(GenericAdminView):
         queryset = queryset.select_related(
             'admin_classification',
             'collection',
+            'corpus',
             'primary_language__script',
             'type__category',
             'document_subtype__category'
@@ -510,7 +519,7 @@ class TextAdminView(GenericAdminView):
         This method must be called in both has_change_permission() and has_delete_permission() below
         """
 
-        # Specify users (by email address) who can always manage all texts (e.g. software dev + project lead)
+        # Specify users (by email address) who can always manage all texts
         if request.user.email in settings.USERS_WHO_CAN_MANAGE_ALL_TEXTS:
             return True
 
@@ -768,9 +777,9 @@ class TextRelatedPublicationAdminView(GenericAdminView):
     Customise the TextRelatedPublication section of the admin dashboard
     """
 
-    list_display = ('id', 'text', 'publication', 'pages', 'catalogue_number')
+    list_display = ('id', 'text', 'publication', 'pages', 'catalogue_number', 'details')
     list_display_links = ('id',)
-    search_fields = ('id', 'text__shelfmark', 'publication__name', 'pages', 'catalogue_number')
+    search_fields = ('id', 'text__shelfmark', 'publication__name', 'pages', 'catalogue_number', 'details')
 
     # Hide this AdminView from sidebar
     def get_model_perms(self, request):

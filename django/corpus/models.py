@@ -276,6 +276,14 @@ class SlTranslationLanguage(SlAbstract):
     pass
 
 
+class SlTextSourceOfData(SlAbstract):
+    """
+    A source of data of a Text
+    E.g. 'The transcription and translation are the original work of the IEDC Team (as yet unpublished in peer-review print)'
+    """
+    pass
+
+
 class SlTextToponym(SlAbstract):
     """
     A toponym (aka place name) that appears in a Text
@@ -467,6 +475,7 @@ class Text(models.Model):
     document_subtype = models.ForeignKey('SlTextDocumentSubtype', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name, help_text='If a type of Administrative or Legal is selected for this Corpus Text, please also provide the subtype')
     texts = models.ManyToManyField('self', through='M2MTextToText', blank=True)
     toponyms = models.ManyToManyField('SlTextToponym', blank=True, related_name=related_name, db_index=True)
+    image_credit_custom = models.CharField(max_length=1000, blank=True, null=True, help_text="Images are credited to the collection by default. If you'd like to credit them to someone else, provide their name here.", verbose_name='image credit (custom)')
 
     # Physical Description
     writing_support = models.ForeignKey('SlTextWritingSupport', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
@@ -553,6 +562,14 @@ class Text(models.Model):
         help_text='Users who have contributed to this Corpus Text (e.g. co-editors, data entry persons, etc.) but are not the principal editor or principal data entry person (these are specified above).<br>',
         verbose_name='contributors'
     )
+    admin_source_of_data = models.ForeignKey(
+        'SlTextSourceOfData',
+        related_name=related_name,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        verbose_name='source of data'
+    )
 
     # Metadata
     meta_created_by = models.ForeignKey(
@@ -635,13 +652,23 @@ class Text(models.Model):
         return str
 
     @property
+    def admin_contributors_list(self):
+        if self.admin_contributors:
+            return ", ".join([str(c) for c in self.admin_contributors.all()])
+
+    @property
+    def image_credit(self):
+        if self.has_image and (self.collection or self.image_credit_custom):
+            return self.image_credit_custom if self.image_credit_custom else self.collection
+
+    @property
     def image_permission_statement(self):
-        if self.has_image and self.collection:
-            return f"""Images of this Text displayed on this web page are provided by {self.collection}.
+        if self.has_image:
+            return f"""Images of this Text displayed on this web page are provided by {self.image_credit}.
             <br>
-            © {self.collection}, All rights reserved.
+            © {self.image_credit}, All rights reserved.
             <br>
-            If you wish to reproduce these images please contact {self.collection}."""
+            If you wish to reproduce these images please contact {self.image_credit}."""
 
     @property
     def summary_of_content_preview(self):
@@ -670,7 +697,8 @@ class Text(models.Model):
             for person in self.persons_in_texts.all():
                 html += f'<li>{person.person.name}'
                 html += f' ({person.person_name_in_text})' if person.person_name_in_text else ''
-                html += f' ({person.person_role_in_text})' if person.person_role_in_text else ''
+                # Ed requested person_role_in_text is hidden from public, but not deleted in case they change mind in future
+                # html += f' ({person.person_role_in_text})' if person.person_role_in_text else ''
                 html += '</li>'
             html += '</ul>'
             return html
@@ -682,7 +710,8 @@ class Text(models.Model):
             for publication in self.text_related_publications.all():
                 html += f'<li>{publication.publication}'
                 html += f' (Pages: {publication.pages})' if publication.pages else ''
-                html += f' (Catalogue Number: {publication.catalogue_number})' if publication.catalogue_number else ''
+                html += f'<br>Catalogue Number: {publication.catalogue_number}' if publication.catalogue_number else ''
+                html += f'<br><strong>{publication.details}</strong>' if publication.details else ''
                 html += '</li>'
             html += '</ul>'
             return html
@@ -775,6 +804,7 @@ class TextRelatedPublication(models.Model):
     publication = models.ForeignKey('SlTextPublication', on_delete=models.RESTRICT, related_name=related_name)
     pages = models.CharField(max_length=1000, blank=True, null=True, help_text='Specify the page number or range of page numbers - e.g. 4, 82-84, etc.')
     catalogue_number = models.CharField(max_length=1000, blank=True, null=True)
+    details = models.CharField(max_length=1000, blank=True, null=True, help_text='Provide additional details, such as "The IEDC translation and transcription have been taken from this publication".')
 
     class Meta:
         verbose_name = 'Related Publication'
