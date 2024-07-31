@@ -10,7 +10,9 @@
 
         {% if not object.public_review_approved %}
             <div id="corpus-text-detail-content-notyetapproved">
-                This text is not yet approved, meaning it's not visible to public users. Only the Principal Data Entry Person and the Principal Editor of this text can see this preview.
+                This text is not yet approved, meaning it's not visible to public users.
+                <br>
+                Only authenticated users (admins and contributors) can see texts before they're approved.
             </div>
         {% endif %}
 
@@ -342,7 +344,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-        <div id="corpus-text-detail-images-credit">Images courtesy of {{ object.collection }}</div>
+        <div id="corpus-text-detail-images-credit">Images courtesy of {{ object.image_credit }}</div>
     </section>{% endif %}
 
     {% if user.is_admin %}

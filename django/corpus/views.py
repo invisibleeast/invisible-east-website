@@ -92,24 +92,12 @@ def text_initial_queryset(user):
     Returns the initially filtered list of Text objects used in get_queryset() methods of views below, e.g. TextDetailView and TextListView
     """
 
-    # Show all Text objects if user can manage all
-    if not user.is_anonymous and user.email in settings.USERS_WHO_CAN_MANAGE_ALL_TEXTS:
+    # If user is logged in, show all texts
+    if user.is_authenticated:
         return models.Text.objects.all()
-
-    # If user isn't allowed to manage all
+    # If user is not logged in, show only approved texts
     else:
-        # If the user is logged in only show published objects, unless user is either the principal editor, data entry person, or reviewer of this Text
-        if not user.is_anonymous:
-            text_filter = Q(public_review_approved=True)\
-                | Q(admin_principal_editor=user)\
-                | Q(admin_principal_data_entry_person=user)\
-                | Q(public_review_reviewer=user)
-        # If user is not logged in only show published objects
-        else:
-            text_filter = Q(public_review_approved=True)
-
-        # Return the filtered queryset of Text objects
-        return models.Text.objects.filter(text_filter)
+        return models.Text.objects.filter(public_review_approved=True)
 
 
 class TextDetailView(DetailView):
@@ -331,6 +319,18 @@ class TextDetailView(DetailView):
                 'section_header': 'Citations'
             },
             {
+                'label': 'Principal Editor',
+                'value': self.object.admin_principal_editor
+            },
+            {
+                'label': 'Contributors',
+                'value': self.object.admin_contributors_list
+            },
+            {
+                'label': 'Source of Data',
+                'value': self.object.admin_source_of_data
+            },
+            {
                 'label': 'Suggested Citation',
                 'value': f'<a href="{reverse("general:about-cite")}">See \'How to Cite\'</a>'
             },
@@ -417,7 +417,7 @@ class TextListView(ListView):
             queries = []
             for search in searches:
                 # Uses 'or_' as the search term could appear in any field, so 'and_' wouldn't be suitable
-                queries.append(reduce(or_, (Q((f'{field_name}__icontains', search)) for field_name in field_names_to_search)))
+                queries.append(reduce(or_, (Q((f'{field_name}__icontains', search.strip())) for field_name in field_names_to_search)))
             # Connect the individual search queries via the user-defined operator (or_ / and_)
             queries = reduce(operator, queries)
             # Filter the queryset using the completed search query
