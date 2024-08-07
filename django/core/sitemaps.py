@@ -70,7 +70,7 @@ class CorpusTextListSitemap(Sitemap):
 
     def lastmod(self, obj):
         try:
-            return corpus_models.Text.objects.order_by('-meta_created_datetime')[0].meta_created_datetime
+            return corpus_models.Text.objects.filter(public_review_approved=True).order_by('-meta_created_datetime')[0].meta_created_datetime
         except IndexError:
             return None
 
