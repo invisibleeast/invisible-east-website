@@ -396,6 +396,7 @@ class TextAdminView(GenericAdminView):
                 'admin_principal_editor',
                 'admin_principal_data_entry_person',
                 'admin_contributors',
+                'admin_source_of_data',
                 'meta_created_by',
                 'meta_created_datetime',
                 'meta_lastupdated_by',

@@ -14,11 +14,11 @@ def source_of_data(apps, schema_editor):
 
     data = [
         {
-            'source_of_data_name': 'The transcription has been revised from a previous publication (see Publications), the translation is the original work of the IEDC Team (as yet unpublished in peer-review print)',
+            'source_of_data_name': 'The transcription and translation are the original work of the IEDC Team (as yet unpublished in peer-review print)',
             'texts_queryset': models.Text.objects.filter(corpus__name='Bamiyan Papers')
         },
         {
-            'source_of_data_name': 'The transcription and translation have been revised from a previous publication (see Publications)',
+            'source_of_data_name': 'The transcription has been revised from a previous publication (see Publications), the translation is the original work of the IEDC Team (as yet unpublished in peer-review print)',
             'texts_queryset': models.Text.objects.filter(corpus__name='Firuzkuh Papers')
         },
         {
