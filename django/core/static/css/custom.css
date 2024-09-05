@@ -882,16 +882,6 @@ main section {
 
 /* ---------- Corpus - Text: Detail ---------- */
 
-#corpus-text-detail-content,
-#corpus-text-detail-images {
-    display: inline-block;
-    vertical-align: top;
-    width: 50%;
-    padding: 1.5em 1em;
-    height: calc(100vh - 4em);
-    overflow: hidden;
-}
-
 #corpus-text-detail-content.full {
     width: 100%;
 }
@@ -950,9 +940,6 @@ main section {
 
 #corpus-text-detail-content article.tabbed {
     display: none;
-    overflow: auto;
-    padding: 1em 0 27em 0;
-    height: calc(100vh - 13em);
 }
 
 #corpus-text-detail-content article.tabbed.active {

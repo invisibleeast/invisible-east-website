@@ -152,6 +152,17 @@
 
     /* ---------- Corpus - Text: Detail ---------- */
 
+    #corpus-text-detail-content,
+    #corpus-text-detail-images {
+        display: block;
+        width: 100%;
+        padding: 1em;
+    }
+
+    #corpus-text-detail-images-container {
+        height: 70vh;
+    }
+
     #corpus-text-detail-content-tabs {
         margin: 2em 0;
     }
