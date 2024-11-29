@@ -550,12 +550,17 @@ class TextListView(ListView):
                     'filter_options': filter_queryset_languages
                 },
             ],
-            # Collection
+            # Collection and Corpus
             [
                 {
                     'filter_id': f'{filter_pre_fk}collection',
                     'filter_name': 'Collection',
                     'filter_options': models.SlTextCollection.objects.all()
+                },
+                {
+                    'filter_id': f'{filter_pre_fk}corpus',
+                    'filter_name': 'Corpus',
+                    'filter_options': models.SlTextCorpus.objects.all()
                 },
             ],
             # Type and subtype
