@@ -294,7 +294,6 @@ admin.site.register(models.SlTextCollection, GenericSlAdminView)
 admin.site.register(models.SlTextCorpus, GenericSlAdminView)
 admin.site.register(models.SlTextClassification, GenericSlAdminView)
 admin.site.register(models.SlTextScript, GenericSlAdminView)
-admin.site.register(models.SlTextLanguage, GenericSlAdminView)
 admin.site.register(models.SlTranslationLanguage, GenericSlAdminView)
 admin.site.register(models.SlTextWritingSupport, GenericSlAdminView)
 admin.site.register(models.SlTextSourceOfData, GenericSlAdminView)
@@ -329,6 +328,14 @@ class SlTextFolioTagAdminView(GenericSlAdminView):
     list_display = ('name', 'category')
     list_filter = ('category',)
     search_fields = ('name', 'category__name')
+
+
+@admin.register(models.SlTextLanguage)
+class SlTextLanguageAdminView(GenericSlAdminView):
+    """
+    Customise the SlTextLanguage, in addition to GenericSlAdminView
+    """
+    list_display = ('name', 'script')
 
 
 @admin.register(models.SlTextToponym)
