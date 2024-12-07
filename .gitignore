@@ -10,6 +10,7 @@ django/general/migrations/
 django/sent_emails/
 django/*/migrations/old_data*/
 django/account/migrations/initial_users/initial_users.py
+django/corpus/dataimport/data
 
 
 ###################### Django Templated gitignore paths  ######################
