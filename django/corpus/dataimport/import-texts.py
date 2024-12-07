@@ -6,7 +6,7 @@ Note, the spreadsheet must contain columns that match the field names in this sc
 
 The spreadsheet must be called 'data.xlsx' and stored in a directory called 'data' in this 'dataimport' directory, which is ignored from Git.
 
-cd to main django dir and run the script directly using shell: python manage.py shell < corpus/dataimport/import-texts.py 
+cd to main django dir and run the script directly using shell: python manage.py shell < corpus/dataimport/import-texts.py
 """
 
 
