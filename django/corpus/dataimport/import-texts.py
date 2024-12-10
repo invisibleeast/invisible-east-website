@@ -112,9 +112,7 @@ for i, record in enumerate(records):
                 # Get/create language
                 additional_language_obj = models.SlTextLanguage.objects.get_or_create(
                     name=language,
-                    script=models.SlTextScript.objects.get_or_create(
-                        name=script
-                    )[0]
+                    script=models.SlTextScript.objects.get_or_create(name=script)[0]
                 )[0]
                 # Add M2M relationship to new text
                 text_obj.additional_languages.add(additional_language_obj)

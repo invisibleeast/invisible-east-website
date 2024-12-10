@@ -672,7 +672,8 @@ class Text(models.Model):
 
     @property
     def summary_of_content_preview(self):
-        return clean_html(textwrap.shorten(self.summary_of_content, width=350, placeholder="..."))
+        if self.summary_of_content:
+            return clean_html(textwrap.shorten(self.summary_of_content, width=350, placeholder="..."))
 
     @property
     def list_image(self):
