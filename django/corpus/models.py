@@ -970,6 +970,7 @@ Please note that the heading text must appear outside of a list and not as a num
                         else:
                             td['class'] = 'empty'
                     # Add a new td containing the line number at the start of each row
+                    tr_number = 0
                     for tr_index, tr in enumerate(line.find_all('tr')):
                         line_number_td = soup.new_tag('td', **{'class': 'line-number', 'dir': f'{"rtl" if rtl else "auto"}'})
                         # Line number: if this <table> is first element in whole trans text
