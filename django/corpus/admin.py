@@ -270,17 +270,6 @@ class M2MTextToText2Inline(admin.TabularInline):
     verbose_name_plural = verbose_name
 
 
-class M2MSlToponymToTextInline(admin.TabularInline):
-    """
-    A subform/inline form for Text 1 to be used in TextAdminView
-    Data is read only, to show relationships set in the related text
-    """
-    model = models.Text.toponyms.through
-    extra = 0
-    verbose_name = 'Texts that this Toponym appears in'
-    verbose_name_plural = verbose_name
-
-
 #
 # 4. Select List admin views
 #
@@ -345,7 +334,6 @@ class SlTextToponymAdminView(GenericSlAdminView):
     """
     list_display = ('name', 'alternative_readings', 'other_attested_forms', 'latitude', 'longitude', 'urls_as_html_links')
     search_fields = ('name', 'alternative_readings', 'other_attested_forms', 'urls')
-    inlines = (M2MSlToponymToTextInline,)
 
 
 #
