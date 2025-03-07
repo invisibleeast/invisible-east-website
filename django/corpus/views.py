@@ -612,52 +612,52 @@ class TextListView(ListView):
                     'filter_options': models.SlTextWritingSupportDetail.objects.all()
                 },
             ],
-            # Tags
-            [
-                {
-                    'filter_group_name': 'Tags',
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_fa',
-                    'filter_name': 'Administrative, Military and Legal Titles, Offices and Processes',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Administrative, Military and Legal Titles, Offices and Processes')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ap',
-                    'filter_name': 'Agricultural Terms',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural Terms')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_cd',
-                    'filter_name': 'Currencies and Denominations',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and Denominations')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_dm',
-                    'filter_name': 'Documentation Terms',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentation Terms')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ga',
-                    'filter_name': 'Geographic Administrative Units',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic Administrative Units')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_mk',
-                    'filter_name': 'Markings',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Markings')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lm',
-                    'filter_name': 'Measurement Units',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Measurement Units')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_rg',
-                    'filter_name': 'Religions',
-                    'filter_options': models.SlTextFolioTag.objects.filter(category__name='Religions')
-                },
-            ]
+            # Tags (Temporarily hidden on 2025-03-07 at Ed's request. To be added back in future.)
+            # [
+            #     {
+            #         'filter_group_name': 'Tags',
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_fa',
+            #         'filter_name': 'Administrative, Military and Legal Titles, Offices and Processes',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Administrative, Military and Legal Titles, Offices and Processes')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ap',
+            #         'filter_name': 'Agricultural Terms',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural Terms')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_cd',
+            #         'filter_name': 'Currencies and Denominations',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and Denominations')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_dm',
+            #         'filter_name': 'Documentation Terms',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentation Terms')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ga',
+            #         'filter_name': 'Geographic Administrative Units',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic Administrative Units')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_mk',
+            #         'filter_name': 'Markings',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Markings')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lm',
+            #         'filter_name': 'Measurement Units',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Measurement Units')
+            #     },
+            #     {
+            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_rg',
+            #         'filter_name': 'Religions',
+            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Religions')
+            #     },
+            # ]
         ]
 
         return context
