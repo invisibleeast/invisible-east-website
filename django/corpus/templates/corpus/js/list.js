@@ -27,21 +27,27 @@ $('.reset-form').on('click', function(e){
 
 // Reset individual filter
 $('#corpus-text-list-options .input-clear').on('click', function(){
-    $(this).next('.corpus-text-list-options-filters-group-filter').val('').trigger('change');
+    $(this).prev('.corpus-text-list-options-filters-filter').val('').trigger('change');
 });
 
 // Show reset individual filter button
 function showFilterResetButton(filter){
-    let clearButton = filter.prev('.input-clear');
+    let clearButton = filter.next('.input-clear');
     if (filter.val() !== '') clearButton.show();
     else clearButton.hide();
 }
+
+// Toggle search type (i.e. regex or not)
+$('#corpus-text-list-options-search-toggletype').on('click', function(){
+    $(this).toggleClass('active');
+    $('#corpus-text-list-options-search-type').val($(this).hasClass('active') ? 'regex' : '');
+});
 
 // Add a search box
 function addSearchBox(){
     let isFirstInstance = Boolean($('.corpus-text-list-options-search-fields-instance').length == 0);
     // Set HTML, but only include operator and remove buttons if this isn't the first instance
-    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Click to toggle 'or'/'and'">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search" placeholder="Search">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<span id="corpus-text-list-options-search-fields-instance-add" title="Add search box"><i class="fas fa-plus"></i></span>`) + `</div>`;
+    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Toggle or/and">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search" placeholder="Search all fields by keyword">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary" title="Search"><i class="fas fa-search"></i></button>`) + `</div>`;
     // Append HTML
     $('#corpus-text-list-options-search-fields').append(searchInputHtml);
 }
@@ -50,7 +56,7 @@ function addSearchBox(){
 addSearchBox();
 
 // Add search box when clicking button
-$('body').on('click', '#corpus-text-list-options-search-fields-instance-add', function(){
+$('body').on('click', '#corpus-text-list-options-search-addinstance', function(){
     addSearchBox();
 });
 
@@ -93,12 +99,23 @@ $('.{{ filter_pre_gt }}, .{{ filter_pre_lt }}').on('change', function(){
     }
 });
 
+// Toggle visibility of section content when clicking on section title
+$('.corpus-text-list-options-section-title').on('click', function(){
+    $(this).next().toggle();
+});
+
 // Submit form (after performing certain functions)
 $('#corpus-text-list-options-submit').on('click', function(e){
     e.preventDefault();  // Stop form from submitting before below steps occur
 
     // Set the multiple searches operator (and / or)
     $('#corpus-text-list-options-search-operator').val(multipleSearchesOperator);
+
+    // Enable disabled values
+    $('#corpus-text-list-options-filters select:disabled').prop('disabled', false);
+
+    // Set the hidden sort value
+    $('#corpus-text-list-options-sort').val($('#corpus-text-list-header-sort-select').val())    
 
     // Remove the document subtype if it's not a child of the text type
     let textType = $('#filter_fk_type option:selected').text().split(' ')[0];
@@ -120,7 +137,7 @@ $('#corpus-text-list-options-submit').on('click', function(e){
 });
 
 // Submit the form upon change of value of certain form elements
-$('.corpus-text-list-options-filters-group-filter, #corpus-text-list-options-sort-by, #corpus-text-list-options-sort-direction').on('change', function(){
+$('.corpus-text-list-options-filters-filter, .corpus-text-list-options-includes-filter, #corpus-text-list-header-sort-select').on('change', function(){
     $('#corpus-text-list-options-submit').trigger('click');
 });
 
@@ -129,12 +146,11 @@ $('body').on('keydown', 'form#corpus-text-list-options input', function(e){
     if (e.keyCode == 13) $('#corpus-text-list-options-submit').trigger('click');
 });
 
-
 //
 // Set form field values on page load from URL parameters
 //
 
-function setFieldValueFromUrl(formItemID, urlParameter, triggerChange=false) {
+function setFieldValueFromUrl(formItemID, urlParameter, triggerChange=false){
     var value = new URL(window.location.href).searchParams.get(urlParameter);
     // If a valid value found
     if (value){
@@ -156,52 +172,84 @@ if (urlSearchesArray){
         // Create a new search box, if this isn't the first item (as there's already 1 by default)
         if (index > 0) addSearchBox();
         // Set this search value in the most recent search box
-        $('.corpus-text-list-options-search-fields-instance input').last().val(searchVal);
+        $('.corpus-text-list-options-search-fields-instance input').last().val(searchVal).attr('data-value', searchVal);
     });
 }
 // Sort
-setFieldValueFromUrl('corpus-text-list-options-sort-by', 'sort_by');
-setFieldValueFromUrl('corpus-text-list-options-sort-direction', 'sort_direction');
+setFieldValueFromUrl('corpus-text-list-header-sort-select', 'sort');
 // Filters
 new URL(window.location.href).searchParams.forEach(function(value, key){
     // If key starts with the 'filter_pre' (as defined in Django view get_context_data() method) then it's a filter
     if (key.startsWith('{{ filter_pre }}')) setFieldValueFromUrl(key, key);
 });
-
-
-//
-// Filter Relationships (i.e. changing visibility/options in one filter based on value of another filter)
-//
-
-// 'Type' and 'Document Subtype'
-function filterRelationshipTypeAndDocumentSubtype(){
-    let textType = $('#filter_fk_type').find('option:selected').text();
-    let documentSubtype = $('#filter_fk_document_subtype');
-    let documentSubtypeContainer = $('#filter_fk_document_subtype').closest('.corpus-text-list-options-filters-group-filter-container');
-    // If selecting Administrative type
-    if (textType.startsWith('Administrative')){
-        documentSubtypeContainer.show();
-        documentSubtype.find('option').each(function(){
-            if ($(this).text().startsWith('Administrative')) $(this).removeClass('hidden');
-            else $(this).addClass('hidden');
-        });
-    }
-    // If selecting Legal type
-    else if (textType.startsWith('Legal')){
-        documentSubtypeContainer.show();
-        documentSubtype.find('option').each(function(){
-            if ($(this).text().startsWith('Legal')) $(this).removeClass('hidden');
-            else $(this).addClass('hidden');
-        });
-    }
-    // If selecting none of the above
-    else {
-        documentSubtypeContainer.hide();
-        documentSubtype.val('');
-    }
+// Search Type (i.e. regex or not)
+if (new URL(window.location.href).searchParams.get('search_type') == 'regex'){
+    $('#corpus-text-list-options-search-toggletype').trigger('click');
 }
 
-filterRelationshipTypeAndDocumentSubtype();
+
+//
+// Tags
+//
+
+$('.corpus-text-list-items-item-text-tags span').on('click', function(e){
+    e.preventDefault();  // Prevent the link to the Text from working
+    let tagId = $(this).attr('data-tagid');
+    $('#filter_fk_text_folios__text_folio_tags__tag').val(tagId).trigger('change');
+});
+
+
+//
+// Set search criteria details if no results found
+//
+
+function htmlSearchCriteriaItem(inputId, inputType, label, value){
+    return `<div class="corpus-text-list-searchcriteria-content-item" data-input-id="${inputId}" data-input-type="${inputType}" data-input-value="${value}" title="Remove this search criteria"><strong>${label}:</strong> ${value}</div>`;
+}
+
+function htmlSearchCriteria(){
+    let html = ""
+    new URL(window.location.href).searchParams.forEach(function(value, key){
+        if (key.startsWith('{{ filter_pre }}') && value.length){
+            let input = $(`#${key}`);
+            let label = input.attr('title');
+            // Input type
+            var inputType;
+            if (input.is('input') && input.attr('type') == 'checkbox') inputType = 'checkbox';
+            else if (input.is('input') && input.attr('type') == 'hidden') inputType = 'hidden';
+            else if (input.is('select')) inputType = 'select';
+            // Value to display
+            var valueDisplay;
+            if (inputType == 'hidden'){
+                if (key === "filter_fk_text_folios__text_folio_tags__tag") valueDisplay = '{{ filter_active_tag }}'
+            }
+            else if (inputType == 'checkbox') valueDisplay = 'Yes';
+            else if (inputType == 'select') valueDisplay = $(`#${key} option:selected`).text();
+            // Append item
+            html += htmlSearchCriteriaItem(key, inputType, label, valueDisplay);
+        }
+        else if (key == 'search'){
+            JSON.parse(value).forEach(function(searchVal, index){
+                html += htmlSearchCriteriaItem(key, 'search', 'Search', searchVal);
+            });
+        }
+    });
+    $('#corpus-text-list-searchcriteria-content').html(html)
+}
+
+htmlSearchCriteria();
+
+$('body').on('click', '.corpus-text-list-searchcriteria-content-item', function(){
+    let inputId = $(this).attr('data-input-id');
+    let inputType = $(this).attr('data-input-type');
+    let inputText = $(this).attr('data-input-value');
+    if (inputType == 'checkbox') $(`#${inputId}`).prop('checked', false).trigger('change');
+    else if (inputType == 'select' || inputType == 'hidden') $(`#${inputId}`).val('').trigger('change');
+    else if (inputType == 'search'){
+        $(`.corpus-text-list-options-search-fields-instance input[data-value="${inputText}"]`).val('');
+        $('#corpus-text-list-options-submit').trigger('click');
+    }
+});
 
 
 //
@@ -209,6 +257,6 @@ filterRelationshipTypeAndDocumentSubtype();
 //
 
 // Show/hide all individual filter reset buttons on page load
-$('.corpus-text-list-options-filters-group-filter').each(function(){
+$('.corpus-text-list-options-filters-filter').each(function(){
     showFilterResetButton($(this));
 });

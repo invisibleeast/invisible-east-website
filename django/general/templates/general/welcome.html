@@ -1,159 +1,118 @@
 {% extends "base.html" %}
-{% load static settings_value %}
+{% load static settings_value i18n %}
 
 {% block main %}
 
 <section id="welcome-banner">
     <img id="welcome-banner-icon" src="{% static 'images/logos/ie-icon/ie-icon-small.png' %}" alt="Invisible East project icon">
     <div id="welcome-banner-title">
-        Invisible East Digital Corpus
+        {% translate "Invisible East Digital Corpus" %}
     </div>
     <div id="welcome-banner-tagline">
-        Bringing the medieval Islamicate East to the forefront of research
+        {% translate "Bringing the medieval Islamicate East to the forefront of research" %}
         <br>
         <br>
-        This is the website of the <strong>digital corpus</strong> of documents collated by the Invisible East Team
+        {% translate "What is meant by “medieval Islamicate East”?" %}
+        <br>
+        {% translate "It refers to the region extending roughly from Iran to Afghanistan, Central Asia and western China, northern India and Pakistan, which, in the middle ages, were under Muslim rule while large population groups practiced other religions." %}
         <br>
         <br>
-        This website is separate to the main <a href="https://invisibleeast.web.ox.ac.uk/" target="_blank">Invisible East project website</a>
+        {% translate "This is the website of the <strong>digital corpus</strong> of documents collated by the Invisible East Team" %}
+        <br>
+        <br>
+        {% translate "This website is separate to the main" %} <a href="https://invisibleeast.web.ox.ac.uk/" target="_blank">{% translate "Invisible East project website" %}</a>
     </div>
     <a id="welcome-banner-link" href="{% url 'corpus:text-list' %}" class="bubblelink">
-        <i class="fas fa-search"></i> Search the Corpus
+        <i class="fas fa-search"></i> {% translate "Search the Corpus" %}
     </a>
-    <i id="welcome-banner-more" class="fas fa-chevron-down"></i>
+    <a id="welcome-banner-link" href="#welcome" class="bubblelink">
+        <i class="fas fa-chevron-down"></i> {% translate "Read more about Invisible East" %}
+    </a>
+
+</section>
+
+<section id="welcome" class="container">
+    <h2 class="clearfloat">{% translate "Welcome" %}</h2>
+    <p>
+        {% translate "Ever wonder what people like you and me did 800 years ago?" %}
+    </p>
+    <p>
+        {% translate "How did they communicate with one another?" %}
+    </p>
+    <p>
+        {% translate "What language did they use?" %}
+    </p>
+    <p>
+        {% translate "Was life very different?" %}
+    </p>
+    <p>
+        {% translate "What did people eat?" %}
+    </p>
+    <p>
+        {% translate "Well, documents give insight into these day-to-day matters. The digital tool contained in this website provides searchable meta-data, tags, and images on documents - letters, contracts, notes-to-self, and many more bits of day-to-day writing - that were written in Iran, Afghanistan, and Central Asia at a time when Islam was still relatively new to the area, and when multicultural societies coexisted." %}
+    </p>
+    <p>
+        {% translate "Our corpus website is aimed at making publicly available academic research on the documents to academics in any country of the world, as well as to wider audiences who are interested in the history and cultures of a fascinating and understudied region of the world." %}
+    </p>
+    <p>
+        {% translate "If you'd like to find out more about the Invisible East project please visit" %} <a href="https://invisibleeast.web.ox.ac.uk/">{% translate "our project website" %}</a> {% translate "where you can read more about" %}:
+    </p>
+    <ul class="bullet-image">
+        <li><a href="https://invisibleeast.web.ox.ac.uk/team">{% translate "Our Team" %}</a></li>
+        <li><a href="https://invisibleeast.web.ox.ac.uk/news">{% translate "Publications, Blogs, and News" %}</a></li>
+        <li><a href="https://invisibleeast.web.ox.ac.uk/events">{% translate "Events" %}</a></li>
+        <li><a href="https://invisibleeast.web.ox.ac.uk/node/3022231">{% translate "Outreach" %}</a></li>
+        <li><a href="https://invisibleeast.web.ox.ac.uk/resources-1">{% translate "Research Tools" %}</a></li>
+    </ul>
 </section>
 
 <section class="container">
-    <div class="language-toggle">
-        <span class="language-toggle-button" data-lang="english">English</span>
-        /
-        <span class="language-toggle-button" data-lang="persian">فارسی</span>
-    </div>
+    <h2>{% translate "The Invisible East Digital Corpus" %}</h2>
+    <p>
+        {% translate "At Invisible East our mission is to digitise an expansive corpus of texts which have long been overlooked. The corpus is a combination of various caches of texts dating from the 8th-13th centuries and originating from Afghanistan, Iran and Central Asia." %}
+    </p>
+    <p>
+        {% translate "Together these texts present a new and exciting history of the region. A history which is not told through kings and courts, but rather through the day to day lives of regular people - their families, their communities, their professions and their faith. Written in languages, like New Persian, Judeo-Persian, Middle Persian, Arabic, Bactrian, Sogdian, Khotanese and Sanskrit, these manuscripts show an immense variety - from deeds of sale, legal proceedings, decrees and petitions to wedding certificates and personal letters." %}
+    </p>
+    <p>
+        {% translate "Our goal is to unite this vast range of texts in a single, publicly accessible database. By doing so, we hope to shed new light on a region, era and population that has remained 'invisible' for far too long." %}
+    </p>
+    <p>
+        {% translate "Some of the texts digitised here, sadly have unclear provenances, which are a symptom of the challenges in heritage management that especially people in Afghanistan, a country mired in decades of conflict and poverty, but also in other countries of the region, have faced. It poses an ethical dilemma to us as researchers, as we do not wish to give legitimacy to, nor encourage, the purchase of unprovenanced materials. For this reason, the IEDC only includes materials that are already in the public domain. Our aim is to make what is publicly available more accessible online to people in the region from which they originate, and the wider community of scholars and the general public. At the same time, we applaud, and support, where we can, all efforts to safeguard and preserve historical texts and manuscripts, in accordance with national plans and priorities in the affected countries of the region." %}
+    </p>
 </section>
 
-<div class="language-content" data-lang="english">
-    <section class="container">
-        <h2 class="clearfloat">Welcome</h2>
-        <p>
-            Ever wonder what people like you and me did 800 years ago?
-        </p>
-        <p>
-            How did they communicate with one another?
-        </p>
-        <p>
-            What language did they use?
-        </p>
-        <p>
-            Was life very different?
-        </p>
-        <p>
-            What did people eat?
-        </p>
-        <p>
-            Well, documents give insight into these day-to-day matters. The digital tool contained in this website provides searchable meta-data, tags, and images on documents - letters, contracts, notes-to-self, and many more bits of day-to-day writing - that were written in Iran, Afghanistan, and Central Asia at a time when Islam was still relatively new to the area, and when multicultural societies coexisted.
-        </p>
-        <p>
-            Our corpus website is aimed at making publicly available academic research on the documents to academics in any country of the world, as well as to wider audiences who are interested in the history and cultures of a fascinating and understudied region of the world. 
-        </p>
-        <p>
-            If you'd like to find out more about the Invisible East project please visit <a href="https://invisibleeast.web.ox.ac.uk/">our project website</a> where you can read more about:
-        </p>
-        <ul class="bullet-image">
-            <li><a href="https://invisibleeast.web.ox.ac.uk/team">Our team</a></li>
-            <li><a href="https://invisibleeast.web.ox.ac.uk/news">Publications, blogs, and news</a></li>
-            <li><a href="https://invisibleeast.web.ox.ac.uk/events">Events</a></li>
-            <li><a href="https://invisibleeast.web.ox.ac.uk/node/3022231">Outreach</a></li>
-            <li><a href="https://invisibleeast.web.ox.ac.uk/resources-1">Research Tools</a></li>
-        </ul>
-    </section>
+<section class="container">
+    <h2>{% translate "A Message from Arezou" %}</h2>
+    <img src="{% static 'images/arezou-azad.jpg' %}" alt="Arezou Azad" class="image-circle">
+    <p>
+        {% translate "Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and Invisible East programme lead. I'm a historian and former UN civilian peacekeeper. I've had the privilege of working with a fantastic team on this digital corpus." %}
+    </p>
+    <p>
+        {% translate "This is the first multilingual database that contains documents from the medieval Islamicate East - Iranian-language documents, in particular, have had little ”airtime”, until now, while documents in other languages, such as Arabic and Hebrew, have enjoyed a considerable digitisation support for some decades now." %}
+    </p>
+    <p>
+        {% translate "Ultimately, the sharing of pre-modern Iranian-language and data and data in other languages enrich our knowledge of the layered history of humanity at a granular and very human level. This kind of knowledge unites, and I'm proud to be playing a part in its production." %}
+    </p>
+</section>
 
-    <section class="container">
-        <h2>The Invisible East Digital Corpus</h2>
-        <p>
-            At Invisible East our mission is to digitise an expansive corpus of texts which have long been overlooked. The corpus is a combination of various caches of texts dating from the 8th-13th centuries and originating from Afghanistan, Iran and Central Asia.
-        </p>
-        <p>
-            Together these texts present a new and exciting history of the region. A history which is not told through kings and courts, but rather through the day to day lives of regular people - their families, their communities, their professions and their faith. Written in languages, like New Persian, Judeo-Persian, Middle Persian, Arabic, Bactrian, Sogdian, Khotanese and Sanskrit, these manuscripts show an immense variety - from deeds of sale, legal proceedings, decrees and petitions to wedding certificates and personal letters.
-        </p>
-        <p>
-            Our goal is to unite this vast range of texts in a single, publicly accessible database. By doing so, we hope to shed new light on a region, era and population that has remained 'invisible' for far too long.
-        </p>
-        <p>
-            Some of the texts digitised here, sadly have unclear provenances, which are a symptom of the challenges in heritage management that especially people in Afghanistan, a country mired in decades of conflict and poverty, but also in other countries of the region, have faced. It poses an ethical dilemma to us as researchers, as we do not wish to give legitimacy to, nor encourage, the purchase of unprovenanced materials. For this reason, the IEDC only includes materials that are already in the public domain. Our aim is to make what is publicly available more accessible online to people in the region from which they originate, and the wider community of scholars and the general public. At the same time, we applaud, and support, where we can, all efforts to safeguard and preserve historical texts and manuscripts, in accordance with national plans and priorities in the affected countries of the region.
-        </p>
-    </section>
-
-    <section class="container">
-        <h2>A Message from Arezou</h2>
-        <img src="{% static 'images/arezou-azad.jpg' %}" alt="Arezou Azad" class="image-circle">
-        <p>
-            Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and Invisible East programme lead. I'm a historian and former UN civilian peacekeeper. I've had the privilege of working with a fantastic team on this digital corpus.
-        </p>
-        <p>
-            This is the first multilingual database that contains documents from the medieval Islamicate East - Iranian-language documents, in particular, have had little "airtime," until now, while documents in other languages, such as Arabic and Hebrew, have enjoyed a considerable digitisation support for some decades now.
-        </p>
-        <p>
-            Ultimately, the sharing of pre-modern Iranian-language and data and data in other languages enrich our knowledge of the layered history of humanity at a granular and very human level. This kind of knowledge unites, and I'm proud to be playing a part in its production.
-        </p>
-    </section>
-
-    <section class="container">
-        <h2>A Message from Ed</h2>
-        <img src="{% static 'images/ed-shawe-taylor.jpg' %}" alt="Arezou Azad" class="image-circle">
-        <p>
-            Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible East programme. I oversee the uploading of data onto our digital corpus, ensuring that the rich historical documents we work with are accurately represented and user friendly. Alongside this role, I'm also a DPhil student in Asian and Middle Eastern Studies at the University of Oxford.
-        </p>
-        <p>
-            I’d like to extend my deepest thanks to my fellow data entry team members—Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom this database would not have been possible. Their dedication and meticulous work have been instrumental in bringing this project to fruition.
-        </p>
-        <p>
-            An enormous thank you also goes to our software developer, <a href="https://ahrsoftware.co.uk/" target="_blank">AHR Software</a>, whose incredible expertise transformed our vision into a reality. They not only brought our ideas to life but also introduced incredible interactive features that we wouldn’t have known were possible. Thanks to their creativity and dedication, we’ve created a website we are truly proud to share with you all!
-        </p>
-        <p>
-            You can read more about the work the Data Entry Team does in the <a href="https://invisibleeast.web.ox.ac.uk/news#tab-3020371" target="_blank">Invisible East Blog!</a>
-        </p>
-    </section>
-</div>
-
-<div class="language-content" data-lang="persian">
-    <section class="container rtl">
-        <h2>خوش آمدید</h2>
-        <div>
-            تا حال به این فکر کرده ‌اید که ۸۰۰ سال پیش، افرادی مانند من و شما چه کار می ‌کردند؟
-            <br>چه‌ گونه با هم‌ دیگر ارتباط برقرار می‌ کردند؟
-            <br>با چه زبانی حرف می ‌زدند؟
-            <br>زندگی خیلی متفاوت بود؟
-            <br>مردم چه می‌ خوردند؟
-            <br>خوب، این اسناد درک و تصویری در باب همین مسائل روزمره ارایه می‌ دهد. ابزار دیجیتالی موجود در این وب‌ سایت، متا داده‌ ها، برچسب‌ ها و تصاویر اسناد قابل جست ‌وجو- نامه‌ها، قرارداد ها، یاد داشت‌ ها و قطعه های فراوان دیگری از نوشتارهای روزانه در اختیار شما قرار می‌ دهد - که در ایران، افغانستان و آسیای میانه، در زمانی نگاشته شده اند که هنوز اسلام در این منطقه نسبتاً تازه بود و جوامع چندفرهنگی در کنار هم می ‌زیستند.
-            <br>وب‌ سایت مجموعه اسناد ما، بنا دارد، دست ‌رسی به پژوهش‌های اکادمیک در مورد این اسناد را برای پژوهشگران در سرتا سر جهان، فراهم سازد و آن‌ ها را در اختیار مخاطبان گسترده ‌تری نیز قرار دهد که به تاریخ و فرهنگ این منطقۀ جذاب و کم ‌تر شناخته شده از جهان، علاقه‌ مند هستند.
-            <br>اگر مایلید در مورد پروژۀ شرق نامرئی اطلاعات بیشتری کسب کنید، لطفاً از وب‌ سایت پروژۀ ما دیدن کنید، جایی که می ‌توانید در این باره بیشتر بخوانید: <a href="https://invisibleeast.web.ox.ac.uk/about-persian">https://invisibleeast.web.ox.ac.uk/about-persian</a>
-        </div>
-
-        <h2>وب‌ سایت مجموعه اسناد شرق نامرئی</h2>
-        <p>
-            در Invisible East ماموریت ما دیجیتالی کردن مجموعۀ وسیع از اسنادی است که مدت هاست نادیده گرفته شده ‌اند. این مجموعه، ترکیبی از ذخایر مختلفِ متونِ مربوط به قرن هشتم تا سیزدهم است که به افغانستان، ایران و آسیای میانه، تعلق دارند.
-            <br>روی‌ هم ‌رفته، این اسناد، تاریخ هیجان‌ انگیز و جدیدی از منطقه  ارائه می‌ دهد. تاریخی که نه از طریق پادشاهان و دربارها، بلکه از طریق زندگی روزمرۀ مردم عادی – خانواده ‌ها، جوامع، حرفه‌ ها و اعتقادات ‌شان روایت می ‌شود. این اسناد خطی که به زبان‌ های مانند فارسی جدید، فارسی ‌یهودی، فارسی میانه، عربی، باختری، سغدی، ختنی و سانسکریت نوشته شده‌ اند، تنوع بسیاری دارند که از اسناد خرید و فروش گرفته تا اقدامات حقوقی، فرامین، داد خواست ‌ها، گواهی ازدواج و نامه‌ های شخصی و رسمی را در بر می ‌گیرند.
-            <br>هدف ما این است که این طیف گسترده ‌ای از اسناد را در یک دیتابیس واحد، گرد آوریم و در دسترس عموم قرار دهیم. با انجام این کار، امیدواریم پرتو تازه ‌ای بر زمانه، جمعیت و منطقه ‌ای بیفگنیم که برای مدت طولانی "دیده نشده" باقی مانده اند.
-        </p>
-    </section>
-</div>
+<section class="container">
+    <h2>{% translate "A Message from Ed" %}</h2>
+    <img src="{% static 'images/ed-shawe-taylor.jpg' %}" alt="Edward Shawe-Taylor" class="image-circle">
+    <p>
+        {% translate "Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible East programme. I oversee the uploading of data onto our digital corpus, ensuring that the rich historical documents we work with are accurately represented and user friendly. Alongside this role, I'm also a DPhil student in Asian and Middle Eastern Studies at the University of Oxford." %}
+    </p>
+    <p>
+        {% translate "I’d like to extend my deepest thanks to my fellow data entry team members—Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom this database would not have been possible. Their dedication and meticulous work have been instrumental in bringing this project to fruition." %}
+    </p>
+    <p>
+        {% translate "An enormous thank you also goes to our software developer," %} <a href="https://ahrsoftware.co.uk/" target="_blank">AHR Software</a>, {% translate "whose incredible expertise transformed our vision into a reality. They not only brought our ideas to life but also introduced incredible interactive features that we wouldn’t have known were possible. Thanks to their creativity and dedication, we’ve created a website we are truly proud to share with you all!" %}
+    </p>
+    <p>
+        {% translate "You can read more about the work the Data Entry Team does in the" %} <a href="https://invisibleeast.web.ox.ac.uk/news#tab-3020371" target="_blank">{% translate "Invisible East Blog" %}</a>{% translate "afterlink-ieblog" %}
+    </p>
+</section>
 
 {% include 'snippets/footer.html' %}
-
-<!-- JS -->
-<script>
-    $(document).ready(function(){
-
-        // Show/hide language content when button is clicked
-        // Note, this is a lightweight custom language implementation just for some content,
-        // instead of using Django's full-site multiple language support tools
-        $('.language-toggle-button').on('click', function(){
-            let lang = $(this).attr('data-lang');
-            $('.language-content').hide();
-            $(`.language-content[data-lang="${lang}"]`).show();
-        });
-
-    });
-</script>
 
 {% endblock %}

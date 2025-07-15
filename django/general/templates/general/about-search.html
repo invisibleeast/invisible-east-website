@@ -1,70 +1,67 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block main %}
 
 <section class="container">
-    <h2>How to Search</h2>
+    <h2>{% translate "How to Search" %}</h2>
     <p>
-        At IEDC, our search tools are designed to be user-friendly, catering to both beginners and experts. Here's a step-by-step guide to help you navigate the Invisible East Digital Corpus
-        effectively:
+        {% translate "At IEDC, our search tools are designed to be user-friendly, catering to both beginners and experts. Here's a step-by-step guide to help you navigate the Invisible East Digital Corpus effectively:" %}
     </p>
 
     <div class="video-container">
         <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NfxrSA1BaOM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
-    <h3>Basic Search</h3>
+    <h3>{% translate "Basic Search" %}</h3>
     <ul class="bullet-image">
-        <li>Type a word or phrase into the search box, in English or the original language.</li>
-        <li>Press "+" to add another search field.</li>
-        <li>Use "or" for terms containing either entry, and "and" for texts containing both (click to toggle between them).</li>
+        <li>{% translate "Type a word or phrase into the search box, in English or the original language." %}</li>
+        <li>{% translate 'Press "+" to add another search field.' %}</li>
+        <li>{% translate 'Use "or" for terms containing either entry, and "and" for texts containing both (click to toggle between them).' %}</li>
     </ul>
 
-    <h3>Sort By</h3>
+    <h3>{% translate "Includes" %}</h3>
     <p>
-        Choose how to sort your results by:
+        {% translate "There are numerous checkboxes you can check/uncheck to help refine searches, including:" %}
+        <ul class="bullet-image">
+            <li>{% translate "Transcription" %}</li>
+            <li>{% translate "Translation" %}</li>
+            <li>{% translate "Transliteration" %}</li>
+            <li>{% translate "Image" %}</li>
+            <li>{% translate "Palaeography" %}</li>
+            <li>{% translate "Seal" %}</li>
+            <li>{% translate "Codex" %}</li>
+        </ul>
+    </p>
+
+    <h3>{% translate "Dates (CE)" %}</h3>
+    <p>
+        {% translate "You can filter results to show only texts after a chosen century and/or before another chosen century." %}
+    </p>
+
+    <h3>{% translate "Filters" %}</h3>
+    <p>
+        {% translate "There are numerous filters which can be used to help refine searches and navigate the IEDC's extensive corpus. If you were only interested in documents written in New Persian, for example, you can select 'New Persian (Arabic Script)' from the 'primary language' drop-down menu. The filters are as follows:" %}
     </p>
     <ul class="bullet-image">
-        <li>Shelfmark: Organised alphanumerically by the holding institution or library.</li>
-        <li>Converted Gregorian Date: The document's production date in the Gregorian calendar.</li>
-        <li>IEDC Input Date: Date of upload onto the Invisible East Digital Corpus.</li>
-        <li>Number of folios: The number of folios in a given text.</li>
+        <li>{% translate "Primary Language" %}</li>
+        <li>{% translate "Additional Languages" %}</li>
+        <li>{% translate "Collection" %}</li>
+        <li>{% translate "Corpus" %}</li>
+        <li>{% translate "Type of Text" %}</li>
+        <li>{% translate "Writing Support" %}</li>
     </ul>
 
-    <h3>Filters</h3>
+    <h3>{% translate "Sort By" %}</h3>
     <p>
-        There are numerous filters which can be used to help refine searches and navigate the IEDC's extensive corpus. If you were only interested in documents written in New Persian, for example, you can select 'New Persian (Arabic Script)' from the 'primary language' drop-down menu. The filters are as follows:
+        {% translate "Choose how to sort your results by:" %}
     </p>
     <ul class="bullet-image">
-        <li>Has an Image</li>
-        <li>Has a Transcription</li>
-        <li>Has a Translation</li>
-        <li>Has a Transliteration</li>
-        <li>Primary Language</li>
-        <li>Additional Languages</li>
-        <li>Collection</li>
-        <li>Type of Text</li>
-        <li>Toponyms</li>
-        <li>Gregorian Date (from)</li>
-        <li>Gregorian Date (to)</li>
-        <li>Writing Support</li>
-        <li>Writing Support Details</li>
-    </ul>
-
-    <h3>Tags</h3>
-    <p>
-        The IEDC also uses numerous tags. These are arranged by category and highlight specific historical details. These have been organised into various categories:
-    </p>
-    <ul class="bullet-image">
-        <li>Administrative, Military and Legal Titles, Offices and Processes</li>
-        <li>Agricultural Terms</li>
-        <li>Currencies and Denominations</li>
-        <li>Documentation Terms</li>
-        <li>Geographic Administrative Units</li>
-        <li>Markings</li>
-        <li>Measurement Units</li>
-        <li>Religions</li>
+        <li>IEDC ID</li>
+        <li>{% translate "Shelfmark: Organised alphanumerically by the holding institution or library." %}</li>
+        <li>{% translate "Converted Gregorian Date: The document's production date in the Gregorian calendar." %}</li>
+        <li>{% translate "IEDC Input Date: Date of upload onto the Invisible East Digital Corpus." %}</li>
+        <li>{% translate "Number of folios: The number of folios in a given text." %}</li>
     </ul>
 </section>
 

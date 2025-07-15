@@ -1,0 +1,3 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<span class="corpus-text-list-options-section-title-toggle{% if LANGUAGE_CODE == 'en' %} right{% elif LANGUAGE_CODE == 'fa' %} left{% endif %}"><i class="fas fa-chevron-down"></i></span>

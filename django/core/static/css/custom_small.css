@@ -57,6 +57,13 @@
         border-left: 3px solid var(--color-secondary);
     }
 
+    #nav-languagelinks {
+        margin-top: 1em;
+        padding: 1em 0;
+        border-top: 2px solid #c1b98a;
+        text-align: center;
+    }
+
     /* ---------- Main ---------- */
 
     main {
@@ -73,12 +80,6 @@
 
     #welcome-banner-title {
         font-size: 3em;
-        line-height: 1.2em;
-    }
-
-    #welcome-banner-tagline {
-        width: 100%;
-        font-size: 1.2em;
         line-height: 1.2em;
     }
 
@@ -113,11 +114,6 @@
         top: 4.5em;
         height: calc(100vh - 4.5em);
         border-top: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    #corpus-text-list-counts span {
-        margin: 0.5rem;
-        display: block;
     }
 
     .corpus-text-list-items-item {
@@ -180,7 +176,6 @@
 
     .corpus-text-detail-content-details-datagroup-dataitem label {
         display: block;
-        text-align: left;
         width: 100%;
     }
 

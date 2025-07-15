@@ -1,0 +1,355 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: corpus/templates/corpus/map-iedctoponyms.html:7
+msgid "Toponyms in the Invisible East Digital Corpus"
+msgstr ""
+
+#: corpus/templates/corpus/map-iedctoponyms.html:9
+msgid ""
+"This is a map of all the place names identified by the Invisible East Team "
+"in the texts of the Invisible East Digital Corpus. If you click on a pin, "
+"you can see all the texts in our corpus which mention this toponym. Please "
+"bear in mind that the exact geographical location of origin is not always "
+"possible to establish. It is, therefore, only an approximation."
+msgstr ""
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:9
+msgid "Show Transcriptions"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:14
+msgid "Show Translations"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:19
+msgid "Show Transliterations"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:24
+msgid "Show Links to Tags"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:29
+msgid "Link to Tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:17
+msgid ""
+"This text is not yet approved, meaning it's not visible to public users."
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:18
+msgid ""
+"Only authenticated users (admins and contributors) can see texts before "
+"they're approved."
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:32
+#: corpus/templates/corpus/text-detail.html:45
+#: corpus/templates/corpus/text-detail.html:312
+msgid "Details"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:33
+#: corpus/templates/corpus/text-detail.html:119
+msgid "Folios"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:34
+#: corpus/templates/corpus/text-detail.html:93
+msgid "Codex"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:35
+#: corpus/templates/corpus/text-detail.html:131
+#: corpus/templates/corpus/text-detail.html:148
+msgid "Tags"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:36
+msgid "Transliterations"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:37
+msgid "Transcriptions"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:38
+msgid "Translations"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:39
+#: corpus/templates/corpus/text-detail.html:269
+msgid "Palaeography"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:40
+#: corpus/templates/corpus/text-detail.html:282
+msgid "Map"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:41
+msgid "Seals"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:133
+#: corpus/templates/corpus/text-detail.html:237
+#: corpus/templates/corpus/text-list.html:156
+msgid "Transcription"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:136
+#: corpus/templates/corpus/text-detail.html:253
+#: corpus/templates/corpus/text-list.html:157
+msgid "Translation"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:139
+#: corpus/templates/corpus/text-detail.html:221
+#: corpus/templates/corpus/text-list.html:158
+msgid "Transliteration"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:188
+msgid "View in Transcriptions"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:193
+msgid "View in Translations"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:198
+msgid "View in Transliterations"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:210
+msgid "This folio doesn't have any tags yet. Please check back soon."
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:284
+msgid ""
+"This map displays the place names identified by the Invisible East Team "
+"related to this corpus text. If you click on a pin, you can see all the "
+"texts in our corpus which mention this toponym. Please bear in mind that the "
+"exact geographical location of origin is not always possible to establish. "
+"It is, therefore, only an approximation."
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:287
+msgid "You can also view"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:287
+msgid "a full map of all toponyms within the Invisible East Digital Corpus"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:287
+msgid "afterlink-detailtotoponyms"
+msgstr "."
+
+#: corpus/templates/corpus/text-detail.html:299
+msgid "Seal"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:309
+#: corpus/templates/corpus/text-list.html:143
+msgid "Type"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:315
+msgid "Inscription"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:318
+msgid "Measurements"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:321
+msgid "Descriptions"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:324
+msgid "Colours"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:327
+msgid "Seal Imprints"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:343
+msgid "Previous Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:345
+msgid "Next Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:349
+msgid "Folio"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:358
+msgid "Only show"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:360
+#: corpus/templates/corpus/text-detail.html:482
+#: corpus/templates/corpus/text-detail.html:500
+msgid "Please select"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:374
+msgid "Reset Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:376
+msgid "Download Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:381
+msgid "Reveal Parts on Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:384
+msgid "Rotate Image Anticlockwise"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:386
+msgid "Rotate Image Clockwise"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:388
+msgid "Fullscreen"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:439
+msgid "Images courtesy of"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:449
+#: corpus/templates/corpus/text-detail.html:474
+msgid "Tag Manager"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:480
+msgid "Tag Category"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:490
+msgid "Tag Search"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:498
+msgid "Tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:508
+msgid "Create a new tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:515
+msgid "Tag Details"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:521
+msgid "Draw on Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:526
+msgid "Save Tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:25
+msgid "How to Search"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:26
+msgid "Search by Map"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:45
+msgid "Includes"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:58
+#: corpus/templates/corpus/text-list.html:145
+msgid "Dates (CE)"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:69
+msgid "Filters"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:89
+msgid "results found"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:89
+msgid "of all"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:89
+msgid "Corpus Texts"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:93
+msgid "Sort by"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:132
+msgid "In IEDC since"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:142
+msgid "Primary Language"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:144
+msgid "Writing Support"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:163
+msgid "Not yet approved"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:190
+msgid "First"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:196
+msgid "Previous"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:203
+msgid "Page"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:203
+msgid "of"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:211
+msgid "Next"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:217
+msgid "Last"
+msgstr ""

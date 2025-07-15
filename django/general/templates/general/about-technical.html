@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load static settings_value %}
+{% load static settings_value i18n %}
 
 {% block main %}
 
 <section class="container">
-    <h2>Technical</h2>
+    <h2>{% translate "Technical" %}</h2>
     <p>
-        The Invisible East Digital Corpus (version {% settings_value 'VERSION' %}) is a web application developed using the following technologies:
+        {% translate "The Invisible East Digital Corpus version" %} ({% settings_value 'VERSION' %}) {% translate "is a web application developed using the following technologies:" %}
         <ul class="bullet-image">
             <li>Django</li>
             <li>Python</li>
@@ -18,13 +18,13 @@
         </ul>
     </p>
     <p>
-        You can view the code used to build the IEDC in the project's <a href="https://github.com/invisibleeast/invisible-east-website" target="_blank">GitHub repository.</a>
+        {% translate "You can view the code used to build the IEDC in the project's" %} <a href="https://github.com/invisibleeast/invisible-east-website" target="_blank">{% translate "GitHub repository" %}</a>{% translate "afterlink-github" %}
     </p>
     <p>
-        You can also access the code via Zenodo with the DOI <a href="https://zenodo.org/records/13220978" target="_blank">13220978</a>.
+        {% translate "You can also access the code via Zenodo with the" %} <a href="https://zenodo.org/records/13220978" target="_blank">DOI 13220978</a>{% translate "afterlink-zenodo" %}
     </p>
     <p>
-        The IEDC was developed by <a href="https://ahrsoftware.co.uk/" target="_blank">AHR Software</a> for the Invisible East project.
+        {% translate "The IEDC was developed by" %} <a href="https://ahrsoftware.co.uk/" target="_blank">AHR Software</a> {% translate "for the Invisible East programme" %}.
     </p>
 </section>
 

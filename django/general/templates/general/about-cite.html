@@ -1,47 +1,47 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block main %}
 
 <section class="container">
-    <h2>How to Cite</h2>
+    <h2>{% translate "How to Cite" %}</h2>
     <p>
-        <strong>Anyone is welcome to use our metadata, transcriptions and translations, but please cite them accordingly.</strong>
+        <strong>{% translate "Anyone is welcome to use our metadata, transcriptions and translations, but please cite them accordingly." %}</strong>
     </p>
     <p>
-        Some general principles, with examples:
+        {% translate "Some general principles, with examples:" %}
     </p>
     <p>
-        <strong><em>Always</em> mention the shelfmark when citing a fragment.</strong>
+        <strong>{% translate "<em>Always</em> mention the shelfmark when citing a fragment." %}</strong>
     </p>
     <p>
-        Example:
+        {% translate "Example:" %}
     </p>
     <ul class="bullet-image">
         <li>
-            Letter from Abu Bakr b. ʿUmar. National Library of Israel, Ms.Heb.8333.88.
+            {% translate "Letter from Abu Bakr b. ʿUmar. National Library of Israel, Ms.Heb.8333.88." %}
         </li>
     </ul>
     <p>
-        <strong>Metadata, transcriptions and translations that come from print editions should acknowledge the original publication.</strong>
+        <strong>{% translate "Metadata, transcriptions and translations that come from print editions should acknowledge the original publication." %}</strong>
     </p>
     <p>
-        Example:
+        {% translate "Example:" %}
     </p>
     <ul class="bullet-image">
         <li>
             Khalili Arabic 29, ed. Geoffrey Khan, <em>Arabic Documents from Early Islamic Khurasan</em> (London: The Nour Foundation in association with Azimuth Editions, 2007)&lrm;, pp. 152-54.
-    </li>
+        </li>
     </ul>
     <p>
-        <strong>Metadata, transcriptions and translations that the IEDC lists as unpublished or revised should be cited with credit to the editor(s) and contributors who produced the data for the IEDC.</strong>
+        <strong>{% translate "Metadata, transcriptions and translations that the IEDC lists as unpublished or revised should be cited with credit to the editor(s) and contributors who produced the data for the IEDC." %}</strong>
     </p>
     <p>
-        Example:
+        {% translate "Example:" %}
     </p>
     <ul class="bullet-image">
         <li>
-            Afghanistan National Archives, Firuzkuh 8, O.Haim, N. Saqee and A. Azad, unpublished translation available online through the Invisible East programme.
+            {% translate "Afghanistan National Archives, Firuzkuh 8, O.Haim, N. Saqee and A. Azad, unpublished translation available online through the Invisible East programme." %}
         </li>
     </ul>
 </section>

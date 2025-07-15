@@ -1,7 +1,10 @@
-{% load static settings_value %}
+{% load static settings_value i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 
     <head>
         <title>Invisible East Digital Corpus</title>
@@ -51,7 +54,7 @@
         <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     </head>
 
-    <body>
+    <body{% if LANGUAGE_CODE == 'fa' %} dir="rtl"{% endif %}>
 
         <!-- jQuery (has to load at start of page, as some templates that extend from this base template include jQuery in them) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
@@ -62,7 +65,7 @@
             <a class="navbar-brand" href="{% url 'general:welcome' %}">
                 <h1>
                     <img src="{% static 'images/logos/ie-icon/ie-icon-xsmall.png' %}" alt="Invisible East project icon">
-                    <div>Invisible East<br>Digital Corpus</div>
+                    <div>{% translate 'Invisible East' %}<br>{% translate 'Digital Corpus' %}</div>
                 </h1>
             </a>
             <!-- Nav toggle button (for small screens) -->
@@ -71,41 +74,60 @@
             </button>
             <!-- Nav list -->
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav m{% if LANGUAGE_CODE == 'fa' %}r{% else %}l{% endif %}-auto">
                     <!-- Welcome -->
                     <li class="nav-item">
-                        <a class="nav-link{% if request.path == "/" %} active{% endif %}" href="{% url 'general:welcome' %}">
-                            Welcome
+                        <a class="nav-link{% if request.path == "/" or request.path == "/fa/" %} active{% endif %}" href="{% url 'general:welcome' %}#welcome">
+                            {% translate 'Welcome' %}
                         </a>
                     </li>
                     <!-- Corpus / Search -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/corpus/" in request.path and '/corpus/map' not in request.path %} active{% endif %}" href="{% url 'corpus:text-list' %}">
-                            Search
+                        <a class="nav-link{% if "/corpus/" in request.path and '/corpus/map' not in request.path and '/corpus/insights/' not in request.path %} active{% endif %}" href="{% url 'corpus:text-list' %}">
+                            {% translate 'Search' %}
                         </a>
                     </li>
-                    <!-- Maps -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle{% if "/corpus/map/" in request.path %} active{% endif %}" href="#" id="navbarDropdownMenuLinkMaps" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Maps
+                    <!-- Corpus Insights (section to be added soon) -->
+                    <!-- <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if "/corpus/insights/" in request.path %} active{% endif %}" href="#" id="navbarDropdownMenuLinkAbout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% translate 'Corpus Insights' %}
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkMaps">
-                            <a class="dropdown-item" href="{% url 'corpus:map-iedctoponyms' %}">IEDC Toponyms</a>
-                            <a class="dropdown-item" href="{% url 'corpus:map-findspots' %}">Find Spots</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkAbout">
+                            <a class="dropdown-item" href="{% url 'corpus:insights-languages' %}">
+                                {% translate 'Languages' %}
+                            </a>
                         </div>
+                    </li> -->
+                    <!-- Map -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/corpus/map/" in request.path %} active{% endif %}" href="{% url 'corpus:map-iedctoponyms' %}">
+                            {% translate 'Map' %}
+                        </a>
                     </li>
                     <!-- About -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle{% if "/about/" in request.path %} active{% endif %}" href="#" id="navbarDropdownMenuLinkAbout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            About
+                            {% translate 'About' %}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkAbout">
-                            <a class="dropdown-item" href="{% url 'general:about-search' %}">How to Search</a>
-                            <a class="dropdown-item" href="{% url 'general:about-cite' %}">How to Cite</a>
-                            <a class="dropdown-item" href="{% url 'general:about-faqs' %}">FAQs</a>
-                            <a class="dropdown-item" href="{% url 'general:about-glossary' %}">Glossary</a>
-                            <a class="dropdown-item" href="{% url 'general:about-technical' %}">Technical/Software</a>
-                            <a class="dropdown-item" href="{% url 'general:about-credits' %}">Credits</a>
+                            <a class="dropdown-item" href="{% url 'general:about-search' %}">
+                                {% translate 'How to Search' %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'general:about-cite' %}">
+                                {% translate 'How to Cite' %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'general:about-faqs' %}">
+                                {% translate 'FAQs' %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'general:about-glossary' %}">
+                                {% translate 'Glossary' %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'general:about-technical' %}">
+                                {% translate 'Technical/Software' %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'general:about-credits' %}">
+                                {% translate 'Credits' %}
+                            </a>
                         </div>
                     </li>
                     {% comment %}
@@ -113,25 +135,32 @@
                         <!-- Help -->
                         <li class="nav-item">
                             <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="{% url 'help:list' %}">
-                                Help
+                                {% translate 'Help' %}
                             </a>
                         </li>
                     {% endcomment %}
                     <!-- Project -->
                     <li class="nav-item">
                         <a class="nav-link" href="https://invisibleeast.web.ox.ac.uk/" target="_blank">
-                            Project
+                            {% translate 'Project' %}
                         </a>
                     </li>
                     {% if user.is_admin %}
                         <!-- Admin -->
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">
-                                Admin
+                                {% translate 'Admin' %}
                             </a>
                         </li>
                     {% endif %}
                 </ul>
+
+                <!-- Language links -->
+                <div id="nav-languagelinks">
+                    <span><a data-langcode="fa" title="Persian" href="#"{% if LANGUAGE_CODE == 'fa' %}class="active"{% endif %}>فا</a></span>
+                    <span id="nav-languagelinks-toggle" data-langcode="{{ LANGUAGE_CODE }}"><i class="fas fa-toggle-on"></i></span>
+                    <span><a data-langcode="en" title="English" href="#"{% if LANGUAGE_CODE == 'en' %}class="active"{% endif %}>Eng</a></span>
+                </div>
             </div>
         </nav>
 
@@ -158,6 +187,7 @@
         </script>
 
         <!-- Custom JavaScript -->
+        <script src="{% static 'js/i18n.js' %}"></script>
         <script src="{% static 'js/cookiesmsg.js' %}"></script>
         <script src="{% static 'js/quicksearch.js' %}"></script>
 

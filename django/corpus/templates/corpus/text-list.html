@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% load static pagination_go_to_page %}
+{% load static pagination_go_to_page i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block main %}
 
@@ -20,140 +22,144 @@
         </div>
 
         <form method="GET" id="corpus-text-list-options">
-            <a id="corpus-text-list-options-helplink" href="{% url 'general:about-search' %}" target="_blank">How to Search</a>
+            <a id="corpus-text-list-options-extlink" href="{% url 'general:about-search' %}" target="_blank">{% translate 'How to Search' %} <i class="fas fa-question-circle"></i></a>
+            <a id="corpus-text-list-options-extlink" href="{% url 'corpus:map-iedctoponyms' %}" target="_blank">{% translate 'Search by Map' %} <i class="fas fa-map-marker-alt"></i></a>
 
             <!-- Search (allows for multiple search criteria) -->
-            <div class="corpus-text-list-options-subtitle">
-                <i class="fas fa-search"></i> Search
+            <div id="corpus-text-list-options-search">
+                <!-- Hidden fields that will have value determined in JS -->
+                <input type="hidden" id="corpus-text-list-options-search-values" name="search">
+                <input type="hidden" id="corpus-text-list-options-search-operator" name="search_operator">
+                <input type="hidden" id="corpus-text-list-options-search-type" name="search_type">
+                <!-- Regex search toggle button -->
+                <div id="corpus-text-list-options-search-toggletype" title="Search using regular expressions">regex (.*)</div>
+                <!-- Search fields (dynamically filled via JS) -->
+                <div id="corpus-text-list-options-search-fields"></div>
+                <!-- Add new search field instance -->
+                <div id="corpus-text-list-options-search-addinstance" title="Add search box"><i class="fas fa-plus"></i></div>
             </div>
-            <!-- Hidden fields that will have value determined in JS -->
-            <input type="hidden" id="corpus-text-list-options-search-values" name="search">
-            <input type="hidden" id="corpus-text-list-options-search-operator" name="search_operator">
-            <!-- Search fields (dynamically filled via JS) -->
-            <div id="corpus-text-list-options-search-fields"></div>
-            <button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary">
-                <i class="fas fa-search"></i> Submit Search
-            </button>
 
-            <!-- Sort -->
-            <div class="corpus-text-list-options-subtitle">
-                <i class="fas fa-sort-amount-down-alt"></i> Sort
+            <!-- Includes (aka checkbox filters) -->
+            <div class="corpus-text-list-options-section">
+                <div class="corpus-text-list-options-section-title">
+                    <i class="fas fa-check-square"></i> {% translate 'Includes' %}
+                    {% include 'corpus/snippets/options-section-title-toggle.html' %}
+                </div>
+                <div id="corpus-text-list-options-includes" class="corpus-text-list-options-section-content">
+                    {% for f in options_includes %}
+                        <label{% if f.filter_helptext %} title="{{ f.filter_helptext }}"{% endif %}><input type="checkbox" class="corpus-text-list-options-includes-filter" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {% if LANGUAGE_CODE == 'en' %}{{ f.filter_name }}{% elif LANGUAGE_CODE == 'fa' %}{{ f.filter_name_fa }}{% endif %}</label>
+                    {% endfor %}
+                </div>
             </div>
-            <!-- Sort by -->
-            <label for="corpus-text-list-options-sort-by">Sort by:</label>
-            <select id="corpus-text-list-options-sort-by" name="sort_by">
-                <!-- Alphabetical sorts (options defined in view) -->
-                {% if options_sortby_alphabetical|length > 0 %}
-                    {% for osa in options_sortby_alphabetical %}
-                        <option value="{{ osa.value }}">{{ osa.label }}</option>
-                    {% endfor %}
-                {% endif %}
-                <!-- Numerical sorts (options defined in view) -->
-                {% if options_sortby_numerical|length > 0 %}
-                    {% for osn in options_sortby_numerical %}
-                        <option value="{{ osn.value }}">{{ osn.label }}</option>
-                    {% endfor %}
-                {% endif %}
-            </select>
-            <!-- Sort direction -->
-            <label for="corpus-text-list-options-sort-direction">Sort direction:</label>
-            <select id="corpus-text-list-options-sort-direction" name="sort_direction">
-                <option value="">Ascending (A-Z, 0-9)</option>
-                <option value="-">Descending (Z-A, 9-0)</option>
-            </select>
+
+            <!-- Dates (range of "from - to" by year) -->
+            <div class="corpus-text-list-options-section">
+                <div class="corpus-text-list-options-section-title">
+                    <i class="fas fa-clock"></i> {% translate 'Dates (CE)' %}
+                    {% include 'corpus/snippets/options-section-title-toggle.html' %}
+                </div>
+                <div id="corpus-text-list-options-datefilters">
+                    {% include 'corpus/snippets/list-filters.html' with filters=options_datefilters %}
+                </div>
+            </div>
 
             <!-- Filter -->
-            {% if options_filters|length > 0 %}
-                <div class="corpus-text-list-options-subtitle">
-                    <i class="fas fa-filter"></i> Filters
+            <div class="corpus-text-list-options-section">
+                <div class="corpus-text-list-options-section-title">
+                    <i class="fas fa-sliders-h"></i> {% translate 'Filters' %}
+                    {% include 'corpus/snippets/options-section-title-toggle.html' %}
                 </div>
-                <div class="corpus-text-list-options-filters">
-                    {% for filter_group in options_filters %}
-                        <div class="corpus-text-list-options-filters-group">
-                            {% for f in filter_group %}
-                                {% if f.filter_group_name %}
-                                    <div class="corpus-text-list-options-filters-group-name">{{ f.filter_group_name }}</div>
-                                {% else %}
-                                    <div class="corpus-text-list-options-filters-group-filter-container">
-                                        {% if filter_pre_bl in f.filter_id %}
-                                            <label><input type="checkbox" class="corpus-text-list-options-filters-group-filter" id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}"> {{ f.filter_name }}</label>
-                                        {% else %}
-                                            <label>
-                                                {{ f.filter_name }}
-                                            </label>
-                                            <span class="input-clear"><i class="fas fa-times-circle"></i></span>
-                                            <select id="{% if f.filter_id_unique %}{{ f.filter_id_unique }}{% else %}{{ f.filter_id }}{% endif %}"
-                                                class="corpus-text-list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
-                                                title="{{ f.filter_name }}"
-                                                name="{{ f.filter_id }}"
-
-                                                {# Filter Dependencies #}
-                                                {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
-
-                                                {# Data Hierarchy #}
-                                                {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
-                                                {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
-                                                {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
-                                                {% include 'snippets/select-default.html' %}
-                                                {% for o in f.filter_options %}
-                                                    <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
+                <div id="corpus-text-list-options-filters">
+                    {% include 'corpus/snippets/list-filters.html' with filters=options_filters %}
                 </div>
-            {% endif %}
+            </div>
+
+            <!-- Sort -->
+            <!-- Hidden, as this option is elsewhere on the page -->
+            <input type="hidden" id="corpus-text-list-options-sort" name="sort" value="">
         </form>
     </section>
 
-    <!-- List Counts -->
-    <section id="corpus-text-list-counts">
-        <span>
-            {{ page_obj.paginator.count }} results found {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">(of all {{ count_all_texts }} Corpus Texts)</a>{% endif %}
-        </span>
-        <span>
-            Showing up to {{ page_obj.paginator.per_page }} results per page
-        </span>
-        <span>
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        </span>
+    <!-- List Header -->
+    <section id="corpus-text-list-header">
+        <!-- Results title -->
+        <div id="corpus-text-list-header-title">Results</div>
+        <!-- Results count -->
+        <div id="corpus-text-list-header-count">
+            {{ page_obj.paginator.count }} {% translate 'results found' %} {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">{% translate 'of all' %} {{ count_all_texts }} {% translate 'Corpus Texts' %}</a>{% endif %}
+        </div>
+        <!-- Sort -->
+        <div id="corpus-text-list-header-sort">
+            <label for="corpus-text-list-header-sort-select">{% translate 'Sort by' %}:</label>
+            <select id="corpus-text-list-header-sort-select" name="sort">
+                {% if options_sort|length > 0 %}
+                    {% for os in options_sort %}
+                        <option value="{{ os.value }}">{{ os.label }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
     </section>
+
+    <section id="corpus-text-list-searchcriteria">
+        <!-- Filled in dynamically via JS -->
+        <div id="corpus-text-list-searchcriteria-content"></div>
+    </section>
+
+    {% comment %}
+    {% if dataexport_text_ids %}
+        <!-- Export data -->
+        <section id="corpus-text-list-dataexport">
+            <a href="{% url 'corpus:dataexport-csv' %}?text_ids={{ dataexport_text_ids }}">
+                <i class="fas fa-file-download"></i> Download Results as CSV
+            </a>
+        </section>
+    {% endif %}
+    {% endcomment %}
 
     <!-- List Items -->
     <section id="corpus-text-list-items">
         {% for object in object_list %}
             <!-- Set the URL based on the main model supplied to this page -->
-            <a href="{% url 'corpus:text-detail' object.id %}" class="corpus-text-list-items-item">
+            <a href="{% url 'corpus:text-detail' object.id %}" class="corpus-text-list-items-item" target="_blank">
                 <!-- Image -->
-                <div class="corpus-text-list-items-item-imagecontainer" style="background-image: url({% if object.list_image %}{{ object.list_image.url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}); background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
+                <div class="corpus-text-list-items-item-imagecontainer" style="background-image: url({% if object.list_image_url %}{{ object.list_image_url }}{% else %}{% static 'images/noimagefound.jpg' %}{% endif %}); background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
                 </div>
                 <!--Text -->
                 <div class="corpus-text-list-items-item-text">
-                    <div class="corpus-text-list-items-item-text-title">{{ object.title }}</div>
+                    <div class="corpus-text-list-items-item-text-meta {% if LANGUAGE_CODE == 'en' %}right{% elif LANGUAGE_CODE == 'fa' %}left{% endif %}">
+                        {% translate 'In IEDC since' %} {{ object.meta_created_datetime | date:"d M o" }} (IEDCID{{ object.id }})
+                    </div>
+                    <div class="corpus-text-list-items-item-text-title">
+                        <span class="corpus-text-list-items-item-text-title-count">{{ forloop.counter }}.</span> {{ object.title }}
+                    </div>
                     <div class="corpus-text-list-items-item-text-details">
-                        <div class="corpus-text-list-items-item-text-details-summary">{{ object.summary_of_content_preview }}</div>
+                        {% if object.summary_of_content %}
+                            <div class="corpus-text-list-items-item-text-details-summary" dir="ltr">{{ object.summary_of_content_preview }}</div>
+                        {% endif %}
                         <dl>
-                            <div><dt>IEDC ID</dt><dd>{{ object.id }}</dd></div>
-                            <div><dt>Type</dt><dd>{{ object.type }}</dd></div>
-                            <div><dt>Number of Folios</dt><dd>{{ object.text_folios.count }}</dd></div>
-                            <div><dt>IEDC Input Date</dt><dd>{{ object.meta_created_datetime | date:"d M o" }}</dd></div>
+                            <div><dt>{% translate 'Primary Language' %}</dt><dd>{{ object.primary_language }}</dd></div>
+                            <div><dt>{% translate 'Type' %}</dt><dd>{{ object.type }}</dd></div>
+                            <div><dt>{% translate 'Writing Support' %}</dt><dd>{{ object.writing_support | title }}</dd></div>
+                            <div><dt>{% translate 'Dates (CE)' %}</dt><dd>{{ object.gregorian_date_full }}</dd></div>
                         </dl>
+                    </div>
+                    <div class="corpus-text-list-items-item-text-tags">
+                        {% for tag in object.tags %}
+                            <span data-tagid="{{ tag.id }}">{{ tag.name }}</span>
+                        {% endfor %}
                     </div>
                 </div>
                 <!-- Booleans -->
-                <div class="corpus-text-list-items-item-booleans">
-                    <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transcription</span>
-                    <span{% if object.has_translation %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Translation</span>
-                    <span{% if object.has_transliteration %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} Transliteration</span>
+                <div class="corpus-text-list-items-item-booleans {% if LANGUAGE_CODE == 'fa' %}rtl{% else %}ltr{% endif %}">
+                    <span{% if object.has_transcription %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} {% translate 'Transcription' %}</span>
+                    <span{% if object.has_translation %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} {% translate 'Translation' %}</span>
+                    <span{% if object.has_transliteration %} class="active"><i class="fas fa-check-circle"></i>{% else %}><i class="fas fa-times-circle"></i>{% endif %} {% translate 'Transliteration' %}</span>
                 </div>
                 {% if not object.public_review_approved %}
                     <!-- Not Yet Approved -->
                     <div class="corpus-text-list-items-item-notyetapproved" title="This text is not visible to public users">
-                        Not yet approved
+                        <i class="fas fa-exclamation-triangle"></i> {% translate 'Not yet approved' %}
                     </div>
                 {% endif %}
             </a>
@@ -173,34 +179,42 @@
 
     <!-- List Pagination, if there are multiple pages -->
     {% if page_obj.paginator.num_pages > 1 %}
-        <section id="corpus-text-list-pagination" class="container">
+        <section id="corpus-text-list-pagination" dir="ltr" class="container">
             <!-- Backwards -->
             <div class="corpus-text-list-pagination-section">
                 {% if page_obj.has_previous %}
                     <!-- First Page -->
                     <div class="corpus-text-list-pagination-action">
-                        <a class="fas fa-angle-double-left" href="{% pagination_go_to_page page_number=1 %}" title="First"></a><label>First</label>
+                        <a href="{% pagination_go_to_page page_number=1 %}">
+                            <i class="fas fa-angle-double-left"></i> {% translate 'First' %}
+                        </a>
                     </div>
                     <!-- Previous Page -->
                     <div class="corpus-text-list-pagination-action">
-                        <a class="fas fa-angle-left" href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}" title="Previous"></a><label>Previous</label>
+                        <a href="{% pagination_go_to_page page_number=page_obj.previous_page_number %}">
+                            <i class="fas fa-angle-left"></i> {% translate 'Previous' %}
+                        </a>
                     </div>
                 {% endif %}
             </div>
             <!-- Current page -->
             <div class="corpus-text-list-pagination-section">
-                <span class="corpus-text-list-pagination-current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span class="corpus-text-list-pagination-current">{% translate 'Page' %} {{ page_obj.number }} {% translate 'of' %} {{ page_obj.paginator.num_pages }}</span>
             </div>
             <!-- Forwards -->
             <div class="corpus-text-list-pagination-section">
                 {% if page_obj.has_next %}
                     <!-- Next Page -->
                     <div class="corpus-text-list-pagination-action">
-                        <a class="fas fa-angle-right" href="{% pagination_go_to_page page_number=page_obj.next_page_number %}" title="Next"></a><label>Next</label>
+                        <a href="{% pagination_go_to_page page_number=page_obj.next_page_number %}">
+                            {% translate 'Next' %} <i class="fas fa-angle-right"></i>
+                        </a>
                     </div>
                     <!-- Last Page -->
                     <div class="corpus-text-list-pagination-action">
-                        <a class="fas fa-angle-double-right" href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}" title="Last"></a><label>Last</label>
+                        <a href="{% pagination_go_to_page page_number=page_obj.paginator.num_pages %}">
+                            {% translate 'Last' %} <i class="fas fa-angle-double-right"></i>
+                        </a>
                     </div>
                 {% endif %}
             </div>

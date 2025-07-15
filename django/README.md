@@ -18,6 +18,17 @@ Apps include:
 - **help** - content to help users to use the website, e.g. PDFs with screenshots, video tutorials, etc.
 
 
+## Translations
+
+The website supports both English (default) and Persian (aka Farsi) on the public interface.
+
+The "general" app uses a simplified approach to translations in the templates due to it being mostly large blocks of text that proved cumbersome to manage in .po files. It simply uses an if/else statement to show the relevant content based on the language.
+
+Other apps use the built-in Django (% translate %) tag, as they often feature many small bits of text to translate, like form labels.
+
+URLs for English pages don't have a language code prefixed. Persian/Farsi pages have 'fa' prefixed. E.g. "/about/faqs/" in English would be "/fa/about/faqs/" in Persian/Farsi. 
+
+
 ## Django Admin
 
 The provided Django Admin feature is utilised within this Django project, to allow the research project team to perform CRUD operations on the database using an intuitive web interface.

@@ -1,0 +1,1299 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: general/templates/general/about-cite.html:7
+msgid "How to Cite"
+msgstr ""
+
+#: general/templates/general/about-cite.html:9
+msgid ""
+"Anyone is welcome to use our metadata, transcriptions and translations, but "
+"please cite them accordingly."
+msgstr ""
+
+#: general/templates/general/about-cite.html:12
+msgid "Some general principles, with examples:"
+msgstr ""
+
+#: general/templates/general/about-cite.html:15
+msgid "<em>Always</em> mention the shelfmark when citing a fragment."
+msgstr ""
+
+#: general/templates/general/about-cite.html:18
+#: general/templates/general/about-cite.html:29
+#: general/templates/general/about-cite.html:40
+msgid "Example:"
+msgstr ""
+
+#: general/templates/general/about-cite.html:22
+msgid ""
+"Letter from Abu Bakr b. ʿUmar. National Library of Israel, Ms.Heb.8333.88."
+msgstr ""
+
+#: general/templates/general/about-cite.html:26
+msgid ""
+"Metadata, transcriptions and translations that come from print editions "
+"should acknowledge the original publication."
+msgstr ""
+
+#: general/templates/general/about-cite.html:37
+msgid ""
+"Metadata, transcriptions and translations that the IEDC lists as unpublished "
+"or revised should be cited with credit to the editor(s) and contributors who "
+"produced the data for the IEDC."
+msgstr ""
+
+#: general/templates/general/about-cite.html:44
+msgid ""
+"Afghanistan National Archives, Firuzkuh 8, O.Haim, N. Saqee and A. Azad, "
+"unpublished translation available online through the Invisible East "
+"programme."
+msgstr ""
+
+#: general/templates/general/about-credits.html:7
+msgid "Credits"
+msgstr ""
+
+#: general/templates/general/about-credits.html:8
+#: general/templates/general/welcome.html:9
+msgid "Invisible East Digital Corpus"
+msgstr ""
+
+#: general/templates/general/about-credits.html:10
+msgid "PI (Research Lead)"
+msgstr ""
+
+#: general/templates/general/about-credits.html:13
+msgid "Project Manager (Technical Lead, TEI-XML)"
+msgstr ""
+
+#: general/templates/general/about-credits.html:16
+msgid "Software Developers"
+msgstr ""
+
+#: general/templates/general/about-credits.html:20
+msgid "Assistant Database Manager"
+msgstr ""
+
+#: general/templates/general/about-credits.html:23
+msgid "Senior Research Assistants"
+msgstr ""
+
+#: general/templates/general/about-credits.html:29
+msgid "Visiting Researchers"
+msgstr ""
+
+#: general/templates/general/about-credits.html:32
+msgid "Student Researchers"
+msgstr ""
+
+#: general/templates/general/about-credits.html:36
+msgid "Special Thanks"
+msgstr ""
+
+#: general/templates/general/about-credits.html:39
+msgid "Invisible East Programme"
+msgstr ""
+
+#: general/templates/general/about-credits.html:43
+msgid "Other Institutions"
+msgstr ""
+
+#: general/templates/general/about-credits.html:49
+msgid "Website Translators into Persian"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:7
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:10
+msgid ""
+"In this section, we have benefitted from the extensive experience of our "
+"colleagues working with documents from"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:10
+msgid "Egypt"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:10
+msgid "and the wider"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:10
+msgid "Arabic-speaking world"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:10
+msgid ""
+", and have borrowed some of their guidance which is also applicable to the "
+"IEDC."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:13
+msgid "The Invisible East Corpus"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:14
+msgid "What is the Invisible East corpus?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:16
+msgid ""
+"As of May 2025 the IEDC consists of 1182 documents including 367 transcribed "
+"and 178 transcribed and translated into English."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:18
+msgid "What kinds of texts are preserved here digitally?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:20
+msgid ""
+"An estimated ninety percent of the IEDC fragments come from documents: "
+"letters, legal deeds, lists, accounts, state documents and other everyday "
+"writings and ephemera."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:21
+msgid ""
+"The remaining ten percent are coming from long-form literary texts, "
+"including liturgy, Hebrew Bible, rabbinic literature,  medicine, astronomy,  "
+"lexicography, poetry and theology."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:22
+msgid ""
+"During this period, paper, parchment, and other writing materials were "
+"frequently reused. This practice often resulted in two entirely unrelated "
+"texts being written on the front (recto) and back (verso) of the same piece "
+"of paper, parchment, or other writing support. In our corpus, if the recto "
+"and verso are connected or if the verso is left blank, the document is "
+"assigned a single shelfmark, e.g. 'Ms.Heb.8333.99.' Conversely, when the "
+"recto and verso are unrelated, each side is given its own distinct "
+"shelfmark, e.g. 'Ms.Heb.8333.67recto' and 'Ms.Heb.8333.67verso'."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:24
+msgid "Where were the IEDC texts written?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:26
+msgid "All the texts survived in Iran, Afghanistan and Central Asia."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:28
+msgid "When is the material from?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:30
+msgid ""
+"The majority of IEDC documents date to the period between 737 and 1221 CE."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:32
+msgid "Where are the IEDC texts now?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:34
+msgid ""
+"The IEDC texts can now be found in around 12 libraries and private "
+"collections in Europe, Afghanistan, Central Asia, Russia and China."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:36
+msgid "For more, see"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:36
+#: general/templates/general/about-faqs.html:103
+#: general/templates/general/about-faqs.html:126
+#: general/templates/general/welcome.html:65
+msgid "Research Tools"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:36
+msgid "afterlink-researchtools"
+msgstr "."
+
+#: general/templates/general/about-faqs.html:40
+#: general/templates/general/welcome.html:70
+msgid "The Invisible East Digital Corpus"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:41
+msgid "What is the IEDC?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:43
+msgid ""
+"IEDC is a database devoted to the text fragments from the medieval "
+"Islamicate East that are already in the public domain but scattered and not "
+"easily accessible."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:44
+msgid "The IEDC also includes seals and bullae preserved on documents."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:46
+msgid "How did the project begin?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:48
+msgid "The IEDC was founded in 2019 by"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:48
+msgid "Arezou Azad"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:48
+msgid ""
+"to digitize transcriptions and translations of documents from the Islamicate "
+"East. The first transcriptions uploaded are those of IE Board members,"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:48
+msgid "Nicholas Sims-Williams"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:48
+msgid "Geoffrey Khan"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:48
+msgid "afterlink-khan"
+msgstr "."
+
+#: general/templates/general/about-faqs.html:49
+msgid ""
+"Through the Invisible East programme, the IEDC has come to include "
+"transcriptions and translations by many other researchers, as well as "
+"descriptions and research aids."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:51
+msgid "What is the Invisible East programme?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:53
+msgid ""
+"The IE programme is currently funded by the European Research Council (ERC) "
+"under the European Union's Horizon 2020 research and innovation programme "
+"(Go.Local project, grant agreement number 851607) and by the Arts and "
+"Humanities Research Council grant for the Persdoc project."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:54
+msgid "For more, see "
+msgstr ""
+
+#: general/templates/general/about-faqs.html:54
+msgid "Who we are"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:54
+msgid "in the IE's programme site."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:56
+msgid "For whom is the Invisible East programme intended?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:58
+msgid ""
+"The IE programme serves as a resource for professional document researchers, "
+"but it has been set up to be accessible to non-specialists, including "
+"students and the public."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:59
+msgid ""
+"Anyone interested in the social and economic history of the medieval and "
+"early modern Middle East, Central, and its multiconfessional communities can "
+"benefit from the IEDC."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:60
+msgid ""
+"Other disciplines can make use of our perspectives, resources, and "
+"approaches, e.g., other digital humanities projects, linguists, open source "
+"advocates, librarians, archivists and software engineers."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:62
+msgid "What are the aims of the IEDC?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:64
+msgid ""
+"to provide access to documents from the Islamicate East (Iran, Afghanistan "
+"and Central Asia) and the interim products of scholarship on the texts, "
+"including unpublished notes and research tools by and for scholars in the "
+"field;"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:65
+msgid ""
+"to facilitate access to documents in order to fuel research into premodern "
+"global history;"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:66
+msgid ""
+"to capture all the documentary texts from the Bamiyan Papers (aka "
+"&ldquo;Afghan Genizah&rdquo;), and related caches from Afghanistan, such as "
+"the Firuzkuh Papers and the Bactrian documents, as well as medieval "
+"documents from Iran, such as the Tabaristan archives."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:68
+msgid "How are IEDC entries structured?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:70
+msgid "IEDC records include five kinds of information:"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:72
+msgid ""
+"<strong>Classifications.</strong> Each document is titled with a shelfmark "
+"(the call-number in the collection where it's housed) and classed into one "
+"of six"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:72
+msgid "types"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:72
+msgid ", as an adaptation from the long-established"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:72
+msgid ""
+"legal document, letter, list or table, paraliterary text, or state/"
+"administrative document."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:73
+msgid ""
+"<strong>Descriptive information.</strong> Two-thirds of our entries have "
+"detailed descriptions of the document's contents. Many also have #tags, but "
+"tags aren't comprehensive; they merely represent the interests of the "
+"researchers who have done the tagging."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:74
+msgid ""
+"<strong>Images.</strong> We currently display images from three collections: "
+"the National Library of Israel, the Afghanistan National Archives, and the "
+"Khalili Collections (in Bactrian, Arabic and New Persian). The images are "
+"displayed in conformity with the International Image Interoperability "
+"Framework (IIIF). As more geniza-holding institutions adopt the IIIF, we "
+"will add their images to our site."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:75
+msgid ""
+"<strong>Transcriptions.</strong> Because it can be challenging to read the "
+"handwriting of medieval scribes, scholars produce typewritten copies that "
+"can be read easily and searched digitally. Transcriptions are also referred "
+"to as scholarly editions. The IEDC currently has 88 transcriptions, with "
+"more to come."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:76
+msgid ""
+"<strong>Scholarship records.</strong> Our records list who has transcribed "
+"the document (as well as whether the transcription has been published, and "
+"if so, where). They also list the published books and articles or "
+"unpublished notes from which we have derived the information in our "
+"descriptions."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:79
+msgid "Can you briefly describe your data model?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:81
+msgid ""
+"First: what is a data model? A data model is a way to organize different "
+"types of data (some examples in our case: documents, fragments, images and "
+"descriptions), and to standardize how they relate to each other."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:82
+msgid ""
+"At the core of our data model is a many-to-many relationship between "
+"physical <em>fragments</em> and the textual units that we call "
+"<em>documents</em>. A single <em>fragment</em> can contain multiple "
+"<em>documents</em>, as when a scribe used the blank back of a page to write "
+"another text. Conversely, a single <em>document</em> can be written across "
+"multiple <em>fragments</em>, as when a text was torn and the pieces now have "
+"different classmarks, and/or are in different libraries."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:84
+msgid "Which philological transcription conventions do you follow?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:86
+msgid ""
+"The IEDC has followed varying sets of transcription conventions, sometimes "
+"reflecting the choices of the text-editors whose editions we have digitized."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:87
+msgid "The IEDC transcription conventions are "
+msgstr ""
+
+#: general/templates/general/about-faqs.html:87
+msgid ""
+"IJMES Arabic for Arabic and Persian, plus IJMES Persian for Persian-only "
+"letters"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:89
+msgid "How do I get involved with IEDC?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:91
+msgid ""
+"We have a team of dedicated and talented researchers who have come to us "
+"from many directions. They include undergraduates, graduate students, "
+"postdocs and faculty at Oxford and other institutions, as well as teachers, "
+"librarians and other professionals interested in Islamic and Iranian studies."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:92
+msgid ""
+"If you would like to contribute information to the IEDC, we'll soon be "
+"adding links to document records through which you can add suggestions. In "
+"the meantime, please contact us at:"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:93
+msgid ""
+"If you would like to give feedback, would like to receive our newsletter or "
+"would like to contact Invisible East, please write to us at"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:98
+msgid "Skills"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:99
+msgid "What languages do I need to know to read IEDC texts?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:101
+msgid "We are including many English translations in the IEDC."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:102
+msgid ""
+"The IEDC contains texts written in 13 languages and nine scripts. The "
+"languages are Arabic, Persian, Judeo-Persian, Middle Persian, Bactrian, "
+"Sogdian, Khotanese, Chinese, Tibetan, Sanskrit, Hebrew, Old Uyghur, Turkish."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:103
+msgid ""
+"For more on the languages that are useful for studying IEDC fragments, see"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:105
+msgid ""
+"Wait. This Persian doesn't look like the Persian I learned how to read. "
+"What's up with that?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:107
+msgid ""
+"Modern, printed Persian is derived from book script, a formal register of "
+"Persian that book scribes wrote when they were getting paid to copy a text "
+"or trying to impress their readers. Scribes writing for everyday purposes "
+"tended to use more informal handwriting, with varying degrees of "
+"cursiveness. Moreover, the Persian in the IEDC corpus is some of the oldest "
+"surviving Persian in the original in the world, where writing conventions "
+"were different to what appeared several centuries later. For a timeline of "
+"Persian writing, see this "
+msgstr ""
+
+#: general/templates/general/about-faqs.html:107
+msgid "chart"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:107
+msgid "afterlink-persianwritingchart"
+msgstr "."
+
+#: general/templates/general/about-faqs.html:108
+msgid ""
+"Learning to read premodern handwritten Persian is a skill that can be "
+"mastered with time and motivation. You might want to start with this "
+msgstr ""
+
+#: general/templates/general/about-faqs.html:108
+msgid "palaeography guide"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:108
+msgid ""
+"created by Pejman Firoozbakhsh for Invisible East researchers and anyone "
+"interested"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:110
+msgid ""
+"Why are there so few dots in the Persian and Arabic documents, and how on "
+"earth do you expect me to make sense of these scribbles?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:112
+msgid ""
+"Documentary Arabic and Persian hands are notoriously difficult to decipher. "
+"These are some of the challenges:"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:114
+msgid ""
+"a dearth of canonical dots, which renders many letter-shapes ambiguous; the "
+"sporadic dot phenomenon inspired this"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:114
+msgid "classic study"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:114
+msgid "afterlink-classicstudy"
+msgstr "."
+
+#: general/templates/general/about-faqs.html:115
+msgid ""
+"scribes' reluctance to lift the pen, which created abusive ligatures, or "
+"strokes connecting letters that in standard Arabic and Persian writing "
+"should remain unconnected"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:116
+msgid ""
+"<em>Verschleifung</em> (literally, &ldquo;slurring&rdquo;) pen-strokes so "
+"that letters are skipped or subsumed into other letters and an abusive "
+"ligature after the <em>alif</em>"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:119
+msgid "Which additional skills do I need to study the IEDC documents?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:121
+msgid "Patience and spreadsheets."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:122
+msgid ""
+"Patience is essential because the texts haven't been studied in depth for "
+"long."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:123
+msgid ""
+"Good record-keeping is essential because there are thousands of documents in "
+"no particular order. If you have worked in an archive, you may have had the "
+"luxury of someone else creating order before your arrival. If you work with "
+"IEDC fragments, you're often assembling your own archives (or dossiers, "
+"which is the technical term to use when the material you're assembling "
+"wasn't actually archived). We use lots of spreadsheets."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:124
+msgid ""
+"Other technical skills one can expect to pick up include understanding how "
+"legal documents are structured, recognizing scribes by their handwriting, "
+"recognizing the names of coins and units of weights and measurement and "
+"learning the patterns of shelfmarks in dozens of library collections."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:126
+msgid "For more, check out our"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:126
+msgid "page!"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:127
+msgid "Is It Bamiyan Papers or Afghan Geniza(h)?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:129
+msgid ""
+"The National Library was quick to attach the term Geniza(h) to the caches of "
+"documents coming from Afghanistan, echoing the name of the well-known "
+"&ldquo;Cairo Geniza&rdquo;. However, in this case, there is no evidence that "
+"the documents came from a geniza, which is a Hebrew term that refers to "
+"storage places for disused papers attached to a synagogue. Rather, Invisible "
+"East researchers have been identifying many place names in the document that "
+"locate the papers in the Bamiyan area."
+msgstr ""
+
+#: general/templates/general/about-faqs.html:131
+msgid ""
+"Are the texts unprovenanced, and if so, what are the ethical issues around "
+"working with these documents?"
+msgstr ""
+
+#: general/templates/general/about-faqs.html:133
+msgid ""
+"Many of the texts have unclear, undocumented provenance. This poses an "
+"ethical dilemma to researchers as we do not wish to give legitimacy or "
+"encourage the purchase of unprovenanced materials. In the case of "
+"Afghanistan, conflict and poverty have made it difficult for Afghanistan's "
+"authorities to regulate the transfer of cultural heritage or develop an "
+"advocacy platform. We hope that the international community will support the "
+"government of Afghanistan in developing an effective regulatory system as "
+"well as a broader safeguarding and preservation strategy. As for materials "
+"that are already in the public domain, it is important that the people of "
+"Afghanistan and the wider community of scholars and the general audience "
+"obtain access to them and learn about their content and historical "
+"interpretations: the IEDC is one such information sharing platform."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:7
+msgid "Glossary"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:8
+msgid "data ontology"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:10
+msgid "<strong>document:</strong> a discrete unit of text"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:11
+msgid "<strong>fragment:</strong> a discrete piece of material support"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:13
+msgid ""
+"A fragment can have more than one document written on it; a document can be "
+"comprised of more than one fragment."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:14
+msgid "manuscript structure"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:16
+msgid ""
+"<strong>folio:</strong> a page, including front (recto) and back (verso)"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:17
+msgid ""
+"<strong>bifolio:</strong> a page folded once to yield four writing surfaces "
+"(two rectos, two versos)"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:18
+msgid "<strong>recto:</strong> the front of the page"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:19
+msgid "<strong>verso:</strong> the back of the page"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:21
+msgid ""
+"During this period, paper, parchment, and other writing materials were "
+"frequently reused. This practice often resulted in two entirely unrelated "
+"texts being written on the front (recto) and back (verso) of the same piece "
+"of paper, parchment, or other writing support. In our corpus, if the recto "
+"and verso are connected or if the verso is left blank, the document is "
+"generally assigned a single shelfmark, e.g. 'Ms.Heb.8333.99.' Conversely, "
+"when the recto and verso are unrelated, each side is given its own distinct "
+"shelfmark, e.g. 'Ms.Heb.8333.67recto' and 'Ms.Heb.8333.67verso'."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:23
+msgid "<strong>quire:</strong> several bifolios nested like a pamphlet"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:24
+msgid "<strong>codex:</strong> several quires sewn together to form a book"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:25
+msgid ""
+"<strong>rotulus:</strong> a vertical scroll (text is written parallel to the "
+"short side of the page)"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:26
+msgid ""
+"<strong>writing support:</strong> the material substrate to which the scribe "
+"applies ink. In the documents from the Islamicate East, paper is the most "
+"common support, followed by parchment; a few pieces are written on cloth."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:28
+msgid "physical condition"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:30
+msgid ""
+"<strong>lacuna:</strong> a gap in the text where the writing support has torn"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:32
+msgid "scholarship"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:34
+msgid ""
+"<strong>discussion:</strong> a passage in a book or article in which a "
+"scholar has offered an interpretation of a document or part of a document"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:35
+msgid ""
+"<strong>transcription:</strong> copy of a text, whether typed or handwritten"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:36
+msgid ""
+"<strong>edition:</strong> a revised, corrected or annotated version of a "
+"text from a manuscript"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:37
+msgid ""
+"<strong>palaeography:</strong> decipherment; also the study of old scripts, "
+"often for the purpose of determining when an undated manuscript was written "
+"or identifying the scribe who wrote it"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:39
+msgid "genres of text"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:41
+msgid ""
+"<strong>legal document:</strong> a contract, testimony or other document "
+"produced by or for a legal court presided over by a qāḍī or other legal "
+"professional (e.g. faqīh), often with probative or dispositive value"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:42
+msgid ""
+"<strong><em>piyyut</em>:</strong> liturgical poetry (Hebrew; pl. "
+"<em>piyyutim</em>)"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:43
+msgid ""
+"<strong><em>responsum</em>:</strong> answer to a legal query by a and "
+"Islamic or rabbinic authority, usually made in writing (Latin; pl. "
+"<em>responsa, </em>Ar. <em>istifṭā</em>)"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:45
+msgid "dating and calendar systems"
+msgstr ""
+
+#: general/templates/general/about-glossary.html:46
+msgid ""
+"IEDC documents use a range of calendar systems depending on the "
+"document&rsquo;s use and provenance. Many documents are not explicitly "
+"dated. For those that are, the dates are included in each entry, both as "
+"given on the document and as converted to common era dating. You can also "
+"convert dates yourself using this <a href=\"https://www.muqawwim.com/"
+"\">calendar converter</a>."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:47
+msgid ""
+"The following is a non-exhaustive list of the most common dating systems you "
+"will encounter in IEDC documents, as well as their relationship to common "
+"era dates."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:49
+msgid ""
+"<strong>Common Era (CE):</strong> This is the western calendar in everyday "
+"use, originally the Julian calendar, established in 45 BCE (before the "
+"common era), then, after the papal calendar reform of 1582 CE, the Gregorian "
+"calendar. Converted dates in IEDC entries are all in the Gregorian "
+"calendrical system."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:50
+msgid ""
+"<strong>Hijrī calendar (AH)</strong>: The Islamic calendar, a lunar calendar "
+"of twelve months. The lunar year is 11 days shorter than the solar year, so "
+"the months slip backwards relative to the solar calendar (so Ramaḍān can "
+"fall in any season). The hijrī is calculated from 622 CE, the year when "
+"Muḥammad and his followers migrated from Mecca to Medina."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:51
+msgid ""
+"<strong>Era of Bactrian Docments (EBD)</strong>: The exact start date of the "
+"Bactrian calendar has been debated, but the consensus seems to be that it "
+"starts in Nawrūz/October 223 AD which coincides with the accession year of "
+"the Sasanian king."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:53
+msgid ""
+"Ardashīr I (r. 224&ndash;42). This dating is reflected in the reworked "
+"edition of the Bactrian Documents, following the argumentation of "
+"Fran&ccedil;ois de Blois. Months and days are either Bactrian, or "
+"Zoroastrian-influenced."
+msgstr ""
+
+#: general/templates/general/about-glossary.html:55
+msgid ""
+"<strong>Seleucid calendar (Sel. or SE; also Anno Graecorum or AG)</strong>: "
+"Though this calendar is now obsolete in Jewish practice, for the numbering "
+"of years, it is the most common calendar found in Cairo Geniza documents. It "
+"is used only for years, and calculated from Seleucus I Nicator&rsquo;s "
+"reconquest of Mesopotamia in 312&ndash;11 BCE. There were variants of the "
+"Seleucid era used in the Middle Ages. The Seleucid era in Jewish documents "
+"was deemed to begin on 1 Tishri 312 BCE. In practice, to convert a Seleucid "
+"date to CE, if the day falls before 1 Tishri, subtract 311 from the Seleucid "
+"year; if after, subtract 312."
+msgstr ""
+
+#: general/templates/general/about-search.html:7
+msgid "How to Search"
+msgstr ""
+
+#: general/templates/general/about-search.html:9
+msgid ""
+"At IEDC, our search tools are designed to be user-friendly, catering to both "
+"beginners and experts. Here's a step-by-step guide to help you navigate the "
+"Invisible East Digital Corpus effectively:"
+msgstr ""
+
+#: general/templates/general/about-search.html:16
+msgid "Basic Search"
+msgstr ""
+
+#: general/templates/general/about-search.html:18
+msgid ""
+"Type a word or phrase into the search box, in English or the original "
+"language."
+msgstr ""
+
+#: general/templates/general/about-search.html:19
+msgid "Press \"+\" to add another search field."
+msgstr ""
+
+#: general/templates/general/about-search.html:20
+msgid ""
+"Use \"or\" for terms containing either entry, and \"and\" for texts "
+"containing both (click to toggle between them)."
+msgstr ""
+
+#: general/templates/general/about-search.html:23
+msgid "Includes"
+msgstr ""
+
+#: general/templates/general/about-search.html:25
+msgid ""
+"There are numerous checkboxes you can check/uncheck to help refine searches, "
+"including:"
+msgstr ""
+
+#: general/templates/general/about-search.html:27
+msgid "Transcription"
+msgstr ""
+
+#: general/templates/general/about-search.html:28
+msgid "Translation"
+msgstr ""
+
+#: general/templates/general/about-search.html:29
+msgid "Transliteration"
+msgstr ""
+
+#: general/templates/general/about-search.html:30
+msgid "Image"
+msgstr ""
+
+#: general/templates/general/about-search.html:31
+msgid "Palaeography"
+msgstr ""
+
+#: general/templates/general/about-search.html:32
+msgid "Seal"
+msgstr ""
+
+#: general/templates/general/about-search.html:33
+msgid "Codex"
+msgstr ""
+
+#: general/templates/general/about-search.html:37
+msgid "Dates (CE)"
+msgstr ""
+
+#: general/templates/general/about-search.html:39
+msgid ""
+"You can filter results to show only texts after a chosen century and/or "
+"before another chosen century."
+msgstr ""
+
+#: general/templates/general/about-search.html:42
+msgid "Filters"
+msgstr ""
+
+#: general/templates/general/about-search.html:44
+msgid ""
+"There are numerous filters which can be used to help refine searches and "
+"navigate the IEDC's extensive corpus. If you were only interested in "
+"documents written in New Persian, for example, you can select 'New Persian "
+"(Arabic Script)' from the 'primary language' drop-down menu. The filters are "
+"as follows:"
+msgstr ""
+
+#: general/templates/general/about-search.html:47
+msgid "Primary Language"
+msgstr ""
+
+#: general/templates/general/about-search.html:48
+msgid "Additional Languages"
+msgstr ""
+
+#: general/templates/general/about-search.html:49
+msgid "Collection"
+msgstr ""
+
+#: general/templates/general/about-search.html:50
+msgid "Corpus"
+msgstr ""
+
+#: general/templates/general/about-search.html:51
+msgid "Type of Text"
+msgstr ""
+
+#: general/templates/general/about-search.html:52
+msgid "Writing Support"
+msgstr ""
+
+#: general/templates/general/about-search.html:55
+msgid "Sort By"
+msgstr ""
+
+#: general/templates/general/about-search.html:57
+msgid "Choose how to sort your results by:"
+msgstr ""
+
+#: general/templates/general/about-search.html:61
+msgid ""
+"Shelfmark: Organised alphanumerically by the holding institution or library."
+msgstr ""
+
+#: general/templates/general/about-search.html:62
+msgid ""
+"Converted Gregorian Date: The document's production date in the Gregorian "
+"calendar."
+msgstr ""
+
+#: general/templates/general/about-search.html:63
+msgid "IEDC Input Date: Date of upload onto the Invisible East Digital Corpus."
+msgstr ""
+
+#: general/templates/general/about-search.html:64
+msgid "Number of folios: The number of folios in a given text."
+msgstr ""
+
+#: general/templates/general/about-technical.html:7
+msgid "Technical"
+msgstr ""
+
+#: general/templates/general/about-technical.html:9
+msgid "The Invisible East Digital Corpus version"
+msgstr ""
+
+#: general/templates/general/about-technical.html:9
+msgid "is a web application developed using the following technologies:"
+msgstr ""
+
+#: general/templates/general/about-technical.html:21
+msgid "You can view the code used to build the IEDC in the project's"
+msgstr ""
+
+#: general/templates/general/about-technical.html:21
+msgid "GitHub repository"
+msgstr ""
+
+#: general/templates/general/about-technical.html:21
+msgid "afterlink-github"
+msgstr "."
+
+#: general/templates/general/about-technical.html:24
+msgid "You can also access the code via Zenodo with the"
+msgstr ""
+
+#: general/templates/general/about-technical.html:24
+msgid "afterlink-zenodo"
+msgstr "."
+
+#: general/templates/general/about-technical.html:27
+msgid "The IEDC was developed by"
+msgstr ""
+
+#: general/templates/general/about-technical.html:27
+msgid "for the Invisible East programme"
+msgstr ""
+
+#: general/templates/general/welcome.html:12
+msgid "Bringing the medieval Islamicate East to the forefront of research"
+msgstr ""
+
+#: general/templates/general/welcome.html:15
+msgid "What is meant by “medieval Islamicate East”?"
+msgstr ""
+
+#: general/templates/general/welcome.html:17
+msgid ""
+"It refers to the region extending roughly from Iran to Afghanistan, Central "
+"Asia and western China, northern India and Pakistan, which, in the middle "
+"ages, were under Muslim rule while large population groups practiced other "
+"religions."
+msgstr ""
+
+#: general/templates/general/welcome.html:20
+msgid ""
+"This is the website of the <strong>digital corpus</strong> of documents "
+"collated by the Invisible East Team"
+msgstr ""
+
+#: general/templates/general/welcome.html:23
+msgid "This website is separate to the main"
+msgstr ""
+
+#: general/templates/general/welcome.html:23
+msgid "Invisible East project website"
+msgstr ""
+
+#: general/templates/general/welcome.html:26
+msgid "Search the Corpus"
+msgstr ""
+
+#: general/templates/general/welcome.html:29
+msgid "Read more about Invisible East"
+msgstr ""
+
+#: general/templates/general/welcome.html:35
+msgid "Welcome"
+msgstr ""
+
+#: general/templates/general/welcome.html:37
+msgid "Ever wonder what people like you and me did 800 years ago?"
+msgstr ""
+
+#: general/templates/general/welcome.html:40
+msgid "How did they communicate with one another?"
+msgstr ""
+
+#: general/templates/general/welcome.html:43
+msgid "What language did they use?"
+msgstr ""
+
+#: general/templates/general/welcome.html:46
+msgid "Was life very different?"
+msgstr ""
+
+#: general/templates/general/welcome.html:49
+msgid "What did people eat?"
+msgstr ""
+
+#: general/templates/general/welcome.html:52
+msgid ""
+"Well, documents give insight into these day-to-day matters. The digital tool "
+"contained in this website provides searchable meta-data, tags, and images on "
+"documents - letters, contracts, notes-to-self, and many more bits of day-to-"
+"day writing - that were written in Iran, Afghanistan, and Central Asia at a "
+"time when Islam was still relatively new to the area, and when multicultural "
+"societies coexisted."
+msgstr ""
+
+#: general/templates/general/welcome.html:55
+msgid ""
+"Our corpus website is aimed at making publicly available academic research "
+"on the documents to academics in any country of the world, as well as to "
+"wider audiences who are interested in the history and cultures of a "
+"fascinating and understudied region of the world."
+msgstr ""
+
+#: general/templates/general/welcome.html:58
+msgid ""
+"If you'd like to find out more about the Invisible East project please visit"
+msgstr ""
+
+#: general/templates/general/welcome.html:58
+msgid "our project website"
+msgstr ""
+
+#: general/templates/general/welcome.html:58
+msgid "where you can read more about"
+msgstr ""
+
+#: general/templates/general/welcome.html:61
+msgid "Our Team"
+msgstr ""
+
+#: general/templates/general/welcome.html:62
+msgid "Publications, Blogs, and News"
+msgstr ""
+
+#: general/templates/general/welcome.html:63
+msgid "Events"
+msgstr ""
+
+#: general/templates/general/welcome.html:64
+msgid "Outreach"
+msgstr ""
+
+#: general/templates/general/welcome.html:72
+msgid ""
+"At Invisible East our mission is to digitise an expansive corpus of texts "
+"which have long been overlooked. The corpus is a combination of various "
+"caches of texts dating from the 8th-13th centuries and originating from "
+"Afghanistan, Iran and Central Asia."
+msgstr ""
+
+#: general/templates/general/welcome.html:75
+msgid ""
+"Together these texts present a new and exciting history of the region. A "
+"history which is not told through kings and courts, but rather through the "
+"day to day lives of regular people - their families, their communities, "
+"their professions and their faith. Written in languages, like New Persian, "
+"Judeo-Persian, Middle Persian, Arabic, Bactrian, Sogdian, Khotanese and "
+"Sanskrit, these manuscripts show an immense variety - from deeds of sale, "
+"legal proceedings, decrees and petitions to wedding certificates and "
+"personal letters."
+msgstr ""
+
+#: general/templates/general/welcome.html:78
+msgid ""
+"Our goal is to unite this vast range of texts in a single, publicly "
+"accessible database. By doing so, we hope to shed new light on a region, era "
+"and population that has remained 'invisible' for far too long."
+msgstr ""
+
+#: general/templates/general/welcome.html:81
+msgid ""
+"Some of the texts digitised here, sadly have unclear provenances, which are "
+"a symptom of the challenges in heritage management that especially people in "
+"Afghanistan, a country mired in decades of conflict and poverty, but also in "
+"other countries of the region, have faced. It poses an ethical dilemma to us "
+"as researchers, as we do not wish to give legitimacy to, nor encourage, the "
+"purchase of unprovenanced materials. For this reason, the IEDC only includes "
+"materials that are already in the public domain. Our aim is to make what is "
+"publicly available more accessible online to people in the region from which "
+"they originate, and the wider community of scholars and the general public. "
+"At the same time, we applaud, and support, where we can, all efforts to "
+"safeguard and preserve historical texts and manuscripts, in accordance with "
+"national plans and priorities in the affected countries of the region."
+msgstr ""
+
+#: general/templates/general/welcome.html:86
+msgid "A Message from Arezou"
+msgstr ""
+
+#: general/templates/general/welcome.html:89
+msgid ""
+"Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and "
+"Invisible East programme lead. I'm a historian and former UN civilian "
+"peacekeeper. I've had the privilege of working with a fantastic team on this "
+"digital corpus."
+msgstr ""
+
+#: general/templates/general/welcome.html:92
+msgid ""
+"This is the first multilingual database that contains documents from the "
+"medieval Islamicate East - Iranian-language documents, in particular, have "
+"had little ”airtime”, until now, while documents in other languages, such as "
+"Arabic and Hebrew, have enjoyed a considerable digitisation support for some "
+"decades now."
+msgstr ""
+
+#: general/templates/general/welcome.html:95
+msgid ""
+"Ultimately, the sharing of pre-modern Iranian-language and data and data in "
+"other languages enrich our knowledge of the layered history of humanity at a "
+"granular and very human level. This kind of knowledge unites, and I'm proud "
+"to be playing a part in its production."
+msgstr ""
+
+#: general/templates/general/welcome.html:100
+msgid "A Message from Ed"
+msgstr ""
+
+#: general/templates/general/welcome.html:103
+msgid ""
+"Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible "
+"East programme. I oversee the uploading of data onto our digital corpus, "
+"ensuring that the rich historical documents we work with are accurately "
+"represented and user friendly. Alongside this role, I'm also a DPhil student "
+"in Asian and Middle Eastern Studies at the University of Oxford."
+msgstr ""
+
+#: general/templates/general/welcome.html:106
+msgid ""
+"I’d like to extend my deepest thanks to my fellow data entry team members—"
+"Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom "
+"this database would not have been possible. Their dedication and meticulous "
+"work have been instrumental in bringing this project to fruition."
+msgstr ""
+
+#: general/templates/general/welcome.html:109
+msgid "An enormous thank you also goes to our software developer,"
+msgstr ""
+
+#: general/templates/general/welcome.html:109
+msgid ""
+"whose incredible expertise transformed our vision into a reality. They not "
+"only brought our ideas to life but also introduced incredible interactive "
+"features that we wouldn’t have known were possible. Thanks to their "
+"creativity and dedication, we’ve created a website we are truly proud to "
+"share with you all!"
+msgstr ""
+
+#: general/templates/general/welcome.html:112
+msgid "You can read more about the work the Data Entry Team does in the"
+msgstr ""
+
+#: general/templates/general/welcome.html:112
+msgid "Invisible East Blog"
+msgstr ""
+
+#: general/templates/general/welcome.html:112
+msgid "afterlink-ieblog"
+msgstr "!"

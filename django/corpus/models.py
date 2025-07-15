@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.db import models
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.html import mark_safe
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
@@ -15,6 +16,8 @@ from unidecode import unidecode
 import os
 import textwrap
 import re
+import json
+import requests
 
 
 # Three main sections:
@@ -468,7 +471,7 @@ class Text(models.Model):
     # General
     shelfmark = models.CharField(max_length=1000, help_text="If this Corpus Text doesn't have a shelfmark then insert another value here to use as a title, such as a catalogue number or a brief description. If this Corpus Text is part of reused sheet that shares a shelfmark with another Corpus Text then append 'recto' or 'verso' to this shelfmark.", verbose_name="Shelfmark / Title")
     collection = models.ForeignKey('SlTextCollection', on_delete=models.RESTRICT, related_name=related_name)
-    corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name)
+    corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name, verbose_name='Findspots')
     primary_language = models.ForeignKey('SlTextLanguage', on_delete=models.RESTRICT, related_name=f'{related_name}_primary')
     additional_languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True, help_text="Don't include the primary language. Only include additional languages/scripts that also appear in the text.")
     type = models.ForeignKey('SlTextType', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
@@ -488,7 +491,17 @@ class Text(models.Model):
     fold_lines_details = models.TextField(blank=True, null=True)
 
     # Content
-    summary_of_content = RichTextField(blank=True, null=True)
+    summary_of_content = RichTextUploadingField(blank=True, null=True)
+
+    # Codex
+    codex_images_location = models.TextField(
+        blank=True, null=True,
+        help_text="""
+        Include either a link to a IIIF manifest (if using IIIF images) OR the name of the directory on the server (if using local images).
+        <br>A IIIF manifest URL must start with 'https://' and include '/iiif/' in it.
+        <br>Examples of valid IIIF manifest URLs include:
+        <br>- https://iiif.bodleian.ox.ac.uk/iiif/manifest/8287e6c8-8b65-4a55-8ad0-e22dff4eccc2.json
+        <br>- https://cudl.lib.cam.ac.uk//iiif/MS-BROWNE-K-00001""")
 
     # Converted Gregorian Date (see child TextDate model for original dates)
     gregorian_date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. "11 February 1198" or "January-February 1162".<br>For help converting original dates to the Gregorian calendar please see <a href="https://www.muqawwim.com" target="_blank">www.muqawwim.com</a>')
@@ -498,7 +511,7 @@ class Text(models.Model):
     gregorian_date_century = models.ForeignKey(SlTextGregorianCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='This century data is only used to filter and sort results in the list of Corpus Texts in the public interface. If the exact century is not known but an approximate date range is available then insert your best estimate (e.g. the middle of the date range) or leave blank if no estimate is available.')
 
     # Commentary
-    commentary = RichTextField(blank=True, null=True, help_text='<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
+    commentary = RichTextUploadingField(blank=True, null=True, help_text='<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
 
     # Review & Approve Text to Show on Public Website
     public_review_reviewer = models.ForeignKey(
@@ -616,6 +629,12 @@ class Text(models.Model):
                 return True
 
     @property
+    def has_palaeography(self):
+        for folio in self.text_folios.all():
+            if folio.palaeography is not None and len(folio.palaeography):
+                return True
+
+    @property
     def has_image(self):
         for folio in self.text_folios.all():
             if folio.image:
@@ -626,6 +645,15 @@ class Text(models.Model):
         for toponym in self.toponyms.all():
             if toponym.latitude and toponym.longitude:
                 return True
+
+    @property
+    def tags(self):
+        tags = []
+        for folio in self.text_folios.all():
+            for tag in folio.text_folio_tags.all():
+                if tag.tag not in tags:
+                    tags.append(tag.tag)
+        return tags if len(tags) else None
 
     @property
     def count_text_folios(self):
@@ -644,12 +672,15 @@ class Text(models.Model):
 
     @property
     def gregorian_date_full(self):
-        str = f'The Gregorian calendar: {self.gregorian_date_text}'
+        str = ''
+        if self.gregorian_date_text:
+            str += self.gregorian_date_text
         if self.gregorian_date:
             str += f' ({self.gregorian_date})'
         if len(self.gregorian_date_range_str):
             str += f' ({self.gregorian_date_range_str})'
-        return str
+        # Return a full string of date or None, if no data exists
+        return f'The Gregorian calendar: {str}' if len(str) else None
 
     @property
     def admin_contributors_list(self):
@@ -658,7 +689,7 @@ class Text(models.Model):
 
     @property
     def image_credit(self):
-        if self.has_image and (self.collection or self.image_credit_custom):
+        if (self.has_image or self.is_codex) and (self.collection or self.image_credit_custom):
             return self.image_credit_custom if self.image_credit_custom else self.collection
 
     @property
@@ -676,11 +707,15 @@ class Text(models.Model):
             return clean_html(textwrap.shorten(self.summary_of_content, width=350, placeholder="..."))
 
     @property
-    def list_image(self):
-        # Return the first image of a folio, if exists
-        for folio in self.text_folios.all():
-            if folio.image and not folio.image_hide:
-                return folio.image_small
+    def list_image_url(self):
+        if self.is_codex:
+            # If text is codex, return the first thumbnail image
+            return self.codex_default_image_thumbnail_url
+        else:
+            # If text has folios, return the first image
+            for folio in self.text_folios.all():
+                if folio.image and not folio.image_hide:
+                    return folio.image_small.url
 
     @property
     def details_html_dates(self):
@@ -692,14 +727,33 @@ class Text(models.Model):
             return html
 
     @property
+    def details_html_dates_full(self):
+        html = ''
+        if self.gregorian_date_full:
+            html += f'<ul><li>{self.gregorian_date_full}</li></ul>'
+        if self.details_html_dates:
+            html += self.details_html_dates
+        return html if len(html) else '<em>(Dates unknown)</em>'
+
+    @property
     def details_html_person_in_text(self):
         if len(self.persons_in_texts.all()):
-            html = '<ul>'
+            html = '<ul class="corpus-text-detail-content-details-datagroup-list">'
             for person in self.persons_in_texts.all():
-                html += f'<li>{person.person.name}'
+                html += f'<li><a href="{reverse("corpus:text-list")}?filter_mm_persons_in_texts__person={person.person_id}">{person.person.name}'
                 html += f' ({person.person_name_in_text})' if person.person_name_in_text else ''
+                html += f' ({person.person.gender})' if person.person.gender else ''
                 # Ed requested person_role_in_text is hidden from public, but not deleted in case they change mind in future
                 # html += f' ({person.person_role_in_text})' if person.person_role_in_text else ''
+                html += '</a>'
+                # Sublist of related persons
+                if person.person.persons.all():
+                    html += '<ul class="corpus-text-detail-content-details-datagroup-list-sublist"><em>Related persons:</em>'
+                    for related_person in person.person.person_1.all():
+                        html += f'<li><a href="{reverse("corpus:text-list")}?filter_mm_persons_in_texts__person={related_person.person_2.id}">{related_person.person_2.name}'
+                        html += f' ({related_person.relationship_type})' if related_person.relationship_type else ''
+                        html += '</a></li>'
+                    html += '</ul>'
                 html += '</li>'
             html += '</ul>'
             return html
@@ -727,8 +781,71 @@ class Text(models.Model):
             return html
 
     @property
+    def is_codex(self):
+        # Returns True if is text is a codex, or False for standard Texts
+        return self.codex_images_location and len(self.codex_images_location.strip())
+
+    @property
+    def is_codex_iiif(self):
+        # Returns True if is manuscript images are from an external source via IIIF
+        return self.is_codex and self.codex_images_location.startswith('https://') and 'iiif' in self.codex_images_location
+
+    @property
+    def codex_images_dir(self):
+        if self.is_codex and not self.is_codex_iiif:
+            return os.path.join(settings.MEDIA_ROOT, 'corpus', 'codex', self.codex_images_location)
+
+    @property
+    def codex_images_url(self):
+        if self.is_codex and not self.is_codex_iiif:
+            return f"{settings.MEDIA_URL}corpus/codex/{self.codex_images_location}/"
+
+    @property
+    def codex_images_thumbnails_url(self):
+        if self.codex_images_url:
+            return f"{self.codex_images_url}thumbnails/"
+
+    @property
+    def codex_images(self):
+        if self.is_codex:
+            if self.is_codex_iiif:
+                try:
+                    response = requests.get(self.codex_images_location)
+                    # Raise an HTTPError for bad responses (4xx or 5xx)
+                    response.raise_for_status()
+                    images = []
+                    for canvas in response.json()['sequences'][0]['canvases']:
+                        image_url = canvas['images'][0]['resource']['@id']
+                        image_full_url = f"{image_url}/full/max/0/default.jpg"
+                        images.append({
+                            'image_thumbnail': image_full_url.replace('max', '60,'),
+                            'image_large': image_full_url.replace('max', '1500,'),
+                            'image_full': image_full_url
+                        })
+                    return images
+                except requests.exceptions.RequestException as e:
+                    print(f"Error fetching data: {e}")
+                    return None
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding JSON: {e}")
+                    return None
+            else:
+                codex_images_files = [file for file in os.listdir(self.codex_images_dir) if file.lower().endswith(".jpg") and '_thumbnail.' not in file.lower()]
+                codex_images_files.sort()
+                return codex_images_files
+
+    @property
+    def codex_default_image_thumbnail_url(self):
+        # Default image thumbnail from IIIF
+        if self.is_codex_iiif:
+            return self.codex_images[0]['image_thumbnail']
+        # Default image thumbnail from locally stored images
+        elif self.codex_images_thumbnails_url and self.codex_images:
+            return self.codex_images_thumbnails_url + self.codex_images[0]
+
+    @property
     def title(self):
-        return f"{self.primary_language.name}: {self.collection}, {self.shelfmark}"
+        return f"{self.collection}: {self.shelfmark}"
 
     def get_absolute_url(self):
         return reverse('corpus:text-detail', args=[str(self.id)])
@@ -859,9 +976,11 @@ Please note that the heading text must appear outside of a list and not as a num
     image_large = models.ImageField(upload_to='corpus/text_folios__large', blank=True, null=True)
     image_hide = models.BooleanField(default=False, verbose_name='Hide image on public website', help_text="e.g. if you don't have permission to share the image publicly")
 
-    transcription = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
-    translation = RichTextField(blank=True, null=True, help_text=text_folio_trans_help_text)
-    transliteration = RichTextField(blank=True, null=True, help_text='<br>Optional. Only relevant to some Middle Persian texts.')
+    transcription = RichTextUploadingField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    translation = RichTextUploadingField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    transliteration = RichTextUploadingField(blank=True, null=True, help_text='<br>Optional. Only relevant to some Middle Persian texts.')
+
+    palaeography = RichTextUploadingField(blank=True, null=True, help_text='<br>Optional. Only relevant to some texts.')
 
     def trans_text_lines(self, text_field, field_name):
         """
@@ -1121,6 +1240,9 @@ class Person(models.Model):
 
     def __str__(self):
         return self.name
+
+    def count_persons(self):
+        return len(self.persons.all())
 
     def save(self, *args, **kwargs):
         self.name_unidecode = unidecode(self.name)

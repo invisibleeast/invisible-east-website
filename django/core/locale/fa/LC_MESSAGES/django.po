@@ -1,0 +1,166 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: core/settings.py:112
+msgid "English"
+msgstr "انگلیسی"
+
+#: core/settings.py:113
+msgid "Persian"
+msgstr "فارسی"
+
+#: core/templates/base.html:68 core/templates/snippets/footer.html:32
+msgid "Invisible East"
+msgstr "پایگاه دیجیتال"
+
+#: core/templates/base.html:68
+msgid "Digital Corpus"
+msgstr "شرق مکنون"
+
+#: core/templates/base.html:81
+msgid "Welcome"
+msgstr "خوش آمدید"
+
+#: core/templates/base.html:87
+msgid "Search"
+msgstr "جستجو"
+
+#: core/templates/base.html:93
+msgid "Corpus Insights"
+msgstr "نگاه تحلیلی به مجموعه اسناد"
+
+#: core/templates/base.html:97
+msgid "Languages"
+msgstr ""
+
+#: core/templates/base.html:104
+msgid "Map"
+msgstr "نقشه‌ها"
+
+#: core/templates/base.html:110
+msgid "About"
+msgstr "درباره ما"
+
+#: core/templates/base.html:114
+msgid "How to Search"
+msgstr "نحوه جستجو"
+
+#: core/templates/base.html:117
+msgid "How to Cite"
+msgstr "راهنمای استناد (رفرنس‌دهی)"
+
+#: core/templates/base.html:120
+msgid "FAQs"
+msgstr "پرسش‌های متداول"
+
+#: core/templates/base.html:123
+msgid "Glossary"
+msgstr "واژه‌نامه"
+
+#: core/templates/base.html:126
+msgid "Technical/Software"
+msgstr "فنی/نرم‌افزار"
+
+#: core/templates/base.html:129
+msgid "Credits"
+msgstr "مشارکت‌کنندگان"
+
+#: core/templates/base.html:146
+msgid "Project"
+msgstr "پروژه"
+
+#: core/templates/base.html:153
+msgid "Admin"
+msgstr "مدیریت"
+
+#: core/templates/snippets/footer.html:29
+msgid "Invisible East is a research project led by"
+msgstr "شرق مکنون یک پروژه پژوهشی به مدیریت"
+
+#: core/templates/snippets/footer.html:29
+msgid "Arezou Azad"
+msgstr "آرزو آزاد"
+
+#: core/templates/snippets/footer.html:29
+msgid "within the"
+msgstr "ست و در چارچوب"
+
+#: core/templates/snippets/footer.html:29
+msgid "Department for Continuing Education"
+msgstr "دپارتمان آموزش متداوم"
+
+#: core/templates/snippets/footer.html:29
+msgid "University of Oxford"
+msgstr "دانشگاه آکسفورد اجرا می‌شود."
+
+#: core/templates/snippets/footer.html:35
+msgid ""
+"This project has received funding from the European Research Council "
+"(ERC)<br>under the European Union’s Horizon 2020 research and innovation "
+"programme (grant agreement No 851607)"
+msgstr ""
+"این پروژه از سوی شورای تحقیقات اروپا (ERC) در قالب برنامه افق پژوهش و نوآوری "
+"اتحادیه اروپا ۲۰۲۰ (با شماره قرارداد ۸۵۱۶۰۷) تأمین مالی شده است."
+
+#: core/templates/snippets/footer.html:38
+msgid "This is version"
+msgstr "این نسخه"
+
+#: core/templates/snippets/footer.html:38
+msgid "of the Invisible East Digital Corpus (IEDC)"
+msgstr "از پایگاه دیجیتال شرق مکنون (IEDC) است."
+
+#: core/templates/snippets/footer.html:41
+msgid "Privacy"
+msgstr "حریم خصوصی"
+
+#: core/templates/snippets/footer.html:42
+msgid "Legal"
+msgstr "حقوقی"
+
+#: core/templates/snippets/footer.html:43
+msgid "Sitemap"
+msgstr "نقشه سایت"
+
+#: core/templates/snippets/footer.html:44
+msgid "Cookies"
+msgstr "کوکی‌ها"
+
+#: core/templates/snippets/footer.html:45
+msgid "Accessibility"
+msgstr "دسترسی‌پذیری"
+
+#: core/templates/snippets/footer.html:47
+msgid "Account"
+msgstr "حساب کاربری"
+
+#: core/templates/snippets/footer.html:49
+msgid "Login"
+msgstr ""
+
+#: core/templates/snippets/footer.html:53
+msgid "© University of Oxford"
+msgstr "© دانشگاه آکسفورد"
+
+#~ msgid "IEDC Toponyms"
+#~ msgstr "نام‌های جغرافیایی پایگاه"
+
+#~ msgid "Find Spots"
+#~ msgstr "محل‌های کشف اسناد"

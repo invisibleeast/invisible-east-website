@@ -1,30 +1,32 @@
+{% load i18n %}
+
 <div class="corpus-text-detail-content-options">
 
     {% include "corpus/snippets/folio-select.html" %}
 
     {% if current_tab != 'transcription' and object.has_transcription %}
         <div>
-            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transcription"> Show Transcriptions</label>
+            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transcription"> {% translate 'Show Transcriptions' %}</label>
         </div>
     {% endif %}
     {% if current_tab != 'translation' and object.has_translation %}
         <div>
-            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="translation"> Show Translations</label>
+            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="translation"> {% translate 'Show Translations' %}</label>
         </div>
     {% endif %}
     {% if current_tab != 'transliteration' and object.has_transliteration %}
         <div>
-            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transliteration"> Show Transliterations</label>
+            <label><input type="checkbox" class="corpus-text-detail-inline-trans-checkbox" data-trans="transliteration"> {% translate 'Show Transliterations' %}</label>
         </div>
     {% endif %}
 
     <div>
-        <label><input type="checkbox" class="corpus-text-detail-trans-linktranstexttotag-checkbox"> Show Links to Tags</label>
+        <label><input type="checkbox" class="corpus-text-detail-trans-linktranstexttotag-checkbox"> {% translate 'Show Links to Tags' %}</label>
     </div>
 
     {% if user.is_admin %}
         <div>
-            <button class="corpus-text-detail-trans-linktranstexttotag" data-trans="{{ current_tab }}"><i class="fas fa-hashtag"></i> Link to Tag</button>
+            <button class="corpus-text-detail-trans-linktranstexttotag" data-trans="{{ current_tab }}"><i class="fas fa-hashtag"></i> {% translate 'Link to Tag' %}</button>
         </div>
     {% endif %}
 

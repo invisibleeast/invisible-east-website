@@ -1,4 +1,4 @@
-{% load static settings_value %}
+{% load static settings_value i18n %}
 
 <!-- Footer -->
 <footer id="footer" class="container-fluid">
@@ -26,35 +26,31 @@
 
         <div id="footer-content-text">
             <p>
-                Invisible East is a research project led by <a href="https://www.ames.ox.ac.uk/people/arezou-azad" target="_blank">Arezou Azad</a> within the
-                
-                <a href="https://www.conted.ox.ac.uk/" target="_blank">Department for Continuing Education</a>, University of Oxford
+                {% translate 'Invisible East is a research project led by' %} <a href="https://www.conted.ox.ac.uk/profiles/arezou-azad" target="_blank">{% translate 'Arezou Azad' %}</a> {% translate 'within the' %} <a href="https://www.conted.ox.ac.uk/" target="_blank">{% translate 'Department for Continuing Education' %}</a>, {% translate 'University of Oxford' %}
             </p>
             <p>
-                Invisible East Offices, Room 17, St Antony’s College, 62 Woodstock Road, Oxford OX2 6JF
+                {% translate 'Invisible East' %}, Ewert House, Ewert Lane, Oxford, OX2 7DD
             </p>
             <p>
-                This project has received funding from the European Research Council (ERC)
-                <br>
-                under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 851607)
+                {% translate 'This project has received funding from the European Research Council (ERC)<br>under the European Union’s Horizon 2020 research and innovation programme (grant agreement No 851607)' %}
             </p>
             <p>
-                This is version {% settings_value 'VERSION' %} of the Invisible East Digital Corpus (IEDC)
+                {% translate 'This is version' %} {% settings_value 'VERSION' %} {% translate 'of the Invisible East Digital Corpus (IEDC)' %}
             </p>
             <p>
-                <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">Privacy</a> |
-                <a href="https://www.ox.ac.uk/legal" target="_blank">Legal</a> |
-                <a href="{% url 'django.contrib.sitemaps.views.sitemap' %}">Sitemap</a> |
-                <a href="{% url 'general:cookies' %}">Cookies</a> |
-                <a href="{% url 'general:accessibility' %}">Accessibility</a> |
+                <a href="https://www.ox.ac.uk/privacy-policy" target="_blank">{% translate 'Privacy' %}</a> |
+                <a href="https://www.ox.ac.uk/legal" target="_blank">{% translate 'Legal' %}</a> |
+                <a href="{% url 'django.contrib.sitemaps.views.sitemap' %}">{% translate 'Sitemap' %}</a> |
+                <a href="{% url 'general:cookies' %}">{% translate 'Cookies' %}</a> |
+                <a href="{% url 'general:accessibility' %}">{% translate 'Accessibility' %}</a> |
                 {% if user.is_authenticated %}
-                    <a href="{% url 'account:account' %}">Account</a>
+                    <a href="{% url 'account:account' %}">{% translate 'Account' %}</a>
                 {% else %}
-                    <a href="{% url 'account:login' %}">Login</a>
+                    <a href="{% url 'account:login' %}">{% translate 'Login' %}</a>
                 {% endif %}
             </p>
             <p>
-                © University of Oxford {% now "Y" %}
+                {% translate '© University of Oxford' %} {% now "Y" %}
             </p>
         </div>
 

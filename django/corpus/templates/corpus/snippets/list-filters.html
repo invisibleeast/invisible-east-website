@@ -1,0 +1,29 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% for f in filters %}
+    <div class="corpus-text-list-options-filters-filter-container">
+        {% if f.filter_hidden %}
+            <input 
+                type="hidden"
+                id="{{ f.filter_id }}"
+                class="corpus-text-list-options-filters-filter"
+                title="{{ f.filter_name }}"
+                name="{{ f.filter_id }}"
+            >
+        {% else %}
+            <select 
+                id="{{ f.filter_id }}"
+                class="corpus-text-list-options-filters-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
+                title="{{ f.filter_name }}"
+                name="{{ f.filter_id }}"
+            >
+                <option value="">--- {% if LANGUAGE_CODE == 'en' %}{{ f.filter_name }}{% else %}{{ f.filter_name_fa }}{% endif %} ---</option>
+                {% for o in f.filter_options %}
+                    <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
+                {% endfor %}
+            </select>
+            <span class="input-clear"><i class="fas fa-times-circle"></i></span>
+        {% endif %}
+    </div>
+{% endfor %}
