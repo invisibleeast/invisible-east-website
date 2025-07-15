@@ -1,3 +1,11 @@
+// Establish language code in JS, used to set translated text below
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+var lang = "{{ LANGUAGE_CODE }}";
+var langIsFa = lang == 'fa';
+var langUrlPrefix = (langIsFa ? '/fa' : '');
+
+
 // Create a map object
 var map = L.map(
     '{{ map_id }}', {scrollWheelZoom: false, attributionControl: false}
@@ -22,26 +30,26 @@ L.tileLayer(
 
         // Add alternative readings
         {% if toponym.alternative_readings %}
-            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Alternative Readings</div>{{ toponym.alternative_readings }}';
+            markerPopupHtml += `<div class="map-iedctoponyms-popup-subtitle">${(langIsFa ? 'خوانش‌های جایگزین' : 'Alternative Readings')}</div>{{ toponym.alternative_readings }}`;
         {% endif %}
 
         // Add alternative pronunciations
         {% if toponym.other_attested_forms %}
-            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Other Attested Forms</div>{{ toponym.other_attested_forms }}';
+            markerPopupHtml += `<div class="map-iedctoponyms-popup-subtitle">${(langIsFa ? 'دیگر شکل‌های مشاهده شده نام' : 'Other Attested Forms')}</div>{{ toponym.other_attested_forms }}`;
         {% endif %}
 
         // Add urls html (if exists)
         {% if toponym.urls_as_html_links %}
-            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Links</div>{{ toponym.urls_as_html_links }}';
+            markerPopupHtml += `<div class="map-iedctoponyms-popup-subtitle">${(langIsFa ? 'لینک‌ها' : 'Links')}</div>{{ toponym.urls_as_html_links }}`;
         {% endif %}
 
         // Add texts
         {% if toponym.texts.all %}
             // Add subtitle for texts, if there are any
-            markerPopupHtml += '<div class="map-iedctoponyms-popup-subtitle">Texts</div>';
+            markerPopupHtml += `<div class="map-iedctoponyms-popup-subtitle">${(langIsFa ? 'متون' : 'Texts')}</div>`;
             // Loop through all Texts to build list of texts
             {% for text in toponym.texts.all %}
-                markerPopupHtml += `<a href="/corpus/{{ text.id }}/" class="map-iedctoponyms-popup-text">{{ text }}</a>`;
+                markerPopupHtml += `<a href="${langUrlPrefix}/corpus/{{ text.id }}/" class="map-iedctoponyms-popup-text">{{ text }}</a>`;
             {% endfor %}
         {% endif %}
 

@@ -20,6 +20,16 @@
         border-bottom: 4px solid var(--color-secondary);
     }
 
+    #nav-languagelinks:dir(ltr) {
+        margin-left: 1em;
+        padding-left: 1em;
+    }
+
+    #nav-languagelinks:dir(rtl) {
+        margin-right: 1em;
+        padding-right: 1em;
+    }
+
     /* ---------- Main ---------- */
 
     main {
@@ -38,10 +48,6 @@
         font-size: 4em;
     }
 
-    #welcome-banner-tagline {
-        font-size: 1.5em;
-    }
-
     /* ---------- Corpus: List ---------- */
 
     #corpus-text-list {
@@ -56,12 +62,6 @@
     #corpus-text-list-options {
         left: 0;
         height: calc(100vh - 4.5em);
-    }
-
-    #corpus-text-list-counts span {
-        margin: 0 1rem;
-        display: inline-block;
-        vertical-align: middle;
     }
 
     .corpus-text-list-items-item {
@@ -84,8 +84,15 @@
 
     .corpus-text-list-items-item-booleans {
         position: absolute;
-        bottom: 0;
+        bottom: 3px;
+    }
+
+    .corpus-text-list-items-item-booleans.ltr {
         right: 15px;
+    }
+
+    .corpus-text-list-items-item-booleans.rtl {
+        left: 0;
     }
 
     #corpus-text-list-pagination {
@@ -153,7 +160,6 @@
         display: inline-block;
         margin-right: 0.5em;
         vertical-align: top;
-        text-align: left;
         width: 12em;
     }
 

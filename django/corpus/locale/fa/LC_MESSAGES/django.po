@@ -1,0 +1,406 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: corpus/templates/corpus/map-iedctoponyms.html:7
+msgid "Toponyms in the Invisible East Digital Corpus"
+msgstr "نام‌های جغرافیایی در پایگاه شرق مکنون"
+
+#: corpus/templates/corpus/map-iedctoponyms.html:9
+msgid ""
+"This is a map of all the place names identified by the Invisible East Team "
+"in the texts of the Invisible East Digital Corpus. If you click on a pin, "
+"you can see all the texts in our corpus which mention this toponym. Please "
+"bear in mind that the exact geographical location of origin is not always "
+"possible to establish. It is, therefore, only an approximation."
+msgstr ""
+"این نقشه‌ای است از تمامی نام‌های جغرافیایی که توسط تیم شرق مکنون در متون "
+"پایگاه دیجیتال شرق مکنون شناسایی شده‌اند. اگر روی یک نشانگر (پین) کلیک کنید، "
+"می‌توانید تمام متون پایگاه که به این نام مکان اشاره کرده‌اند ببینید. لطفاً توجه "
+"داشته باشید که تعیین دقیق موقعیت جغرافیایی منشأ همواره ممکن نیست؛ بنابراین، "
+"محل‌های نمایش‌داده‌شده گاهی تقریبی هستند."
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:9
+msgid "Show Transcriptions"
+msgstr "نشان دادن نسخه‌برداری"
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:14
+msgid "Show Translations"
+msgstr "نشان دادن ترجمه"
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:19
+msgid "Show Transliterations"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:24
+msgid "Show Links to Tags"
+msgstr "نشان دادن پیوند برچسب‌ها"
+
+#: corpus/templates/corpus/snippets/foliotext-options.html:29
+msgid "Link to Tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:17
+msgid ""
+"This text is not yet approved, meaning it's not visible to public users."
+msgstr ""
+"این متن هنوز تایید نشده است، به این معنی که برای کاربران عمومی قابل مشاهده "
+"نیست."
+
+#: corpus/templates/corpus/text-detail.html:18
+msgid ""
+"Only authenticated users (admins and contributors) can see texts before "
+"they're approved."
+msgstr ""
+"فقط کاربران معتبر (مدیران و مشارکت‌کنندگان) می‌توانند متونی را که قبل از تایید "
+"مشاهده کنند."
+
+#: corpus/templates/corpus/text-detail.html:32
+#: corpus/templates/corpus/text-detail.html:45
+#: corpus/templates/corpus/text-detail.html:312
+msgid "Details"
+msgstr "جزئیات"
+
+#: corpus/templates/corpus/text-detail.html:33
+#: corpus/templates/corpus/text-detail.html:119
+msgid "Folios"
+msgstr "برگ‌ها"
+
+#: corpus/templates/corpus/text-detail.html:34
+#: corpus/templates/corpus/text-detail.html:93
+msgid "Codex"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:35
+#: corpus/templates/corpus/text-detail.html:131
+#: corpus/templates/corpus/text-detail.html:148
+msgid "Tags"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:36
+msgid "Transliterations"
+msgstr "رونویسی‌ها"
+
+#: corpus/templates/corpus/text-detail.html:37
+msgid "Transcriptions"
+msgstr "نسخه‌برداری‌ها"
+
+#: corpus/templates/corpus/text-detail.html:38
+msgid "Translations"
+msgstr "ترجمه‌ها"
+
+#: corpus/templates/corpus/text-detail.html:39
+#: corpus/templates/corpus/text-detail.html:269
+msgid "Palaeography"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:40
+#: corpus/templates/corpus/text-detail.html:282
+msgid "Map"
+msgstr "نقشه"
+
+#: corpus/templates/corpus/text-detail.html:41
+msgid "Seals"
+msgstr "مهرها"
+
+#: corpus/templates/corpus/text-detail.html:133
+#: corpus/templates/corpus/text-detail.html:237
+#: corpus/templates/corpus/text-list.html:156
+msgid "Transcription"
+msgstr "نسخه‌برداری"
+
+#: corpus/templates/corpus/text-detail.html:136
+#: corpus/templates/corpus/text-detail.html:253
+#: corpus/templates/corpus/text-list.html:157
+msgid "Translation"
+msgstr "ترجمه"
+
+#: corpus/templates/corpus/text-detail.html:139
+#: corpus/templates/corpus/text-detail.html:221
+#: corpus/templates/corpus/text-list.html:158
+msgid "Transliteration"
+msgstr "رونویسی"
+
+#: corpus/templates/corpus/text-detail.html:188
+msgid "View in Transcriptions"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:193
+msgid "View in Translations"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:198
+msgid "View in Transliterations"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:210
+msgid "This folio doesn't have any tags yet. Please check back soon."
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:284
+msgid ""
+"This map displays the place names identified by the Invisible East Team "
+"related to this corpus text. If you click on a pin, you can see all the "
+"texts in our corpus which mention this toponym. Please bear in mind that the "
+"exact geographical location of origin is not always possible to establish. "
+"It is, therefore, only an approximation."
+msgstr ""
+"این نقشه نام‌های مکانی که گروه شرق مکنون در ارتباط با این متن از مجموعه اسناد "
+"شناسایی کرده است را نمایش می‌دهد. اگر روی یک نشان کلیک کنید، می‌توانید تمام "
+"متونی را که در مجموعه اسناد ما به این نام مکانی اشاره کرده‌اند ببینید. لطفاً "
+"توجه داشته باشید که ممکن است تعیین موقعیت جغرافیایی دقیق ممکن نباشد و تقریبی‌ "
+"باشد."
+
+#: corpus/templates/corpus/text-detail.html:287
+msgid "You can also view"
+msgstr "شما همچنین می‌توانید"
+
+#: corpus/templates/corpus/text-detail.html:287
+msgid "a full map of all toponyms within the Invisible East Digital Corpus"
+msgstr "نقشه کامل تمامی نام‌های مکانی موجود در پایگاه دیجیتال شرق مکنون"
+
+#: corpus/templates/corpus/text-detail.html:287
+msgid "afterlink-detailtotoponyms"
+msgstr "را مشاهده کنید."
+
+#: corpus/templates/corpus/text-detail.html:299
+msgid "Seal"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:309
+#: corpus/templates/corpus/text-list.html:143
+msgid "Type"
+msgstr "نوع"
+
+#: corpus/templates/corpus/text-detail.html:315
+msgid "Inscription"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:318
+msgid "Measurements"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:321
+msgid "Descriptions"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:324
+msgid "Colours"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:327
+msgid "Seal Imprints"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:343
+msgid "Previous Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:345
+msgid "Next Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:349
+msgid "Folio"
+msgstr "برگ"
+
+#: corpus/templates/corpus/text-detail.html:358
+msgid "Only show"
+msgstr "فقط نشان دادن"
+
+#: corpus/templates/corpus/text-detail.html:360
+#: corpus/templates/corpus/text-detail.html:482
+#: corpus/templates/corpus/text-detail.html:500
+msgid "Please select"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:374
+msgid "Reset Image"
+msgstr "بازتنظیم تصویر"
+
+#: corpus/templates/corpus/text-detail.html:376
+msgid "Download Image"
+msgstr "دانلود تصویر"
+
+#: corpus/templates/corpus/text-detail.html:381
+msgid "Reveal Parts on Image"
+msgstr "نمایش قسمت‌هایی بر روی تصویر"
+
+#: corpus/templates/corpus/text-detail.html:384
+msgid "Rotate Image Anticlockwise"
+msgstr "گرداندن پادساعت‌وار تصویر"
+
+#: corpus/templates/corpus/text-detail.html:386
+msgid "Rotate Image Clockwise"
+msgstr "گرداندن ساعت‌وار تصویر"
+
+#: corpus/templates/corpus/text-detail.html:388
+msgid "Fullscreen"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:439
+msgid "Images courtesy of"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:449
+#: corpus/templates/corpus/text-detail.html:474
+msgid "Tag Manager"
+msgstr "مدیریت برچسب‌ها"
+
+#: corpus/templates/corpus/text-detail.html:480
+msgid "Tag Category"
+msgstr "دسته‌بندی برچسب‌ها"
+
+#: corpus/templates/corpus/text-detail.html:490
+msgid "Tag Search"
+msgstr "جستجوی برچسب‌ها"
+
+#: corpus/templates/corpus/text-detail.html:498
+msgid "Tag"
+msgstr "برچسب"
+
+#: corpus/templates/corpus/text-detail.html:508
+msgid "Create a new tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:515
+msgid "Tag Details"
+msgstr "جزئیات برچسب"
+
+#: corpus/templates/corpus/text-detail.html:521
+msgid "Draw on Image"
+msgstr ""
+
+#: corpus/templates/corpus/text-detail.html:526
+msgid "Save Tag"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:25
+msgid "How to Search"
+msgstr "نحوه جستجو"
+
+#: corpus/templates/corpus/text-list.html:26
+msgid "Search by Map"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:45
+msgid "Includes"
+msgstr "دارای"
+
+#: corpus/templates/corpus/text-list.html:58
+#: corpus/templates/corpus/text-list.html:145
+msgid "Dates (CE)"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:69
+msgid "Filters"
+msgstr "فیلترها"
+
+#: corpus/templates/corpus/text-list.html:89
+msgid "results found"
+msgstr "افته‌ها"
+
+#: corpus/templates/corpus/text-list.html:89
+msgid "of all"
+msgstr "از"
+
+#: corpus/templates/corpus/text-list.html:89
+msgid "Corpus Texts"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:93
+msgid "Sort by"
+msgstr "مرتب کردن بر اساس"
+
+#: corpus/templates/corpus/text-list.html:132
+msgid "In IEDC since"
+msgstr "تاریخ اضافه‌شدن به پایگاه دیجیتال شرق مکنون"
+
+#: corpus/templates/corpus/text-list.html:142
+msgid "Primary Language"
+msgstr "زبان اصلی"
+
+#: corpus/templates/corpus/text-list.html:144
+msgid "Writing Support"
+msgstr "سطح نوشتار"
+
+#: corpus/templates/corpus/text-list.html:163
+msgid "Not yet approved"
+msgstr "در دست تأیید"
+
+#: corpus/templates/corpus/text-list.html:190
+msgid "First"
+msgstr "اولین"
+
+#: corpus/templates/corpus/text-list.html:196
+msgid "Previous"
+msgstr "قبلی"
+
+#: corpus/templates/corpus/text-list.html:203
+msgid "Page"
+msgstr "صفحه"
+
+#: corpus/templates/corpus/text-list.html:203
+msgid "of"
+msgstr "از"
+
+#: corpus/templates/corpus/text-list.html:211
+msgid "Next"
+msgstr "بعدی"
+
+#: corpus/templates/corpus/text-list.html:217
+msgid "Last"
+msgstr "آخرین"
+
+#~ msgid "Find Spots"
+#~ msgstr "محل پیدا شدن اسناد"
+
+#~ msgid ""
+#~ "The map below is a visualisation tool that geographically locates the "
+#~ "places from which the documents in our corpus came. You can learn more "
+#~ "about each subset by clicking on the place markers. The subsets are "
+#~ "categorised by language and location; scroll down on the left side to see "
+#~ "documents in multiple languages from given sites. You can also \"enable "
+#~ "map scroll\" to zoom in all the way down to street level. This map was "
+#~ "created by the Invisible East team, with cartographer Michael Athanson, "
+#~ "and references to it should credit the Invisible East programme."
+#~ msgstr ""
+#~ "نقشه‌ای که در پایین مشاهده می‌کنید، ابزاری است که مکان‌های جغرافیایی منشأ "
+#~ "اسناد موجود در پایگاه ما را نمایش می‌دهد. با کلیک بر روی نشانگرها می‌توانید "
+#~ "اطلاعات بیشتری درباره هر زیرمجموعه به دست آورید. زیرمجموعه‌ها بر اساس زبان "
+#~ "و موقعیت جغرافیایی دسته‌بندی شده‌اند. برای مشاهده اسناد چندزبانه از یک مکان "
+#~ "خاص، از نوار سمت چپ صفحه به پایین اسکرول کنید. همچنین می‌توانید با "
+#~ "فعال‌کردن گزینه «فعال‌سازی پیمایش در نقشه» تا سطح خیابان بزرگ‌نمایی کنید. "
+#~ "این نقشه توسط تیم شرق مکنون با همکاری نقشه‌نگار مایکل آتانسن تهیه شده است "
+#~ "و هرگونه ارجاع به آن باید با ذکر نام برنامه پژوهشی شرق مکنون صورت گیرد."
+
+#~ msgid "Submit Search"
+#~ msgstr "ثبت جستجو"
+
+#~ msgid "Sort"
+#~ msgstr "مرتب کردن"
+
+#~ msgid "Sort direction"
+#~ msgstr "جهت مرتب کردن"
+
+#~ msgid "Showing up to"
+#~ msgstr "نمایش حداقل"
+
+#~ msgid "results per page"
+#~ msgstr "یافته در هر صفحه"

@@ -24,7 +24,6 @@ class StaticPagesSitemap(Sitemap):
             'general:cookies',
             'general:accessibility',
             'corpus:map-iedctoponyms',
-            'corpus:map-findspots',
         ]
 
     def location(self, obj):

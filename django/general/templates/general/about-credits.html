@@ -1,54 +1,55 @@
 {% extends "base.html" %}
-{% load static settings_value %}
+{% load static settings_value i18n %}
 
 {% block main %}
 
 <section class="container">
-    <h2>Credits</h2>
-    <h3>Invisible East Digital Corpus</h3>
+    <h2>{% translate "Credits" %}</h2>
+    <h3>{% translate "Invisible East Digital Corpus" %}</h3>
 
-    <h4>PI (Research Lead)</h4>
+    <h4>{% translate "PI (Research Lead)" %}</h4>
     <p>Arezou Azad</p>
 
-    <h4>Project Manager (Technical Lead, TEI-XML)</h4>
+    <h4>{% translate "Project Manager (Technical Lead, TEI-XML)" %}</h4>
     <p>Arash Zeini (April 2022 - March 2023)</p>
 
-    <h4>Software Developers</h4>
-    <p>Mike Allaway (May 2023-present)</p>
+    <h4>{% translate "Software Developers" %}</h4>
+    <p>AHR Software (May 2023-present)</p>
     <p>eXist Solutions (Spring 2022 - March 2023)</p>
 
-    <h4>Assistant Database Manager</h4>
+    <h4>{% translate "Assistant Database Manager" %}</h4>
     <p>Edward Shawe-Taylor (October 2023 - present)</p>
 
-    <h4>Senior Research Assistants</h4>
+    <h4>{% translate "Senior Research Assistants" %}</h4>
     <p>Ofir Haim</p>
     <p>Nabi Saqee</p>
     <p>Pejman Firoozbakhsh</p>
     <p>Majid Montazer-Mahdi</p>
 
-    <h4>Visiting Researchers</h4>
+    <h4>{% translate "Visiting Researchers" %}</h4>
     <p>Shamim Homayun</p>
 
-    <h4>Student Researchers</h4>
+    <h4>{% translate "Student Researchers" %}</h4>
     <p>Ed Shawe-Taylor (January 2023 - October 2023)</p>
     <p>Catherine McNally (January 2023 - October 2023)</p>
 
-    <h4>Special Thanks</h4>
+    <h4>{% translate "Special Thanks" %}</h4>
     <p>IT Office, Faculty of Asian and Middle Eastern Studies</p>
 
-    <h4>Invisible East Programme</h4>
+    <h4>{% translate "Invisible East Programme" %}</h4>
     <p>Silvia Ferreri</p>
     <p>Servane Wentzel</p>
 
-    <h4>Other Institutions</h4>
+    <h4>{% translate "Other Institutions" %}</h4>
     <p>Marina Rustow, Princeton Geniza Project</p>
     <p>Sarah Savant, Center for Digital Humanities, Aga Khan University</p>
     <p>Sohail Merchant, Center for Digital Humanities, Aga Khan University</p>
     <p>Maxim Romanov, University of Hamburg</p>
 
-    <h4>Website Translators</h4>
-    <p>Nabi Saqee (Persian)</p>
-    <p>Pejman Firoozbakhsh (Persian)</p>
+    <h4>{% translate "Website Translators into Persian" %}</h4>
+    <p>Matin Arghandehpour</p>
+    <p>Nabi Saqee</p>
+    <p>Pejman Firoozbakhsh</p>
 </section>
 
 {% include 'snippets/footer.html' %}

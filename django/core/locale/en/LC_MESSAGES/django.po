@@ -1,0 +1,158 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: core/settings.py:112
+msgid "English"
+msgstr ""
+
+#: core/settings.py:113
+msgid "Persian"
+msgstr ""
+
+#: core/templates/base.html:68 core/templates/snippets/footer.html:32
+msgid "Invisible East"
+msgstr ""
+
+#: core/templates/base.html:68
+msgid "Digital Corpus"
+msgstr ""
+
+#: core/templates/base.html:81
+msgid "Welcome"
+msgstr ""
+
+#: core/templates/base.html:87
+msgid "Search"
+msgstr ""
+
+#: core/templates/base.html:93
+msgid "Corpus Insights"
+msgstr ""
+
+#: core/templates/base.html:97
+msgid "Languages"
+msgstr ""
+
+#: core/templates/base.html:104
+msgid "Map"
+msgstr ""
+
+#: core/templates/base.html:110
+msgid "About"
+msgstr ""
+
+#: core/templates/base.html:114
+msgid "How to Search"
+msgstr ""
+
+#: core/templates/base.html:117
+msgid "How to Cite"
+msgstr ""
+
+#: core/templates/base.html:120
+msgid "FAQs"
+msgstr ""
+
+#: core/templates/base.html:123
+msgid "Glossary"
+msgstr ""
+
+#: core/templates/base.html:126
+msgid "Technical/Software"
+msgstr ""
+
+#: core/templates/base.html:129
+msgid "Credits"
+msgstr ""
+
+#: core/templates/base.html:146
+msgid "Project"
+msgstr ""
+
+#: core/templates/base.html:153
+msgid "Admin"
+msgstr ""
+
+#: core/templates/snippets/footer.html:29
+msgid "Invisible East is a research project led by"
+msgstr ""
+
+#: core/templates/snippets/footer.html:29
+msgid "Arezou Azad"
+msgstr ""
+
+#: core/templates/snippets/footer.html:29
+msgid "within the"
+msgstr ""
+
+#: core/templates/snippets/footer.html:29
+msgid "Department for Continuing Education"
+msgstr ""
+
+#: core/templates/snippets/footer.html:29
+msgid "University of Oxford"
+msgstr ""
+
+#: core/templates/snippets/footer.html:35
+msgid ""
+"This project has received funding from the European Research Council "
+"(ERC)<br>under the European Union’s Horizon 2020 research and innovation "
+"programme (grant agreement No 851607)"
+msgstr ""
+
+#: core/templates/snippets/footer.html:38
+msgid "This is version"
+msgstr ""
+
+#: core/templates/snippets/footer.html:38
+msgid "of the Invisible East Digital Corpus (IEDC)"
+msgstr ""
+
+#: core/templates/snippets/footer.html:41
+msgid "Privacy"
+msgstr ""
+
+#: core/templates/snippets/footer.html:42
+msgid "Legal"
+msgstr ""
+
+#: core/templates/snippets/footer.html:43
+msgid "Sitemap"
+msgstr ""
+
+#: core/templates/snippets/footer.html:44
+msgid "Cookies"
+msgstr ""
+
+#: core/templates/snippets/footer.html:45
+msgid "Accessibility"
+msgstr ""
+
+#: core/templates/snippets/footer.html:47
+msgid "Account"
+msgstr ""
+
+#: core/templates/snippets/footer.html:49
+msgid "Login"
+msgstr ""
+
+#: core/templates/snippets/footer.html:53
+msgid "© University of Oxford"
+msgstr ""

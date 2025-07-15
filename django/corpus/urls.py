@@ -5,6 +5,9 @@ app_name = 'corpus'
 
 urlpatterns = [
 
+    # Data Export
+    path('dataexport/', views.dataexport_csv, name='dataexport-csv'),
+
     # Text
     path('', views.TextListView.as_view(), name='text-list'),
     path('<pk>/', views.TextDetailView.as_view(), name='text-detail'),
@@ -20,5 +23,8 @@ urlpatterns = [
     # Maps
     path('map/texts/', views.MapTextsListView.as_view(), name='map-iedctoponyms'),
     path('map/find-spots/', views.MapFindSpotTemplateView.as_view(), name='map-findspots'),
+
+    # Corpus Insights (data visualisations)
+    path('insights/languages/', views.InsightsLanguagesTemplateView.as_view(), name='insights-languages'),
 
 ]

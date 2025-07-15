@@ -11,7 +11,7 @@ You can find the officially hosted version of this website at: <https://www.invi
 
 The people directly involved in the development of this website are from:
 
-- [Arezou Azad](https://www.orinst.ox.ac.uk/people/arezou-azad)
+- [Arezou Azad](https://www.conted.ox.ac.uk/profiles/arezou-azad)
 - [AHR Software](https://ahrsoftware.co.uk)
 
 To get in touch with us about this website or the research project, please email us at: <hello@ahrsoftware.ac.uk>

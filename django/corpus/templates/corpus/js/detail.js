@@ -1,4 +1,11 @@
 //
+// Set Page Title
+//
+
+document.title = '{{ object }}';
+
+
+//
 // URL Parameters
 //
 
@@ -73,6 +80,71 @@ $('.corpus-text-detail-content-details-datagroup').each(function(){
 
 
 //
+// Codex
+//
+
+// Pagination:
+
+// Selecting a page
+$('#codex-pagination select').on('change', function(){
+    $(this).closest('form').submit();
+});
+
+// Setting current page value in select list
+if (getUrlParameter('codex_pagination')) $('#codex-pagination-select').val(getUrlParameter('codex_pagination'));
+
+// Click a thumbnail to make that image active in the image viewer
+$('body').on('click', '.codex-thumbnails-item', function(){
+    // Get the url of the main, high-res image
+    let imageUrl = $(this).attr('data-src');
+    // Show image loading
+    $('#corpus-text-detail-images-loading').remove();
+    $('#corpus-text-detail-images-container').append('<div id="corpus-text-detail-images-loading">Loading...</div>');
+    // Load the image in the viewer (hidden whilst loading, is shown in image on load event)
+    $('#corpus-text-detail-images-image-codex').show();
+    $('#corpus-text-detail-images-image-codex-img').hide().attr('src', imageUrl);
+    // Set the 'Download image' link location
+    $('#corpus-text-detail-images-controls-downloadimage a').attr('href', imageUrl);
+    // Set active state of thumbnails
+    $('.codex-thumbnails-item').removeClass('active');
+    $(this).addClass('active');
+    // Set URL parameter
+    setUrlParameter('codex', $(this).attr('data-index'));
+});
+
+// Function to get the the active image index
+function getActiveCodexImageByIndex(){
+    return Number($('.codex-thumbnails-item.active').attr('data-index'));
+}
+
+// Function to set the the active image using its index
+function setActiveCodexImageByIndex(index){
+    $(`.codex-thumbnails-item[data-index="${index}"]`).trigger('click');
+}
+
+// Use left arrow button to go to previous active codex image
+$('body').on('click', '#corpus-text-detail-images-controls-codeximagenav-previous', function(){
+    setActiveCodexImageByIndex(getActiveCodexImageByIndex() - 1);
+});
+
+// Use right arrow button to go to next active codex image
+$('body').on('click', '#corpus-text-detail-images-controls-codeximagenav-next', function(){
+    setActiveCodexImageByIndex(getActiveCodexImageByIndex() + 1);
+});
+
+// Once codex image is loaded (on page load and each time user clicks on thumbnail)
+$('#corpus-text-detail-images-image-codex-img').on("load", function(){
+    // Hide loading
+    $('#corpus-text-detail-images-loading').remove();
+    // Show image
+    $('#corpus-text-detail-images-image-codex-img').show();
+    // Reset panzoom
+    setPanzoomStartScale();
+    setPanzoomOnImage();
+});
+
+
+//
 // Folios
 //
 
@@ -107,6 +179,9 @@ $('.corpus-text-detail-folio-select').on('change', function(){
     // Show this folio in image
     let imageSelect = $('#corpus-text-detail-images-controls-chooseimage select');
     if (imageSelect.val() != folioId) imageSelect.val(folioId).trigger('change');
+    // Show this folio in palaeography
+    $('.corpus-text-detail-content-palaeography-folio').hide();
+    $(`.corpus-text-detail-content-palaeography-folio[data-folio="${folioId}"`).show();
 }).trigger('change');
 
 
@@ -625,6 +700,21 @@ $('#corpus-text-detail-images-controls-rotate-clockwise').on('click', function()
     imageRotationSet(clockwise=true);
 });
 
+// Fullscreen Image (toggle)
+$('#corpus-text-detail-images-controls-rotate-fullscreen').on('click', function(){
+    $('#corpus-text-detail-images').toggleClass('fullscreen');
+    $(this).toggleClass('active');
+});
+
+// Use escape key on keyboard to escape full screen view
+$('body').on('keydown', function(e){
+    if (e.keyCode === 27 && $('#corpus-text-detail-images').hasClass('fullscreen')){
+        e.preventDefault();
+        $('#corpus-text-detail-images').removeClass('fullscreen');
+        $('#corpus-text-detail-images-controls-rotate-fullscreen').removeClass('active');
+    }
+});
+
 // Text Folio Image Part controls (e.g. add, delete)
 
 var canDrawNewTextFolioImagePart = false;
@@ -798,7 +888,25 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
     }
 });
 
-// Apply the select list image controls once page is loaded
-if (getUrlParameter('textfolio')) $('#corpus-text-detail-images-controls-chooseimage select').val(getUrlParameter('textfolio'));
-$('#corpus-text-detail-images-controls-chooseimage select').trigger('change');
-$('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').trigger('change');
+// Apply the select list image controls once page is loaded, for either Text Folio images or Codex images
+// Text Folio Images
+if ($('#corpus-text-detail-images-controls-chooseimage').length){
+    if (getUrlParameter('textfolio')) $('#corpus-text-detail-images-controls-chooseimage select').val(getUrlParameter('textfolio'));
+    $('#corpus-text-detail-images-controls-chooseimage select').trigger('change');
+    $('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').trigger('change');
+}
+// Codex Images
+else {
+    // Activate panzoom on image
+    panzoomImageId = 'codex';
+    // Set default image (try to get from URL, if not in URL then use first)
+    if (getUrlParameter('codex')) defaultCodexImage = getUrlParameter('codex');
+    else defaultCodexImage = 1;
+    setActiveCodexImageByIndex(defaultCodexImage);
+    // Use left/right keyboard arrow keys to navigate previous/next manuscript images
+    $('body').on('keydown', function(e){
+        if (e.keyCode === 37) $('#corpus-text-detail-images-controls-codeximagenav-previous').trigger('click');
+        else if (e.keyCode === 39) $('#corpus-text-detail-images-controls-codeximagenav-next').trigger('click');
+    });
+    
+}

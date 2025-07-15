@@ -1,15 +1,33 @@
 from django.views.generic import (DetailView, ListView, TemplateView, View)
 from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField, Prefetch)
-from django.http import HttpResponseRedirect
+from django.core.exceptions import BadRequest
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.conf import settings
+from datetime import datetime
 from functools import reduce
 from operator import (or_, and_)
 from bs4 import BeautifulSoup
 from . import models
 import json
+import math
 import re
+import csv
+import io
+
+
+# Sections of this file:
+# 1. Reusable Code
+# 2. Main Views
+# 3. Maps Views
+# 4. Corpus Insights (data visualisations) Views
+# 5. Data Export Views (e.g. CSV)
+
+
+#
+# 1. Reusable Code
+#
 
 
 # Special starts to the values & labels of options in 'filter' select lists
@@ -18,7 +36,7 @@ filter_pre_mm = f'{filter_pre}mm_'  # Many to Many relationship
 filter_pre_fk = f'{filter_pre}fk_'  # Foreign Key relationship
 filter_pre_gt = f'{filter_pre}gt_'  # Greater than (or equal to) filter, e.g. "Date (from)"
 filter_pre_lt = f'{filter_pre}lt_'  # Less than (or equal to) filter, e.g. "Date (to)"
-filter_pre_bl = f'{filter_pre}hs_'  # Boolean, e.g. "Has transcription"
+filter_pre_bl = f'{filter_pre}bl_'  # Boolean, e.g. "Has transcription"
 
 
 def clean_date_from_datetime(datetime_obj):
@@ -100,6 +118,11 @@ def text_initial_queryset(user):
         return models.Text.objects.filter(public_review_approved=True)
 
 
+#
+# 2. Main Views
+#
+
+
 class TextDetailView(DetailView):
     """
     Class-based view for Text detail template
@@ -118,15 +141,22 @@ class TextDetailView(DetailView):
             'gregorian_date_century',
             'collection',
         ).prefetch_related(
-            'text_folios',
+            'text_folios__text_folio_tags',
             'texts',
             'text_related_publications',
             'text_dates',
-            'toponyms',
+            'seals',
+            Prefetch(
+                'toponyms__texts',
+                models.Text.objects.all().select_related('collection', 'primary_language__script')
+            ),
             Prefetch(
                 'persons_in_texts',
-                models.PersonInText.objects.all().select_related('person_role_in_text')
-            )
+                models.PersonInText.objects.all().select_related('person_role_in_text', 'person__gender')
+            ),
+            'persons_in_texts__person__persons',
+            'persons_in_texts__person__person_1__person_2',
+            'persons_in_texts__person__person_1__relationship_type',
         )
 
         return queryset
@@ -134,6 +164,28 @@ class TextDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # Codex pagination
+        if self.object.is_codex:
+            codex_pagination = int(self.request.GET.get('codex_pagination', 0))
+            codex_perpage = 25
+            codex_images = self.object.codex_images
+            context['codex_images'] = codex_images[
+                codex_pagination:codex_pagination + codex_perpage
+            ]
+            context['codex_pagination_pagecountstart'] = codex_pagination
+            # Codex pagination options (if there are multiple pages)
+            if len(codex_images) > codex_perpage:
+                codex_pages = range(0, math.ceil(len(codex_images) / codex_perpage))
+                codex_pagination_options = []
+                for p in codex_pages:
+                    p_start = p * codex_perpage
+                    p_end = min(p_start + codex_perpage, len(codex_images))
+                    codex_pagination_options.append(
+                        {'value': p_start, 'label': f'{p_start + 1} - {p_end}'}
+                    )
+                context['codex_pagination_options'] = codex_pagination_options
+
+        # TextFolio and TextFolioTag
         context['text_folios'] = self.object.text_folios.all().select_related(
             'side',
             'open_state'
@@ -146,24 +198,31 @@ class TextDetailView(DetailView):
         context['text_folio_tag_categories'] = models.SlTextFolioTagCategory.objects.all().prefetch_related('tags__text_folio_tags')
         context['text_folio_tags'] = models.SlTextFolioTag.objects.all().select_related('category')
         context['permalink'] = self.request.build_absolute_uri().split('?')[0]
+
+        # Details data
         context['data_items'] = [
 
             # General
             {
-                'section_header': 'Details'
+                'section_header': 'Details',
+                'section_header_fa': 'جزئیات',
             },
             {
-                'label': 'Shelfmark/Title', 'value': self.object.shelfmark
+                'label': 'Shelfmark/Title',
+                'label_fa': 'شماره قفسه/عنوان',
+                'value': self.object.shelfmark
             },
             {
                 'label': 'Collection',
+                'label_fa': 'مجموعه',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}collection',
                     self.object.collection
                 )
             },
             {
-                'label': 'Corpus',
+                'label': 'Findspots',
+                'label_fa': '',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}corpus',
                     self.object.corpus
@@ -171,10 +230,12 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Classification',
+                'label_fa': 'طبقه‌بندی',
                 'value': self.object.admin_classification.name_full if self.object.admin_classification else None
             },
             {
                 'label': 'Primary Language',
+                'label_fa': 'زبان اصلی',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}primary_language',
                     self.object.primary_language
@@ -182,6 +243,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Additional Languages',
+                'label_fa': '',
                 'value': html_details_list_items(
                     f'{filter_pre_mm}additional_languages',
                     self.object.additional_languages.all()
@@ -189,6 +251,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Type',
+                'label_fa': 'نوع',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}type',
                     self.object.type,
@@ -197,6 +260,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Document Subtype',
+                'label_fa': '',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}document_subtype',
                     self.object.document_subtype
@@ -204,6 +268,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Toponyms',
+                'label_fa': 'نام‌های جغرافیایی',
                 'value': html_details_list_items(
                     f'{filter_pre_mm}toponyms',
                     self.object.toponyms.all()
@@ -212,10 +277,12 @@ class TextDetailView(DetailView):
 
             # Physical Description
             {
-                'section_header': 'Physical Description'
+                'section_header': 'Physical Description',
+                'section_header_fa': 'توصیفات فیزیکی',
             },
             {
                 'label': 'Writing Support',
+                'label_fa': 'سطح نوشتار',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}writing_support',
                     self.object.writing_support
@@ -223,6 +290,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Writing Support Details',
+                'label_fa': '',
                 'value': html_details_list_items(
                     f'{filter_pre_mm}writing_support_details',
                     self.object.writing_support_details.all()
@@ -230,22 +298,27 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Writing Support Notes',
+                'label_fa': 'نکات سطح نوشتار',
                 'value': self.object.writing_support_details_additional
             },
             {
                 'label': 'Height (cm)',
+                'label_fa': 'طول (سانتی متر)',
                 'value': self.object.dimensions_height
             },
             {
                 'label': 'Width (cm)',
+                'label_fa': 'عرض (سانتی متر)',
                 'value': self.object.dimensions_width
             },
             {
                 'label': 'Fold Lines',
+                'label_fa': 'رد تا',
                 'value': self.object.fold_lines_count
             },
             {
                 'label': 'Fold Lines',
+                'label_fa': 'رد تا',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}fold_lines_alignment',
                     self.object.fold_lines_alignment
@@ -253,29 +326,34 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Fold Lines',
+                'label_fa': 'رد تا',
                 'value': self.object.fold_lines_details
             },
 
             # Content
             {
-                'section_header': 'Content'
+                'section_header': 'Content',
+                'section_header_fa': 'محتوا',
             },
             {
                 'label': 'Summary of Content',
+                'label_fa': 'خلاصه محتوا',
                 'value': self.object.summary_of_content
             },
 
             # Dates (Gregorian and Original)
             {
-                'section_header': 'Dates'
+                'section_header': 'Dates',
+                'section_header_fa': 'تاریخ',
             },
             {
-                'html': f'<ul><li>{self.object.gregorian_date_full}</li></ul>{self.object.details_html_dates}'
+                'html': self.object.details_html_dates_full
             },
 
             # People
             {
-                'section_header': 'People'
+                'section_header': 'People',
+                'section_header_fa': 'اشخاص',
             },
             {
                 'html': self.object.details_html_person_in_text
@@ -283,7 +361,8 @@ class TextDetailView(DetailView):
 
             # Publications
             {
-                'section_header': 'Publications'
+                'section_header': 'Publications',
+                'section_header_fa': '',
             },
             {
                 'html': self.object.details_html_publications
@@ -291,7 +370,8 @@ class TextDetailView(DetailView):
 
             # Related Shelfmarks
             {
-                'section_header': 'Related Shelfmarks'
+                'section_header': 'Related Shelfmarks',
+                'section_header_fa': '',
             },
             {
                 'html': self.object.details_html_texts
@@ -299,56 +379,69 @@ class TextDetailView(DetailView):
 
             # IEDC Data
             {
-                'section_header': 'IEDC Data'
+                'section_header': 'IEDC Data',
+                'section_header_fa': 'داده‌های پایگاه دیجیتال شرق مکنون',
             },
             {
                 'label': 'IEDC ID',
+                'label_fa': 'شناسه‌ی پایگاه دیجیتال شرق مکنون',
                 'value': self.object.id
             },
             {
                 'label': 'Date Added to IE Corpus',
+                'label_fa': 'تاریخ اضافه شدن به پایگاه دیجیتال شرق مکنون',
                 'value': clean_date_from_datetime(self.object.meta_created_datetime)
             },
             {
                 'label': 'Date Last Updated in IE Corpus',
+                'label_fa': '',
                 'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
             },
 
             # Citations
             {
-                'section_header': 'Citations'
+                'section_header': 'Citations',
+                'section_header_fa': 'ارجاعات',
             },
             {
                 'label': 'Principal Editor',
+                'label_fa': '',
                 'value': self.object.admin_principal_editor
             },
             {
                 'label': 'Contributors',
+                'label_fa': '',
                 'value': self.object.admin_contributors_list
             },
             {
                 'label': 'Source of Data',
+                'label_fa': '',
                 'value': self.object.admin_source_of_data
             },
             {
                 'label': 'Suggested Citation',
+                'label_fa': 'ارجاع پیشنهادی',
                 'value': f'<a href="{reverse("general:about-cite")}">See \'How to Cite\'</a>'
             },
             {
                 'label': 'Permalink',
+                'label_fa': 'پیوند سند',
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
             {
                 'label': 'Image Permission Statement',
+                'label_fa': '',
                 'value': self.object.image_permission_statement
             },
 
             # Contact
             {
-                'section_header': 'Contact'
+                'section_header': 'Contact',
+                'section_header_fa': 'تماس',
             },
             {
                 'label': 'Contact Editorial Team',
+                'label_fa': 'تماس با گروه تدوین',
                 'value': f'<a href="mailto:{settings.MAIN_CONTACT_EMAIL}?subject=Invisible East Digital Corpus&body=This email relates to Text {self.object.id} - {context["permalink"]}">{settings.MAIN_CONTACT_EMAIL}</a> <em>(Please include the above permalink when contacting the editorial team about this Text)</em>'
             },
 
@@ -388,6 +481,7 @@ class TextListView(ListView):
 
         # Improve performance
         queryset = queryset.select_related(
+            'writing_support',
             'primary_language__script',
             'type__category',
             'gregorian_date_century',
@@ -397,7 +491,11 @@ class TextListView(ListView):
         )
 
         # Search
-        searches = json.loads(self.request.GET.get('search', '[]'))
+        try:
+            searches = json.loads(self.request.GET.get('search', '[]'))
+        except json.decoder.JSONDecodeError:
+            searches = []
+
         field_names_to_search = [
             'shelfmark',
             'collection__name',
@@ -413,11 +511,12 @@ class TextListView(ListView):
         ]
         # Set list of search options
         if searches not in [[''], []]:
+            search_type = 'iregex' if self.request.GET.get('search_type', '') == 'regex' else 'icontains'
             operator = or_ if self.request.GET.get('search_operator', '') == 'or' else and_
             queries = []
             for search in searches:
                 # Uses 'or_' as the search term could appear in any field, so 'and_' wouldn't be suitable
-                queries.append(reduce(or_, (Q((f'{field_name}__icontains', search.strip())) for field_name in field_names_to_search)))
+                queries.append(reduce(or_, (Q((f'{field_name}__{search_type}', search.strip())) for field_name in field_names_to_search)))
             # Connect the individual search queries via the user-defined operator (or_ / and_)
             queries = reduce(operator, queries)
             # Filter the queryset using the completed search query
@@ -426,9 +525,6 @@ class TextListView(ListView):
         # Filter
         for filter_key in [k for k in list(self.request.GET.keys()) if k.startswith(filter_pre)]:
             filter_value = self.request.GET.get(filter_key, '')
-            # Remove the 'unique' data from the filter name (this is needed for unique id and name for filters that point to the same model)
-            if '___unique_' in filter_key:
-                filter_key = filter_key.split('___unique_')[0]
             # Perform the filter based on the type
             if filter_value != '':
                 # Many to Many relationship (uses __in comparison and filter_value is a list)
@@ -451,25 +547,30 @@ class TextListView(ListView):
                 elif filter_key.startswith(filter_pre_bl):
                     filter_field = filter_key.replace(filter_pre_bl, '')
                     if filter_value == 'on':
-                        queryset = queryset.exclude(**{f'{filter_field}__isnull': True})  # remove null values
-                        queryset = queryset.exclude(**{f'{filter_field}__exact': ''})  # remove empty strings
+                        try:
+                            queryset = queryset.exclude(**{f'{filter_field}__isnull': True})  # remove null values
+                        except Exception:
+                            pass
+                        try:
+                            queryset = queryset.exclude(**{f'{filter_field}__exact': ''})  # remove empty strings
+                        except Exception:
+                            pass
 
         # Sort
         # Establish the sort direction (asc/desc) and the field to sort by, from the self.request
-        sort_dir = self.request.GET.get('sort_direction', '')
-        sort_by = self.request.GET.get('sort_by', 'id')
-        sort = sort_dir + sort_by
+        sort = self.request.GET.get('sort', 'id')
+        sort_dir = '-' if sort.startswith('-') else ''
         sort_pre_length = len(f"{sort_dir}{self.sort_pre_count_value}")  # e.g. '-numerical_' for descending numerical
         # Count sorting (e.g. sort by count of related items)
-        if sort.startswith(sort_dir + self.sort_pre_count_value):
-            sort_by = sort_dir + 'countitems'  # '-countitems' if descending, 'countitems' if ascending
-            # Try to apply the admin_published=True constraint
+        if sort.startswith(self.sort_pre_count_value) or sort.startswith(f'-{self.sort_pre_count_value}'):
+            # '-countitems' if descending, 'countitems' if ascending
+            order_by = f'{sort_dir}countitems'
             sort_field = sort[sort_pre_length:]
-            queryset = queryset.annotate(countitems=Count(sort_field)).order_by(sort_by)
+            queryset = queryset.annotate(countitems=Count(sort_field)).order_by(order_by)
         # Standard sort
         else:
             # Sort descending (Z-A)
-            if sort_dir == '-':
+            if sort.startswith('-'):
                 # Convert CharField and TextField values to lowercase, for case insensitivity
                 if isinstance(self.get_field_type(sort, queryset), (CharField, TextField)):
                     queryset = queryset.order_by(Lower(sort[1:]).desc())
@@ -497,167 +598,125 @@ class TextListView(ListView):
         context['filter_pre_lt'] = filter_pre_lt
         context['filter_pre_bl'] = filter_pre_bl
 
-        # Options: Sort By
-        # Alphabetical
-        context['options_sortby_alphabetical'] = [
-            {'value': 'shelfmark', 'label': 'Shelfmark'},
-            {'value': 'gregorian_date_century__century_number', 'label': 'Converted Gregorian Date'},
-            {'value': 'meta_created_datetime', 'label': 'IEDC Input Date'}
-        ]
-        # Numerical
-        context['options_sortby_numerical'] = [
-            {
-                'value': f'{self.sort_pre_count_value}text_folios',
-                'label': f'{self.sort_pre_count_label}Folios'
-            },
+        # Data Export
+        context['dataexport_text_ids'] = ','.join([str(i) for i in self.object_list.values_list('id', flat=True)])
+
+        # Tag
+        tag_id = self.request.GET.get(f'{filter_pre_fk}text_folios__text_folio_tags__tag', None)
+        if tag_id:
+            context['filter_active_tag'] = models.SlTextFolioTag.objects.get(id=tag_id).name
+
+        # Options: Sort
+        context['options_sort'] = [
+            {'value': '?', 'label': 'Random'},
+            {'value': 'shelfmark', 'label': 'Shelfmark (A-Z)'},
+            {'value': 'gregorian_date_century__century_number', 'label': 'Converted date (CE) ↑'},
+            {'value': '-gregorian_date_century__century_number', 'label': 'Converted date (CE) ↓'},
+            {'value': 'meta_created_datetime', 'label': 'Date added to IEDC ↑'},
+            {'value': '-meta_created_datetime', 'label': 'Date added to IEDC ↓'}
         ]
 
         # Reused querysets in below filters (specified here to avoid duplicate SQL queries)
         filter_queryset_languages = models.SlTextLanguage.objects.all().select_related('script')
         filter_queryset_centuries = models.SlTextGregorianCentury.objects.all()
 
+        # Includes (aka checkbox filters)
+        context['options_includes'] = [
+            {
+                'filter_id': f'{filter_pre_bl}text_folios__transcription',
+                'filter_name': 'Transcription',
+                'filter_name_fa': 'نسخه‌برداری ',
+                'filter_helptext': 'reproduce spoken word in writing'
+            },
+            {
+                'filter_id': f'{filter_pre_bl}text_folios__translation',
+                'filter_name': 'Translation',
+                'filter_name_fa': 'ترجمه'
+            },
+            {
+                'filter_id': f'{filter_pre_bl}text_folios__transliteration',
+                'filter_name': 'Transliteration',
+                'filter_name_fa': 'رونویسی',
+                'filter_helptext': 'a rendition of a text in another script, preserving pronunciation'
+            },
+            {
+                'filter_id': f'{filter_pre_bl}text_folios__image',
+                'filter_name': 'Image',
+                'filter_name_fa': 'عکس '
+            },
+            {
+                'filter_id': f'{filter_pre_bl}text_folios__palaeography',
+                'filter_name': 'Palaeography',
+                'filter_name_fa': 'پالئوگرافی'
+            },
+            {
+                'filter_id': f'{filter_pre_bl}seals__id',
+                'filter_name': 'Seal',
+                'filter_name_fa': 'مهر'
+            },
+            {
+                'filter_id': f'{filter_pre_bl}codex_images_location',
+                'filter_name': 'Codex',
+                'filter_name_fa': '',
+            }
+        ]
+
+        # Gregorian Dates
+        context['options_datefilters'] = [
+            {
+                'filter_id': f'{filter_pre_gt}gregorian_date_century__century_number',
+                'filter_classes': filter_pre_gt,
+                'filter_name': 'From',
+                'filter_name_fa': '',
+                'filter_options': filter_queryset_centuries
+            },
+            {
+                'filter_id': f'{filter_pre_lt}gregorian_date_century__century_number',
+                'filter_classes': filter_pre_lt,
+                'filter_name': 'To',
+                'filter_name_fa': '',
+                'filter_options': filter_queryset_centuries
+            },
+        ]
+
         # Filters
         context['options_filters'] = [
-            # Booleans
-            [
-                {
-                    'filter_id': f'{filter_pre_bl}text_folios__image',
-                    'filter_name': 'Has an Image'
-                },
-                {
-                    'filter_id': f'{filter_pre_bl}text_folios__transcription',
-                    'filter_name': 'Has a Transcription'
-                },
-                {
-                    'filter_id': f'{filter_pre_bl}text_folios__translation',
-                    'filter_name': 'Has a Translation'
-                },
-                {
-                    'filter_id': f'{filter_pre_bl}text_folios__transliteration',
-                    'filter_name': 'Has a Transliteration'
-                },
-            ],
-            # Languages
-            [
-                {
-                    'filter_id': f'{filter_pre_fk}primary_language',
-                    'filter_name': 'Primary Language',
-                    'filter_options': filter_queryset_languages
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}additional_languages',
-                    'filter_name': 'Additional Languages',
-                    'filter_options': filter_queryset_languages
-                },
-            ],
-            # Collection and Corpus
-            [
-                {
-                    'filter_id': f'{filter_pre_fk}collection',
-                    'filter_name': 'Collection',
-                    'filter_options': models.SlTextCollection.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}corpus',
-                    'filter_name': 'Corpus',
-                    'filter_options': models.SlTextCorpus.objects.all()
-                },
-            ],
-            # Type and subtype
-            [
-                {
-                    'filter_id': f'{filter_pre_fk}type',
-                    'filter_name': 'Type of Text',
-                    'filter_options': models.SlTextType.objects.all().select_related('category')
-                },
-                {
-                    'filter_id': f'{filter_pre_fk}document_subtype',
-                    'filter_name': 'Document Subtype',
-                    'filter_options': models.SlTextDocumentSubtype.objects.all().select_related('category')
-                },
-            ],
-            # Toponyms
-            [
-                {
-                    'filter_id': f'{filter_pre_mm}toponyms',
-                    'filter_name': 'Toponyms',
-                    'filter_options': models.SlTextToponym.objects.all()
-                },
-            ],
-            # Gregorian Dates
-            [
-                {
-                    'filter_id': f'{filter_pre_gt}gregorian_date_century__century_number',
-                    'filter_classes': filter_pre_gt,
-                    'filter_name': 'Gregorian Date (from)',
-                    'filter_options': filter_queryset_centuries
-                },
-                {
-                    'filter_id': f'{filter_pre_lt}gregorian_date_century__century_number',
-                    'filter_classes': filter_pre_lt,
-                    'filter_name': 'Gregorian Date (to)',
-                    'filter_options': filter_queryset_centuries
-                }
-            ],
-            # Writing Support
-            [
-                {
-                    'filter_id': f'{filter_pre_fk}writing_support',
-                    'filter_name': 'Writing Support',
-                    'filter_options': models.SlTextWritingSupport.objects.all()
-                },
-                {
-                    'filter_id': f'{filter_pre_mm}writing_support_details',
-                    'filter_name': 'Writing Support Details',
-                    'filter_options': models.SlTextWritingSupportDetail.objects.all()
-                },
-            ],
-            # Tags (Temporarily hidden on 2025-03-07 at Ed's request. To be added back in future.)
-            # [
-            #     {
-            #         'filter_group_name': 'Tags',
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_fa',
-            #         'filter_name': 'Administrative, Military and Legal Titles, Offices and Processes',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Administrative, Military and Legal Titles, Offices and Processes')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ap',
-            #         'filter_name': 'Agricultural Terms',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Agricultural Terms')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_cd',
-            #         'filter_name': 'Currencies and Denominations',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Currencies and Denominations')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_dm',
-            #         'filter_name': 'Documentation Terms',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Documentation Terms')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_ga',
-            #         'filter_name': 'Geographic Administrative Units',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Geographic Administrative Units')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_mk',
-            #         'filter_name': 'Markings',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Markings')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_lm',
-            #         'filter_name': 'Measurement Units',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Measurement Units')
-            #     },
-            #     {
-            #         'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag___unique_rg',
-            #         'filter_name': 'Religions',
-            #         'filter_options': models.SlTextFolioTag.objects.filter(category__name='Religions')
-            #     },
-            # ]
+            {
+                'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
+                'filter_name': 'Tag',
+                'filter_options': models.SlTextFolioTag.objects.all(),
+                'filter_hidden': True  # this filter is not visible as its set by user clicking tags in list items
+            },
+            {
+                'filter_id': f'{filter_pre_fk}primary_language',
+                'filter_name': 'Primary Language',
+                'filter_name_fa': 'زبان اصلی',
+                'filter_options': filter_queryset_languages
+            },
+            {
+                'filter_id': f'{filter_pre_fk}collection',
+                'filter_name': 'Collection',
+                'filter_name_fa': 'مجموعه',
+                'filter_options': models.SlTextCollection.objects.all()
+            },
+            {
+                'filter_id': f'{filter_pre_fk}corpus',
+                'filter_name': 'Findspots',
+                'filter_name_fa': 'Findspots',
+                'filter_options': models.SlTextCorpus.objects.all()
+            },
+            {
+                'filter_id': f'{filter_pre_fk}type',
+                'filter_name': 'Type of Text',
+                'filter_name_fa': 'نوع متن',
+                'filter_options': models.SlTextType.objects.all().select_related('category')
+            },
+            {
+                'filter_id': f'{filter_pre_fk}writing_support',
+                'filter_name': 'Writing Support',
+                'filter_name_fa': 'سطح نوشتار',
+                'filter_options': models.SlTextWritingSupport.objects.all()
+            },
         ]
 
         return context
@@ -815,6 +874,11 @@ class TextFolioTransLineDrawnOnImageFailedTemplateView(TemplateView):
     template_name = 'corpus/textfoliotranslinedrawnonimage-failed.html'
 
 
+#
+# 3. Maps Views
+#
+
+
 class MapTextsListView(ListView):
     """
     Class based view to show a map (of SlTextToponym objects) list template
@@ -847,3 +911,81 @@ class MapFindSpotTemplateView(TemplateView):
     """
 
     template_name = 'corpus/map-findspots.html'
+
+
+#
+# 4. Corpus Insights (data visualisations) Views
+#
+
+
+class InsightsLanguagesTemplateView(TemplateView):
+    """
+    Class based view to show a 'corpus insights - languages' template
+    """
+
+    template_name = 'corpus/insights-languages.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['data'] = 1
+
+        return context
+
+
+#
+# 5. Data Export Views
+#
+
+
+def dataexport_csv(request):
+    """
+    Functional view to export data Text queryset into a CSV file,
+    which is then returned to the user
+    """
+
+    text_ids = request.GET.get('text_ids', None)
+    if not text_ids:
+        raise BadRequest('A valid "text_ids" value must be provided')
+
+    # Titles
+    titles = [[
+        "ID",
+        # "Experiment Instance", "Message", "Sender", "Sent time", "Text",
+        # "Experiment Instance", "Message", "Sender", "Sent time", "Text",
+    ]]
+
+    # Data
+    data = models.Text.objects.all().select_related(
+        'collection'
+    ).prefetch_related(
+        'texts'
+    )
+
+    if text_ids:
+        data = data.filter(id__in=text_ids.split(','))
+    data_list = []
+    for d in data:
+        data_list.append([
+            d.id,
+            # d.id,
+            # d.sender_role,
+            # d.datetime_created_clean,
+            # d.text.strip()
+        ])
+
+    # Create csv file
+    # Create an in-memory text buffer (StringIO for CSV writer)
+    csv_buffer = io.StringIO()
+    # Create a CSV writer object
+    csv_writer = csv.writer(csv_buffer)
+    # Write data to the CSV buffer
+    csv_writer.writerows(titles + data_list)
+    csv_file_content = csv_buffer.getvalue()
+    csv_buffer.close()
+
+    # Return csv file as response
+    response = HttpResponse(csv_file_content, content_type='text/csv')
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    response['Content-Disposition'] = f'attachment; filename="iedc_{timestamp}.csv"'
+    return response

@@ -1,18 +1,21 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
 
 {% block main %}
 
 <div id="corpus-text-detail">
 
     <!-- Content -->
-    <section id="corpus-text-detail-content"{% if not object.has_image %} class="full"{% endif %}>
+    <section id="corpus-text-detail-content"{% if not object.has_image and not object.is_codex %} class="full"{% endif %}>
 
         {% if not object.public_review_approved %}
             <div id="corpus-text-detail-content-notyetapproved">
-                This text is not yet approved, meaning it's not visible to public users.
-                <br>
-                Only authenticated users (admins and contributors) can see texts before they're approved.
+                <i class="fas fa-exclamation-triangle"></i>
+                {% translate "This text is not yet approved, meaning it's not visible to public users." %}
+                {% translate "Only authenticated users (admins and contributors) can see texts before they're approved." %}
             </div>
         {% endif %}
 
@@ -26,24 +29,40 @@
         </div>
 
         <ul id="corpus-text-detail-content-tabs">
-            <li id="details"><i class="fas fa-align-left"></i> Details</li>
-            {% if object.count_text_folios > 1 %}<li id="folios"><i class="fas fa-scroll"></i> Folios</li>{% endif %}
-            {% if object.has_textfoliotag %}<li id="tags"><i class="fas fa-hashtag"></i> Tags</li>{% endif %}
-            {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> Transcriptions</li>{% endif %}
-            {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> Translations</li>{% endif %}
-            {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> Transliterations</li>{% endif %}
-            {% if object.has_toponym_coordinates %}<li id="map"><i class="fas fa-map"></i> Map</li>{% endif %}
-            {% if object.seals.all %}<li id="seals"><i class="fas fa-stamp"></i> Seals</li>{% endif %}
+            <li id="details"><i class="fas fa-align-left"></i> {% translate 'Details' %}</li>
+            {% if object.count_text_folios > 1 %}<li id="folios"><i class="fas fa-scroll"></i> {% translate 'Folios' %}</li>{% endif %}
+            {% if object.is_codex %}<li id="codex"><i class="fas fa-th"></i> {% translate 'Codex' %}</li>{% endif %}
+            {% if object.has_textfoliotag %}<li id="tags"><i class="fas fa-hashtag"></i> {% translate 'Tags' %}</li>{% endif %}
+            {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> {% translate 'Transliterations' %}</li>{% endif %}
+            {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> {% translate 'Transcriptions' %}</li>{% endif %}
+            {% if object.has_translation %}<li id="translation"><i class="fas fa-globe-europe"></i> {% translate 'Translations' %}</li>{% endif %}
+            {% if object.has_palaeography %}<li id="palaeography"><i class="fas fa-pen-nib"></i> {% translate 'Palaeography' %}</li>{% endif %}
+            {% if object.has_toponym_coordinates %}<li id="map"><i class="fas fa-map"></i> {% translate 'Map' %}</li>{% endif %}
+            {% if object.seals.all %}<li id="seals"><i class="fas fa-stamp"></i> {% translate 'Seals' %}</li>{% endif %}
         </ul>
 
         <article class="tabbed" id="corpus-text-detail-content-details">
-            <div class="tabbed-title">Details</div>
+            <div class="tabbed-title">{% translate 'Details' %}</div>
+
+            {% comment %}
+            <!-- Export data -->
+            <div id="orpus-text-detail-content-details-dataexport"  style="float: {% if LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %};">
+                <a href="{% url 'corpus:dataexport-csv' %}?text_ids={{ object.id }}">
+                    <i class="fas fa-file-download"></i> Download as CSV
+                </a>
+            </div>
+            {% endcomment %}
+
             {% for data_item in data_items %}
 
                 {% if data_item.section_header %}
                     {% if forloop.counter > 1 %}</div>{% endif %}
                     <div class="corpus-text-detail-content-details-datagroup">
-                    <h3>{{ data_item.section_header }}</h3>
+                    {% if LANGUAGE_CODE == 'en' %}
+                        <h3>{{ data_item.section_header }}</h3>
+                    {% elif LANGUAGE_CODE == 'fa' %}
+                        <h3 dir="rtl">{{ data_item.section_header_fa }}</h3>
+                    {% endif %}
 
                 {% elif data_item.html %}
                     <div class="corpus-text-detail-content-details-datagroup-datahtml">
@@ -52,7 +71,14 @@
 
                 {% elif data_item.value %}
                     <div class="corpus-text-detail-content-details-datagroup-dataitem">
-                        <label>{{ data_item.label }}</label><span>{{ data_item.value | safe }}</span>
+                        <label>
+                            {% if LANGUAGE_CODE == 'en' %}
+                                {{ data_item.label }}
+                            {% elif LANGUAGE_CODE == 'fa' %}
+                                {{ data_item.label_fa }}
+                            {% endif %}
+                        </label>
+                        <span>{{ data_item.value | safe }}</span>
                     </div>
                 {% endif %}
 
@@ -61,8 +87,35 @@
             {% endfor %}
         </article>
 
+        {% if object.is_codex %}
+            <article class="tabbed" id="corpus-text-detail-content-codex">
+                <div class="tabbed-title">{% translate 'Codex' %}</div>
+                {% if codex_pagination_options %}
+                    <div id="codex-pagination">
+                        <form action="" method="get">
+                            <input type="hidden" name="tab" value="codex">
+                            <label for="codex-pagination-select">View pages:</label>
+                            <select id="codex-pagination-select" name="codex_pagination">
+                                {% for option in codex_pagination_options %}
+                                    <option value="{{ option.value }}">{{ option.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                {% endif %}
+                <div class="codex-thumbnails">
+                    {% for image in codex_images %}
+                        <div class="codex-thumbnails-item" data-src="{% if object.is_codex_iiif %}{{ image.image_large }}{% else %}{{ object.codex_images_url }}{{ image }}{% endif %}" data-index="{{ forloop.counter }}">
+                            <div class="codex-thumbnails-item-name">{{  codex_pagination_pagecountstart|add:forloop.counter }}</div>
+                            <img src="{% if object.is_codex_iiif %}{{ image.image_thumbnail }}{% else %}{{ object.codex_images_thumbnails_url }}{{ image }}{% endif %}" alt="Manuscript page">
+                        </div>
+                    {% endfor %}
+                </div>
+            </article>
+        {% endif %}
+
         <article class="tabbed" id="corpus-text-detail-content-folios">
-            <div class="tabbed-title">Folios</div>
+            <div class="tabbed-title">{% translate 'Folios' %}</div>
             {% for text_folio in text_folios %}
                 <div class="corpus-text-detail-content-folios-folio" data-folio="{{ text_folio.id }}">
                     <!-- Title -->
@@ -74,15 +127,15 @@
                     </div>
                     <!-- Links -->
                     <div class="corpus-text-detail-content-folios-folio-links">
-                        <div data-tab="tags"><i class="fas fa-hashtag"></i> Tags</div>
+                        <div data-tab="tags"><i class="fas fa-hashtag"></i> {% translate 'Tags' %}</div>
                         {% if text_folio.transcription %}
-                            <div data-tab="transcription"><i class="fas fa-pen-fancy"></i> Transcription</div>
+                            <div data-tab="transcription"><i class="fas fa-pen-fancy"></i> {% translate 'Transcription' %}</div>
                         {% endif %}
                         {% if text_folio.translation %}
-                            <div data-tab="translation"><i class="fas fa-globe-europe"></i>Translation</div>
+                            <div data-tab="translation"><i class="fas fa-globe-europe"></i>{% translate 'Translation' %}</div>
                         {% endif %}
                         {% if text_folio.transliteration %}
-                            <div data-tab="transliteration"><i class="fas fa-font"></i>Transliteration</div>
+                            <div data-tab="transliteration"><i class="fas fa-font"></i>{% translate 'Transliteration' %}</div>
                         {% endif %}
                     </div>
                 </div>
@@ -91,7 +144,7 @@
 
         {% if object.has_textfoliotag %}
             <article class="tabbed" id="corpus-text-detail-content-tags">
-                <div class="tabbed-title">Tags</div>
+                <div class="tabbed-title">{% translate 'Tags' %}</div>
 
                 <!-- Options -->
                 <div class="corpus-text-detail-content-options">
@@ -131,17 +184,17 @@
                                 <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links">
                                     {% if text_folio_tag.is_in_text_folio_transcription %}
                                         <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links-link" data-trans="transcription">
-                                            <i class="fas fa-pen-fancy"></i> View in Transcriptions
+                                            <i class="fas fa-pen-fancy"></i> {% translate 'View in Transcriptions' %}
                                         </div>
                                     {% endif %}
                                     {% if text_folio_tag.is_in_text_folio_translation %}
                                         <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links-link" data-trans="translation">
-                                            <i class="fas fa-globe-europe"></i> View in Translations
+                                            <i class="fas fa-globe-europe"></i> {% translate 'View in Translations' %}
                                         </div>
                                     {% endif %}
                                     {% if text_folio_tag.is_in_text_folio_transliteration %}
                                         <div class="corpus-text-detail-content-tags-folio-tagcategory-tag-links-link" data-trans="transliteration">
-                                            <i class="fas fa-font"></i> View in Transliterations
+                                            <i class="fas fa-font"></i> {% translate 'View in Transliterations' %}
                                         </div>
                                     {% endif %}
                                 </div>
@@ -153,7 +206,7 @@
 
                         {% empty %}
                             <div class="corpus-text-detail-content-tags-folio-notags">
-                                This folio doesn't have any tags yet. Please check back soon.
+                                {% translate "This folio doesn't have any tags yet. Please check back soon." %}
                             </div>
                         {% endfor %}
                     </div>
@@ -162,9 +215,25 @@
             </article>
         {% endif %}
 
+        {% if object.has_transliteration %}
+            <article class="tabbed" id="corpus-text-detail-content-transliteration" data-trans="transliteration">
+                <div class="tabbed-title">{% translate 'Transliteration' %}</div>
+
+                {% include "corpus/snippets/foliotext-options.html" with current_tab='transliteration' %}
+
+                {% for text_folio in text_folios %}
+                    {% if text_folio.transliteration_text_lines %}
+                        <div class="corpus-text-detail-content-transliteration-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
+                            {% include "corpus/snippets/foliotext-lines.html" with trans_text_lines=text_folio.transliteration_text_lines %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </article>
+        {% endif %}
+
         {% if object.has_transcription %}
             <article class="tabbed" id="corpus-text-detail-content-transcription" data-trans="transcription">
-                <div class="tabbed-title">Transcription</div>
+                <div class="tabbed-title">{% translate 'Transcription' %}</div>
 
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='transcription' %}
 
@@ -180,7 +249,7 @@
 
         {% if object.has_translation %}
             <article class="tabbed" id="corpus-text-detail-content-translation" data-trans="translation">
-                <div class="tabbed-title">Translation</div>
+                <div class="tabbed-title">{% translate 'Translation' %}</div>
 
                 {% include "corpus/snippets/foliotext-options.html" with current_tab='translation' %}
 
@@ -194,16 +263,13 @@
             </article>
         {% endif %}
 
-        {% if object.has_transliteration %}
-            <article class="tabbed" id="corpus-text-detail-content-transliteration" data-trans="transliteration">
-                <div class="tabbed-title">Transliteration</div>
-
-                {% include "corpus/snippets/foliotext-options.html" with current_tab='transliteration' %}
-
+        {% if object.has_palaeography %}
+            <article class="tabbed" id="corpus-text-detail-content-palaeography" data-trans="palaeography">
+                <div class="tabbed-title">{% translate 'Palaeography' %}</div>
                 {% for text_folio in text_folios %}
-                    {% if text_folio.transliteration_text_lines %}
-                        <div class="corpus-text-detail-content-transliteration-folio-lines folio-lines" data-folio="{{ text_folio.id }}">
-                            {% include "corpus/snippets/foliotext-lines.html" with trans_text_lines=text_folio.transliteration_text_lines %}
+                    {% if text_folio.palaeography %}
+                        <div class="corpus-text-detail-content-palaeography-folio" data-folio="{{ text_folio.id }}">
+                            {{ text_folio.palaeography | safe }}
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -212,12 +278,12 @@
 
         {% if object.has_toponym_coordinates %}
             <article class="tabbed" id="corpus-text-detail-content-map">
-                <div class="tabbed-title">Map</div>
+                <div class="tabbed-title">{% translate 'Map' %}</div>
                 <p>
-                    This map displays the place names identified by the Invisible East Team related to this corpus text. If you click on a pin, you can see all the texts in our corpus which mention this toponym. Please bear in mind that the exact geographical location of origin is not always possible to establish. It is, therefore, only an approximation.
+                    {% translate 'This map displays the place names identified by the Invisible East Team related to this corpus text. If you click on a pin, you can see all the texts in our corpus which mention this toponym. Please bear in mind that the exact geographical location of origin is not always possible to establish. It is, therefore, only an approximation.' %}
                 </p>
                 <p>
-                    You can also view <a href="{% url 'corpus:map-iedctoponyms' %}">a full map of all toponyms within the Invisible East Digital Corpus</a>.
+                    {% translate 'You can also view' %} <a href="{% url 'corpus:map-iedctoponyms' %}">{% translate 'a full map of all toponyms within the Invisible East Digital Corpus' %}</a>{% translate 'afterlink-detailtotoponyms' %}
                 </p>
                 {% include "corpus/snippets/leaflet.html" with map_id='corpus-text-detail-content-map-iedctoponyms' %}
             </article>
@@ -229,7 +295,7 @@
                 {% for seal in object.seals.all %}
                     <div class="corpus-text-detail-content-seals">
                         <!-- Title -->
-                        <div class="corpus-text-detail-content-seals-title">Seal {{ forloop.counter }}</div>
+                        <div class="corpus-text-detail-content-seals-title">{% translate 'Seal' %} {{ forloop.counter }}</div>
                         <!-- Image -->
                         {% if seal.image %}
                             <a href="{{ seal.image.url }}" class="corpus-text-detail-content-seals-imagecontainer">
@@ -239,25 +305,25 @@
                         <!-- Data -->
                         {% if object.primary_language.name != 'Bactrian' %}
                             {% if seal.type %}
-                                <label>Type</label><div>{{ seal.type }}</div>
+                                <label>{% translate 'Type' %}</label><div>{{ seal.type }}</div>
                             {% endif %}
                             {% if seal.details %}
-                                <label>Details</label><div>{{ seal.details | safe | linebreaks }}</div>
+                                <label>{% translate 'Details' %}</label><div>{{ seal.details | safe | linebreaks }}</div>
                             {% endif %}
                             {% if seal.inscription %}
-                                <label>Inscription</label><div>{{ seal.inscription | safe | linebreaks }}</div>
+                                <label>{% translate 'Inscription' %}</label><div>{{ seal.inscription | safe | linebreaks }}</div>
                             {% endif %}
                             {% if seal.measurements %}
-                                <label>Measurements</label><div>{{ seal.measurements | safe | linebreaks }}</div>
+                                <label>{% translate 'Measurements' %}</label><div>{{ seal.measurements | safe | linebreaks }}</div>
                             {% endif %}
                             {% if seal.descriptions_html_list %}
-                                <label>Descriptions</label><div>{{ seal.descriptions_html_list | safe }}</div>
+                                <label>{% translate 'Descriptions' %}</label><div>{{ seal.descriptions_html_list | safe }}</div>
                             {% endif %}
                             {% if seal.colours_html_list %}
-                                <label>Colours</label><div>{{ seal.colours_html_list | safe }}</div>
+                                <label>{% translate 'Colours' %}</label><div>{{ seal.colours_html_list | safe }}</div>
                             {% endif %}
                             {% if seal.imprints_html_list %}
-                                <label>Seal Imprints</label><div>{{ seal.imprints_html_list | safe }}</div>
+                                <label>{% translate 'Seal Imprints' %}</label><div>{{ seal.imprints_html_list | safe }}</div>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -268,83 +334,110 @@
     </section><!--
 
     Image
-    -->{% if object.has_image %}<section id="corpus-text-detail-images">
+    -->{% if object.has_image or object.is_codex %}<section id="corpus-text-detail-images">
         <!-- Image Controls -->
         <div id="corpus-text-detail-images-controls">
-            <!-- Choose Folio/Image -->
-            <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
-                <label>Folio:</label>
-                <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
-                    {% for text_folio in text_folios %}
-                        <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Only Show Certain Image Parts -->
-            <div id="corpus-text-detail-images-controls-onlyshowcertainimageparts" class="corpus-text-detail-images-controls-item">
-                <label>Only show:</label>
-                <select>
-                    <option value="">-- Please select --</option>
-                    <optgroup label="Lines of Text">
-                        <option value="lines-transcription">Transcription</option>
-                    </optgroup>
-                    <optgroup label="Tags">
-                        <option value="tags-all">All tags</option>
-                        {% for category in text_folio_tag_categories %}
-                            <option value="tags-{{ category.id }}">{{ category.name }}</option>
+            {% if object.is_codex %}
+                <!-- Previous Image -->
+                <div id="corpus-text-detail-images-controls-codeximagenav-previous" class="corpus-text-detail-images-controls-item" title="{% translate 'Previous Image' %}"><i class="fas fa-arrow-left"></i></div>
+                <!-- Next Image -->
+                <div id="corpus-text-detail-images-controls-codeximagenav-next" class="corpus-text-detail-images-controls-item" title="{% translate 'Next Image' %}"><i class="fas fa-arrow-right"></i></div>
+            {% elif object.has_image %}
+                <!-- Choose Folio/Image -->
+                <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
+                    <label>{% translate 'Folio' %}:</label>
+                    <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
+                        {% for text_folio in text_folios %}
+                            <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
                         {% endfor %}
-                    </optgroup>
-                </select>
-            </div>
+                    </select>
+                </div>
+                <!-- Only Show Certain Image Parts -->
+                <div id="corpus-text-detail-images-controls-onlyshowcertainimageparts" class="corpus-text-detail-images-controls-item">
+                    <label>{% translate 'Only show' %}:</label>
+                    <select>
+                        <option value="">-- {% translate 'Please select' %} --</option>
+                        <optgroup label="Lines of Text">
+                            <option value="lines-transcription">Transcription</option>
+                        </optgroup>
+                        <optgroup label="Tags">
+                            <option value="tags-all">All tags</option>
+                            {% for category in text_folio_tag_categories %}
+                                <option value="tags-{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+            {% endif %}
             <!-- Reset Viewer -->
-            <div id="corpus-text-detail-images-controls-reset" class="corpus-text-detail-images-controls-item" title="Reset Image"><i class="fas fa-sync-alt"></i></div>
+            <div id="corpus-text-detail-images-controls-reset" class="corpus-text-detail-images-controls-item" title="{% translate 'Reset Image' %}"><i class="fas fa-sync-alt"></i></div>
             <!-- Download Image -->
-            <div id="corpus-text-detail-images-controls-downloadimage" class="corpus-text-detail-images-controls-item" title="Download Image">
+            <div id="corpus-text-detail-images-controls-downloadimage" class="corpus-text-detail-images-controls-item" title="{% translate 'Download Image' %}">
                 <a href="#" title="Download Image" download><i class="fas fa-download"></i></a>
             </div>
-            <!-- Show All Parts -->
-            <div id="corpus-text-detail-images-controls-revealparts" class="corpus-text-detail-images-controls-item" title="Reveal Parts on Image"><i class="fas fa-border-none"></i></div>
+            {% if object.has_image %}
+                <!-- Show All Parts -->
+                <div id="corpus-text-detail-images-controls-revealparts" class="corpus-text-detail-images-controls-item" title="{% translate 'Reveal Parts on Image' %}"><i class="fas fa-border-none"></i></div>
+            {% endif %}
             <!-- Rotate Image Anticlockwise -->
-            <div id="corpus-text-detail-images-controls-rotate-anticlockwise" class="corpus-text-detail-images-controls-item" title="Rotate Image Anticlockwise"><i class="fas fa-undo-alt"></i></div>
+            <div id="corpus-text-detail-images-controls-rotate-anticlockwise" class="corpus-text-detail-images-controls-item" title="{% translate 'Rotate Image Anticlockwise' %}"><i class="fas fa-undo-alt"></i></div>
             <!-- Rotate Image Clockwise -->
-            <div id="corpus-text-detail-images-controls-rotate-clockwise" class="corpus-text-detail-images-controls-item" title="Rotate Image Clockwise"><i class="fas fa-redo-alt"></i></div>
+            <div id="corpus-text-detail-images-controls-rotate-clockwise" class="corpus-text-detail-images-controls-item" title="{% translate 'Rotate Image Clockwise' %}"><i class="fas fa-redo-alt"></i></div>
+            <!-- Fullscreen Image -->
+            <div id="corpus-text-detail-images-controls-rotate-fullscreen" class="corpus-text-detail-images-controls-item" title="{% translate 'Fullscreen' %}"><i class="fas fa-expand"></i></div>
         </div>
-        <div id="corpus-text-detail-images-container">
-            {% for text_folio in text_folios %}
-                {% if text_folio.image %}
-                    <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
-                        {% if text_folio.image_hide %}
-                            <div class="corpus-text-detail-images-image-hidden">
-                                <p>
-                                    We are currently unable to share this image publicly.
-                                </p>
-                                <p>
-                                    Please contact us if you require access to this image and we can advise further.
-                                </p>
-                            </div>
-                        {% else %}
-                            <div class="corpus-text-detail-images-image-rotatelayer">
-                                <div class="corpus-text-detail-images-image-drawlayer">
-                                    <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
-                                    <div class="corpus-text-detail-images-image-parts">
-                                        <!--
-                                            Add TextFolioTag image parts
-                                            Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
-                                        -->
-                                        {% for tag in text_folio.text_folio_tags.all %}
-                                            {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
-                                                <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
-                                            {% endif %}
-                                        {% endfor %}
+        <!-- Images (either Codex images or Text Folio images, can't be both) -->
+        <div id="corpus-text-detail-images-container" dir="ltr">
+            {% if object.is_codex %}
+                <!-- Codex images -->
+                <div id="corpus-text-detail-images-image-codex" class="corpus-text-detail-images-image active">
+                    <div class="corpus-text-detail-images-image-rotatelayer">
+                        <!-- img src set dynamically via JS -->
+                        <img id="corpus-text-detail-images-image-codex-img" alt="Codex image">
+                    </div>
+                </div>
+            {% else %}
+                <!-- Text Folio Images -->
+                {% for text_folio in text_folios %}
+                    {% if text_folio.image %}
+                        <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
+                            {% if text_folio.image_hide %}
+                                <div class="corpus-text-detail-images-image-hidden">
+                                    <p>
+                                        We are currently unable to share this image publicly.
+                                    </p>
+                                    <p>
+                                        Please contact us if you require access to this image and we can advise further.
+                                    </p>
+                                </div>
+                            {% else %}
+                                <div class="corpus-text-detail-images-image-rotatelayer">
+                                    <div class="corpus-text-detail-images-image-drawlayer">
+                                        <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
+                                        <div class="corpus-text-detail-images-image-parts">
+                                            <!--
+                                                Add TextFolioTag image parts
+                                                Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
+                                            -->
+                                            {% for tag in text_folio.text_folio_tags.all %}
+                                                {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
+                                                    <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
-        <div id="corpus-text-detail-images-credit">Images courtesy of {{ object.image_credit }}</div>
+        {% if object.image_credit %}
+            <div id="corpus-text-detail-images-credit">
+                {% translate 'Images courtesy of' %} {{ object.image_credit }}
+            </div>
+        {% endif %}
     </section>{% endif %}
 
     {% if user.is_admin %}
@@ -352,7 +445,7 @@
         <!-- Tag Manager (only display for admins) -->
         <!-- Show -->
         <div id="corpus-text-detail-content-tags-textfoliotag-form-show">
-            <i class="fas fa-hashtag"></i> Tag Manager
+            <i class="fas fa-hashtag"></i> {% translate 'Tag Manager' %}
         </div>
         <!-- Form -->
         <form id="corpus-text-detail-content-tags-textfoliotag-form" name="textfoliotag-form" method="POST" action="{% url 'corpus:textfoliotag-create' %}" novalidate>
@@ -377,15 +470,15 @@
 
             <!-- Title -->
             <div id="corpus-text-detail-content-tags-textfoliotag-form-title">
-                <i class="fas fa-hashtag"></i> Tag Manager
+                <i class="fas fa-hashtag"></i> {% translate 'Tag Manager' %}
             </div>
 
             <div class="fieldgroup">
                 <!-- Tag Category -->
                 <div>
-                    <label>Tag Category <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
+                    <label>{% translate 'Tag Category' %} <a href="{% url 'admin:corpus_sltextfoliotagcategory_changelist' %}" title="View Tag Categories in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
                     <select name="category" required>
-                        <option value="">-- Please select --</option>
+                        <option value="">-- {% translate 'Please select' %} --</option>
                         {% for category in text_folio_tag_categories %}
                             <option value="{{ category.id }}">{{ category.name }}</option>
                         {% endfor %}
@@ -393,7 +486,7 @@
                 </div>
                 <!-- Tag Search -->
                 <div>
-                    <label>Tag Search</label>
+                    <label>{% translate 'Tag Search' %}</label>
                     <input type="text" name="tag_search" title="Search" placeholder="Search for an existing tag in the below list">
                 </div>
             </div>
@@ -401,9 +494,9 @@
             <div class="fieldgroup">
                 <!-- Tag (existing) -->
                 <div>
-                    <label>Tag <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
+                    <label>{% translate 'Tag' %} <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
                     <select name="tag_existing">
-                        <option value="">-- Please select --</option>
+                        <option value="">-- {% translate 'Please select' %} --</option>
                         {% for tag in text_folio_tags %}
                             <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>
                         {% endfor %}
@@ -411,25 +504,25 @@
                 </div>
                 <!-- Tag (new) -->
                 <div>
-                    <label><span class="hidden">Create a new tag</span></label>
+                    <label><span class="hidden">{% translate 'Create a new tag' %}</span></label>
                     <input type="text" name="tag_new" title="Create a new tag" placeholder="If no existing tag is suitable, type a new tag here to create it">
                 </div>
             </div>
 
             <!-- Tag Details -->
             <div>
-                <label>Tag Details</label>
+                <label>{% translate 'Tag Details' %}</label>
                 <input type="text" name="details" title="Tag Details" placeholder="Optional. Provide more details about this tag if needed">
             </div>
             {% if object.has_image %}
                 <!-- Draw on Image -->
                 <div>
-                    <label>Draw on Image</label>
+                    <label>{% translate 'Draw on Image' %}</label>
                     <input type="checkbox" id="corpus-text-detail-content-tags-textfoliotag-form-draw-start" title="Click to start drawing tag on image"> <i class="fas fa-pencil-alt"></i>
                 </div>
             {% endif %}
             <!-- Submit form button -->
-            <button type="submit"><i class="fas fa-check-circle"></i> Save Tag</button>
+            <button type="submit"><i class="fas fa-check-circle"></i> {% translate 'Save Tag' %}</button>
         </form>
     {% endif %}
 

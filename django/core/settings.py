@@ -1,9 +1,10 @@
 import os
 import sys
+from django.utils.translation import gettext_lazy as _
 
 
 # Version of this project (see: https://semver.org/)
-VERSION = '1.1.7'
+VERSION = '1.2.0'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'embed_video',
     'debug_toolbar',
     'ckeditor',
+    'ckeditor_uploader',
     'rest_framework',
     'django_admin_listfilter_dropdown',
     # Custom
@@ -102,10 +104,21 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Europe/London'
-USE_I18N = False
+USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+LANGUAGES = (
+    ('en', _('English')),
+    ('fa', _('Persian')),  # fa stands for Farsi
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'general/locale'),
+    os.path.join(BASE_DIR, 'corpus/locale'),
+    os.path.join(BASE_DIR, 'help/locale'),
+)
 
 # Static files (CSS, JavaScript, Images)
 
@@ -134,6 +147,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # CKEditor configuration options
+# Image File uploads via CKEditor
+CKEDITOR_UPLOAD_PATH = 'cke_uploads/'  # will be based within MEDIA dir
+CKEDITOR_ALLOW_NONIMAGE_FILES = False  # only allow images to be uploaded
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
+CKEDITOR_THUMBNAIL_SIZE = (100, 100)
+CKEDITOR_FORCE_JPEG_COMPRESSION = True
+CKEDITOR_IMAGE_QUALITY = 90
+SILENCED_SYSTEM_CHECKS = ["ckeditor.W001"]
 # For full list of toolbar options see:
 # https://ckeditor.com/latest/samples/old/toolbar/toolbar.html
 CKEDITOR_CONFIGS = {
@@ -142,7 +163,7 @@ CKEDITOR_CONFIGS = {
             {
                 'name': 'tools',
                 'items': [
-                    'NumberedList', 'Table', 'Format', 'Source',
+                    'NumberedList', 'Table', 'Image', 'Format', 'Source',
                     '-',
                     'Outdent', 'Indent', 'BidiLtr', 'BidiRtl',
                     '-',

@@ -182,7 +182,8 @@ class TextFolioStackedInline(admin.StackedInline):
         'image_hide',
         'image_preview',
         ('transcription', 'translation'),
-        'transliteration'
+        'transliteration',
+        'palaeography'
     )
     readonly_fields = ('image_small', 'image_medium', 'image_large', 'image_preview')
 
@@ -430,6 +431,12 @@ class TextAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
+        ('Codex', {
+            'fields': (
+                'codex_images_location',
+            ),
+            'classes': ['collapse']
+        }),
         ('Gregorian Date (Converted from Original Dates)', {
             'fields': (
                 'gregorian_date_text',
@@ -597,6 +604,10 @@ class TextAdminView(GenericAdminView):
         if obj_old and obj_old.admin_principal_data_entry_person is None:
             obj.admin_principal_data_entry_person = request.user
 
+        # Ensure codex text has no whitespace at start/end when user copies and pastes URL
+        if obj.codex_images_location and len(obj.codex_images_location):
+            obj.codex_images_location = obj.codex_images_location.strip()
+
         # Set meta created data (if adding a new object)
         if obj.id is None:
             obj.meta_created_by = request.user
@@ -711,7 +722,7 @@ class PersonAdminView(GenericAdminView):
     Customise the Person section of the admin dashboard
     """
 
-    list_display = ('id', 'name', 'gender', 'profession')
+    list_display = ('id', 'name', 'gender', 'profession', 'count_persons')
     list_display_links = ('id', 'name')
     search_fields = ('id', 'name', 'name_unidecode')
     inlines = (
