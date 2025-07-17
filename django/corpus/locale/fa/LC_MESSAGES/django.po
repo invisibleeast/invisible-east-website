@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"POT-Creation-Date: 2025-07-17 10:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,6 +90,7 @@ msgstr ""
 #: corpus/templates/corpus/text-detail.html:35
 #: corpus/templates/corpus/text-detail.html:131
 #: corpus/templates/corpus/text-detail.html:148
+#: corpus/templates/corpus/text-list.html:157
 msgid "Tags"
 msgstr ""
 
@@ -121,19 +122,19 @@ msgstr "مهرها"
 
 #: corpus/templates/corpus/text-detail.html:133
 #: corpus/templates/corpus/text-detail.html:237
-#: corpus/templates/corpus/text-list.html:156
+#: corpus/templates/corpus/text-list.html:166
 msgid "Transcription"
 msgstr "نسخه‌برداری"
 
 #: corpus/templates/corpus/text-detail.html:136
 #: corpus/templates/corpus/text-detail.html:253
-#: corpus/templates/corpus/text-list.html:157
+#: corpus/templates/corpus/text-list.html:167
 msgid "Translation"
 msgstr "ترجمه"
 
 #: corpus/templates/corpus/text-detail.html:139
 #: corpus/templates/corpus/text-detail.html:221
-#: corpus/templates/corpus/text-list.html:158
+#: corpus/templates/corpus/text-list.html:168
 msgid "Transliteration"
 msgstr "رونویسی"
 
@@ -184,7 +185,7 @@ msgid "Seal"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:309
-#: corpus/templates/corpus/text-list.html:143
+#: corpus/templates/corpus/text-list.html:150
 msgid "Type"
 msgstr "نوع"
 
@@ -299,72 +300,79 @@ msgstr "نحوه جستجو"
 msgid "Search by Map"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:45
+#: corpus/templates/corpus/text-list.html:52
 msgid "Includes"
 msgstr "دارای"
 
-#: corpus/templates/corpus/text-list.html:58
-#: corpus/templates/corpus/text-list.html:145
+#: corpus/templates/corpus/text-list.html:65
+#: corpus/templates/corpus/text-list.html:152
 msgid "Dates (CE)"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:69
+#: corpus/templates/corpus/text-list.html:76
 msgid "Filters"
 msgstr "فیلترها"
 
-#: corpus/templates/corpus/text-list.html:89
+#: corpus/templates/corpus/text-list.html:96
 msgid "results found"
 msgstr "افته‌ها"
 
-#: corpus/templates/corpus/text-list.html:89
+#: corpus/templates/corpus/text-list.html:96
 msgid "of all"
 msgstr "از"
 
-#: corpus/templates/corpus/text-list.html:89
+#: corpus/templates/corpus/text-list.html:96
 msgid "Corpus Texts"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:93
+#: corpus/templates/corpus/text-list.html:100
 msgid "Sort by"
 msgstr "مرتب کردن بر اساس"
 
-#: corpus/templates/corpus/text-list.html:132
+#: corpus/templates/corpus/text-list.html:139
 msgid "In IEDC since"
 msgstr "تاریخ اضافه‌شدن به پایگاه دیجیتال شرق مکنون"
 
-#: corpus/templates/corpus/text-list.html:142
+#: corpus/templates/corpus/text-list.html:149
 msgid "Primary Language"
 msgstr "زبان اصلی"
 
-#: corpus/templates/corpus/text-list.html:144
+#: corpus/templates/corpus/text-list.html:149
+#: corpus/templates/corpus/text-list.html:150
+#: corpus/templates/corpus/text-list.html:151
+#: corpus/templates/corpus/text-list.html:152
+msgid "Unknown"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:151
 msgid "Writing Support"
 msgstr "سطح نوشتار"
 
-#: corpus/templates/corpus/text-list.html:163
+#: corpus/templates/corpus/text-list.html:173
 msgid "Not yet approved"
 msgstr "در دست تأیید"
 
-#: corpus/templates/corpus/text-list.html:190
+#: corpus/templates/corpus/text-list.html:200
 msgid "First"
 msgstr "اولین"
 
-#: corpus/templates/corpus/text-list.html:196
+#: corpus/templates/corpus/text-list.html:206
 msgid "Previous"
 msgstr "قبلی"
 
-#: corpus/templates/corpus/text-list.html:203
+#: corpus/templates/corpus/text-list.html:213
 msgid "Page"
 msgstr "صفحه"
 
-#: corpus/templates/corpus/text-list.html:203
+#: corpus/templates/corpus/text-list.html:213
 msgid "of"
 msgstr "از"
 
-#: corpus/templates/corpus/text-list.html:211
+#: corpus/templates/corpus/text-list.html:221
 msgid "Next"
 msgstr "بعدی"
 
-#: corpus/templates/corpus/text-list.html:217
+#: corpus/templates/corpus/text-list.html:227
 msgid "Last"
 msgstr "آخرین"
 

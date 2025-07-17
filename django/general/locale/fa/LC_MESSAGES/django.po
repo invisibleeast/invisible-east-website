@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"POT-Creation-Date: 2025-07-17 10:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1129,11 +1129,11 @@ msgstr ""
 "متخصصان مناسب باشند. در اینجا یک راهنمای گام به گام برای کمک به شما در "
 "جستجوی مؤثر در پایگاه دیجیتالی شرق مکنون آورده شده است:"
 
-#: general/templates/general/about-search.html:16
-msgid "Basic Search"
-msgstr "جستجوی ساده"
+#: general/templates/general/about-search.html:17
+msgid "Search Type"
+msgstr ""
 
-#: general/templates/general/about-search.html:18
+#: general/templates/general/about-search.html:19
 msgid ""
 "Type a word or phrase into the search box, in English or the original "
 "language."
@@ -1141,11 +1141,11 @@ msgstr ""
 "یک کلمه یا عبارت را در جعبه جستجو وارد کنید، چه به زبان انگلیسی و چه به زبان "
 "اصلی."
 
-#: general/templates/general/about-search.html:19
+#: general/templates/general/about-search.html:20
 msgid "Press \"+\" to add another search field."
 msgstr "برای اضافه کردن یک مورد جستجوی دیگر، روی دکمه '+' کلیک کنید."
 
-#: general/templates/general/about-search.html:20
+#: general/templates/general/about-search.html:21
 msgid ""
 "Use \"or\" for terms containing either entry, and \"and\" for texts "
 "containing both (click to toggle between them)."
@@ -1154,59 +1154,59 @@ msgstr ""
 "متونی که هر دو ورودی را شامل می‌شوند از 'و' استفاده کنید (با کلیک روی آن‌ها "
 "می‌توانید بین این دو یکی را انتخاب کنید)."
 
-#: general/templates/general/about-search.html:23
+#: general/templates/general/about-search.html:33
 msgid "Includes"
 msgstr "دارای"
 
-#: general/templates/general/about-search.html:25
+#: general/templates/general/about-search.html:35
 msgid ""
 "There are numerous checkboxes you can check/uncheck to help refine searches, "
 "including:"
 msgstr ""
 
-#: general/templates/general/about-search.html:27
+#: general/templates/general/about-search.html:37
 msgid "Transcription"
 msgstr "نسخه‌برداری"
 
-#: general/templates/general/about-search.html:28
+#: general/templates/general/about-search.html:38
 msgid "Translation"
 msgstr "ترجمه"
 
-#: general/templates/general/about-search.html:29
+#: general/templates/general/about-search.html:39
 msgid "Transliteration"
 msgstr "رونویسی"
 
-#: general/templates/general/about-search.html:30
+#: general/templates/general/about-search.html:40
 msgid "Image"
 msgstr "عکس"
 
-#: general/templates/general/about-search.html:31
+#: general/templates/general/about-search.html:41
 msgid "Palaeography"
 msgstr "پالئوگرافی"
 
-#: general/templates/general/about-search.html:32
+#: general/templates/general/about-search.html:42
 msgid "Seal"
 msgstr "مهر"
 
-#: general/templates/general/about-search.html:33
+#: general/templates/general/about-search.html:43
 msgid "Codex"
 msgstr ""
 
-#: general/templates/general/about-search.html:37
+#: general/templates/general/about-search.html:47
 msgid "Dates (CE)"
 msgstr ""
 
-#: general/templates/general/about-search.html:39
+#: general/templates/general/about-search.html:49
 msgid ""
 "You can filter results to show only texts after a chosen century and/or "
 "before another chosen century."
 msgstr ""
 
-#: general/templates/general/about-search.html:42
+#: general/templates/general/about-search.html:52
 msgid "Filters"
 msgstr "فیلترها"
 
-#: general/templates/general/about-search.html:44
+#: general/templates/general/about-search.html:54
 msgid ""
 "There are numerous filters which can be used to help refine searches and "
 "navigate the IEDC's extensive corpus. If you were only interested in "
@@ -1219,56 +1219,56 @@ msgstr ""
 "می‌توانید از منوی کشویی «زبان اصلی» گزینه «فارسی (خط عربی)» را انتخاب کنید. "
 "فیلترها عبارتند از:"
 
-#: general/templates/general/about-search.html:47
+#: general/templates/general/about-search.html:57
 msgid "Primary Language"
 msgstr "زبان اصلی"
 
-#: general/templates/general/about-search.html:48
+#: general/templates/general/about-search.html:58
 msgid "Additional Languages"
 msgstr "زبان‌های دیگر"
 
-#: general/templates/general/about-search.html:49
+#: general/templates/general/about-search.html:59
 msgid "Collection"
 msgstr "مجموعه"
 
-#: general/templates/general/about-search.html:50
+#: general/templates/general/about-search.html:60
 msgid "Corpus"
 msgstr "ایگاه"
 
-#: general/templates/general/about-search.html:51
+#: general/templates/general/about-search.html:61
 msgid "Type of Text"
 msgstr "نوع متن"
 
-#: general/templates/general/about-search.html:52
+#: general/templates/general/about-search.html:62
 msgid "Writing Support"
 msgstr "سطح نوشتار"
 
-#: general/templates/general/about-search.html:55
+#: general/templates/general/about-search.html:65
 msgid "Sort By"
 msgstr "مرتب کردن بر اساس"
 
-#: general/templates/general/about-search.html:57
+#: general/templates/general/about-search.html:67
 msgid "Choose how to sort your results by:"
 msgstr "می‌توانید نتایج جستجوی خود را با استفاده از یکی از روش‌ها مرتب کنید:"
 
-#: general/templates/general/about-search.html:61
+#: general/templates/general/about-search.html:71
 msgid ""
 "Shelfmark: Organised alphanumerically by the holding institution or library."
 msgstr ""
 "شماره قفسه: سازمان‌دهی به ‌صورت الفبایی و عددی بر اساس موسسه یا کتابخانه "
 "نگهدارنده."
 
-#: general/templates/general/about-search.html:62
+#: general/templates/general/about-search.html:72
 msgid ""
 "Converted Gregorian Date: The document's production date in the Gregorian "
 "calendar."
 msgstr "تاریخ میلادی: تاریخ تولید سند در تقویم میلادی."
 
-#: general/templates/general/about-search.html:63
+#: general/templates/general/about-search.html:73
 msgid "IEDC Input Date: Date of upload onto the Invisible East Digital Corpus."
 msgstr "تاریخ ورودی به پایگاه: تاریخ آپلود سند در پایگاه دیجیتال شرق مکنون."
 
-#: general/templates/general/about-search.html:64
+#: general/templates/general/about-search.html:74
 msgid "Number of folios: The number of folios in a given text."
 msgstr "تعداد برگ‌ها: تعداد برگ‌های موجود در یک متن خاص."
 
@@ -1604,3 +1604,6 @@ msgstr "وبلاگ شرق مکنون "
 #: general/templates/general/welcome.html:112
 msgid "afterlink-ieblog"
 msgstr "بیشتر بخوانید!"
+
+#~ msgid "Basic Search"
+#~ msgstr "جستجوی ساده"

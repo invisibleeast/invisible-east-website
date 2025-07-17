@@ -51,8 +51,8 @@
     /* ---------- Corpus: List ---------- */
 
     #corpus-text-list {
-        width: calc(100% - 27em);
-        margin-left: 27em;
+        width: calc(100% - 20em);
+        margin-left: 20em;
     }
 
     #corpus-text-list-options-toggler {

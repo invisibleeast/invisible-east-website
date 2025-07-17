@@ -683,6 +683,17 @@ class Text(models.Model):
         return f'The Gregorian calendar: {str}' if len(str) else None
 
     @property
+    def gregorian_date_listview(self):
+        if self.gregorian_date_text:
+            return self.gregorian_date_text
+        elif self.gregorian_date:
+            return self.gregorian_date
+        elif self.gregorian_date_range_start:
+            return self.gregorian_date_range_start
+        elif self.gregorian_date_range_end:
+            return self.gregorian_date_range_end
+
+    @property
     def admin_contributors_list(self):
         if self.admin_contributors:
             return ", ".join([str(c) for c in self.admin_contributors.all()])

@@ -1,3 +1,7 @@
+// Tooltips
+
+$('label[title], .corpus-text-list-options-search-type-button').attr('data-placement', 'bottom').tooltip();
+
 // Click mobile toggle button on corpus-text-list-options 
 $('#corpus-text-list-options-toggler').on('click', function(){
     // Hide
@@ -37,17 +41,25 @@ function showFilterResetButton(filter){
     else clearButton.hide();
 }
 
-// Toggle search type (i.e. regex or not)
-$('#corpus-text-list-options-search-toggletype').on('click', function(){
-    $(this).toggleClass('active');
-    $('#corpus-text-list-options-search-type').val($(this).hasClass('active') ? 'regex' : '');
+// Set search type (i.e. general or regex)
+$('.corpus-text-list-options-search-type-button').on('click', function(){
+    // Active status
+    $('.corpus-text-list-options-search-type-button').removeClass('active');
+    $(this).addClass('active');
+    // Form value
+    let searchType = $(this).attr('data-type');
+    $('#corpus-text-list-options-search-type').val(searchType);
+    // Set placeholder text of search boxes
+    let placeholder = 'Search all fields by keyword';
+    if (searchType === 'regex') placeholder = 'Search all fields with RegEx'
+    $('.corpus-text-list-options-search-fields-instance input').first().attr('placeholder', placeholder);
 });
 
 // Add a search box
 function addSearchBox(){
     let isFirstInstance = Boolean($('.corpus-text-list-options-search-fields-instance').length == 0);
     // Set HTML, but only include operator and remove buttons if this isn't the first instance
-    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Toggle or/and">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search" placeholder="Search all fields by keyword">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary" title="Search"><i class="fas fa-search"></i></button>`) + `</div>`;
+    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Toggle or/and">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary" title="Search"><i class="fas fa-search"></i></button>`) + `</div>`;
     // Append HTML
     $('#corpus-text-list-options-search-fields').append(searchInputHtml);
 }
@@ -184,7 +196,9 @@ new URL(window.location.href).searchParams.forEach(function(value, key){
 });
 // Search Type (i.e. regex or not)
 if (new URL(window.location.href).searchParams.get('search_type') == 'regex'){
-    $('#corpus-text-list-options-search-toggletype').trigger('click');
+    $('#corpus-text-list-options-search-type-regex').trigger('click');
+} else {
+    $('#corpus-text-list-options-search-type-general').trigger('click');
 }
 
 
@@ -204,7 +218,7 @@ $('.corpus-text-list-items-item-text-tags span').on('click', function(e){
 //
 
 function htmlSearchCriteriaItem(inputId, inputType, label, value){
-    return `<div class="corpus-text-list-searchcriteria-content-item" data-input-id="${inputId}" data-input-type="${inputType}" data-input-value="${value}" title="Remove this search criteria"><strong>${label}:</strong> ${value}</div>`;
+    return `<div class="corpus-text-list-searchcriteria-content-item" data-input-id="${inputId}" data-input-type="${inputType}" data-input-value="${value}" title="Remove this search criteria"><i class="fas fa-times-circle"></i><strong>${label}:</strong> ${value} </div>`;
 }
 
 function htmlSearchCriteria(){

@@ -13,12 +13,22 @@
         <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/NfxrSA1BaOM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
-    <h3>{% translate "Basic Search" %}</h3>
-    <ul class="bullet-image">
-        <li>{% translate "Type a word or phrase into the search box, in English or the original language." %}</li>
-        <li>{% translate 'Press "+" to add another search field.' %}</li>
-        <li>{% translate 'Use "or" for terms containing either entry, and "and" for texts containing both (click to toggle between them).' %}</li>
-    </ul>
+    <div id="about-search-type">
+        <h3>{% translate "Search Type" %}</h3>
+        <ul class="bullet-image">
+            <li>{% translate "Type a word or phrase into the search box, in English or the original language." %}</li>
+            <li>{% translate 'Press "+" to add another search field.' %}</li>
+            <li>{% translate 'Use "or" for terms containing either entry, and "and" for texts containing both (click to toggle between them).' %}</li>
+            <li>
+                RegEx cheat sheet:
+                <ul>
+                    <li>If you're looking for a word with one missing letter, use a period. Two missing letters, use two periods or {2}. Increase the number in the curly brackets to increase the number of characters, or insert a range with a comma in between, ex. {0,5}</li>
+                    <li>If you don't know how many characters are missing, use .*</li>
+                    <li>If you know which characters you want, use square brackets to find multiple spellings, ex. [יו] for yud or vav</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 
     <h3>{% translate "Includes" %}</h3>
     <p>
