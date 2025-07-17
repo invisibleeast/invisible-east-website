@@ -22,8 +22,8 @@
         </div>
 
         <form method="GET" id="corpus-text-list-options">
-            <a id="corpus-text-list-options-extlink" href="{% url 'general:about-search' %}" target="_blank">{% translate 'How to Search' %} <i class="fas fa-question-circle"></i></a>
-            <a id="corpus-text-list-options-extlink" href="{% url 'corpus:map-iedctoponyms' %}" target="_blank">{% translate 'Search by Map' %} <i class="fas fa-map-marker-alt"></i></a>
+            <a id="corpus-text-list-options-extlink" href="{% url 'general:about-search' %}">{% translate 'How to Search' %} <i class="fas fa-question-circle"></i></a>
+            <a id="corpus-text-list-options-extlink" href="{% url 'corpus:map-iedctoponyms' %}">{% translate 'Search by Map' %} <i class="fas fa-map-marker-alt"></i></a>
 
             <!-- Search (allows for multiple search criteria) -->
             <div id="corpus-text-list-options-search">
@@ -32,7 +32,14 @@
                 <input type="hidden" id="corpus-text-list-options-search-operator" name="search_operator">
                 <input type="hidden" id="corpus-text-list-options-search-type" name="search_type">
                 <!-- Regex search toggle button -->
-                <div id="corpus-text-list-options-search-toggletype" title="Search using regular expressions">regex (.*)</div>
+                <div id="corpus-text-list-options-search-type">
+                    <strong>Search type:</strong>
+                    <!-- Buttons -->
+                    <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button" title="Search using keywords" data-type="">General</div><!--
+                    --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button" title="Search using regular expressions" data-type="regex">RegEx</div>
+                    <!-- Info link -->
+                    <a href="{% url 'general:about-search' %}#about-search-type"><i class="fas fa-info-circle"></i></a>
+                </div>
                 <!-- Search fields (dynamically filled via JS) -->
                 <div id="corpus-text-list-options-search-fields"></div>
                 <!-- Add new search field instance -->
@@ -138,17 +145,20 @@
                             <div class="corpus-text-list-items-item-text-details-summary" dir="ltr">{{ object.summary_of_content_preview }}</div>
                         {% endif %}
                         <dl>
-                            <div><dt>{% translate 'Primary Language' %}</dt><dd>{{ object.primary_language }}</dd></div>
-                            <div><dt>{% translate 'Type' %}</dt><dd>{{ object.type }}</dd></div>
-                            <div><dt>{% translate 'Writing Support' %}</dt><dd>{{ object.writing_support | title }}</dd></div>
-                            <div><dt>{% translate 'Dates (CE)' %}</dt><dd>{{ object.gregorian_date_full }}</dd></div>
+                            <div><dt>{% translate 'Primary Language' %}</dt><dd>{% if object.primary_language %}{{ object.primary_language }}{% else %}{% translate 'Unknown' %}{% endif %}</dd></div>
+                            <div><dt>{% translate 'Type' %}</dt><dd>{% if object.type %}{{ object.type }}{% else %}{% translate 'Unknown' %}{% endif %}</dd></div>
+                            <div><dt>{% translate 'Writing Support' %}</dt><dd>{% if object.writing_support %}{{ object.writing_support | title }}{% else %}{% translate 'Unknown' %}{% endif %}</dd></div>
+                            <div><dt>{% translate 'Dates (CE)' %}</dt><dd>{% if object.gregorian_date_listview %}{{ object.gregorian_date_listview }}{% else %}{% translate 'Unknown' %}{% endif %}</dd></div>
                         </dl>
                     </div>
-                    <div class="corpus-text-list-items-item-text-tags">
-                        {% for tag in object.tags %}
-                            <span data-tagid="{{ tag.id }}">{{ tag.name }}</span>
-                        {% endfor %}
-                    </div>
+                    {% if object.tags %}
+                        <div class="corpus-text-list-items-item-text-tags">
+                            <strong>{% translate 'Tags' %}: </strong>
+                            {% for tag in object.tags %}
+                                <span data-tagid="{{ tag.id }}">{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
                 <!-- Booleans -->
                 <div class="corpus-text-list-items-item-booleans {% if LANGUAGE_CODE == 'fa' %}rtl{% else %}ltr{% endif %}">

@@ -558,7 +558,7 @@ class TextListView(ListView):
 
         # Sort
         # Establish the sort direction (asc/desc) and the field to sort by, from the self.request
-        sort = self.request.GET.get('sort', 'id')
+        sort = self.request.GET.get('sort', '?')
         sort_dir = '-' if sort.startswith('-') else ''
         sort_pre_length = len(f"{sort_dir}{self.sort_pre_count_value}")  # e.g. '-numerical_' for descending numerical
         # Count sorting (e.g. sort by count of related items)
@@ -623,6 +623,12 @@ class TextListView(ListView):
         # Includes (aka checkbox filters)
         context['options_includes'] = [
             {
+                'filter_id': f'{filter_pre_bl}text_folios__transliteration',
+                'filter_name': 'Transliteration',
+                'filter_name_fa': 'رونویسی',
+                'filter_helptext': 'a rendition of a text in another script, preserving pronunciation'
+            },
+            {
                 'filter_id': f'{filter_pre_bl}text_folios__transcription',
                 'filter_name': 'Transcription',
                 'filter_name_fa': 'نسخه‌برداری ',
@@ -632,12 +638,6 @@ class TextListView(ListView):
                 'filter_id': f'{filter_pre_bl}text_folios__translation',
                 'filter_name': 'Translation',
                 'filter_name_fa': 'ترجمه'
-            },
-            {
-                'filter_id': f'{filter_pre_bl}text_folios__transliteration',
-                'filter_name': 'Transliteration',
-                'filter_name_fa': 'رونویسی',
-                'filter_helptext': 'a rendition of a text in another script, preserving pronunciation'
             },
             {
                 'filter_id': f'{filter_pre_bl}text_folios__image',
