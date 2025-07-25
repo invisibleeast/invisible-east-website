@@ -24,6 +24,7 @@
                 {% endfor %}
             </select>
             <span class="input-clear"><i class="fas fa-times-circle"></i></span>
+            {% if f.info_link %}<a href="{{ f.info_link }}"><i class="fas fa-info-circle"></i></a>{% endif %}
         {% endif %}
     </div>
 {% endfor %}

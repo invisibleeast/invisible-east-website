@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 10:17+0100\n"
+"POT-Creation-Date: 2025-07-19 10:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -286,6 +286,22 @@ msgstr ""
 msgid "Search by Map"
 msgstr ""
 
+#: corpus/templates/corpus/text-list.html:38
+msgid "Search using keywords"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:38
+msgid "General"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:39
+msgid "Search using regular expressions"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:39
+msgid "RegEx"
+msgstr ""
+
 #: corpus/templates/corpus/text-list.html:52
 msgid "Includes"
 msgstr ""
@@ -297,6 +313,10 @@ msgstr ""
 
 #: corpus/templates/corpus/text-list.html:76
 msgid "Filters"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:93
+msgid "Results"
 msgstr ""
 
 #: corpus/templates/corpus/text-list.html:96
@@ -346,18 +366,18 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:213
+#: corpus/templates/corpus/text-list.html:214
 msgid "Page"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:213
+#: corpus/templates/corpus/text-list.html:216
 msgid "of"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:221
+#: corpus/templates/corpus/text-list.html:226
 msgid "Next"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:227
+#: corpus/templates/corpus/text-list.html:232
 msgid "Last"
 msgstr ""

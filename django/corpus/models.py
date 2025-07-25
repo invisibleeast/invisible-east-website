@@ -471,7 +471,7 @@ class Text(models.Model):
     # General
     shelfmark = models.CharField(max_length=1000, help_text="If this Corpus Text doesn't have a shelfmark then insert another value here to use as a title, such as a catalogue number or a brief description. If this Corpus Text is part of reused sheet that shares a shelfmark with another Corpus Text then append 'recto' or 'verso' to this shelfmark.", verbose_name="Shelfmark / Title")
     collection = models.ForeignKey('SlTextCollection', on_delete=models.RESTRICT, related_name=related_name)
-    corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name, verbose_name='Findspots')
+    corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name, verbose_name='Groups')
     primary_language = models.ForeignKey('SlTextLanguage', on_delete=models.RESTRICT, related_name=f'{related_name}_primary')
     additional_languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True, help_text="Don't include the primary language. Only include additional languages/scripts that also appear in the text.")
     type = models.ForeignKey('SlTextType', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
@@ -662,11 +662,11 @@ class Text(models.Model):
     @property
     def gregorian_date_range_str(self):
         if self.gregorian_date_range_start and self.gregorian_date_range_end:
-            return f'Estimated date range: {self.gregorian_date_range_start}-{self.gregorian_date_range_end}'
+            return f'{self.gregorian_date_range_start}-{self.gregorian_date_range_end}'
         elif self.gregorian_date_range_start:
-            return f'Estimated date: {self.gregorian_date_range_start}'
+            return self.gregorian_date_range_start
         elif self.gregorian_date_range_end:
-            return f'Estimated date: {self.gregorian_date_range_end}'
+            return self.gregorian_date_range_end
         else:
             return ''
 
@@ -901,11 +901,11 @@ class TextDate(models.Model):
     @property
     def date_range_str(self):
         if self.date_range_start and self.date_range_end:
-            return f'Estimated date range: {self.date_range_start}-{self.date_range_end}'
+            return f'{self.date_range_start}-{self.date_range_end}'
         elif self.date_range_start:
-            return f'Estimated date: {self.date_range_start}'
+            return self.date_range_start
         elif self.date_range_end:
-            return f'Estimated date: {self.date_range_end}'
+            return self.date_range_end
         else:
             return ''
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-14 19:27+0100\n"
+"POT-Creation-Date: 2025-07-25 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,18 +75,22 @@ msgid "Glossary"
 msgstr "واژه‌نامه"
 
 #: core/templates/base.html:126
+msgid "Typology"
+msgstr "نوع شناسی"
+
+#: core/templates/base.html:129
 msgid "Technical/Software"
 msgstr "فنی/نرم‌افزار"
 
-#: core/templates/base.html:129
+#: core/templates/base.html:132
 msgid "Credits"
 msgstr "مشارکت‌کنندگان"
 
-#: core/templates/base.html:146
+#: core/templates/base.html:149
 msgid "Project"
 msgstr "پروژه"
 
-#: core/templates/base.html:153
+#: core/templates/base.html:156
 msgid "Admin"
 msgstr "مدیریت"
 
@@ -153,7 +157,7 @@ msgstr "حساب کاربری"
 
 #: core/templates/snippets/footer.html:49
 msgid "Login"
-msgstr ""
+msgstr "ورود"
 
 #: core/templates/snippets/footer.html:53
 msgid "© University of Oxford"

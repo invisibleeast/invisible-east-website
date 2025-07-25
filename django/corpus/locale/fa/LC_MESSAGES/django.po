@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 10:17+0100\n"
+"POT-Creation-Date: 2025-07-19 10:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr "نشان دادن ترجمه"
 
 #: corpus/templates/corpus/snippets/foliotext-options.html:19
 msgid "Show Transliterations"
-msgstr ""
+msgstr "نشان دادن نسخهبرداری"
 
 #: corpus/templates/corpus/snippets/foliotext-options.html:24
 msgid "Show Links to Tags"
@@ -54,7 +54,7 @@ msgstr "نشان دادن پیوند برچسب‌ها"
 
 #: corpus/templates/corpus/snippets/foliotext-options.html:29
 msgid "Link to Tag"
-msgstr ""
+msgstr "وصل کردن به برچسب"
 
 #: corpus/templates/corpus/text-detail.html:17
 msgid ""
@@ -85,14 +85,14 @@ msgstr "برگ‌ها"
 #: corpus/templates/corpus/text-detail.html:34
 #: corpus/templates/corpus/text-detail.html:93
 msgid "Codex"
-msgstr ""
+msgstr "کتاب خطی"
 
 #: corpus/templates/corpus/text-detail.html:35
 #: corpus/templates/corpus/text-detail.html:131
 #: corpus/templates/corpus/text-detail.html:148
 #: corpus/templates/corpus/text-list.html:157
 msgid "Tags"
-msgstr ""
+msgstr "برچسبها"
 
 #: corpus/templates/corpus/text-detail.html:36
 msgid "Transliterations"
@@ -109,7 +109,7 @@ msgstr "ترجمه‌ها"
 #: corpus/templates/corpus/text-detail.html:39
 #: corpus/templates/corpus/text-detail.html:269
 msgid "Palaeography"
-msgstr ""
+msgstr "پالئوگرافی"
 
 #: corpus/templates/corpus/text-detail.html:40
 #: corpus/templates/corpus/text-detail.html:282
@@ -140,19 +140,19 @@ msgstr "رونویسی"
 
 #: corpus/templates/corpus/text-detail.html:188
 msgid "View in Transcriptions"
-msgstr ""
+msgstr "نمایش در رونویسیها"
 
 #: corpus/templates/corpus/text-detail.html:193
 msgid "View in Translations"
-msgstr ""
+msgstr "نمایش در ترجمهها"
 
 #: corpus/templates/corpus/text-detail.html:198
 msgid "View in Transliterations"
-msgstr ""
+msgstr "نمایش در نسخهبرداریها"
 
 #: corpus/templates/corpus/text-detail.html:210
 msgid "This folio doesn't have any tags yet. Please check back soon."
-msgstr ""
+msgstr "این برگ هنوز برچسبی ندارد. لطفاً بعداً مراجعه کنید."
 
 #: corpus/templates/corpus/text-detail.html:284
 msgid ""
@@ -182,7 +182,7 @@ msgstr "را مشاهده کنید."
 
 #: corpus/templates/corpus/text-detail.html:299
 msgid "Seal"
-msgstr ""
+msgstr "مهر"
 
 #: corpus/templates/corpus/text-detail.html:309
 #: corpus/templates/corpus/text-list.html:150
@@ -191,31 +191,31 @@ msgstr "نوع"
 
 #: corpus/templates/corpus/text-detail.html:315
 msgid "Inscription"
-msgstr ""
+msgstr "کتیبه"
 
 #: corpus/templates/corpus/text-detail.html:318
 msgid "Measurements"
-msgstr ""
+msgstr "ابعاد"
 
 #: corpus/templates/corpus/text-detail.html:321
 msgid "Descriptions"
-msgstr ""
+msgstr "توضیحات"
 
 #: corpus/templates/corpus/text-detail.html:324
 msgid "Colours"
-msgstr ""
+msgstr "رنگها"
 
 #: corpus/templates/corpus/text-detail.html:327
 msgid "Seal Imprints"
-msgstr ""
+msgstr "اثرهای مهر"
 
 #: corpus/templates/corpus/text-detail.html:343
 msgid "Previous Image"
-msgstr ""
+msgstr "عکس قبلی"
 
 #: corpus/templates/corpus/text-detail.html:345
 msgid "Next Image"
-msgstr ""
+msgstr "عکس بعدی"
 
 #: corpus/templates/corpus/text-detail.html:349
 msgid "Folio"
@@ -229,7 +229,7 @@ msgstr "فقط نشان دادن"
 #: corpus/templates/corpus/text-detail.html:482
 #: corpus/templates/corpus/text-detail.html:500
 msgid "Please select"
-msgstr ""
+msgstr "لطفاً انتخاب کنید"
 
 #: corpus/templates/corpus/text-detail.html:374
 msgid "Reset Image"
@@ -253,11 +253,11 @@ msgstr "گرداندن ساعت‌وار تصویر"
 
 #: corpus/templates/corpus/text-detail.html:388
 msgid "Fullscreen"
-msgstr ""
+msgstr "تمام صفحه"
 
 #: corpus/templates/corpus/text-detail.html:439
 msgid "Images courtesy of"
-msgstr ""
+msgstr "نمایش عکس به لطف"
 
 #: corpus/templates/corpus/text-detail.html:449
 #: corpus/templates/corpus/text-detail.html:474
@@ -278,7 +278,7 @@ msgstr "برچسب"
 
 #: corpus/templates/corpus/text-detail.html:508
 msgid "Create a new tag"
-msgstr ""
+msgstr "ساختن برچسب جدید"
 
 #: corpus/templates/corpus/text-detail.html:515
 msgid "Tag Details"
@@ -286,11 +286,11 @@ msgstr "جزئیات برچسب"
 
 #: corpus/templates/corpus/text-detail.html:521
 msgid "Draw on Image"
-msgstr ""
+msgstr "کشیدن روی صفحه"
 
 #: corpus/templates/corpus/text-detail.html:526
 msgid "Save Tag"
-msgstr ""
+msgstr "ذخیره کردن برچسب"
 
 #: corpus/templates/corpus/text-list.html:25
 msgid "How to Search"
@@ -298,7 +298,23 @@ msgstr "نحوه جستجو"
 
 #: corpus/templates/corpus/text-list.html:26
 msgid "Search by Map"
-msgstr ""
+msgstr "جستجو در نقشه"
+
+#: corpus/templates/corpus/text-list.html:38
+msgid "Search using keywords"
+msgstr "جستجو با استفاده از کلیدواژه"
+
+#: corpus/templates/corpus/text-list.html:38
+msgid "General"
+msgstr "کلی"
+
+#: corpus/templates/corpus/text-list.html:39
+msgid "Search using regular expressions"
+msgstr "جستجو با استفاده از عبارات متداول"
+
+#: corpus/templates/corpus/text-list.html:39
+msgid "RegEx"
+msgstr "عبارات متداول"
 
 #: corpus/templates/corpus/text-list.html:52
 msgid "Includes"
@@ -307,11 +323,15 @@ msgstr "دارای"
 #: corpus/templates/corpus/text-list.html:65
 #: corpus/templates/corpus/text-list.html:152
 msgid "Dates (CE)"
-msgstr ""
+msgstr "تاریخها (میلادی)"
 
 #: corpus/templates/corpus/text-list.html:76
 msgid "Filters"
 msgstr "فیلترها"
+
+#: corpus/templates/corpus/text-list.html:93
+msgid "Results"
+msgstr "نتایج"
 
 #: corpus/templates/corpus/text-list.html:96
 msgid "results found"
@@ -323,7 +343,7 @@ msgstr "از"
 
 #: corpus/templates/corpus/text-list.html:96
 msgid "Corpus Texts"
-msgstr ""
+msgstr "متونِ پیکره (Corpus)"
 
 #: corpus/templates/corpus/text-list.html:100
 msgid "Sort by"
@@ -342,7 +362,7 @@ msgstr "زبان اصلی"
 #: corpus/templates/corpus/text-list.html:151
 #: corpus/templates/corpus/text-list.html:152
 msgid "Unknown"
-msgstr ""
+msgstr "ناشناخته"
 
 #: corpus/templates/corpus/text-list.html:151
 msgid "Writing Support"
@@ -360,19 +380,19 @@ msgstr "اولین"
 msgid "Previous"
 msgstr "قبلی"
 
-#: corpus/templates/corpus/text-list.html:213
+#: corpus/templates/corpus/text-list.html:214
 msgid "Page"
 msgstr "صفحه"
 
-#: corpus/templates/corpus/text-list.html:213
+#: corpus/templates/corpus/text-list.html:216
 msgid "of"
 msgstr "از"
 
-#: corpus/templates/corpus/text-list.html:221
+#: corpus/templates/corpus/text-list.html:226
 msgid "Next"
 msgstr "بعدی"
 
-#: corpus/templates/corpus/text-list.html:227
+#: corpus/templates/corpus/text-list.html:232
 msgid "Last"
 msgstr "آخرین"
 

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block main %}
+
+<section class="container-fluid" id="about-typology">
+    <h2>{% translate "Typology of texts in IEDC" %}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>{% translate 'Type' %}</th>
+                <th>{% translate 'Sub-type' %}</th>
+                <th>{% translate 'Definition' %}</th>
+                <th>{% translate 'Included' %}</th>
+                <th>{% translate 'Excluded' %}</th>
+                <th>{% translate 'Comments' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>{% translate 'Legal' %}</strong></td>
+                <td>
+                    <ol>
+                        <li>{% translate 'Worship acts' %}</li>
+                        <li>{% translate 'Sale' %}</li>
+                        <li>{% translate 'Rent-hire' %}</li>
+                        <li>{% translate 'Partnership' %}</li>
+                        <li>{% translate 'Marriage' %}</li>
+                        <li>{% translate 'Divorce' %}</li>
+                        <li>{% translate 'Loan' %}</li>
+                        <li>{% translate 'Amicable Settlement' %}</li>
+                        <li>{% translate 'Preemption' %}</li>
+                        <li>{% translate 'Power of attorney' %}</li>
+                        <li>{% translate 'Slavery and Manumission' %}</li>
+                        <li>{% translate 'Inheritance' %}</li>
+                        <li>{% translate 'Donation' %}</li>
+                        <li>{% translate 'Transfer of money [or good]' %}</li>
+                        <li>{% translate 'Guarantee of liability' %}</li>
+                        <li>{% translate 'Loan, Debt' %}</li>
+                        <li>{% translate 'Penal rules' %}</li>
+                        <li>{% translate 'Personal Status' %}</li>
+                        <li>{% translate 'Testimony' %}</li>
+                        <li>{% translate 'Litigation' %}</li>
+                        <li>{% translate 'Jihad' %}</li>
+                    </ol>
+                </td>
+                <td>{% translate 'Document produced by or for a qāḍī court or legal or paralegal professional (eg. faqīh), often having probative or dispositive value' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Stand-alone deeds: testimonies, marriage contracts, bills of divorce, bills of sale, acknowledgments of debt, partnership agreements' %}</li>
+                        <li>{% translate 'Copies of deeds and summaries of cases in court registers' %}</li>
+                        <li>{% translate 'Legal queries and responsa' %}</li>
+                        <li>{% translate 'Communal decrees when formulated like legal documents, but also tag as #communal_decree' %}</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Tax receipts and orders of payment to or from the fisc (classed under administrative document)' %}</li>
+                        <li>{% translate 'Other administrative documents with legal force: this category is for court and private deeds only' %}</li>
+                        <li>{% translate 'Orders of payment (not involving the fisc)' %}</li>
+                        <li>{% translate 'Legal formularies' %}</li>
+                        <li>{% translate 'Private orders of payment' %}</li>
+                        <li>{% translate 'Lists of payment (not involving the fisc)' %}</li>
+                        <li>{% translate 'Commercial accounts' %}</li>
+                        <li>{% translate 'Price lists' %}</li>
+                    </ul>
+                </td>
+                <td>{% translate "Legal documents can contain witnesses’ signatures but don’t necessarily." %}</td>
+            </tr>
+            <tr>
+                <td><strong>{% translate 'Letter' %}</strong></td>
+                <td>
+                    <ol>
+                        <li>{% translate 'Complaint' %}</li>
+                        <li>{% translate 'Condolence' %}</li>
+                        <li>{% translate 'Support' %}</li>
+                        <li>{% translate 'Longing (ishtiyāq)' %}</li>
+                        <li>{% translate 'Congratulation' %}</li>
+                        <li>{% translate 'Convalescence' %}</li>
+                        <li>{% translate 'Gratitude' %}</li>
+                        <li>{% translate 'Displeasure' %}</li>
+                        <li>{% translate 'Invitation' %}</li>
+                        <li>{% translate 'Consultation' %}</li>
+                        <li>{% translate 'Apology' %}</li>
+                        <li>{% translate 'Loan request' %}</li>
+                        <li>{% translate 'Confidential note (mulaṭṭafa)' %}</li>
+                        <li>{% translate 'Commercial' %}</li>
+                        <li>{% translate 'Confirmation of receipt of letter' %}</li>
+                    </ol>
+                </td>
+                <td>{% translate 'Communication from one or more parties to one or more parties, named or unnamed. Usually contains full sentences with verbs' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Letters' %}</li>
+                        <li>{% translate 'Notes' %}</li>
+                        <li>{% translate 'Epistles' %}</li>
+                        <li>{% translate 'Petitions to private patrons or communal officials' %}</li>
+                        <li>{% translate 'Epistolary formularies with practical value' %}</li>
+                    </ul>
+                </td>
+                <td>{% translate 'Administrative (i.e. state) decrees, rescripts, petitions and reports (classed under administrative document)' %}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><strong>{% translate 'List or table' %}</strong></td>
+                <td>
+                    <ol>
+                        <li>{% translate 'Grocery' %}</li>
+                        <li>{% translate 'Payment' %}</li>
+                        <li>{% translate 'Charity' %}</li>
+                        <li>{% translate 'Commercial accounts' %}</li>
+                        <li>{% translate 'Prices' %}</li>
+                        <li>{% translate 'Inventory' %}</li>
+                    </ol>
+                </td>
+                <td>{% translate 'Items arranged in sequence, whether vertically or horizontally. A list has one column, a table has two or more columns; rarely contains verbs.' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Grocery lists' %}</li>
+                        <li>{% translate 'Lists of payment' %}</li>
+                        <li>{% translate 'Charity lists' %}</li>
+                        <li>{% translate 'Commercial accounts' %}</li>
+                        <li>{% translate 'Price lists' %}</li>
+                    </ul>
+                </td>
+                <td>{% translate 'state (fiscal) accounts' %}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><strong>{% translate 'Literary' %}</strong></td>
+                <td>
+                    <ol>
+                        <li>{% translate 'Poetry' %}</li>
+                        <li>{% translate 'Liturgy/prayer' %}</li>
+                        <li>{% translate 'Political history' %}</li>
+                        <li>{% translate 'Biographical' %}</li>
+                        <li>{% translate 'Lexicography' %}</li>
+                        <li>{% translate 'Science' %}</li>
+                        <li>{% translate 'Medicine' %}</li>
+                        <li>{% translate 'Scriptures' %}</li>
+                        <li>{% translate 'Exegesis' %}</li>
+                        <li>{% translate 'Mystical' %}</li>
+                    </ol>
+                </td>
+                <td>{% translate 'Long-form narrative, analytical or canonical texts, as well as poems; often artful and/or formal; usually intended for posterity.' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Poems' %}</li>
+                        <li>{% translate 'Prayerbooks' %}</li>
+                        <li>{% translate 'Tales' %}</li>
+                        <li>{% translate 'Anthologies' %}</li>
+                        <li>{% translate 'Chronicles' %}</li>
+                        <li>{% translate 'Biographical dictionaries' %}</li>
+                        <li>{% translate 'Scientific and medical works' %}</li>
+                        <li>{% translate 'Copies of transmitted religious works (Bible, Qurʾān, Talmud, Midrash)' %}</li>
+                        <li>{% translate 'Legal codes' %}</li>
+                        <li>{% translate "Occasional literary pieces such as sermons, liturgical poems and panegyrics intended for recitation in specific settings, even if they haven’t been anthologized — tag accordingly" %}</li>
+                        <li>{% translate 'Prayers for curative purposes are given the prayer sub-type' %}</li>
+                    </ul>
+                </td>
+                <td>{% translate '1-2 lines of a literary work jotted down in another context, e.g., trials of the pen when scribbled on other texts that we can categorize some other way. But if a fragment contains only literary trials of the pen, it is literary.' %}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><strong>{% translate 'Paraliterary' %}</strong></td>
+                <td>
+                    <ol>
+                        <li>{% translate 'Curative prescription' %}</li>
+                        <li>{% translate 'Calendar' %}</li>
+                        <li>{% translate 'Magic' %}</li>
+                        <li>{% translate 'Recipe' %}</li>
+                        <li>{% translate 'Colophon' %}</li>
+                        <li>{% translate 'Draft' %}</li>
+                    </ol>
+                </td>
+                <td>{% translate 'Texts that are neither documentary nor literary, and/or are highly specialized and/or highly formalised. The texts are less narrative or literary and less of the quotidian records that documents are.' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Medical prescriptions' %}</li>
+                        <li>{% translate 'Ephemerides, calendars and other astronomical aids' %}</li>
+                        <li>{% translate 'Amulets and other practical magical texts' %}</li>
+                        <li>{% translate 'Recipe' %}</li>
+                        <li>{% translate 'Colophon' %}</li>
+                        <li>{% translate 'Drafts of literary texts' %}</li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Cheques (these are legal); tax receipts (these are administrative)' %}</li>
+                        <li>{% translate 'Drafts of legal or administrative documents' %}</li>
+                    </ul>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><strong>{% translate 'Administrative' %}</strong></td>
+                <td>
+                    <ol>
+                        <li>{% translate 'Decree' %}</li>
+                        <li>{% translate 'Petition to state officials' %}</li>
+                        <li>{% translate 'Report' %}</li>
+                        <li>{% translate 'Receipt' %}</li>
+                        <li>{% translate 'Fiscal account/register' %}</li>
+                        <li>{% translate 'Order of payment (or other)' %}</li>
+                        <li>{% translate 'List' %}</li>
+                        <li>{% translate 'Internal correspondence' %}</li>
+                    </ol>
+                </td>
+                <td>{% translate 'Documents written by or to state officials in their capacity as officials, including private contractors (such as tax farmers)' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Decrees and rescripts' %}</li>
+                        <li>{% translate 'Petitions to state officials (even drafts or private copies)' %}</li>
+                        <li>{% translate 'Official reports' %}</li>
+                        <li>{% translate 'Tax receipts' %}</li>
+                        <li>{% translate 'Fiscal accounts' %}</li>
+                        <li>{% translate 'Lists of payment' %}</li>
+                        <li>{% translate 'Charity lists and poor rolls' %}</li>
+                        <li>{% translate '[Internal correspondence]' %}</li>
+                    </ul>
+                </td>
+                <td>{% translate 'letters or notes written by state officials acting as private persons (classed under letters)' %}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><strong>{% translate 'Unknown' %}</strong></td>
+                <td></td>
+                <td>{% translate 'Unknown is for quitters!' %}</td>
+                <td>
+                    <ul>
+                        <li>{% translate 'Illegible texts' %}</li>
+                        <li>{% translate 'Doodles' %}</li>
+                        <li>{% translate 'Pen trials' %}</li>
+                    </ul>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+{% include 'snippets/footer.html' %}
+
+{% endblock %}

@@ -111,6 +111,16 @@ $('.{{ filter_pre_gt }}, .{{ filter_pre_lt }}').on('change', function(){
     }
 });
 
+// Use Page Selector to go to specific page
+$('#corpus-text-list-pagination-current-pageselector').on('change', function(){
+    let newPage = $(this).val();
+    let maxPage = $(this).attr('max');
+    if (newPage > maxPage) newPage = maxPage;
+    let url = new URL(window.location.href);
+    url.searchParams.set('page', newPage);
+    window.location.href = url.toString();
+});
+
 // Toggle visibility of section content when clicking on section title
 $('.corpus-text-list-options-section-title').on('click', function(){
     $(this).next().toggle();

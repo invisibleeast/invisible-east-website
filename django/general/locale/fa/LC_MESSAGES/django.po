@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 10:17+0100\n"
+"POT-Creation-Date: 2025-07-25 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,28 +137,27 @@ msgstr "سوالات متداول"
 msgid ""
 "In this section, we have benefitted from the extensive experience of our "
 "colleagues working with documents from"
-msgstr ""
-"در این بخش، ما از تجربه گسترده همکاران خود که با اسناد مصری و دنیای عرب‌زبان "
-"گسترده‌تر کار کرده‌اند بهره برده‌ایم و برخی از راهنمایی‌های آنان را که برای "
-"پایگاه داده‌های دیجیتالی شرق مکنون نیز قابل اعمال است، به‌کار برده‌ایم."
+msgstr "در این بخش، ما از تجربه گسترده همکاران خود که با اسناد "
 
 #: general/templates/general/about-faqs.html:10
 msgid "Egypt"
-msgstr ""
+msgstr "مصر"
 
 #: general/templates/general/about-faqs.html:10
 msgid "and the wider"
-msgstr ""
+msgstr "ی و "
 
 #: general/templates/general/about-faqs.html:10
 msgid "Arabic-speaking world"
-msgstr ""
+msgstr "دنیای عرب‌زبان "
 
 #: general/templates/general/about-faqs.html:10
 msgid ""
 ", and have borrowed some of their guidance which is also applicable to the "
 "IEDC."
 msgstr ""
+"گسترده‌تر کار کرده‌اند بهره برده‌ایم و برخی از راهنمایی‌های آنان را که برای "
+"پایگاه داده‌های دیجیتالی شرق مکنون نیز قابل اعمال است، به‌کار برده‌ایم."
 
 #: general/templates/general/about-faqs.html:13
 msgid "The Invisible East Corpus"
@@ -256,7 +255,7 @@ msgstr "برای اطلاعات بیشتر، به "
 #: general/templates/general/about-faqs.html:36
 #: general/templates/general/about-faqs.html:103
 #: general/templates/general/about-faqs.html:126
-#: general/templates/general/welcome.html:65
+#: general/templates/general/welcome.html:67
 msgid "Research Tools"
 msgstr "ابزارهای پژوهشی"
 
@@ -265,7 +264,7 @@ msgid "afterlink-researchtools"
 msgstr "مراجعه کنید."
 
 #: general/templates/general/about-faqs.html:40
-#: general/templates/general/welcome.html:70
+#: general/templates/general/welcome.html:73
 msgid "The Invisible East Digital Corpus"
 msgstr "پایگاه دیجیتال شرق مکنون"
 
@@ -436,22 +435,23 @@ msgid ""
 "of six"
 msgstr ""
 "طبقه‌بندی‌ها: هر سند با یک شماره قفسه (شماره کالای موجود در مجموعه‌ای که در آن "
-"نگهداری می‌شود) عنوان‌گذاری شده و به یکی از شش نوع طبقه‌بندی شده است، که از "
-"پروژه مشهور "
+"نگهداری می‌شود) عنوان‌گذاری شده و به یکی از شش "
 
 #: general/templates/general/about-faqs.html:72
 msgid "types"
-msgstr ""
+msgstr "نوع"
 
 #: general/templates/general/about-faqs.html:72
 msgid ", as an adaptation from the long-established"
-msgstr ""
+msgstr "طبقه‌بندی شده است، که از پروژه مشهور "
 
 #: general/templates/general/about-faqs.html:72
 msgid ""
 "legal document, letter, list or table, paraliterary text, or state/"
 "administrative document."
 msgstr ""
+"اقتباس شده است: سند قانونی، نامه، فهرست یا جدول، متن شبه‌ادبی، یا سند دولتی/"
+"اداری."
 
 #: general/templates/general/about-faqs.html:73
 msgid ""
@@ -837,8 +837,8 @@ msgstr ""
 "آشنا شوند. پایگاه شرق مکنون یکی از همین پلتفرم‌های به‌اشتراک‌گذاری اطلاعات است."
 
 #: general/templates/general/about-glossary.html:7
-msgid "Glossary"
-msgstr "واژه‌نامه"
+msgid "Glossary of technical terms used in IEDC"
+msgstr "IEDC واژه‌نامهٔ اصطلاحات فنیِ به‌کاررفته در"
 
 #: general/templates/general/about-glossary.html:8
 msgid "data ontology"
@@ -985,42 +985,10 @@ msgstr ""
 "نگارش نسخه یا شناسایی کاتب آن."
 
 #: general/templates/general/about-glossary.html:39
-msgid "genres of text"
-msgstr "گونه‌های متن (genres of text)"
-
-#: general/templates/general/about-glossary.html:41
-msgid ""
-"<strong>legal document:</strong> a contract, testimony or other document "
-"produced by or for a legal court presided over by a qāḍī or other legal "
-"professional (e.g. faqīh), often with probative or dispositive value"
-msgstr ""
-"<strong>سند حقوقی (legal document):</strong> قرارداد، شهادت‌نامه‌ یا سندی دیگر "
-"که توسط یا برای دادگاه حقوقی بوسیله قاضی و یا یک متخصص حقوقی دیگر (مثل فقیه) "
-"تنظیم شده و معمولاً دارای ارزش اثباتی یا اجرایی است"
-
-#: general/templates/general/about-glossary.html:42
-msgid ""
-"<strong><em>piyyut</em>:</strong> liturgical poetry (Hebrew; pl. "
-"<em>piyyutim</em>)"
-msgstr ""
-"<strong>پیوت (piyyut):</strong> شعر مذهبی عبری؛ (جمع: piyyutim)، نوعی سروده‌ی "
-"عبادی برای استفاده در مراسم مذهبی یهودی"
-
-#: general/templates/general/about-glossary.html:43
-msgid ""
-"<strong><em>responsum</em>:</strong> answer to a legal query by a and "
-"Islamic or rabbinic authority, usually made in writing (Latin; pl. "
-"<em>responsa, </em>Ar. <em>istifṭā</em>)"
-msgstr ""
-"<strong>رساله‌ی فقهی (responsum):</strong> پاسخ به یک سؤال حقوقی که معمولاً "
-"به‌صورت مکتوب توسط یک مرجع اسلامی یا ربانی ارائه می‌شود (لاتین؛ جمع responsa، "
-"عربی: استفتاء)"
-
-#: general/templates/general/about-glossary.html:45
 msgid "dating and calendar systems"
 msgstr "تاریخ‌گذاری و نظام‌های تقویمی (dating and calendar systems)"
 
-#: general/templates/general/about-glossary.html:46
+#: general/templates/general/about-glossary.html:40
 msgid ""
 "IEDC documents use a range of calendar systems depending on the "
 "document&rsquo;s use and provenance. Many documents are not explicitly "
@@ -1034,7 +1002,7 @@ msgstr ""
 "هم تاریخ مندرج در سند و هم معادل آن به میلادی در هر مدخل درج شده‌اند. همچنین "
 "می‌توانید از مبدل تقویم برای تبدیل تاریخ‌ها استفاده کنید."
 
-#: general/templates/general/about-glossary.html:47
+#: general/templates/general/about-glossary.html:41
 msgid ""
 "The following is a non-exhaustive list of the most common dating systems you "
 "will encounter in IEDC documents, as well as their relationship to common "
@@ -1043,7 +1011,7 @@ msgstr ""
 "پائین‌تر، فهرست غیرجامع از رایج‌ترین نظام‌های تقویمی که در اسناد IEDC با آن "
 "مواجه می‌شوید به همراه نسبتشان به تقویم‌های متداول آمده است:"
 
-#: general/templates/general/about-glossary.html:49
+#: general/templates/general/about-glossary.html:43
 msgid ""
 "<strong>Common Era (CE):</strong> This is the western calendar in everyday "
 "use, originally the Julian calendar, established in 45 BCE (before the "
@@ -1056,7 +1024,7 @@ msgstr ""
 "واتیکان در سال ۱۵۸۲ میلادی به «تقویم گرگورین» تبدیل شد. تاریخ‌های تبدیل‌شده در "
 "IEDC همه به تاریخ گرگورین هستند."
 
-#: general/templates/general/about-glossary.html:50
+#: general/templates/general/about-glossary.html:44
 msgid ""
 "<strong>Hijrī calendar (AH)</strong>: The Islamic calendar, a lunar calendar "
 "of twelve months. The lunar year is 11 days shorter than the solar year, so "
@@ -1070,7 +1038,7 @@ msgstr ""
 "رمضان ممکن است در هر فصلی از سال قرار بگیرد). مبدأ این تقویم سال ۶۲۲ میلادی "
 "است، یعنی سالی که پیامبر اسلام به همراه یارانش از مکه به مدینه هجرت کرد."
 
-#: general/templates/general/about-glossary.html:51
+#: general/templates/general/about-glossary.html:45
 msgid ""
 "<strong>Era of Bactrian Docments (EBD)</strong>: The exact start date of the "
 "Bactrian calendar has been debated, but the consensus seems to be that it "
@@ -1081,7 +1049,7 @@ msgstr ""
 "دقیق آغاز این تقویم مورد بحث بوده، اما اجماع بر آن است که از نوروز/اکتبر سال "
 "۲۲۳ میلادی آغاز می‌شود، که با آغاز سلطنت اردشیر یکم مطابقت دارد."
 
-#: general/templates/general/about-glossary.html:53
+#: general/templates/general/about-glossary.html:47
 msgid ""
 "Ardashīr I (r. 224&ndash;42). This dating is reflected in the reworked "
 "edition of the Bactrian Documents, following the argumentation of "
@@ -1093,7 +1061,7 @@ msgstr ""
 "Blois) استفاده شده است. ماه‌ها و روزها یا به صورت بلخی هستند یا اینکه تحت "
 "تأثیر تقویم زرتشتی."
 
-#: general/templates/general/about-glossary.html:55
+#: general/templates/general/about-glossary.html:49
 msgid ""
 "<strong>Seleucid calendar (Sel. or SE; also Anno Graecorum or AG)</strong>: "
 "Though this calendar is now obsolete in Jewish practice, for the numbering "
@@ -1131,7 +1099,7 @@ msgstr ""
 
 #: general/templates/general/about-search.html:17
 msgid "Search Type"
-msgstr ""
+msgstr "نوع جستجو"
 
 #: general/templates/general/about-search.html:19
 msgid ""
@@ -1163,6 +1131,7 @@ msgid ""
 "There are numerous checkboxes you can check/uncheck to help refine searches, "
 "including:"
 msgstr ""
+"برای بهینه‌سازی جستجوی خود می‌توانید هرچند تا از جعبه‌های روبرو را تیک بزنید:"
 
 #: general/templates/general/about-search.html:37
 msgid "Transcription"
@@ -1190,17 +1159,19 @@ msgstr "مهر"
 
 #: general/templates/general/about-search.html:43
 msgid "Codex"
-msgstr ""
+msgstr "کتاب خطی"
 
 #: general/templates/general/about-search.html:47
 msgid "Dates (CE)"
-msgstr ""
+msgstr "تاریخها (میلادی)"
 
 #: general/templates/general/about-search.html:49
 msgid ""
 "You can filter results to show only texts after a chosen century and/or "
 "before another chosen century."
 msgstr ""
+"می‌توانید نتایج را طوری فیلتر کنید که فقط متون پس از یک قرن انتخاب‌شده و/یا "
+"پیش از قرنی دیگر نمایش داده شوند."
 
 #: general/templates/general/about-search.html:52
 msgid "Filters"
@@ -1314,6 +1285,619 @@ msgstr "این پایگاه داده توسط شرکت"
 msgid "for the Invisible East programme"
 msgstr "رای برنامه شرق مکنون طراحی و پیاده‌سازی شده است."
 
+#: general/templates/general/about-typology.html:7
+msgid "Typology of texts in IEDC"
+msgstr "IEDC نوع شناسی متون در"
+
+#: general/templates/general/about-typology.html:11
+msgid "Type"
+msgstr "نوع"
+
+#: general/templates/general/about-typology.html:12
+msgid "Sub-type"
+msgstr "زیربخش"
+
+#: general/templates/general/about-typology.html:13
+msgid "Definition"
+msgstr "تعریف"
+
+#: general/templates/general/about-typology.html:14
+msgid "Included"
+msgstr "شامل"
+
+#: general/templates/general/about-typology.html:15
+msgid "Excluded"
+msgstr "غیرشامل"
+
+#: general/templates/general/about-typology.html:16
+msgid "Comments"
+msgstr "توضیحات"
+
+#: general/templates/general/about-typology.html:21
+msgid "Legal"
+msgstr "حقوقی"
+
+#: general/templates/general/about-typology.html:24
+msgid "Worship acts"
+msgstr "اعمال عبادی؟"
+
+#: general/templates/general/about-typology.html:25
+msgid "Sale"
+msgstr "فروش / بیع"
+
+#: general/templates/general/about-typology.html:26
+msgid "Rent-hire"
+msgstr "اجاره/کرایه"
+
+#: general/templates/general/about-typology.html:27
+msgid "Partnership"
+msgstr "شراکت"
+
+#: general/templates/general/about-typology.html:28
+msgid "Marriage"
+msgstr "ازدواج"
+
+#: general/templates/general/about-typology.html:29
+msgid "Divorce"
+msgstr "طلاق"
+
+#: general/templates/general/about-typology.html:30
+msgid "Loan"
+msgstr "قرض"
+
+#: general/templates/general/about-typology.html:31
+msgid "Amicable Settlement"
+msgstr "مصالحه"
+
+#: general/templates/general/about-typology.html:32
+msgid "Preemption"
+msgstr "حق شفعه"
+
+#: general/templates/general/about-typology.html:33
+msgid "Power of attorney"
+msgstr "وکالت"
+
+#: general/templates/general/about-typology.html:34
+msgid "Slavery and Manumission"
+msgstr "برده داری (غلامی) و آزادی (عتق)"
+
+#: general/templates/general/about-typology.html:35
+msgid "Inheritance"
+msgstr "میراث"
+
+#: general/templates/general/about-typology.html:36
+msgid "Donation"
+msgstr "بخشش (هبه)"
+
+#: general/templates/general/about-typology.html:37
+msgid "Transfer of money [or good]"
+msgstr "پرداخت و حواله"
+
+#: general/templates/general/about-typology.html:38
+msgid "Guarantee of liability"
+msgstr "ضمان"
+
+#: general/templates/general/about-typology.html:39
+msgid "Loan, Debt"
+msgstr "وام / قرض / دین"
+
+#: general/templates/general/about-typology.html:40
+msgid "Penal rules"
+msgstr "احکام کیفری"
+
+#: general/templates/general/about-typology.html:41
+msgid "Personal Status"
+msgstr "احوال مدنی"
+
+#: general/templates/general/about-typology.html:42
+msgid "Testimony"
+msgstr "شهادت / گواهی"
+
+#: general/templates/general/about-typology.html:43
+msgid "Litigation"
+msgstr "دعاوی"
+
+#: general/templates/general/about-typology.html:44
+msgid "Jihad"
+msgstr "جهاد"
+
+#: general/templates/general/about-typology.html:47
+msgid ""
+"Document produced by or for a qāḍī court or legal or paralegal professional "
+"(eg. faqīh), often having probative or dispositive value"
+msgstr ""
+"سندی که توسط دادگاه قاضی (قاضی شرع) یا یک مفتی / فقیه تهیه شده و اغلب دارای "
+"ارزش اثباتی یا تعیین کننده است."
+
+#: general/templates/general/about-typology.html:50
+msgid ""
+"Stand-alone deeds: testimonies, marriage contracts, bills of divorce, bills "
+"of sale, acknowledgments of debt, partnership agreements"
+msgstr ""
+"اسناد مستقل: مانند شهادت‌نامه‌ها، عقدنامه‌ها، طلاق‌نامه‌ها، مبایعه‌نامه‌ها، "
+"اقرارنامه‌های بدهی، قراردادهای شراکت"
+
+#: general/templates/general/about-typology.html:51
+msgid "Copies of deeds and summaries of cases in court registers"
+msgstr "نسخه‌ها یا خلاصه‌هایی از اسناد در دفاتر دادگاه"
+
+#: general/templates/general/about-typology.html:52
+msgid "Legal queries and responsa"
+msgstr "استفتائات و پاسخ‌های فقهی"
+
+#: general/templates/general/about-typology.html:53
+msgid ""
+"Communal decrees when formulated like legal documents, but also tag as "
+"#communal_decree"
+msgstr "احکام عمومی با فرم اسناد حقوقی"
+
+#: general/templates/general/about-typology.html:58
+msgid ""
+"Tax receipts and orders of payment to or from the fisc (classed under "
+"administrative document)"
+msgstr ""
+"برات‌های مالیاتی و حواله‌های پرداخت به/از خزانه (که به اسناد اداری تعلق دارند)"
+
+#: general/templates/general/about-typology.html:59
+msgid ""
+"Other administrative documents with legal force: this category is for court "
+"and private deeds only"
+msgstr ""
+"اسناد اداری با اعتبار حقوقی؛ این دسته فقط مخصوص اسناد دادگاهی و خصوصی است"
+
+#: general/templates/general/about-typology.html:60
+msgid "Orders of payment (not involving the fisc)"
+msgstr "اسناد پذیرش /تسلیم /اطلاقی که به خزانه مربوط نباشند"
+
+#: general/templates/general/about-typology.html:61
+msgid "Legal formularies"
+msgstr "دستورالعمل‌های حقوقی"
+
+#: general/templates/general/about-typology.html:62
+msgid "Private orders of payment"
+msgstr "حواله‌های خصوصی"
+
+#: general/templates/general/about-typology.html:63
+msgid "Lists of payment (not involving the fisc)"
+msgstr "تفصیل (لیست‌های) پرداخت (نامرتبط به خزانه)"
+
+#: general/templates/general/about-typology.html:64
+#: general/templates/general/about-typology.html:111
+#: general/templates/general/about-typology.html:122
+msgid "Commercial accounts"
+msgstr "حساب‌های تجاری"
+
+#: general/templates/general/about-typology.html:65
+#: general/templates/general/about-typology.html:123
+msgid "Price lists"
+msgstr "فهرست قیمت /تفصیل بها"
+
+#: general/templates/general/about-typology.html:68
+msgid ""
+"Legal documents can contain witnesses’ signatures but don’t necessarily."
+msgstr "اسناد حقوقی ممکن است امضای شهود داشته باشند ولی الزامی نیست."
+
+#: general/templates/general/about-typology.html:71
+msgid "Letter"
+msgstr "نامه"
+
+#: general/templates/general/about-typology.html:74
+msgid "Complaint"
+msgstr "شکایت"
+
+#: general/templates/general/about-typology.html:75
+msgid "Condolence"
+msgstr "تسلیت"
+
+#: general/templates/general/about-typology.html:76
+msgid "Support"
+msgstr "حمایت"
+
+#: general/templates/general/about-typology.html:77
+msgid "Longing (ishtiyāq)"
+msgstr "اشتیاق"
+
+#: general/templates/general/about-typology.html:78
+msgid "Congratulation"
+msgstr "تبریک"
+
+#: general/templates/general/about-typology.html:79
+msgid "Convalescence"
+msgstr "عیادت (احوال‌پرسی)"
+
+#: general/templates/general/about-typology.html:80
+msgid "Gratitude"
+msgstr "قدردانی"
+
+#: general/templates/general/about-typology.html:81
+msgid "Displeasure"
+msgstr "گلایه"
+
+#: general/templates/general/about-typology.html:82
+msgid "Invitation"
+msgstr "دعوت"
+
+#: general/templates/general/about-typology.html:83
+msgid "Consultation"
+msgstr "مشورت"
+
+#: general/templates/general/about-typology.html:84
+msgid "Apology"
+msgstr "عذرخواهی"
+
+#: general/templates/general/about-typology.html:85
+msgid "Loan request"
+msgstr "تقاضای قرض"
+
+#: general/templates/general/about-typology.html:86
+msgid "Confidential note (mulaṭṭafa)"
+msgstr "محرمانه"
+
+#: general/templates/general/about-typology.html:87
+msgid "Commercial"
+msgstr "تجاری"
+
+#: general/templates/general/about-typology.html:88
+msgid "Confirmation of receipt of letter"
+msgstr "تصدیق"
+
+#: general/templates/general/about-typology.html:91
+msgid ""
+"Communication from one or more parties to one or more parties, named or "
+"unnamed. Usually contains full sentences with verbs"
+msgstr ""
+"مکاتبه‌ای از یک یا چند طرف مشخص یا نامشخص دیگر. معمولاً شامل جملات کامل با "
+"استفاده از افعال است."
+
+#: general/templates/general/about-typology.html:94
+msgid "Letters"
+msgstr "نامه‌ها"
+
+#: general/templates/general/about-typology.html:95
+msgid "Notes"
+msgstr "یادداشت‌ها"
+
+#: general/templates/general/about-typology.html:96
+msgid "Epistles"
+msgstr "عریضه (درخواست /دادخواست) به مقامات عمومی یا افراد خاص"
+
+#: general/templates/general/about-typology.html:97
+msgid "Petitions to private patrons or communal officials"
+msgstr "کتاب الرسایل /با کاربرد عملی"
+
+#: general/templates/general/about-typology.html:98
+msgid "Epistolary formularies with practical value"
+msgstr " "
+
+#: general/templates/general/about-typology.html:101
+msgid ""
+"Administrative (i.e. state) decrees, rescripts, petitions and reports "
+"(classed under administrative document)"
+msgstr "(عرض‌نامه) و گزارش‌های اداری"
+
+#: general/templates/general/about-typology.html:105
+msgid "List or table"
+msgstr "جدول یا فهرست (تفصیل /جمع)"
+
+#: general/templates/general/about-typology.html:108
+msgid "Grocery"
+msgstr "مواد عذایی"
+
+#: general/templates/general/about-typology.html:109
+msgid "Payment"
+msgstr "پرداخت"
+
+#: general/templates/general/about-typology.html:110
+msgid "Charity"
+msgstr "صدقه"
+
+#: general/templates/general/about-typology.html:112
+msgid "Prices"
+msgstr "قیمت /بهاء"
+
+#: general/templates/general/about-typology.html:113
+msgid "Inventory"
+msgstr "سیاهه /موجودی"
+
+#: general/templates/general/about-typology.html:116
+msgid ""
+"Items arranged in sequence, whether vertically or horizontally. A list has "
+"one column, a table has two or more columns; rarely contains verbs."
+msgstr ""
+"اقلام به ترتیب، به صورت عمودی یا افقی تنظیم شده‌اند. فهرست‌ها یک ستون دارند؛ "
+"جداول دو ستون یا بیتر. استفاده از افعال در آنها نادر است."
+
+#: general/templates/general/about-typology.html:119
+msgid "Grocery lists"
+msgstr "فهرست مواد غذایی"
+
+#: general/templates/general/about-typology.html:120
+#: general/templates/general/about-typology.html:217
+msgid "Lists of payment"
+msgstr "فهرست پرداخت‌ها"
+
+#: general/templates/general/about-typology.html:121
+msgid "Charity lists"
+msgstr "فهرست صدقه"
+
+#: general/templates/general/about-typology.html:126
+msgid "state (fiscal) accounts"
+msgstr "حسابهای مالیاتی دولتی"
+
+#: general/templates/general/about-typology.html:130
+msgid "Literary"
+msgstr "متون گزینشی و ادبی"
+
+#: general/templates/general/about-typology.html:133
+msgid "Poetry"
+msgstr "شعر"
+
+#: general/templates/general/about-typology.html:134
+msgid "Liturgy/prayer"
+msgstr "نیایش / دعا"
+
+#: general/templates/general/about-typology.html:135
+msgid "Political history"
+msgstr "تاریخ سیاسی"
+
+#: general/templates/general/about-typology.html:136
+msgid "Biographical"
+msgstr "زندگینامه"
+
+#: general/templates/general/about-typology.html:137
+msgid "Lexicography"
+msgstr "واژهنامه"
+
+#: general/templates/general/about-typology.html:138
+msgid "Science"
+msgstr "علمی"
+
+#: general/templates/general/about-typology.html:139
+msgid "Medicine"
+msgstr "پزشکی"
+
+#: general/templates/general/about-typology.html:140
+msgid "Scriptures"
+msgstr "متون مقدس"
+
+#: general/templates/general/about-typology.html:141
+msgid "Exegesis"
+msgstr "تفسیر"
+
+#: general/templates/general/about-typology.html:142
+msgid "Mystical"
+msgstr "عرفانی"
+
+#: general/templates/general/about-typology.html:145
+msgid ""
+"Long-form narrative, analytical or canonical texts, as well as poems; often "
+"artful and/or formal; usually intended for posterity."
+msgstr ""
+"متون بلند تحلیلی یا شرعی یا شعر؛ اغلب هنری و/یا رسمی؛ معمولاً آثار نفیس و "
+"ماندگار"
+
+#: general/templates/general/about-typology.html:148
+msgid "Poems"
+msgstr "شعر"
+
+#: general/templates/general/about-typology.html:149
+msgid "Prayerbooks"
+msgstr "کتب دعا"
+
+#: general/templates/general/about-typology.html:150
+msgid "Tales"
+msgstr "داستان"
+
+#: general/templates/general/about-typology.html:151
+msgid "Anthologies"
+msgstr "مجموعه گلچین"
+
+#: general/templates/general/about-typology.html:152
+msgid "Chronicles"
+msgstr "تواریخ"
+
+#: general/templates/general/about-typology.html:153
+msgid "Biographical dictionaries"
+msgstr "فهرست و توضیح افراد"
+
+#: general/templates/general/about-typology.html:154
+msgid "Scientific and medical works"
+msgstr "آثار علمی و پزشکی"
+
+#: general/templates/general/about-typology.html:155
+msgid "Copies of transmitted religious works (Bible, Qurʾān, Talmud, Midrash)"
+msgstr "نسخههای کتب مقدس (قرآن، انجیل، تلمود و غیره)"
+
+#: general/templates/general/about-typology.html:156
+msgid "Legal codes"
+msgstr "قوانین حقوقی"
+
+#: general/templates/general/about-typology.html:157
+msgid ""
+"Occasional literary pieces such as sermons, liturgical poems and panegyrics "
+"intended for recitation in specific settings, even if they haven’t been "
+"anthologized — tag accordingly"
+msgstr "آثار ادبی مناسبتی مثل موعظه، اشعار عبادی و مدح"
+
+#: general/templates/general/about-typology.html:158
+msgid "Prayers for curative purposes are given the prayer sub-type"
+msgstr ""
+"دعاهایی که به منظور شفا نوشته شده باشند تحت زیربخش شبهادبی قرار میگیرند."
+
+#: general/templates/general/about-typology.html:161
+msgid ""
+"1-2 lines of a literary work jotted down in another context, e.g., trials of "
+"the pen when scribbled on other texts that we can categorize some other way. "
+"But if a fragment contains only literary trials of the pen, it is literary."
+msgstr ""
+"قطعات کوتاه ادبی یک یا دو خطی که در زمینههای دیگر نوشته شده باشند. مثال: "
+"تمرین خطی که روی متنی غیر ادبی نوشته شده باشد اما اگر قطعهای تنها شامل تمرین "
+"خط با محتوای ادبی باشد، ما هم آن را ادبی تلقی میکنیم."
+
+#: general/templates/general/about-typology.html:165
+msgid "Paraliterary"
+msgstr "شبهادبی"
+
+#: general/templates/general/about-typology.html:168
+msgid "Curative prescription"
+msgstr "نسخه درمانی"
+
+#: general/templates/general/about-typology.html:169
+msgid "Calendar"
+msgstr "تقویم"
+
+#: general/templates/general/about-typology.html:170
+msgid "Magic"
+msgstr "جادو"
+
+#: general/templates/general/about-typology.html:171
+#: general/templates/general/about-typology.html:182
+msgid "Recipe"
+msgstr "دستور غذا"
+
+#: general/templates/general/about-typology.html:172
+#: general/templates/general/about-typology.html:183
+msgid "Colophon"
+msgstr "انجامه"
+
+#: general/templates/general/about-typology.html:173
+msgid "Draft"
+msgstr "پیشنویس"
+
+#: general/templates/general/about-typology.html:176
+msgid ""
+"Texts that are neither documentary nor literary, and/or are highly "
+"specialized and/or highly formalised. The texts are less narrative or "
+"literary and less of the quotidian records that documents are."
+msgstr ""
+"نوشتههایی که نه سندی و نه ادبی هستند و/یا بسیار تخصصی یا رسمیاند. این متون "
+"به اندازه نوشتههای گزینشی و ادبی حالت روایی ندارند و برخلاف اسناد حالت "
+"روزمره ندارند."
+
+#: general/templates/general/about-typology.html:179
+msgid "Medical prescriptions"
+msgstr "نسخههای پزشکی"
+
+#: general/templates/general/about-typology.html:180
+msgid "Ephemerides, calendars and other astronomical aids"
+msgstr "تقویم و دیگر ابزار نجومی"
+
+#: general/templates/general/about-typology.html:181
+msgid "Amulets and other practical magical texts"
+msgstr "طلسم و دیگر متن‌های کاربردی جادویی"
+
+#: general/templates/general/about-typology.html:184
+msgid "Drafts of literary texts"
+msgstr "دستور غذا"
+
+#: general/templates/general/about-typology.html:189
+msgid "Cheques (these are legal); tax receipts (these are administrative)"
+msgstr "چِک (که اسناد حقوقی باشند)"
+
+#: general/templates/general/about-typology.html:190
+msgid "Drafts of legal or administrative documents"
+msgstr "رسیدهای مالیاتی (که اداریاند)"
+
+#: general/templates/general/about-typology.html:196
+msgid "Administrative"
+msgstr "اداری"
+
+#: general/templates/general/about-typology.html:199
+msgid "Decree"
+msgstr "فرمان"
+
+#: general/templates/general/about-typology.html:200
+msgid "Petition to state officials"
+msgstr "دادخواست به مقامات دولتی"
+
+#: general/templates/general/about-typology.html:201
+msgid "Report"
+msgstr "گزارش"
+
+#: general/templates/general/about-typology.html:202
+msgid "Receipt"
+msgstr "رسید (برات)"
+
+#: general/templates/general/about-typology.html:203
+msgid "Fiscal account/register"
+msgstr "حساب/دفتر مالیاتی"
+
+#: general/templates/general/about-typology.html:204
+msgid "Order of payment (or other)"
+msgstr "دستور پرداخت (برات، حواله و دیگر دستورات)"
+
+#: general/templates/general/about-typology.html:205
+msgid "List"
+msgstr "فهرست"
+
+#: general/templates/general/about-typology.html:206
+msgid "Internal correspondence"
+msgstr "مکاتبات داخلی"
+
+#: general/templates/general/about-typology.html:209
+msgid ""
+"Documents written by or to state officials in their capacity as officials, "
+"including private contractors (such as tax farmers)"
+msgstr ""
+"اسنادی که برای و یا توسط مقامات دولتی نوشته شدهاند، حتی پیمانکاران خصوصی "
+"(مانند مقاطعهکاران مالیاتی)"
+
+#: general/templates/general/about-typology.html:212
+msgid "Decrees and rescripts"
+msgstr "فرمانها و توقیعات"
+
+#: general/templates/general/about-typology.html:213
+msgid "Petitions to state officials (even drafts or private copies)"
+msgstr "دادخواست به مقامات دولتی (حتی پیشنویس یا نسخه خصوصی)"
+
+#: general/templates/general/about-typology.html:214
+msgid "Official reports"
+msgstr "گزارشهای رسمی"
+
+#: general/templates/general/about-typology.html:215
+msgid "Tax receipts"
+msgstr "رسیدهای مالیاتی"
+
+#: general/templates/general/about-typology.html:216
+msgid "Fiscal accounts"
+msgstr "حسابهای مالیاتی"
+
+#: general/templates/general/about-typology.html:218
+msgid "Charity lists and poor rolls"
+msgstr "فهرست صدقه و فقرا"
+
+#: general/templates/general/about-typology.html:219
+msgid "[Internal correspondence]"
+msgstr "مکاتبات داخلی"
+
+#: general/templates/general/about-typology.html:222
+msgid ""
+"letters or notes written by state officials acting as private persons "
+"(classed under letters)"
+msgstr ""
+"نامههایی که توسط مقامات دولتی در مقام شخصی نوشته شدهاند (که جزو «نامهها» "
+"محسوب میشوند)"
+
+#: general/templates/general/about-typology.html:226
+msgid "Unknown"
+msgstr "ناشناخته"
+
+#: general/templates/general/about-typology.html:228
+msgid "Unknown is for quitters!"
+msgstr "ناشناخته بازنده است!"
+
+#: general/templates/general/about-typology.html:231
+msgid "Illegible texts"
+msgstr "متون ناخوانا"
+
+#: general/templates/general/about-typology.html:232
+msgid "Doodles"
+msgstr "خطخطی و نقاشی"
+
+#: general/templates/general/about-typology.html:233
+msgid "Pen trials"
+msgstr "تمرین خط"
+
 #: general/templates/general/welcome.html:12
 msgid "Bringing the medieval Islamicate East to the forefront of research"
 msgstr "آوردن شرق اسلامی قرون وسطی به خط مقدم پژوهش"
@@ -1344,11 +1928,11 @@ msgstr ""
 
 #: general/templates/general/welcome.html:23
 msgid "This website is separate to the main"
-msgstr ""
+msgstr "این وب‌سایت مستقل از "
 
 #: general/templates/general/welcome.html:23
 msgid "Invisible East project website"
-msgstr ""
+msgstr "وب‌سایت اصلی پروژه شرق مکنون است"
 
 #: general/templates/general/welcome.html:26
 msgid "Search the Corpus"
@@ -1356,7 +1940,7 @@ msgstr "جستجو در پایگاه"
 
 #: general/templates/general/welcome.html:29
 msgid "Read more about Invisible East"
-msgstr ""
+msgstr "در مورد شرق مکنون بییشتر بخوانید"
 
 #: general/templates/general/welcome.html:35
 msgid "Welcome"
@@ -1400,7 +1984,7 @@ msgstr ""
 "اسلام هنوز پدیده‌ای نسبتاً نو در این مناطق بود و جوامع چندفرهنگی در کنار هم "
 "زندگی می‌کردند."
 
-#: general/templates/general/welcome.html:55
+#: general/templates/general/welcome.html:57
 msgid ""
 "Our corpus website is aimed at making publicly available academic research "
 "on the documents to academics in any country of the world, as well as to "
@@ -1411,36 +1995,36 @@ msgstr ""
 "این اسناد برای پژوهشگران سراسر جهان و همچنین برای مخاطبان دیگری است که به "
 "تاریخ و فرهنگ‌ این منطقه شگفت‌انگیز و کمتر شناخته‌شده، علاقه‌مندند."
 
-#: general/templates/general/welcome.html:58
+#: general/templates/general/welcome.html:60
 msgid ""
 "If you'd like to find out more about the Invisible East project please visit"
-msgstr ""
+msgstr "اگر مایلید بیشتر درباره پروژه شرق مکنون بدانید، لطفاً به "
 
-#: general/templates/general/welcome.html:58
+#: general/templates/general/welcome.html:60
 msgid "our project website"
-msgstr ""
+msgstr "وب‌سایت پروژه ما"
 
-#: general/templates/general/welcome.html:58
+#: general/templates/general/welcome.html:60
 msgid "where you can read more about"
-msgstr ""
+msgstr "مراجعه کنید. در آنجا اطلاعات بیشتری در مورد موارد زیر یافت می شود"
 
-#: general/templates/general/welcome.html:61
+#: general/templates/general/welcome.html:63
 msgid "Our Team"
 msgstr "تیم ما"
 
-#: general/templates/general/welcome.html:62
+#: general/templates/general/welcome.html:64
 msgid "Publications, Blogs, and News"
 msgstr "کتاب‌ها و مقالات، بلاگ‌ها و اخبار"
 
-#: general/templates/general/welcome.html:63
+#: general/templates/general/welcome.html:65
 msgid "Events"
 msgstr "رویدادها"
 
-#: general/templates/general/welcome.html:64
+#: general/templates/general/welcome.html:66
 msgid "Outreach"
 msgstr "فعالیت‌های ارتباطی"
 
-#: general/templates/general/welcome.html:72
+#: general/templates/general/welcome.html:75
 msgid ""
 "At Invisible East our mission is to digitise an expansive corpus of texts "
 "which have long been overlooked. The corpus is a combination of various "
@@ -1451,7 +2035,7 @@ msgstr ""
 "نادیده گرفته شده‌اند. این پایگاه ترکیبی از مجموعه‌های متنی گوناگون از قرون ۸ "
 "تا ۱۳ میلادی است که منشأ آن‌ها افغانستان، ایران و آسیای مرکزی است."
 
-#: general/templates/general/welcome.html:75
+#: general/templates/general/welcome.html:78
 msgid ""
 "Together these texts present a new and exciting history of the region. A "
 "history which is not told through kings and courts, but rather through the "
@@ -1470,7 +2054,7 @@ msgstr ""
 "اسناد خرید و فروش، روندهای قانونی، احکام و دادخواست‌ها تا عقدنامه‌ها و نامه‌های "
 "شخصی."
 
-#: general/templates/general/welcome.html:78
+#: general/templates/general/welcome.html:83
 msgid ""
 "Our goal is to unite this vast range of texts in a single, publicly "
 "accessible database. By doing so, we hope to shed new light on a region, era "
@@ -1480,7 +2064,7 @@ msgstr ""
 "قابل‌دسترسی است. با این کار، امیدواریم نوری تازه بر منطقه، زمانه و مردمانی "
 "بیندازیم که برای مدت‌ها «مکنون» و ناپیدا بوده‌اند."
 
-#: general/templates/general/welcome.html:81
+#: general/templates/general/welcome.html:86
 msgid ""
 "Some of the texts digitised here, sadly have unclear provenances, which are "
 "a symptom of the challenges in heritage management that especially people in "
@@ -1508,11 +2092,13 @@ msgstr ""
 "برنامه‌ها و اولویت‌های ملی در کشورهای آسیب‌دیده، حمایت می‌کنیم و در حد توان خود "
 "پشتیبانی خواهیم کرد."
 
-#: general/templates/general/welcome.html:86
-msgid "A Message from Arezou"
+#: general/templates/general/welcome.html:94
+#, fuzzy
+#| msgid "A Message from Arezou"
+msgid "A Message from the Programme Director"
 msgstr "پیامی از آرزو"
 
-#: general/templates/general/welcome.html:89
+#: general/templates/general/welcome.html:100
 msgid ""
 "Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and "
 "Invisible East programme lead. I'm a historian and former UN civilian "
@@ -1523,7 +2109,7 @@ msgstr ""
 "مکنون. من مورخ و حافظ صلح غیر نظامی سابق سازمان ملل متحد هستم. افتخار همکاری "
 "با تیمی فوق‌العاده در این پروژه دیجیتالی داشته‌ام."
 
-#: general/templates/general/welcome.html:92
+#: general/templates/general/welcome.html:103
 msgid ""
 "This is the first multilingual database that contains documents from the "
 "medieval Islamicate East - Iranian-language documents, in particular, have "
@@ -1536,7 +2122,7 @@ msgstr ""
 "بودند، در حالی که اسناد به زبان‌های دیگر مانند عربی و عبری طی دهه‌های گذشته از "
 "حمایت‌های فراوانی برای دیجیتالی‌سازی برخوردار بوده‌اند"
 
-#: general/templates/general/welcome.html:95
+#: general/templates/general/welcome.html:106
 msgid ""
 "Ultimately, the sharing of pre-modern Iranian-language and data and data in "
 "other languages enrich our knowledge of the layered history of humanity at a "
@@ -1547,11 +2133,13 @@ msgstr ""
 "ما را از تاریخ چندلایه بشریت، در سطحی دقیق و انسانی، غنا می‌بخشد. این نوع "
 "دانش باعث اتحاد مردم می‌شود و من به نقش خود در تولید آن افتخار می‌کنم."
 
-#: general/templates/general/welcome.html:100
-msgid "A Message from Ed"
-msgstr "پیامی از اِد"
+#: general/templates/general/welcome.html:113
+#, fuzzy
+#| msgid "Assistant Database Manager"
+msgid "A Message from the Assistant Database Manager"
+msgstr "دستیار مدیر پایگاه داده‌ها"
 
-#: general/templates/general/welcome.html:103
+#: general/templates/general/welcome.html:119
 msgid ""
 "Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible "
 "East programme. I oversee the uploading of data onto our digital corpus, "
@@ -1564,7 +2152,7 @@ msgstr ""
 "اسناد تاریخی و کاربرپسند بودنشان است.<br>در کنار این، دانشجوی دکترای مطالعات "
 "آسیایی و خاورمیانه‌ای در دانشگاه آکسفورد نیز هستم."
 
-#: general/templates/general/welcome.html:106
+#: general/templates/general/welcome.html:122
 msgid ""
 "I’d like to extend my deepest thanks to my fellow data entry team members—"
 "Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom "
@@ -1576,11 +2164,11 @@ msgstr ""
 "پایگاه داده ممکن نبود. تعهد و دقت مثال‌زدنی آن‌ها نقش اساسی در به ثمر رسیدن "
 "این پروژه داشته است"
 
-#: general/templates/general/welcome.html:109
+#: general/templates/general/welcome.html:125
 msgid "An enormous thank you also goes to our software developer,"
 msgstr "با تشکر فراوان از توسعه‌دهنده نرم‌افزار ما، شرکت "
 
-#: general/templates/general/welcome.html:109
+#: general/templates/general/welcome.html:125
 msgid ""
 "whose incredible expertise transformed our vision into a reality. They not "
 "only brought our ideas to life but also introduced incredible interactive "
@@ -1593,17 +2181,54 @@ msgstr ""
 "اضافه کردند که حتی تصورشان را هم نمی‌کردیم. به لطف خلاقیت و تلاش بی‌وقفه‌شان "
 "موفق شدیم وب‌سایتی بسازیم که از به اشتراک‌گذاری آن با شما افتخار می‌کنیم!"
 
-#: general/templates/general/welcome.html:112
+#: general/templates/general/welcome.html:128
 msgid "You can read more about the work the Data Entry Team does in the"
 msgstr "می‌توانید درباره فعالیت‌های تیم داده‌ها در "
 
-#: general/templates/general/welcome.html:112
+#: general/templates/general/welcome.html:128
 msgid "Invisible East Blog"
 msgstr "وبلاگ شرق مکنون "
 
-#: general/templates/general/welcome.html:112
+#: general/templates/general/welcome.html:128
 msgid "afterlink-ieblog"
 msgstr "بیشتر بخوانید!"
+
+#~ msgid "Glossary"
+#~ msgstr "واژه‌نامه"
+
+#~ msgid "genres of text"
+#~ msgstr "گونه‌های متن (genres of text)"
+
+#~ msgid ""
+#~ "<strong>legal document:</strong> a contract, testimony or other document "
+#~ "produced by or for a legal court presided over by a qāḍī or other legal "
+#~ "professional (e.g. faqīh), often with probative or dispositive value"
+#~ msgstr ""
+#~ "<strong>سند حقوقی (legal document):</strong> قرارداد، شهادت‌نامه‌ یا سندی "
+#~ "دیگر که توسط یا برای دادگاه حقوقی بوسیله قاضی و یا یک متخصص حقوقی دیگر "
+#~ "(مثل فقیه) تنظیم شده و معمولاً دارای ارزش اثباتی یا اجرایی است"
+
+#~ msgid ""
+#~ "<strong><em>piyyut</em>:</strong> liturgical poetry (Hebrew; pl. "
+#~ "<em>piyyutim</em>)"
+#~ msgstr ""
+#~ "<strong>پیوت (piyyut):</strong> شعر مذهبی عبری؛ (جمع: piyyutim)، نوعی "
+#~ "سروده‌ی عبادی برای استفاده در مراسم مذهبی یهودی"
+
+#~ msgid ""
+#~ "<strong><em>responsum</em>:</strong> answer to a legal query by a and "
+#~ "Islamic or rabbinic authority, usually made in writing (Latin; pl. "
+#~ "<em>responsa, </em>Ar. <em>istifṭā</em>)"
+#~ msgstr ""
+#~ "<strong>رساله‌ی فقهی (responsum):</strong> پاسخ به یک سؤال حقوقی که معمولاً "
+#~ "به‌صورت مکتوب توسط یک مرجع اسلامی یا ربانی ارائه می‌شود (لاتین؛ جمع "
+#~ "responsa، عربی: استفتاء)"
+
+#~ msgid "Typology"
+#~ msgstr "نوع شناسی"
+
+#~ msgid "A Message from Ed"
+#~ msgstr "پیامی از اِد"
 
 #~ msgid "Basic Search"
 #~ msgstr "جستجوی ساده"
