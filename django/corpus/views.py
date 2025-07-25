@@ -607,7 +607,7 @@ class TextListView(ListView):
             start_count = (page_obj.number - 1) * page_obj.paginator.per_page + 1
             context['start_count'] = start_count
         else:
-            context['start_count'] = 0
+            context['start_count'] = 1
 
         # Tag
         tag_id = self.request.GET.get(f'{filter_pre_fk}text_folios__text_folio_tags__tag', None)
