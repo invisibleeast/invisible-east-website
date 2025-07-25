@@ -13,11 +13,11 @@
         <div id="corpus-text-list-options-toggler">
             <!-- Inactive (show left arrow, to signal sliding out) -->
             <div id="corpus-text-list-options-toggler-active">
-                <i class="far fa-caret-square-left"></i>
+                <i class="fas fa-search"></i>
             </div>
             <!-- Active (show right arrow, to signal sliding in) -->
             <div id="corpus-text-list-options-toggler-inactive">
-                <i class="far fa-caret-square-right"></i>
+                <i class="fas fa-search"></i>
             </div>
         </div>
 
@@ -35,8 +35,8 @@
                 <div id="corpus-text-list-options-search-type">
                     <strong>Search type:</strong>
                     <!-- Buttons -->
-                    <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button" title="Search using keywords" data-type="">General</div><!--
-                    --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button" title="Search using regular expressions" data-type="regex">RegEx</div>
+                    <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button" title="{% translate 'Search using keywords' %}" data-type="">{% translate 'General' %}</div><!--
+                    --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button" title="{% translate 'Search using regular expressions' %}" data-type="regex">{% translate 'RegEx' %}</div>
                     <!-- Info link -->
                     <a href="{% url 'general:about-search' %}#about-search-type"><i class="fas fa-info-circle"></i></a>
                 </div>
@@ -90,7 +90,7 @@
     <!-- List Header -->
     <section id="corpus-text-list-header">
         <!-- Results title -->
-        <div id="corpus-text-list-header-title">Results</div>
+        <div id="corpus-text-list-header-title">{% translate 'Results' %}</div>
         <!-- Results count -->
         <div id="corpus-text-list-header-count">
             {{ page_obj.paginator.count }} {% translate 'results found' %} {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">{% translate 'of all' %} {{ count_all_texts }} {% translate 'Corpus Texts' %}</a>{% endif %}
@@ -138,7 +138,7 @@
                         {% translate 'In IEDC since' %} {{ object.meta_created_datetime | date:"d M o" }} (IEDCID{{ object.id }})
                     </div>
                     <div class="corpus-text-list-items-item-text-title">
-                        <span class="corpus-text-list-items-item-text-title-count">{{ forloop.counter }}.</span> {{ object.title }}
+                        <span class="corpus-text-list-items-item-text-title-count">{{ forloop.counter0|add:start_count }}</span> {{ object.title }}
                     </div>
                     <div class="corpus-text-list-items-item-text-details">
                         {% if object.summary_of_content %}
@@ -209,7 +209,12 @@
             </div>
             <!-- Current page -->
             <div class="corpus-text-list-pagination-section">
-                <span class="corpus-text-list-pagination-current">{% translate 'Page' %} {{ page_obj.number }} {% translate 'of' %} {{ page_obj.paginator.num_pages }}</span>
+                <span class="corpus-text-list-pagination-current">
+                    {% translate 'Page' %}
+                    <input id="corpus-text-list-pagination-current-pageselector" type="number" value="{{ page_obj.number }}" max="{{ page_obj.paginator.num_pages }}" min="1">
+                    {% translate 'of' %}
+                    {{ page_obj.paginator.num_pages }}
+                </span>
             </div>
             <!-- Forwards -->
             <div class="corpus-text-list-pagination-section">

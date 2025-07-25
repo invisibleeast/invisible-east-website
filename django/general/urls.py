@@ -12,6 +12,7 @@ urlpatterns = [
     path('about/glossary/', views.AboutGlossaryTemplateView.as_view(), name='about-glossary'),
     path('about/search/', views.AboutSearchTemplateView.as_view(), name='about-search'),
     path('about/technical/', views.AboutTechnicalTemplateView.as_view(), name='about-technical'),
+    path('about/typology/', views.AboutTypologyTemplateView.as_view(), name='about-typology'),
 
     path('accessibility/', views.AccessibilityTemplateView.as_view(), name='accessibility'),
     path('cookies/', views.CookiesTemplateView.as_view(), name='cookies'),

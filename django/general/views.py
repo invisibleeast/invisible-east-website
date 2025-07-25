@@ -50,6 +50,13 @@ class AboutTechnicalTemplateView(TemplateView):
     template_name = 'general/about-technical.html'
 
 
+class AboutTypologyTemplateView(TemplateView):
+    """
+    Class-based view to show the about-typology template
+    """
+    template_name = 'general/about-typology.html'
+
+
 class AccessibilityTemplateView(TemplateView):
     """
     Class-based view to show the accessibility template

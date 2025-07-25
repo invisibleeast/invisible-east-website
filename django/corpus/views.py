@@ -221,7 +221,7 @@ class TextDetailView(DetailView):
                 )
             },
             {
-                'label': 'Findspots',
+                'label': 'Groups',
                 'label_fa': '',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}corpus',
@@ -260,7 +260,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Document Subtype',
-                'label_fa': '',
+                'label_fa': 'زیربخش سند',
                 'value': html_details_link_to_text_list_filtered(
                     f'{filter_pre_fk}document_subtype',
                     self.object.document_subtype
@@ -290,7 +290,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Writing Support Details',
-                'label_fa': '',
+                'label_fa': 'توضیحات سطح نوشتاری',
                 'value': html_details_list_items(
                     f'{filter_pre_mm}writing_support_details',
                     self.object.writing_support_details.all()
@@ -362,7 +362,7 @@ class TextDetailView(DetailView):
             # Publications
             {
                 'section_header': 'Publications',
-                'section_header_fa': '',
+                'section_header_fa': 'نشریات مرتبط',
             },
             {
                 'html': self.object.details_html_publications
@@ -371,7 +371,7 @@ class TextDetailView(DetailView):
             # Related Shelfmarks
             {
                 'section_header': 'Related Shelfmarks',
-                'section_header_fa': '',
+                'section_header_fa': 'شماره قفسههای مرتبط',
             },
             {
                 'html': self.object.details_html_texts
@@ -394,7 +394,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Date Last Updated in IE Corpus',
-                'label_fa': '',
+                'label_fa': 'تاریخ آخرین بروزرسانی در پایگاه شرق مکنون',
                 'value': clean_date_from_datetime(self.object.meta_lastupdated_datetime)
             },
 
@@ -405,17 +405,17 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Principal Editor',
-                'label_fa': '',
+                'label_fa': 'ویراستار اصلی',
                 'value': self.object.admin_principal_editor
             },
             {
                 'label': 'Contributors',
-                'label_fa': '',
+                'label_fa': 'مشارکت کنندگان',
                 'value': self.object.admin_contributors_list
             },
             {
                 'label': 'Source of Data',
-                'label_fa': '',
+                'label_fa': 'منبع دادهها',
                 'value': self.object.admin_source_of_data
             },
             {
@@ -430,7 +430,7 @@ class TextDetailView(DetailView):
             },
             {
                 'label': 'Image Permission Statement',
-                'label_fa': '',
+                'label_fa': 'بیانیه‌ی اجازه استفاده از تصویر',
                 'value': self.object.image_permission_statement
             },
 
@@ -558,7 +558,7 @@ class TextListView(ListView):
 
         # Sort
         # Establish the sort direction (asc/desc) and the field to sort by, from the self.request
-        sort = self.request.GET.get('sort', '?')
+        sort = self.request.GET.get('sort', 'id')
         sort_dir = '-' if sort.startswith('-') else ''
         sort_pre_length = len(f"{sort_dir}{self.sort_pre_count_value}")  # e.g. '-numerical_' for descending numerical
         # Count sorting (e.g. sort by count of related items)
@@ -601,6 +601,14 @@ class TextListView(ListView):
         # Data Export
         context['dataexport_text_ids'] = ','.join([str(i) for i in self.object_list.values_list('id', flat=True)])
 
+        # Results count start
+        if context.get('is_paginated'):
+            page_obj = context['page_obj']
+            start_count = (page_obj.number - 1) * page_obj.paginator.per_page + 1
+            context['start_count'] = start_count
+        else:
+            context['start_count'] = 0
+
         # Tag
         tag_id = self.request.GET.get(f'{filter_pre_fk}text_folios__text_folio_tags__tag', None)
         if tag_id:
@@ -608,7 +616,7 @@ class TextListView(ListView):
 
         # Options: Sort
         context['options_sort'] = [
-            {'value': '?', 'label': 'Random'},
+            {'value': 'id', 'label': 'Random'},
             {'value': 'shelfmark', 'label': 'Shelfmark (A-Z)'},
             {'value': 'gregorian_date_century__century_number', 'label': 'Converted date (CE) ↑'},
             {'value': '-gregorian_date_century__century_number', 'label': 'Converted date (CE) ↓'},
@@ -657,7 +665,7 @@ class TextListView(ListView):
             {
                 'filter_id': f'{filter_pre_bl}codex_images_location',
                 'filter_name': 'Codex',
-                'filter_name_fa': '',
+                'filter_name_fa': 'کتاب خطی',
             }
         ]
 
@@ -667,14 +675,14 @@ class TextListView(ListView):
                 'filter_id': f'{filter_pre_gt}gregorian_date_century__century_number',
                 'filter_classes': filter_pre_gt,
                 'filter_name': 'From',
-                'filter_name_fa': '',
+                'filter_name_fa': 'از',
                 'filter_options': filter_queryset_centuries
             },
             {
                 'filter_id': f'{filter_pre_lt}gregorian_date_century__century_number',
                 'filter_classes': filter_pre_lt,
                 'filter_name': 'To',
-                'filter_name_fa': '',
+                'filter_name_fa': 'به',
                 'filter_options': filter_queryset_centuries
             },
         ]
@@ -694,6 +702,12 @@ class TextListView(ListView):
                 'filter_options': filter_queryset_languages
             },
             {
+                'filter_id': f'{filter_pre_mm}additional_languages',
+                'filter_name': 'Additional Languages',
+                'filter_name_fa': 'زبانهای دیگر',
+                'filter_options': filter_queryset_languages
+            },
+            {
                 'filter_id': f'{filter_pre_fk}collection',
                 'filter_name': 'Collection',
                 'filter_name_fa': 'مجموعه',
@@ -701,15 +715,16 @@ class TextListView(ListView):
             },
             {
                 'filter_id': f'{filter_pre_fk}corpus',
-                'filter_name': 'Findspots',
-                'filter_name_fa': 'Findspots',
+                'filter_name': 'Groups',
+                'filter_name_fa': 'گروه',
                 'filter_options': models.SlTextCorpus.objects.all()
             },
             {
                 'filter_id': f'{filter_pre_fk}type',
                 'filter_name': 'Type of Text',
                 'filter_name_fa': 'نوع متن',
-                'filter_options': models.SlTextType.objects.all().select_related('category')
+                'filter_options': models.SlTextType.objects.all().select_related('category'),
+                'info_link': reverse('general:about-typology')
             },
             {
                 'filter_id': f'{filter_pre_fk}writing_support',

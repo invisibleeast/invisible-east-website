@@ -51,19 +51,22 @@
     <p>
         {% translate "Well, documents give insight into these day-to-day matters. The digital tool contained in this website provides searchable meta-data, tags, and images on documents - letters, contracts, notes-to-self, and many more bits of day-to-day writing - that were written in Iran, Afghanistan, and Central Asia at a time when Islam was still relatively new to the area, and when multicultural societies coexisted." %}
     </p>
-    <p>
-        {% translate "Our corpus website is aimed at making publicly available academic research on the documents to academics in any country of the world, as well as to wider audiences who are interested in the history and cultures of a fascinating and understudied region of the world." %}
-    </p>
-    <p>
-        {% translate "If you'd like to find out more about the Invisible East project please visit" %} <a href="https://invisibleeast.web.ox.ac.uk/">{% translate "our project website" %}</a> {% translate "where you can read more about" %}:
-    </p>
-    <ul class="bullet-image">
-        <li><a href="https://invisibleeast.web.ox.ac.uk/team">{% translate "Our Team" %}</a></li>
-        <li><a href="https://invisibleeast.web.ox.ac.uk/news">{% translate "Publications, Blogs, and News" %}</a></li>
-        <li><a href="https://invisibleeast.web.ox.ac.uk/events">{% translate "Events" %}</a></li>
-        <li><a href="https://invisibleeast.web.ox.ac.uk/node/3022231">{% translate "Outreach" %}</a></li>
-        <li><a href="https://invisibleeast.web.ox.ac.uk/resources-1">{% translate "Research Tools" %}</a></li>
-    </ul>
+    <div class="readmore-link">Read more...</div>
+    <div class="readmore-content">
+        <p>
+            {% translate "Our corpus website is aimed at making publicly available academic research on the documents to academics in any country of the world, as well as to wider audiences who are interested in the history and cultures of a fascinating and understudied region of the world." %}
+        </p>
+        <p>
+            {% translate "If you'd like to find out more about the Invisible East project please visit" %} <a href="https://invisibleeast.web.ox.ac.uk/">{% translate "our project website" %}</a> {% translate "where you can read more about" %}:
+        </p>
+        <ul class="bullet-image">
+            <li><a href="https://invisibleeast.web.ox.ac.uk/team">{% translate "Our Team" %}</a></li>
+            <li><a href="https://invisibleeast.web.ox.ac.uk/news">{% translate "Publications, Blogs, and News" %}</a></li>
+            <li><a href="https://invisibleeast.web.ox.ac.uk/events">{% translate "Events" %}</a></li>
+            <li><a href="https://invisibleeast.web.ox.ac.uk/node/3022231">{% translate "Outreach" %}</a></li>
+            <li><a href="https://invisibleeast.web.ox.ac.uk/resources-1">{% translate "Research Tools" %}</a></li>
+        </ul>
+    </div>
 </section>
 
 <section class="container">
@@ -74,45 +77,83 @@
     <p>
         {% translate "Together these texts present a new and exciting history of the region. A history which is not told through kings and courts, but rather through the day to day lives of regular people - their families, their communities, their professions and their faith. Written in languages, like New Persian, Judeo-Persian, Middle Persian, Arabic, Bactrian, Sogdian, Khotanese and Sanskrit, these manuscripts show an immense variety - from deeds of sale, legal proceedings, decrees and petitions to wedding certificates and personal letters." %}
     </p>
-    <p>
-        {% translate "Our goal is to unite this vast range of texts in a single, publicly accessible database. By doing so, we hope to shed new light on a region, era and population that has remained 'invisible' for far too long." %}
-    </p>
-    <p>
-        {% translate "Some of the texts digitised here, sadly have unclear provenances, which are a symptom of the challenges in heritage management that especially people in Afghanistan, a country mired in decades of conflict and poverty, but also in other countries of the region, have faced. It poses an ethical dilemma to us as researchers, as we do not wish to give legitimacy to, nor encourage, the purchase of unprovenanced materials. For this reason, the IEDC only includes materials that are already in the public domain. Our aim is to make what is publicly available more accessible online to people in the region from which they originate, and the wider community of scholars and the general public. At the same time, we applaud, and support, where we can, all efforts to safeguard and preserve historical texts and manuscripts, in accordance with national plans and priorities in the affected countries of the region." %}
-    </p>
+    <div class="readmore-link">Read more...</div>
+    <div class="readmore-content">
+        <p>
+            {% translate "Our goal is to unite this vast range of texts in a single, publicly accessible database. By doing so, we hope to shed new light on a region, era and population that has remained 'invisible' for far too long." %}
+        </p>
+        <p>
+            {% translate "Some of the texts digitised here, sadly have unclear provenances, which are a symptom of the challenges in heritage management that especially people in Afghanistan, a country mired in decades of conflict and poverty, but also in other countries of the region, have faced. It poses an ethical dilemma to us as researchers, as we do not wish to give legitimacy to, nor encourage, the purchase of unprovenanced materials. For this reason, the IEDC only includes materials that are already in the public domain. Our aim is to make what is publicly available more accessible online to people in the region from which they originate, and the wider community of scholars and the general public. At the same time, we applaud, and support, where we can, all efforts to safeguard and preserve historical texts and manuscripts, in accordance with national plans and priorities in the affected countries of the region." %}
+        </p>
+    </div>
 </section>
 
-<section class="container">
-    <h2>{% translate "A Message from Arezou" %}</h2>
-    <img src="{% static 'images/arezou-azad.jpg' %}" alt="Arezou Azad" class="image-circle">
-    <p>
-        {% translate "Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and Invisible East programme lead. I'm a historian and former UN civilian peacekeeper. I've had the privilege of working with a fantastic team on this digital corpus." %}
-    </p>
-    <p>
-        {% translate "This is the first multilingual database that contains documents from the medieval Islamicate East - Iranian-language documents, in particular, have had little ”airtime”, until now, while documents in other languages, such as Arabic and Hebrew, have enjoyed a considerable digitisation support for some decades now." %}
-    </p>
-    <p>
-        {% translate "Ultimately, the sharing of pre-modern Iranian-language and data and data in other languages enrich our knowledge of the layered history of humanity at a granular and very human level. This kind of knowledge unites, and I'm proud to be playing a part in its production." %}
-    </p>
-</section>
+<section class="container accordion">
+    <div class="accordion-item">
+        <div class="accordion-item-header">
+            <span class="accordion-item-header-text">{% translate "A Message from the Programme Director" %}</span>
+            <span class="accordion-item-header-symbol"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="accordion-item-body">
+            <img src="{% static 'images/arezou-azad.jpg' %}" alt="Arezou Azad" class="image-circle">
+            <p>
+                {% translate "Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and Invisible East programme lead. I'm a historian and former UN civilian peacekeeper. I've had the privilege of working with a fantastic team on this digital corpus." %}
+            </p>
+            <p>
+                {% translate "This is the first multilingual database that contains documents from the medieval Islamicate East - Iranian-language documents, in particular, have had little ”airtime”, until now, while documents in other languages, such as Arabic and Hebrew, have enjoyed a considerable digitisation support for some decades now." %}
+            </p>
+            <p>
+                {% translate "Ultimately, the sharing of pre-modern Iranian-language and data and data in other languages enrich our knowledge of the layered history of humanity at a granular and very human level. This kind of knowledge unites, and I'm proud to be playing a part in its production." %}
+            </p>
+        </div>
+    </div>
 
-<section class="container">
-    <h2>{% translate "A Message from Ed" %}</h2>
-    <img src="{% static 'images/ed-shawe-taylor.jpg' %}" alt="Edward Shawe-Taylor" class="image-circle">
-    <p>
-        {% translate "Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible East programme. I oversee the uploading of data onto our digital corpus, ensuring that the rich historical documents we work with are accurately represented and user friendly. Alongside this role, I'm also a DPhil student in Asian and Middle Eastern Studies at the University of Oxford." %}
-    </p>
-    <p>
-        {% translate "I’d like to extend my deepest thanks to my fellow data entry team members—Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom this database would not have been possible. Their dedication and meticulous work have been instrumental in bringing this project to fruition." %}
-    </p>
-    <p>
-        {% translate "An enormous thank you also goes to our software developer," %} <a href="https://ahrsoftware.co.uk/" target="_blank">AHR Software</a>, {% translate "whose incredible expertise transformed our vision into a reality. They not only brought our ideas to life but also introduced incredible interactive features that we wouldn’t have known were possible. Thanks to their creativity and dedication, we’ve created a website we are truly proud to share with you all!" %}
-    </p>
-    <p>
-        {% translate "You can read more about the work the Data Entry Team does in the" %} <a href="https://invisibleeast.web.ox.ac.uk/news#tab-3020371" target="_blank">{% translate "Invisible East Blog" %}</a>{% translate "afterlink-ieblog" %}
-    </p>
+    <div class="accordion-item">
+        <div class="accordion-item-header">
+            <span class="accordion-item-header-text">{% translate "A Message from the Assistant Database Manager" %}</span>
+            <span class="accordion-item-header-symbol"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="accordion-item-body">
+            <img src="{% static 'images/ed-shawe-taylor.jpg' %}" alt="Edward Shawe-Taylor" class="image-circle">
+            <p>
+                {% translate "Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible East programme. I oversee the uploading of data onto our digital corpus, ensuring that the rich historical documents we work with are accurately represented and user friendly. Alongside this role, I'm also a DPhil student in Asian and Middle Eastern Studies at the University of Oxford." %}
+            </p>
+            <p>
+                {% translate "I’d like to extend my deepest thanks to my fellow data entry team members—Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom this database would not have been possible. Their dedication and meticulous work have been instrumental in bringing this project to fruition." %}
+            </p>
+            <p>
+                {% translate "An enormous thank you also goes to our software developer," %} <a href="https://ahrsoftware.co.uk/" target="_blank">AHR Software</a>, {% translate "whose incredible expertise transformed our vision into a reality. They not only brought our ideas to life but also introduced incredible interactive features that we wouldn’t have known were possible. Thanks to their creativity and dedication, we’ve created a website we are truly proud to share with you all!" %}
+            </p>
+            <p>
+                {% translate "You can read more about the work the Data Entry Team does in the" %} <a href="https://invisibleeast.web.ox.ac.uk/news#tab-3020371" target="_blank">{% translate "Invisible East Blog" %}</a>{% translate "afterlink-ieblog" %}
+            </p>
+        </div>
+    </div>
+
 </section>
 
 {% include 'snippets/footer.html' %}
+
+
+<script>
+$(document).ready(function(){
+
+    // "Read more"
+    $('.readmore-link').on('click', function(){
+        $(this).next('.readmore-content').show();
+        $(this).remove();
+    });
+
+    // Accordion
+    $('.accordion-item-header').on('click', function() {
+        // Toggle visibility of the body, which comes next after the header
+        $(this).next().slideToggle();
+        // Toggle icon
+        var headerSymbol = $(this).find('.accordion-item-header-symbol').first();
+        if (headerSymbol.html() == '<i class="fas fa-chevron-down"></i>') headerSymbol.html('<i class="fas fa-chevron-up"></i>');
+        else headerSymbol.html('<i class="fas fa-chevron-down"></i>');
+    });
+});
+</script>
 
 {% endblock %}

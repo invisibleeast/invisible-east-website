@@ -102,7 +102,7 @@ dt::after {
 
 dd {
     display: inline-block;
-    margin-left: 0.3em;
+    margin: 0 0.3em;
 }
 
 table {
@@ -250,6 +250,52 @@ li {
 }
 
 .hide {
+    display: none;
+}
+
+.readmore-link {
+    color: var(--color-primary);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.readmore-content {
+    display: none;
+}
+
+.accordion {
+    margin: 3em auto;
+}
+
+.accordion-item {
+    margin: 2em auto;
+}
+
+.accordion-item-header {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.8em 1.2em;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.accordion-item-header:hover {
+    opacity: 0.9;
+}
+
+.accordion-item-header span {
+    display: inline-block;
+}
+
+.accordion-item-header-symbol {
+    float: right;
+    font-size: 1.3em;
+}
+
+.accordion-item-body {
+    background: #EEE;
+    padding: 1.5em;
     display: none;
 }
 
@@ -558,6 +604,15 @@ main section {
     padding-top: 3em;
 }
 
+#about-typology table td {
+    vertical-align: top;
+}
+
+#about-typology table ul,
+#about-typology table ol {
+    padding: 0 1.3em;
+}
+
 /* ---------- Corpus - Text: List ---------- */
 
 #corpus-text-list {
@@ -661,10 +716,14 @@ main section {
     display: none;
 }
 
+.corpus-text-list-options-filters-filter-container a {
+    color: white;
+}
+
 .corpus-text-list-options-filters-filter {
     display: inline-block;
     margin: 0.5em 0.2em;
-    width: 90%;
+    width: 80%;
     border-radius: 0.3em;
     background-color: rgba(255, 255, 255, 0.7);
 }
@@ -987,6 +1046,9 @@ main section {
 .corpus-text-list-items-item-text-title-count {
     display: inline-block;
     margin: 0 0.3em;
+    padding: 0.1em 0.4em;
+    border: 1px solid #606060;
+    color: #606060;
 }
 
 .corpus-text-list-items-item-text-details {
