@@ -25,6 +25,10 @@
             </select>
             <span class="input-clear"><i class="fas fa-times-circle"></i></span>
             {% if f.info_link %}<a href="{{ f.info_link }}"><i class="fas fa-info-circle"></i></a>{% endif %}
+            
+            {% if f.info_alert %}
+                <span class="info-alert" data-alert="{{ f.info_alert }}" data-alert-fa="{{ f.info_alert_fa }}"><i class="fas fa-info-circle"></i></span>
+            {% endif %}
         {% endif %}
     </div>
 {% endfor %}

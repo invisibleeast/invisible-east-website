@@ -5,8 +5,9 @@ app_name = 'corpus'
 
 urlpatterns = [
 
-    # Data Export
-    path('dataexport/', views.dataexport_csv, name='dataexport-csv'),
+    # Download Data
+    path('downloaddata/word/', views.downloaddata_word, name='downloaddata-word'),
+    path('downloaddata/json/', views.downloaddata_json, name='downloaddata-json'),
 
     # Text
     path('', views.TextListView.as_view(), name='text-list'),

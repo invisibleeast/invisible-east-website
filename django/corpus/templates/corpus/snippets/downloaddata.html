@@ -1,0 +1,55 @@
+{% if downloaddata_text_ids or 1 %}
+    <!-- Download data (trigger button + pop up) -->
+    <div id="downloaddata-trigger"><i class="fas fa-download"></i> Download</div>
+    <div id="downloaddata-popup">
+        <div id="downloaddata-popup-content">
+            <div id="downloaddata-popup-content-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <h4>Download IEDC Data</h4>
+            <p>
+                You are about to download data for {{ data_description }} from the IEDC database.
+            </p>
+            <p>
+                To start the download, please click on your desired format below.
+            </p>
+            <p>
+                <strong>Note: it can take up to 1 minute to download your data, so please wait whilst it processes</strong>
+            </p>
+            <ul id="downloaddata-popup-content-links">
+                <li data-url="{% url 'corpus:downloaddata-word' %}?text_ids={{ downloaddata_text_ids }}">Microsoft Word (.docx)</li>
+                <li data-url="{% url 'corpus:downloaddata-json' %}{% if downloaddata_text_ids %}?text_ids={{ downloaddata_text_ids }}{% endif %}">JSON</li>
+                <!-- <li data-url="TODO">XML</li> -->
+            </ul>
+            <div id="downloaddata-popup-content-downloadstarted">
+                <i class="fas fa-check"></i> Download started
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script>
+        $(document).ready(function(){
+
+            // Open popup (and set default content)
+            $('#downloaddata-trigger').on('click', function(){
+                $('#downloaddata-popup').show();
+                $('#downloaddata-popup-content-links').show();
+                $('#downloaddata-popup-content-downloadstarted').hide();
+            });
+
+            // Close popup
+            $('#downloaddata-popup-content-close').on('click', function(){
+                $('#downloaddata-popup').hide();
+            });
+
+            // Start download
+            $('#downloaddata-popup-content-links li').on('click', function(){
+                window.open($(this).attr('data-url'));
+                $('#downloaddata-popup-content-links').hide();
+                $('#downloaddata-popup-content-downloadstarted').show();
+            });
+
+        });
+    </script>
+{% endif %}

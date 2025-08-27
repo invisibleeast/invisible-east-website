@@ -1,20 +1,21 @@
 from django.views.generic import (DetailView, ListView, TemplateView, View)
 from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField, Prefetch)
-from django.core.exceptions import BadRequest
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.conf import settings
-from datetime import datetime
 from functools import reduce
 from operator import (or_, and_)
 from bs4 import BeautifulSoup
+from docx import Document
+from docx.shared import Cm
 from . import models
 import json
 import math
 import re
-import csv
-import io
+import os
+import glob
+import time
 
 
 # Sections of this file:
@@ -22,7 +23,7 @@ import io
 # 2. Main Views
 # 3. Maps Views
 # 4. Corpus Insights (data visualisations) Views
-# 5. Data Export Views (e.g. CSV)
+# 5. Download Data Views
 
 
 #
@@ -118,6 +119,88 @@ def text_initial_queryset(user):
         return models.Text.objects.filter(public_review_approved=True)
 
 
+def media_url_full(request, media_file_path):
+    """
+    Return the full URL of the media file
+    """
+    return f"{request.scheme}://{request.META['HTTP_HOST']}{media_file_path}"
+
+
+# Used in clean_html function, but compiled here once for performance improvements
+CLEANR = re.compile('<.*?>')
+
+
+def clean_html(raw_html):
+    """
+    Remove all tags from HTML and convert chars
+    """
+    clean_text = re.sub(CLEANR, '', str(raw_html))
+    clean_text = clean_text\
+        .replace('&#39;', "'")\
+        .replace('&nbsp;', ' ')\
+        .replace('&quot;', '"')
+    return clean_text
+
+
+def downloaddata_text_queryset(view_request):
+    """
+    Generates the queryset of Text objects for use in downloaddata views
+    """
+    texts = models.Text.objects.all().select_related(
+        'primary_language__script',
+        'type__category',
+        'gregorian_date_century',
+        'collection',
+        'admin_principal_editor',
+        'admin_classification',
+        'corpus',
+        'writing_support',
+        'fold_lines_alignment',
+        'admin_source_of_data',
+        'document_subtype__category'
+    ).prefetch_related(
+        Prefetch(
+            'texts',
+            models.Text.objects.all().select_related('collection')
+        ),
+        'text_related_publications__publication',
+        'text_dates',
+        Prefetch(
+            'additional_languages',
+            models.SlTextLanguage.objects.all().select_related('script')
+        ),
+        Prefetch(
+            'text_folios',
+            models.TextFolio.objects.all().select_related('side', 'open_state')
+        ),
+        Prefetch(
+            'persons_in_texts',
+            models.PersonInText.objects.all().select_related('person_role_in_text', 'person__gender')
+        ),
+        'persons_in_texts__person__person_1__person_2',
+        'persons_in_texts__person__person_1__relationship_type',
+    )
+
+    # Hide non-approved Text data from public users
+    if not view_request.user.is_authenticated:
+        texts = texts.filter(public_review_approved=True)
+
+    # Limit to only specific texts, if provided
+    text_ids = view_request.GET.get('text_ids', None)
+    if text_ids:
+        texts = texts.filter(id__in=text_ids.split(','))
+
+    return texts
+
+
+def json_str(value):
+    """
+    For use in JSON data download, convert value to string
+    if value exists, else return None/null
+    """
+    return str(value) if value else None
+
+
 #
 # 2. Main Views
 #
@@ -201,6 +284,26 @@ class TextDetailView(DetailView):
 
         # Details data
         context['data_items'] = [
+
+            # Content
+            {
+                'section_header': 'Content',
+                'section_header_fa': 'محتوا',
+            },
+            {
+                'label': 'Summary of Content',
+                'label_fa': 'خلاصه محتوا',
+                'value': self.object.summary_of_content
+            },
+
+            # Dates (Gregorian and Original)
+            {
+                'section_header': 'Dates',
+                'section_header_fa': 'تاریخ',
+            },
+            {
+                'html': self.object.details_html_dates_full
+            },
 
             # General
             {
@@ -328,26 +431,6 @@ class TextDetailView(DetailView):
                 'label': 'Fold Lines',
                 'label_fa': 'رد تا',
                 'value': self.object.fold_lines_details
-            },
-
-            # Content
-            {
-                'section_header': 'Content',
-                'section_header_fa': 'محتوا',
-            },
-            {
-                'label': 'Summary of Content',
-                'label_fa': 'خلاصه محتوا',
-                'value': self.object.summary_of_content
-            },
-
-            # Dates (Gregorian and Original)
-            {
-                'section_header': 'Dates',
-                'section_header_fa': 'تاریخ',
-            },
-            {
-                'html': self.object.details_html_dates_full
             },
 
             # People
@@ -488,6 +571,7 @@ class TextListView(ListView):
             'collection',
         ).prefetch_related(
             'text_folios',
+            'text_folios__text_folio_tags'
         )
 
         # Search
@@ -598,8 +682,9 @@ class TextListView(ListView):
         context['filter_pre_lt'] = filter_pre_lt
         context['filter_pre_bl'] = filter_pre_bl
 
-        # Data Export
-        context['dataexport_text_ids'] = ','.join([str(i) for i in self.object_list.values_list('id', flat=True)])
+        # Download Data
+        if self.request.GET:
+            context['downloaddata_text_ids'] = ','.join([str(i) for i in self.object_list.values_list('id', flat=True)])
 
         # Results count start
         if context.get('is_paginated'):
@@ -625,7 +710,6 @@ class TextListView(ListView):
         ]
 
         # Reused querysets in below filters (specified here to avoid duplicate SQL queries)
-        filter_queryset_languages = models.SlTextLanguage.objects.all().select_related('script')
         filter_queryset_centuries = models.SlTextGregorianCentury.objects.all()
 
         # Includes (aka checkbox filters)
@@ -699,13 +783,13 @@ class TextListView(ListView):
                 'filter_id': f'{filter_pre_fk}primary_language',
                 'filter_name': 'Primary Language',
                 'filter_name_fa': 'زبان اصلی',
-                'filter_options': filter_queryset_languages
+                'filter_options': models.SlTextLanguage.objects.filter(texts_primary__isnull=False).distinct().select_related('script')
             },
             {
                 'filter_id': f'{filter_pre_mm}additional_languages',
                 'filter_name': 'Additional Languages',
                 'filter_name_fa': 'زبانهای دیگر',
-                'filter_options': filter_queryset_languages
+                'filter_options': models.SlTextLanguage.objects.filter(texts__isnull=False).distinct().select_related('script')
             },
             {
                 'filter_id': f'{filter_pre_fk}collection',
@@ -717,7 +801,9 @@ class TextListView(ListView):
                 'filter_id': f'{filter_pre_fk}corpus',
                 'filter_name': 'Groups',
                 'filter_name_fa': 'گروه',
-                'filter_options': models.SlTextCorpus.objects.all()
+                'filter_options': models.SlTextCorpus.objects.all(),
+                'info_alert': 'These are sub-corpora of documents organised by place of origin (presumed or confirmed)',
+                'info_alert_fa': 'این زیرمجموعه‌ها شامل اسنادی هستند که بر اساس محل نگارش (تأیید شده یا مفروض) طبقه‌بندی شده‌اند'
             },
             {
                 'filter_id': f'{filter_pre_fk}type',
@@ -949,58 +1035,272 @@ class InsightsLanguagesTemplateView(TemplateView):
 
 
 #
-# 5. Data Export Views
+# 5. Download Data Views
 #
 
 
-def dataexport_csv(request):
+def downloaddata_word(request):
     """
-    Functional view to export data Text queryset into a CSV file,
-    which is then returned to the user
+    Creates a Word Document (.docx) containing Text (and related) data
+    and returns the file to be download
     """
 
-    text_ids = request.GET.get('text_ids', None)
-    if not text_ids:
-        raise BadRequest('A valid "text_ids" value must be provided')
+    texts = downloaddata_text_queryset(request)
+    texts_count = texts.count()
 
-    # Titles
-    titles = [[
-        "ID",
-        # "Experiment Instance", "Message", "Sender", "Sent time", "Text",
-        # "Experiment Instance", "Message", "Sender", "Sent time", "Text",
-    ]]
+    # Create a new Document
+    word_doc = Document()
 
-    # Data
-    data = models.Text.objects.all().select_related(
-        'collection'
-    ).prefetch_related(
-        'texts'
-    )
+    # Set page margins
+    sections = word_doc.sections
+    margin = Cm(1.5)
+    for section in sections:
+        section.top_margin = margin
+        section.bottom_margin = margin
+        section.left_margin = margin
+        section.right_margin = margin
 
-    if text_ids:
-        data = data.filter(id__in=text_ids.split(','))
-    data_list = []
-    for d in data:
-        data_list.append([
-            d.id,
-            # d.id,
-            # d.sender_role,
-            # d.datetime_created_clean,
-            # d.text.strip()
-        ])
+    # Build content within Document:
 
-    # Create csv file
-    # Create an in-memory text buffer (StringIO for CSV writer)
-    csv_buffer = io.StringIO()
-    # Create a CSV writer object
-    csv_writer = csv.writer(csv_buffer)
-    # Write data to the CSV buffer
-    csv_writer.writerows(titles + data_list)
-    csv_file_content = csv_buffer.getvalue()
-    csv_buffer.close()
+    # Introduction content
+    word_doc.add_heading('Invisible East Digital Corpus', 0)
+    word_doc.add_paragraph(f"This document contains data for {texts_count} text{'s' if texts_count != 1 else ''} exported from the IEDC database.")
+    word_doc.add_paragraph(f"The data was exported on {time.strftime('%d/%m/%Y')} at {time.strftime('%H:%M')}.")
+    word_doc.add_paragraph(f"If you have any questions or comments please contact the IEDC Editorial Team: {settings.MAIN_CONTACT_EMAIL}")
 
-    # Return csv file as response
-    response = HttpResponse(csv_file_content, content_type='text/csv')
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    response['Content-Disposition'] = f'attachment; filename="iedc_{timestamp}.csv"'
-    return response
+    # Content for each text
+    for i, text in enumerate(texts):
+
+        permalink = f"{request.build_absolute_uri('/')[:-1]}{reverse('corpus:text-detail', args=[text.id])}"
+
+        word_doc.add_page_break()
+        heading = f'Text {i + 1} of {texts_count}: {text.title}' if texts_count > 1 else str(text.title)
+        word_doc.add_heading(heading, 1)
+        word_doc.add_paragraph(f'Source: {permalink}')
+
+        text_data_items = [
+
+            # General
+            {'section_header': 'Details'},
+            {'label': 'Shelfmark/Title', 'value': text.shelfmark},
+            {'label': 'Collection', 'value': text.collection},
+            {'label': 'Group', 'value': text.corpus},
+            {'label': 'Classification', 'value': text.admin_classification.name_full if text.admin_classification else None},
+            {'label': 'Primary Language', 'value': text.primary_language},
+            {'label': 'Additional Languages', 'value': text.strlist_additional_languages},
+            {'label': 'Type', 'value': text.type.name if text.type else None},
+            {'label': 'Document Subtype', 'value': text.document_subtype},
+            {'label': 'Toponyms', 'value': text.strlist_toponyms},
+
+            # Physical Description
+            {'section_header': 'Physical Description'},
+            {'label': 'Writing Support', 'value': text.writing_support},
+            {'label': 'Writing Support Details', 'value': text.strlist_writing_support_details},
+            {'label': 'Writing Support Notes', 'value': text.writing_support_details_additional},
+            {'label': 'Height (cm)', 'value': text.dimensions_height},
+            {'label': 'Width (cm)', 'value': text.dimensions_width},
+            {'label': 'Fold Lines Count', 'value': text.fold_lines_count},
+            {'label': 'Fold Lines Alignment', 'value': text.fold_lines_alignment},
+            {'label': 'Fold Lines', 'value': text.fold_lines_details},
+
+            # Content
+            {'section_header': 'Content Summary'},
+            {'content_block': text.summary_of_content},
+
+            # Dates (Gregorian and Original)
+            {'section_header': 'Dates'},
+            {'content_block': text.gregorian_date_full},
+
+            # People
+            {'section_header': 'People'},
+            {'content_block': text.strlist_persons_in_texts},
+
+            # Publications
+            {'section_header': 'Publications'},
+            {'content_block': text.strlist_publications},
+
+            # Related Shelfmarks
+            {'section_header': 'Related Shelfmarks'},
+            {'content_block': text.strlist_texts},
+
+            # IEDC Data
+            {'section_header': 'IEDC Data'},
+            {'label': 'IEDC ID', 'value': text.id},
+            {'label': 'Date Added to IE Corpus', 'value': clean_date_from_datetime(text.meta_created_datetime)},
+            {'label': 'Date Last Updated in IE Corpus', 'value': clean_date_from_datetime(text.meta_lastupdated_datetime)},
+
+            # Citations
+            {'section_header': 'Citations'},
+            {'label': 'Principal Editor', 'value': text.admin_principal_editor},
+            {'label': 'Contributors', 'value': text.admin_contributors_list},
+            {'label': 'Source of Data', 'value': text.admin_source_of_data},
+            {'label': 'Permalink', 'value': permalink},
+            {'label': 'Image Permission Statement', 'value': clean_html(text.image_permission_statement)},
+
+            # Folios
+            {'section_header': 'Folios'},
+            {'content_block': text.strlist_text_folios},
+
+            # Transliteration
+            {'section_header': 'Transliteration'},
+            {'content_block': text.transliteration_text_lines_str},
+
+            # Transcription
+            {'section_header': 'Transcription'},
+            {
+                'content_block': text.transcription_text_lines_str,
+                'alignment': 2 if text.primary_language.script.is_written_right_to_left else 0
+            },
+
+            # Transcription
+            {'section_header': 'Translation'},
+            {'content_block': text.translation_text_lines_str},
+        ]
+
+        for text_data_item in text_data_items:
+            # Section headers
+            if 'section_header' in text_data_item:
+                p = word_doc.add_paragraph()
+                section_header = p.add_run(f"\n{text_data_item['section_header']}\n")
+                section_header.underline = True
+            # Label/Value keypairs
+            elif 'label' in text_data_item and 'value' in text_data_item and text_data_item['value']:
+                p = word_doc.add_paragraph()
+                # Label
+                label = p.add_run(f"{text_data_item['label']}: ")
+                label.bold = True
+                # Value
+                p.add_run(str(text_data_item['value']))
+            # Content blocks (e.g. multiline blocks of text, like transcriptions)
+            elif 'content_block' in text_data_item and text_data_item['content_block']:
+                p = word_doc.add_paragraph()
+                p.add_run(f"{clean_html(text_data_item['content_block'])}")
+                if 'alignment' in text_data_item:
+                    p.alignment = text_data_item['alignment']
+
+            # Add formatting to p
+            paragraph_format = p.paragraph_format
+            paragraph_format.space_before = Cm(0)
+            paragraph_format.space_after = Cm(0)
+
+    # Delete all existing files in the export directory
+    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloaddata', 'word')
+    files = glob.glob(data_path + '/*')
+    for f in files:
+        os.remove(f)
+
+    # Establish new file name
+    file_name = f'iedc_{time.strftime("%Y-%m-%d_%H-%M")}.docx'
+    file_path = os.path.join(data_path, file_name)
+
+    # Save Word document and return the file
+    word_doc.save(file_path)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/word")
+            response['Content-Disposition'] = f'inline; filename={os.path.basename(file_path)}'
+            return response
+
+
+def downloaddata_json(request):
+    """
+    Returns a JSON object containing all Text and related data
+    """
+
+    texts = downloaddata_text_queryset(request)
+    data = []
+    for text in texts:
+        permalink = f"{request.build_absolute_uri('/')[:-1]}{reverse('corpus:text-detail', args=[text.id])}"
+
+        data.append({
+            # General
+            'uri': json_str(text.uri),
+            'shelfmark': json_str(text.shelfmark),
+            'collection': json_str(text.collection),
+            'group': json_str(text.corpus),
+            'classification': text.admin_classification.name_full if text.admin_classification else None,
+            'primaryLanguage': json_str(text.primary_language),
+            'additionalLanguages': [str(lng) for lng in text.additional_languages.all()],
+            'documentType': text.type.name if text.type else None,
+            'documentSubtype': json_str(text.document_subtype),
+            'toponyms': [
+                {
+                    'name': t.name,
+                    'alternativeReadings': t.alternative_readings,
+                    'otherAttestedForms': t.other_attested_forms,
+                    'latitude': t.latitude,
+                    'longitude': t.longitude,
+                    'urls': t.urls
+                } for t in text.toponyms.all()
+            ],
+
+            # Physical Description
+            'writingSupport': json_str(text.writing_support),
+            'writingSupportDetails': [str(w) for w in text.writing_support_details.all()],
+            'writingSupportNotes': text.writing_support_details_additional,
+            'height': json_str(text.dimensions_height),
+            'width': json_str(text.dimensions_width),
+            'foldLinesCount': json_str(text.fold_lines_count),
+            'foldLinesAlignment': json_str(text.fold_lines_alignment),
+            'foldLines': json_str(text.fold_lines_details),
+
+            # Content
+            'contentSummary': text.summary_of_content,
+
+            # Dates (Gregorian and Original)
+            'dates': text.gregorian_date_full,
+
+            # Folios
+            'folios': [
+                {
+                    'side': json_str(f.side),
+                    'openState': json_str(f.open_state),
+                    'image': f.image.url if f.image else None,
+                    'transliteration': f.transliteration,
+                    'transcription': f.transcription,
+                    'translation': f.translation,
+                    'palaeography': f.palaeography
+                } for f in text.text_folios.all()
+            ],
+
+            # People
+            'personsInText': [
+                {
+                    'person': json_str(p.person),
+                    'personNameInText': p.person_name_in_text,
+                    'personRoleInText': json_str(p.person_role_in_text)
+                } for p in text.persons_in_texts.all()
+            ],
+
+            # Publications
+            'publications': [
+                {
+                    'publication': json_str(p.publication),
+                    'pages': p.pages,
+                    'catalogueNumber': p.catalogue_number,
+                    'details': p.details
+                } for p in text.text_related_publications.all()
+            ],
+
+            # Related Shelfmarks
+            'relatedShelfmarks': [
+                {
+                    'id': t.id,
+                    'title': json_str(t),
+                } for t in text.texts.all()
+            ],
+
+            # IEDC Data
+            'iedcId': text.id,
+            'dateAdded': clean_date_from_datetime(text.meta_created_datetime),
+            'dateLastUpdated': clean_date_from_datetime(text.meta_lastupdated_datetime),
+
+            # Citations
+            'principalEditor': json_str(text.admin_principal_editor),
+            'contributors': json_str(text.admin_contributors_list),
+            'sourceOfData': json_str(text.admin_source_of_data),
+            'permalink': permalink,
+            'imagePermissionStatement': clean_html(text.image_permission_statement),
+        })
+
+    return JsonResponse(data, safe=False)

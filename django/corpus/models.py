@@ -133,6 +133,24 @@ def queryset_to_html_list(queryset):
         return html
 
 
+def queryset_to_strlist(queryset, linebreaks=False):
+    """
+    Returns a string containing a list of objects in the queryset
+    If linebreaks is True, items will be a bulleted list, separated with new lines
+    If linebreaks is False, items will stay in a single line, separated by a comma
+    """
+    if queryset:
+        # Determine if separating by linebreaks or in the same line
+        if linebreaks:
+            separator = '\n'
+            start = '•  '
+        else:
+            separator = ', '
+            start = ''
+        # Return the combined string of all objects
+        return separator.join([f"{start}{getattr(obj, 'strlist_value', str(obj))}" for obj in queryset])
+
+
 #
 # 2. Select List models (all inherit from above SlAbstract class, with some extending with additional fields, etc.)
 #
@@ -605,6 +623,14 @@ class Text(models.Model):
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
     @property
+    def uri(self):
+        """
+        Unique Resource Identifier (URI) used in the data export
+        E.g. An external collaborator (OpenITI team) requested this
+        """
+        return f"IEDC{self.id:04d}"  # DON'T EVER CHANGE THIS, AS EXTERNAL PARTNERS USE IT
+
+    @property
     def has_textfoliotag(self):
         for folio in self.text_folios.all():
             if len(folio.text_folio_tags.all()):
@@ -662,7 +688,7 @@ class Text(models.Model):
     @property
     def gregorian_date_range_str(self):
         if self.gregorian_date_range_start and self.gregorian_date_range_end:
-            return f'{self.gregorian_date_range_start}-{self.gregorian_date_range_end}'
+            return f'{self.gregorian_date_range_start} - {self.gregorian_date_range_end}'
         elif self.gregorian_date_range_start:
             return self.gregorian_date_range_start
         elif self.gregorian_date_range_end:
@@ -706,11 +732,7 @@ class Text(models.Model):
     @property
     def image_permission_statement(self):
         if self.has_image:
-            return f"""Images of this Text displayed on this web page are provided by {self.image_credit}.
-            <br>
-            © {self.image_credit}, All rights reserved.
-            <br>
-            If you wish to reproduce these images please contact {self.image_credit}."""
+            return f"""Images of this Text displayed on this web page are provided by {self.image_credit}.<br> © {self.image_credit}, All rights reserved.<br> If you wish to reproduce these images please contact {self.image_credit}."""
 
     @property
     def summary_of_content_preview(self):
@@ -790,6 +812,58 @@ class Text(models.Model):
                 html += f'<li><a href="{reverse("corpus:text-detail", args=[str(text.id)])}">{text}</a></li>'
             html += '</ul>'
             return html
+
+    @property
+    def strlist_additional_languages(self):
+        return queryset_to_strlist(self.additional_languages.all())
+
+    @property
+    def strlist_toponyms(self):
+        return queryset_to_strlist(self.toponyms.all())
+
+    @property
+    def strlist_writing_support_details(self):
+        return queryset_to_strlist(self.writing_support_details.all())
+
+    @property
+    def strlist_publications(self):
+        return queryset_to_strlist(self.text_related_publications.all(), linebreaks=True)
+
+    @property
+    def strlist_persons_in_texts(self):
+        return queryset_to_strlist(self.persons_in_texts.all(), linebreaks=True)
+
+    @property
+    def strlist_texts(self):
+        return queryset_to_strlist(self.texts.all(), linebreaks=True)
+
+    @property
+    def strlist_text_folios(self):
+        return queryset_to_strlist(self.text_folios.all(), linebreaks=True)
+
+    @property
+    def transliteration_text_lines_str(self):
+        return "\n".join([f.transliteration_text_lines_str for f in self.text_folios.all()])
+
+    @property
+    def transcription_text_lines_str(self):
+        return "\n".join([f.transcription_text_lines_str for f in self.text_folios.all()])
+
+    @property
+    def translation_text_lines_str(self):
+        return "\n".join([f.translation_text_lines_str for f in self.text_folios.all()])
+
+    @property
+    def transliteration(self):
+        return "\n".join([f.transliteration for f in self.text_folios.all()])
+
+    @property
+    def transcription(self):
+        return "\n".join([f.transcription for f in self.text_folios.all()])
+
+    @property
+    def translation(self):
+        return "\n".join([f.translation for f in self.text_folios.all()])
 
     @property
     def is_codex(self):
@@ -935,6 +1009,14 @@ class TextRelatedPublication(models.Model):
     catalogue_number = models.CharField(max_length=1000, blank=True, null=True)
     details = models.CharField(max_length=1000, blank=True, null=True, help_text='Provide additional details, such as "The IEDC translation and transcription have been taken from this publication".')
 
+    @property
+    def strlist_value(self):
+        value = str(self.publication)
+        value += f' (Pages: {self.pages})' if self.pages else ''
+        value += f' | Catalogue Number: {self.catalogue_number}' if self.catalogue_number else ''
+        value += f' | {self.details}' if self.details else ''
+        return value
+
     class Meta:
         verbose_name = 'Related Publication'
 
@@ -1015,13 +1097,10 @@ Please note that the heading text must appear outside of a list and not as a num
             line_index = -1
 
             for line in lines:
-
                 # Lines that are <li> elements (aka list items in a <ol> element, aka standard lines of text)
                 if str(line).startswith('<li'):
-
                     # Increase the line index for each line
                     line_index += 1
-
                     # Line number
                     try:
                         line_number = int(line.attrs['value'])
@@ -1135,6 +1214,10 @@ Please note that the heading text must appear outside of a list and not as a num
             return lines_data
 
     @property
+    def transliteration_text_lines(self):
+        return self.trans_text_lines(self.transliteration, 'transliteration')
+
+    @property
     def transcription_text_lines(self):
         return self.trans_text_lines(self.transcription, 'transcription')
 
@@ -1142,9 +1225,29 @@ Please note that the heading text must appear outside of a list and not as a num
     def translation_text_lines(self):
         return self.trans_text_lines(self.translation, 'translation')
 
+    def trans_text_lines_str(self, trans_text_lines):
+        if trans_text_lines:
+            return f"[{self.name_short}]\n" + "\n".join([f"{lne['lineNumbers']}: {lne['text']}" for lne in trans_text_lines if 'lineNumbers' in lne]) + "\n"
+        else:
+            return '-'
+
     @property
-    def transliteration_text_lines(self):
-        return self.trans_text_lines(self.transliteration, 'transliteration')
+    def transliteration_text_lines_str(self):
+        return self.trans_text_lines_str(self.transliteration_text_lines)
+
+    @property
+    def transcription_text_lines_str(self):
+        return self.trans_text_lines_str(self.transcription_text_lines)
+
+    @property
+    def translation_text_lines_str(self):
+        return self.trans_text_lines_str(self.translation_text_lines)
+
+    @property
+    def strlist_value(self):
+        value = self.name_short
+        value += f' - Image: https://www.invisible-east.org{self.image.url}' if self.image else ''
+        return value
 
     @property
     def image_is_wider_than_tall(self):
@@ -1274,6 +1377,13 @@ class PersonInText(models.Model):
     person = models.ForeignKey('Person', on_delete=models.CASCADE, related_name=related_name, help_text="Be sure to search the list before adding a new person. We do not want duplicate records.")
     person_name_in_text = models.CharField(max_length=1000, blank=True, null=True, help_text='If Person is named differently in Text than in this database then record their name in the Text here', verbose_name='person name (as it appears in this text)')
     person_role_in_text = models.ForeignKey('SlPersonInTextRole', on_delete=models.SET_NULL, blank=True, null=True, related_name=related_name)
+
+    @property
+    def strlist_value(self):
+        value = self.person.name
+        value += f' ({self.person_name_in_text})' if self.person_name_in_text else ''
+        value += f' ({self.person.gender})' if self.person.gender else ''
+        return value
 
     def __str__(self):
         str = f'{self.text.title}: {self.person.name}'

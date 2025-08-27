@@ -1,5 +1,7 @@
-// Tooltips
+// Language code (English or Persian)
+var languageCode = (window.location.href.includes('/fa/') ? 'fa' : 'en');
 
+// Tooltips
 $('label[title], .corpus-text-list-options-search-type-button').attr('data-placement', 'bottom').tooltip();
 
 // Click mobile toggle button on corpus-text-list-options 
@@ -20,6 +22,11 @@ $('#corpus-text-list-options-toggler').on('click', function(){
         $(this).find('#corpus-text-list-options-toggler-inactive').hide();
         $(this).find('#corpus-text-list-options-toggler-active').show();
     }
+});
+
+$('#corpus-text-list-options-filters .info-alert').on('click', function(){
+    let attrName = (languageCode == 'fa' ? 'data-alert-fa' : 'data-alert');
+    alert($(this).attr(attrName));
 });
 
 // Reset form
@@ -50,7 +57,7 @@ $('.corpus-text-list-options-search-type-button').on('click', function(){
     let searchType = $(this).attr('data-type');
     $('#corpus-text-list-options-search-type').val(searchType);
     // Set placeholder text of search boxes
-    let placeholder = 'Search all fields by keyword';
+    let placeholder = (languageCode == 'en' ? 'Search all fields by keyword' : 'جستجوی تمامی داد‌ه‌ها با استفاده از کلیدواژه');
     if (searchType === 'regex') placeholder = 'Search all fields with RegEx'
     $('.corpus-text-list-options-search-fields-instance input').first().attr('placeholder', placeholder);
 });
