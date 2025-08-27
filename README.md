@@ -17,6 +17,11 @@ The people directly involved in the development of this website are from:
 To get in touch with us about this website or the research project, please email us at: <hello@ahrsoftware.ac.uk>
 
 
+## Data
+
+You can download all of the project's data in JSON format by going to: <https://www.invisible-east.org/corpus/downloaddata/json/>
+
+
 ## Prerequisites
 
 To run this project, you're required to have the following software installed on your machine:

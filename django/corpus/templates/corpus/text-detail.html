@@ -44,14 +44,10 @@
         <article class="tabbed" id="corpus-text-detail-content-details">
             <div class="tabbed-title">{% translate 'Details' %}</div>
 
-            {% comment %}
-            <!-- Export data -->
-            <div id="orpus-text-detail-content-details-dataexport"  style="float: {% if LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %};">
-                <a href="{% url 'corpus:dataexport-csv' %}?text_ids={{ object.id }}">
-                    <i class="fas fa-file-download"></i> Download as CSV
-                </a>
+            <!-- Download Data -->
+            <div style="float: {% if LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %};">
+                {% include 'corpus/snippets/downloaddata.html' with downloaddata_text_ids=object.id data_description='the current text' %}
             </div>
-            {% endcomment %}
 
             {% for data_item in data_items %}
 

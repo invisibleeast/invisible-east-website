@@ -33,7 +33,7 @@
                 <input type="hidden" id="corpus-text-list-options-search-type" name="search_type">
                 <!-- Regex search toggle button -->
                 <div id="corpus-text-list-options-search-type">
-                    <strong>Search type:</strong>
+                    <strong>{% translate 'Search type' %}:</strong>
                     <!-- Buttons -->
                     <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button" title="{% translate 'Search using keywords' %}" data-type="">{% translate 'General' %}</div><!--
                     --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button" title="{% translate 'Search using regular expressions' %}" data-type="regex">{% translate 'RegEx' %}</div>
@@ -106,23 +106,14 @@
                 {% endif %}
             </select>
         </div>
+        <!-- Download Data -->
+        {% include 'corpus/snippets/downloaddata.html' with data_description='all texts in the search results' %}
     </section>
 
     <section id="corpus-text-list-searchcriteria">
         <!-- Filled in dynamically via JS -->
         <div id="corpus-text-list-searchcriteria-content"></div>
     </section>
-
-    {% comment %}
-    {% if dataexport_text_ids %}
-        <!-- Export data -->
-        <section id="corpus-text-list-dataexport">
-            <a href="{% url 'corpus:dataexport-csv' %}?text_ids={{ dataexport_text_ids }}">
-                <i class="fas fa-file-download"></i> Download Results as CSV
-            </a>
-        </section>
-    {% endif %}
-    {% endcomment %}
 
     <!-- List Items -->
     <section id="corpus-text-list-items">

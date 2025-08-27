@@ -89,6 +89,15 @@
         width: 100%;
     }
 
+    #corpus-text-list-header-title,
+    #corpus-text-list-header-count,
+    #corpus-text-list-header-sort,
+    #downloaddata-trigger {
+        display: block;
+        margin: 0 0 1rem 0;
+        width: fit-content;
+    }
+
     #corpus-text-list-options-toggler {
         display: block;
         position: fixed;

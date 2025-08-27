@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Version of this project (see: https://semver.org/)
-VERSION = '1.2.3'
+VERSION = '1.3.0'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'ckeditor',
     'ckeditor_uploader',
-    'rest_framework',
     'django_admin_listfilter_dropdown',
     # Custom
     'account',

@@ -622,7 +622,7 @@ class TextAdminView(GenericAdminView):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all many to many fields to display the filter_horizontal widget
-        self.filter_horizontal = get_manytomany_fields(self.model)
+        self.filter_horizontal = get_manytomany_fields(self.model, ['texts'])
         # Set all foreign key fields to display the autocomplete widget
         self.autocomplete_fields = get_foreignkey_fields(
             model=self.model,
@@ -730,6 +730,13 @@ class PersonAdminView(GenericAdminView):
         M2MPersonToPerson2Inline,
         M2MPersonToPerson1Inline
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all many to many fields to display the filter_horizontal widget
+        self.filter_horizontal = get_manytomany_fields(self.model, ['persons'])
+        # Set all foreign key fields to display the autocomplete widget
+        self.autocomplete_fields = get_foreignkey_fields(model=self.model,)
 
 
 @admin.register(models.PersonInText)

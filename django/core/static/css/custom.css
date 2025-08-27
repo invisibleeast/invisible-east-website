@@ -18,7 +18,7 @@ html, body {
     --color-secondary-light: #e6e3d0;
     --color-red: #c23616;
     --color-red-light: #e74c3c;
-    --color-green: #27ae60;
+    --color-green: #008839;
     --color-purple: #8e44ad;
 }
 
@@ -728,6 +728,10 @@ main section {
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+#corpus-text-list-options-filters .info-alert {
+    cursor: pointer;
+}
+
 #corpus-text-list-options hr {
     margin: 2em auto 0.7em auto;
     border-top: 1px solid #CCC;
@@ -951,7 +955,7 @@ main section {
 
 #corpus-text-list-header-count {
     padding: 0;
-    margin: 0 5em;
+    margin: 0 2em;
     color: #707070;
     font-size: 1rem;
     display: inline-block;
@@ -975,19 +979,89 @@ main section {
     background-repeat: no-repeat;
     background-position-x: 100%;
     background-position-y: 5px;
-    background-color: transparent;
+    background-color: #EEE;
     border-radius: 0.3em;
 }
 
-#corpus-text-list-header-sort-select:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+#downloaddata-trigger {
+    display: inline-block;
+    margin-left: 2em;
+    cursor: pointer;
+    border-radius: 0.3em;
+    background: #EEE;
+    padding: 0.3em 0.8em;
+    font-weight: 500;
 }
 
-#corpus-text-list-dataexport {
-    padding: 1em 3.5em 0 3.5em;
-    color: #707070;
-    text-align: right;
-    font-size: 1rem;
+#downloaddata-trigger:hover {
+    color: white;
+    background: var(--color-primary);
+}
+
+#downloaddata-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 100000000;
+    display: none;
+}
+
+#downloaddata-popup-content {
+    margin: 10vh auto 0 auto;
+    width: 40em;
+    min-height: 10em;
+    text-align: center;
+    max-width: 90%;
+    background: white;
+    padding: 2em;
+    position: relative;
+}
+
+#downloaddata-popup-content-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.3em;
+    user-select: none;
+    cursor: pointer;
+}
+
+#downloaddata-popup-content h4 {
+    padding-top: 0;
+}
+
+#downloaddata-popup-content-links {
+    width: fit-content;
+    margin: 2em auto;
+    padding: 0;
+}
+
+#downloaddata-popup-content-links li {
+    width: 100%;    
+    list-style: none;
+    background: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    margin: 1em 0;
+    padding: 0.5em 1.5em;
+    border-radius: 0.3em;
+    font-weight: 500;
+    user-select: none;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+
+#downloaddata-popup-content-links li:hover {
+    background: var(--color-primary-dark);
+}
+
+#downloaddata-popup-content-downloadstarted {
+    font-weight: 500;
+    color: var(--color-green);
+    margin-top: 2em;
 }
 
 /* Corpus List Items */
@@ -1044,8 +1118,9 @@ main section {
 }
 
 .corpus-text-list-items-item-text-title-count {
-    display: inline-block;
-    margin: 0 0.3em;
+    display: block;
+    width: fit-content;
+    margin: -1em 0 0.5em 0;
     padding: 0.1em 0.4em;
     border: 1px solid #606060;
     color: #606060;
