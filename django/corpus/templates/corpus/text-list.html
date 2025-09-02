@@ -146,7 +146,7 @@
                         <div class="corpus-text-list-items-item-text-tags">
                             <strong>{% translate 'Tags' %}: </strong>
                             {% for tag in object.tags %}
-                                <span data-tagid="{{ tag.id }}">{{ tag.name }}</span>
+                                <span class="corpus-text-list-items-item-text-tags-tag" data-tagid="{{ tag.id }}">{{ tag.name }}</span>
                             {% endfor %}
                         </div>
                     {% endif %}

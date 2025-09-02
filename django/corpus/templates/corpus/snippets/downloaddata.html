@@ -1,20 +1,24 @@
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
 {% if downloaddata_text_ids or 1 %}
     <!-- Download data (trigger button + pop up) -->
-    <div id="downloaddata-trigger"><i class="fas fa-download"></i> Download</div>
+    <div id="downloaddata-trigger"><i class="fas fa-download"></i> {% translate 'Download' %}</div>
     <div id="downloaddata-popup">
         <div id="downloaddata-popup-content">
             <div id="downloaddata-popup-content-close">
                 <i class="fas fa-times"></i>
             </div>
-            <h4>Download IEDC Data</h4>
+            <h4>{% translate 'Download IEDC Data' %}</h4>
             <p>
-                You are about to download data for {{ data_description }} from the IEDC database.
+                {% if LANGUAGE_CODE == 'fa' %}با انتخاب یکی از گزینه‌های زیر، ذخیره‌سازی متن تمامی نتایج جستجویتان در پایگاه داده‌های شرق مکنون شروع می‌شود.{% else %}You are about to download data for {{ data_description }} from the IEDC database.{% endif %}
             </p>
             <p>
-                To start the download, please click on your desired format below.
+                {% translate 'To start the download, please click on your desired format below.' %}
             </p>
             <p>
-                <strong>Note: it can take up to 1 minute to download your data, so please wait whilst it processes</strong>
+                <strong>{% translate 'Note: it can take up to several minutes to download your data, so please wait whilst it processes' %}</strong>
             </p>
             <ul id="downloaddata-popup-content-links">
                 <li data-url="{% url 'corpus:downloaddata-word' %}?text_ids={{ downloaddata_text_ids }}">Microsoft Word (.docx)</li>

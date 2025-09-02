@@ -223,11 +223,26 @@ if (new URL(window.location.href).searchParams.get('search_type') == 'regex'){
 // Tags
 //
 
-$('.corpus-text-list-items-item-text-tags span').on('click', function(e){
+$('.corpus-text-list-items-item-text-tags-tag').on('click', function(e){
     e.preventDefault();  // Prevent the link to the Text from working
     let tagId = $(this).attr('data-tagid');
     $('#filter_fk_text_folios__text_folio_tags__tag').val(tagId).trigger('change');
 });
+
+$('.corpus-text-list-items-item-text-tags').each(function(){
+    let tags = $(this).find('.corpus-text-list-items-item-text-tags-tag');
+    let maxTags = 4;
+    tags.slice(maxTags).addClass(`corpus-text-list-items-item-text-tags-extra`);
+    if(tags.length > maxTags) $(this).append(`<span class="corpus-text-list-items-item-text-tags-extrashow">+${tags.length - maxTags}</span>`);
+});
+
+$('.corpus-text-list-items-item-text-tags-extrashow').on('click', function(e){
+    e.preventDefault();  // Prevent the link to the Text from working
+    $(this).parent().find('.corpus-text-list-items-item-text-tags-extra').removeClass('corpus-text-list-items-item-text-tags-extra');
+    $(this).remove();
+});
+
+
 
 
 //

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 15:36+0100\n"
+"POT-Creation-Date: 2025-09-02 08:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1707,6 +1707,11 @@ msgid ""
 "day writing - that were written in Iran, Afghanistan, and Central Asia at a "
 "time when Islam was still relatively new to the area, and when multicultural "
 "societies coexisted."
+msgstr ""
+
+#: general/templates/general/welcome.html:54
+#: general/templates/general/welcome.html:80
+msgid "Read more..."
 msgstr ""
 
 #: general/templates/general/welcome.html:57

@@ -1145,7 +1145,7 @@ main section {
     font-size: 0.95em;
 }
 
-.corpus-text-list-items-item-text-tags span {
+.corpus-text-list-items-item-text-tags-tag {
     background: #505050;
     color: white;
     padding: 0.3em 0.8em 0.2em 0.8em;
@@ -1155,8 +1155,23 @@ main section {
     font-size: 0.9em;
 }
 
-.corpus-text-list-items-item-text-tags span:hover {
+.corpus-text-list-items-item-text-tags-tag:hover {
     opacity: 0.8;
+}
+
+.corpus-text-list-items-item-text-tags-extra {
+    display: none;
+}
+
+.corpus-text-list-items-item-text-tags-extrashow {
+    background: #CCC;
+    color: #404040;
+    padding: 0.3em 0.8em 0.2em 0.8em;
+    display: inline-block;
+    margin: 0.2em 0.4em;
+    border-radius: 0.3em;
+    font-size: 0.9em;
+    font-weight: 600;
 }
 
 .corpus-text-list-items-item-notyetapproved {
