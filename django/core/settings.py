@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 # Version of this project (see: https://semver.org/)
-VERSION = '1.3.0'
+VERSION = '1.3.1'
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

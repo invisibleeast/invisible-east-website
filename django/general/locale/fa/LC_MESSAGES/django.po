@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 15:36+0100\n"
+"POT-Creation-Date: 2025-09-02 08:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1984,6 +1984,11 @@ msgstr ""
 "اسلام هنوز پدیده‌ای نسبتاً نو در این مناطق بود و جوامع چندفرهنگی در کنار هم "
 "زندگی می‌کردند."
 
+#: general/templates/general/welcome.html:54
+#: general/templates/general/welcome.html:80
+msgid "Read more..."
+msgstr "بيشتر بخوانيد..."
+
 #: general/templates/general/welcome.html:57
 msgid ""
 "Our corpus website is aimed at making publicly available academic research "
@@ -2093,10 +2098,8 @@ msgstr ""
 "پشتیبانی خواهیم کرد."
 
 #: general/templates/general/welcome.html:94
-#, fuzzy
-#| msgid "A Message from Arezou"
 msgid "A Message from the Programme Director"
-msgstr "پیامی از آرزو"
+msgstr "پیامی از مدیر برنامه"
 
 #: general/templates/general/welcome.html:100
 msgid ""
@@ -2134,10 +2137,8 @@ msgstr ""
 "دانش باعث اتحاد مردم می‌شود و من به نقش خود در تولید آن افتخار می‌کنم."
 
 #: general/templates/general/welcome.html:113
-#, fuzzy
-#| msgid "Assistant Database Manager"
 msgid "A Message from the Assistant Database Manager"
-msgstr "دستیار مدیر پایگاه داده‌ها"
+msgstr "پیامی از دستیار مدیر پایگاه"
 
 #: general/templates/general/welcome.html:119
 msgid ""

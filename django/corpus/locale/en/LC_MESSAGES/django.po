@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-19 10:56+0100\n"
+"POT-Creation-Date: 2025-09-02 08:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,24 @@ msgid ""
 "you can see all the texts in our corpus which mention this toponym. Please "
 "bear in mind that the exact geographical location of origin is not always "
 "possible to establish. It is, therefore, only an approximation."
+msgstr ""
+
+#: corpus/templates/corpus/snippets/downloaddata.html:7
+msgid "Download"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/downloaddata.html:13
+msgid "Download IEDC Data"
+msgstr ""
+
+#: corpus/templates/corpus/snippets/downloaddata.html:18
+msgid "To start the download, please click on your desired format below."
+msgstr ""
+
+#: corpus/templates/corpus/snippets/downloaddata.html:21
+msgid ""
+"Note: it can take up to several minutes to download your data, so please "
+"wait whilst it processes"
 msgstr ""
 
 #: corpus/templates/corpus/snippets/foliotext-options.html:9
@@ -64,24 +82,24 @@ msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:32
 #: corpus/templates/corpus/text-detail.html:45
-#: corpus/templates/corpus/text-detail.html:312
+#: corpus/templates/corpus/text-detail.html:307
 msgid "Details"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:33
-#: corpus/templates/corpus/text-detail.html:119
+#: corpus/templates/corpus/text-detail.html:114
 msgid "Folios"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:34
-#: corpus/templates/corpus/text-detail.html:93
+#: corpus/templates/corpus/text-detail.html:88
 msgid "Codex"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:35
-#: corpus/templates/corpus/text-detail.html:131
-#: corpus/templates/corpus/text-detail.html:148
-#: corpus/templates/corpus/text-list.html:157
+#: corpus/templates/corpus/text-detail.html:126
+#: corpus/templates/corpus/text-detail.html:143
+#: corpus/templates/corpus/text-list.html:147
 msgid "Tags"
 msgstr ""
 
@@ -98,12 +116,12 @@ msgid "Translations"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:39
-#: corpus/templates/corpus/text-detail.html:269
+#: corpus/templates/corpus/text-detail.html:264
 msgid "Palaeography"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:40
-#: corpus/templates/corpus/text-detail.html:282
+#: corpus/templates/corpus/text-detail.html:277
 msgid "Map"
 msgstr ""
 
@@ -111,41 +129,41 @@ msgstr ""
 msgid "Seals"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:133
-#: corpus/templates/corpus/text-detail.html:237
-#: corpus/templates/corpus/text-list.html:166
+#: corpus/templates/corpus/text-detail.html:128
+#: corpus/templates/corpus/text-detail.html:232
+#: corpus/templates/corpus/text-list.html:156
 msgid "Transcription"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:136
-#: corpus/templates/corpus/text-detail.html:253
-#: corpus/templates/corpus/text-list.html:167
+#: corpus/templates/corpus/text-detail.html:131
+#: corpus/templates/corpus/text-detail.html:248
+#: corpus/templates/corpus/text-list.html:157
 msgid "Translation"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:139
-#: corpus/templates/corpus/text-detail.html:221
-#: corpus/templates/corpus/text-list.html:168
+#: corpus/templates/corpus/text-detail.html:134
+#: corpus/templates/corpus/text-detail.html:216
+#: corpus/templates/corpus/text-list.html:158
 msgid "Transliteration"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:188
+#: corpus/templates/corpus/text-detail.html:183
 msgid "View in Transcriptions"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:193
+#: corpus/templates/corpus/text-detail.html:188
 msgid "View in Translations"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:198
+#: corpus/templates/corpus/text-detail.html:193
 msgid "View in Transliterations"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:210
+#: corpus/templates/corpus/text-detail.html:205
 msgid "This folio doesn't have any tags yet. Please check back soon."
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:284
+#: corpus/templates/corpus/text-detail.html:279
 msgid ""
 "This map displays the place names identified by the Invisible East Team "
 "related to this corpus text. If you click on a pin, you can see all the "
@@ -154,127 +172,127 @@ msgid ""
 "It is, therefore, only an approximation."
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:287
+#: corpus/templates/corpus/text-detail.html:282
 msgid "You can also view"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:287
+#: corpus/templates/corpus/text-detail.html:282
 msgid "a full map of all toponyms within the Invisible East Digital Corpus"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:287
+#: corpus/templates/corpus/text-detail.html:282
 msgid "afterlink-detailtotoponyms"
 msgstr "."
 
-#: corpus/templates/corpus/text-detail.html:299
+#: corpus/templates/corpus/text-detail.html:294
 msgid "Seal"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:309
-#: corpus/templates/corpus/text-list.html:150
+#: corpus/templates/corpus/text-detail.html:304
+#: corpus/templates/corpus/text-list.html:140
 msgid "Type"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:315
+#: corpus/templates/corpus/text-detail.html:310
 msgid "Inscription"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:318
+#: corpus/templates/corpus/text-detail.html:313
 msgid "Measurements"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:321
+#: corpus/templates/corpus/text-detail.html:316
 msgid "Descriptions"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:324
+#: corpus/templates/corpus/text-detail.html:319
 msgid "Colours"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:327
+#: corpus/templates/corpus/text-detail.html:322
 msgid "Seal Imprints"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:343
+#: corpus/templates/corpus/text-detail.html:338
 msgid "Previous Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:345
+#: corpus/templates/corpus/text-detail.html:340
 msgid "Next Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:349
+#: corpus/templates/corpus/text-detail.html:344
 msgid "Folio"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:358
+#: corpus/templates/corpus/text-detail.html:353
 msgid "Only show"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:360
-#: corpus/templates/corpus/text-detail.html:482
-#: corpus/templates/corpus/text-detail.html:500
+#: corpus/templates/corpus/text-detail.html:355
+#: corpus/templates/corpus/text-detail.html:477
+#: corpus/templates/corpus/text-detail.html:495
 msgid "Please select"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:374
+#: corpus/templates/corpus/text-detail.html:369
 msgid "Reset Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:376
+#: corpus/templates/corpus/text-detail.html:371
 msgid "Download Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:381
+#: corpus/templates/corpus/text-detail.html:376
 msgid "Reveal Parts on Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:384
+#: corpus/templates/corpus/text-detail.html:379
 msgid "Rotate Image Anticlockwise"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:386
+#: corpus/templates/corpus/text-detail.html:381
 msgid "Rotate Image Clockwise"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:388
+#: corpus/templates/corpus/text-detail.html:383
 msgid "Fullscreen"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:439
+#: corpus/templates/corpus/text-detail.html:434
 msgid "Images courtesy of"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:449
-#: corpus/templates/corpus/text-detail.html:474
+#: corpus/templates/corpus/text-detail.html:444
+#: corpus/templates/corpus/text-detail.html:469
 msgid "Tag Manager"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:480
+#: corpus/templates/corpus/text-detail.html:475
 msgid "Tag Category"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:490
+#: corpus/templates/corpus/text-detail.html:485
 msgid "Tag Search"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:498
+#: corpus/templates/corpus/text-detail.html:493
 msgid "Tag"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:508
+#: corpus/templates/corpus/text-detail.html:503
 msgid "Create a new tag"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:515
+#: corpus/templates/corpus/text-detail.html:510
 msgid "Tag Details"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:521
+#: corpus/templates/corpus/text-detail.html:516
 msgid "Draw on Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:526
+#: corpus/templates/corpus/text-detail.html:521
 msgid "Save Tag"
 msgstr ""
 
@@ -284,6 +302,10 @@ msgstr ""
 
 #: corpus/templates/corpus/text-list.html:26
 msgid "Search by Map"
+msgstr ""
+
+#: corpus/templates/corpus/text-list.html:36
+msgid "Search type"
 msgstr ""
 
 #: corpus/templates/corpus/text-list.html:38
@@ -307,7 +329,7 @@ msgid "Includes"
 msgstr ""
 
 #: corpus/templates/corpus/text-list.html:65
-#: corpus/templates/corpus/text-list.html:152
+#: corpus/templates/corpus/text-list.html:142
 msgid "Dates (CE)"
 msgstr ""
 
@@ -335,49 +357,49 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:139
+#: corpus/templates/corpus/text-list.html:129
 msgid "In IEDC since"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:149
+#: corpus/templates/corpus/text-list.html:139
 msgid "Primary Language"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:149
-#: corpus/templates/corpus/text-list.html:150
-#: corpus/templates/corpus/text-list.html:151
-#: corpus/templates/corpus/text-list.html:152
+#: corpus/templates/corpus/text-list.html:139
+#: corpus/templates/corpus/text-list.html:140
+#: corpus/templates/corpus/text-list.html:141
+#: corpus/templates/corpus/text-list.html:142
 msgid "Unknown"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:151
+#: corpus/templates/corpus/text-list.html:141
 msgid "Writing Support"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:173
+#: corpus/templates/corpus/text-list.html:163
 msgid "Not yet approved"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:200
+#: corpus/templates/corpus/text-list.html:190
 msgid "First"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:206
+#: corpus/templates/corpus/text-list.html:196
 msgid "Previous"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:214
+#: corpus/templates/corpus/text-list.html:204
 msgid "Page"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:216
+#: corpus/templates/corpus/text-list.html:206
 msgid "of"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:226
+#: corpus/templates/corpus/text-list.html:216
 msgid "Next"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:232
+#: corpus/templates/corpus/text-list.html:222
 msgid "Last"
 msgstr ""
