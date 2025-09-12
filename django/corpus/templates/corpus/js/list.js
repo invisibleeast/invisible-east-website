@@ -66,7 +66,7 @@ $('.corpus-text-list-options-search-type-button').on('click', function(){
 function addSearchBox(){
     let isFirstInstance = Boolean($('.corpus-text-list-options-search-fields-instance').length == 0);
     // Set HTML, but only include operator and remove buttons if this isn't the first instance
-    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator" title="Toggle or/and">` + multipleSearchesOperator + `</div>` : ``) + `<input type="text" title="search">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary" title="Search"><i class="fas fa-search"></i></button>`) + `</div>`;
+    let searchInputHtml = `<div class="corpus-text-list-options-search-fields-instance">` + (!isFirstInstance ? `<div class="corpus-text-list-options-search-fields-instance-operator operator-or${(multipleSearchesOperator == 'or' ? ' active' : '')} ${(languageCode == 'fa' ? 'rtl' : 'ltr')}" data-operator="or" title="or">${(languageCode == 'fa' ? 'یا' : 'or')}</div><div class="corpus-text-list-options-search-fields-instance-operator operator-and${(multipleSearchesOperator == 'and' ? ' active' : '')} ${(languageCode == 'fa' ? 'rtl' : 'ltr')}"  data-operator="and" title="and">${(languageCode == 'fa' ? 'و' : 'and')}</div>` : ``) + `<input type="text" title="search">` + (!isFirstInstance ? `<span title="Remove this search box" class="corpus-text-list-options-search-fields-instance-remove"><i class="fas fa-minus"></i></span>` : `<button id="corpus-text-list-options-submit" class="corpus-text-list-options-submitbuttons-primary" title="Search"><i class="fas fa-search"></i></button>`) + `</div>`;
     // Append HTML
     $('#corpus-text-list-options-search-fields').append(searchInputHtml);
 }
@@ -90,7 +90,8 @@ $('#corpus-text-list-options').on('click', '.corpus-text-list-options-search-fie
     if (multipleSearchesOperator === 'or') multipleSearchesOperator = 'and';
     else multipleSearchesOperator = 'or';
     // Set the text of each instance
-    $('.corpus-text-list-options-search-fields-instance-operator').text(multipleSearchesOperator);
+    $('.corpus-text-list-options-search-fields-instance-operator').removeClass('active');
+    $(`.corpus-text-list-options-search-fields-instance-operator[data-operator=${multipleSearchesOperator}]`).addClass('active');
 });
 
 // Swap related greater than/less than values if not in order. So if gt > lt

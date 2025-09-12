@@ -38,7 +38,7 @@ msgstr ""
 
 #: corpus/templates/corpus/snippets/downloaddata.html:7
 msgid "Download"
-msgstr "تحميل"
+msgstr "بارگذاری"
 
 #: corpus/templates/corpus/snippets/downloaddata.html:13
 msgid "Download IEDC Data"

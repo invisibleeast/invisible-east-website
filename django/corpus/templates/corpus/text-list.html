@@ -35,8 +35,8 @@
                 <div id="corpus-text-list-options-search-type">
                     <strong>{% translate 'Search type' %}:</strong>
                     <!-- Buttons -->
-                    <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button" title="{% translate 'Search using keywords' %}" data-type="">{% translate 'General' %}</div><!--
-                    --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button" title="{% translate 'Search using regular expressions' %}" data-type="regex">{% translate 'RegEx' %}</div>
+                    <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button{% if LANGUAGE_CODE == 'fa' %} rtl{% endif %}" title="{% translate 'Search using keywords' %}" data-type="">{% translate 'General' %}</div><!--
+                    --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button{% if LANGUAGE_CODE == 'fa' %} rtl{% endif %}" title="{% translate 'Search using regular expressions' %}" data-type="regex">{% translate 'RegEx' %}</div>
                     <!-- Info link -->
                     <a href="{% url 'general:about-search' %}#about-search-type"><i class="fas fa-info-circle"></i></a>
                 </div>
@@ -101,7 +101,9 @@
             <select id="corpus-text-list-header-sort-select" name="sort">
                 {% if options_sort|length > 0 %}
                     {% for os in options_sort %}
-                        <option value="{{ os.value }}">{{ os.label }}</option>
+                        <option value="{{ os.value }}">
+                            {% if LANGUAGE_CODE == 'fa' %}{{ os.label_fa }}{% else %}{{ os.label }}{% endif %}
+                        </option>
                     {% endfor %}
                 {% endif %}
             </select>
@@ -202,7 +204,7 @@
             <div class="corpus-text-list-pagination-section">
                 <span class="corpus-text-list-pagination-current">
                     {% translate 'Page' %}
-                    <input id="corpus-text-list-pagination-current-pageselector" type="number" value="{{ page_obj.number }}" max="{{ page_obj.paginator.num_pages }}" min="1">
+                    <input id="corpus-text-list-pagination-current-pageselector" type="number" title="page" value="{{ page_obj.number }}" max="{{ page_obj.paginator.num_pages }}" min="1">
                     {% translate 'of' %}
                     {{ page_obj.paginator.num_pages }}
                 </span>

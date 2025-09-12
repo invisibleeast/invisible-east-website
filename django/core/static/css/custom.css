@@ -867,6 +867,14 @@ main section {
     border-radius: 0 0.3em 0.3em 0;
 }
 
+.corpus-text-list-options-search-type-button.rtl:first-of-type {
+    border-radius: 0 0.3em 0.3em 0;
+}
+
+.corpus-text-list-options-search-type-button.rtl:last-of-type {
+    border-radius: 0.3em 0 0 0.3em;
+}
+
 .corpus-text-list-options-search-type-button:not(.active):hover {
     opacity: 0.8;
 }
@@ -896,24 +904,53 @@ main section {
 }
 
 .corpus-text-list-options-search-fields-instance span,
-.corpus-text-list-options-search-fields-instance-operator,
 #corpus-text-list-options-search-addinstance {
     background: var(--color-primary-light);
     color: var(--color-primary-dark);
 }
 
 .corpus-text-list-options-search-fields-instance span:hover,
-.corpus-text-list-options-search-fields-instance-operator:hover,
 #corpus-text-list-options-search-addinstance:hover {
     opacity: 0.8;
 }
 
 .corpus-text-list-options-search-fields-instance-operator {
+    display: inline-block;
+    background: var(--color-primary-light);
+    padding: 0.2em 0.8em 0.1em 0.8em;
+    margin: 0.4em 1px;
+    color: var(--color-primary-dark);
+    font-weight: 500;
+    font-size: 0.95em;
     cursor: pointer;
-    width: fit-content;
-    padding: 0.13em 0.6em;
-    border-radius: 0.2em;
-    margin: 0.3em 0;
+}
+
+.corpus-text-list-options-search-fields-instance-operator:hover {
+    opacity: 0.8;
+}
+
+.corpus-text-list-options-search-fields-instance-operator.active {
+    background: var(--color-secondary);
+    color: var(--color-secondary-dark);
+}
+
+.corpus-text-list-options-search-fields-instance-operator.operator-or {
+    border-radius: 0.3em 0 0 0.3em;
+    margin-left: 0.5em;
+}
+
+.corpus-text-list-options-search-fields-instance-operator.operator-and {
+    border-radius: 0 0.3em 0.3em 0;
+}
+
+.corpus-text-list-options-search-fields-instance-operator.operator-or.rtl {
+    border-radius: 0 0.3em 0.3em 0;
+    margin-right: 0.5em;
+    margin-left: 1px;
+}
+
+.corpus-text-list-options-search-fields-instance-operator.operator-and.rtl {
+    border-radius: 0.3em 0 0 0.3em;
 }
 
 #corpus-text-list-options-search-addinstance {
