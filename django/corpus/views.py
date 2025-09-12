@@ -701,12 +701,36 @@ class TextListView(ListView):
 
         # Options: Sort
         context['options_sort'] = [
-            {'value': 'id', 'label': 'Random'},
-            {'value': 'shelfmark', 'label': 'Shelfmark (A-Z)'},
-            {'value': 'gregorian_date_century__century_number', 'label': 'Converted date (CE) ↑'},
-            {'value': '-gregorian_date_century__century_number', 'label': 'Converted date (CE) ↓'},
-            {'value': 'meta_created_datetime', 'label': 'Date added to IEDC ↑'},
-            {'value': '-meta_created_datetime', 'label': 'Date added to IEDC ↓'}
+            {
+                'value': 'id',
+                'label': 'Random',
+                'label_fa': 'اتفاقی'
+            },
+            {
+                'value': 'shelfmark',
+                'label': 'Shelfmark (A-Z)',
+                'label_fa': 'شماره قفسه (الفبایی)'
+            },
+            {
+                'value': 'gregorian_date_century__century_number',
+                'label': 'Converted date (CE) ↑',
+                'label_fa': 'تاریخ میلادی ↑'
+            },
+            {
+                'value': '-gregorian_date_century__century_number',
+                'label': 'Converted date (CE) ↓',
+                'label_fa': 'تاریخ میلادی ↓'
+            },
+            {
+                'value': 'meta_created_datetime',
+                'label': 'Date added to IEDC ↑',
+                'label_fa': 'تاریخ اضافه شدن به پایگاه ↑'
+            },
+            {
+                'value': '-meta_created_datetime',
+                'label': 'Date added to IEDC ↓',
+                'label_fa': 'تاریخ اضافه شدن به پایگاه ↓'
+            }
         ]
 
         # Reused querysets in below filters (specified here to avoid duplicate SQL queries)
