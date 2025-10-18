@@ -713,7 +713,7 @@ main section {
 }
 
 #corpus-text-list-options-filters {
-    display: none;
+    /* display: none; */
 }
 
 .corpus-text-list-options-filters-filter-container a {
@@ -1725,6 +1725,21 @@ main section {
 
 .corpus-text-detail-trans-linktranstexttotag {
     display: none;
+}
+
+.corpus-text-detail-trans-emailmistake {
+    background: var(--color-secondary-dark);
+    color: var(--color-secondary);
+    padding: 0.2em 0.5em;
+    border-radius: 0.2em;
+    display: inline-block;
+    font-size: 0.95em;
+}
+
+.corpus-text-detail-trans-emailmistake:hover {
+    opacity: 0.9;
+    color: var(--color-secondary);
+    text-decoration: none;
 }
 
 .folio-lines {

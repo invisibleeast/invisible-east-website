@@ -577,6 +577,13 @@ class Text(models.Model):
         help_text='The main person responsible for this Corpus Text',
         verbose_name='principal editor'
     )
+    admin_principal_editor_details = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text="Optional. Include any necessary additional details about the Principal Editor of this text.",
+        verbose_name='principal editor (details)'
+    )
     admin_principal_data_entry_person = models.ForeignKey(
         User,
         related_name='text_admin_principal_data_entry_person',
@@ -723,6 +730,15 @@ class Text(models.Model):
     def admin_contributors_list(self):
         if self.admin_contributors:
             return ", ".join([str(c) for c in self.admin_contributors.all()])
+
+    @property
+    def admin_principal_editor_complete(self):
+        if self.admin_principal_editor:
+            pe = str(self.admin_principal_editor)
+            if self.admin_principal_editor_details:
+                return f'{pe} --- {self.admin_principal_editor_details}'
+            else:
+                return pe
 
     @property
     def image_credit(self):

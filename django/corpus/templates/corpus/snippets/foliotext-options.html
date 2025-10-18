@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n settings_value %}
 
 <div class="corpus-text-detail-content-options">
 
@@ -29,6 +29,10 @@
             <button class="corpus-text-detail-trans-linktranstexttotag" data-trans="{{ current_tab }}"><i class="fas fa-hashtag"></i> {% translate 'Link to Tag' %}</button>
         </div>
     {% endif %}
+
+    <div>
+        <a class="corpus-text-detail-trans-emailmistake" href="mailto:{% settings_value 'MAIN_CONTACT_EMAIL' %}?subject=IEDC: mistake spotted in text&body=I have spotted a mistake in the text for {{ object }} (ID = {{ object.id }}):%0D%0A%0D%0A%0D%0A">{% translate 'Spotted a mistake?' %}</a>
+    </div>
 
     <!--
         This form has only hidden values (so is invisible)

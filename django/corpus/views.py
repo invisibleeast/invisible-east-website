@@ -489,7 +489,7 @@ class TextDetailView(DetailView):
             {
                 'label': 'Principal Editor',
                 'label_fa': 'ویراستار اصلی',
-                'value': self.object.admin_principal_editor
+                'value': self.object.admin_principal_editor_complete
             },
             {
                 'label': 'Contributors',
@@ -703,8 +703,8 @@ class TextListView(ListView):
         context['options_sort'] = [
             {
                 'value': 'id',
-                'label': 'Random',
-                'label_fa': 'اتفاقی'
+                'label': '',
+                'label_fa': ''
             },
             {
                 'value': 'shelfmark',

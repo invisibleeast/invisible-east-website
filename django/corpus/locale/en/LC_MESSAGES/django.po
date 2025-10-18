@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-02 08:59+0100\n"
+"POT-Creation-Date: 2025-10-18 09:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,6 +69,10 @@ msgstr ""
 msgid "Link to Tag"
 msgstr ""
 
+#: corpus/templates/corpus/snippets/foliotext-options.html:34
+msgid "Spotted a mistake?"
+msgstr ""
+
 #: corpus/templates/corpus/text-detail.html:17
 msgid ""
 "This text is not yet approved, meaning it's not visible to public users."
@@ -99,7 +103,7 @@ msgstr ""
 #: corpus/templates/corpus/text-detail.html:35
 #: corpus/templates/corpus/text-detail.html:126
 #: corpus/templates/corpus/text-detail.html:143
-#: corpus/templates/corpus/text-list.html:147
+#: corpus/templates/corpus/text-list.html:149
 msgid "Tags"
 msgstr ""
 
@@ -131,19 +135,19 @@ msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:128
 #: corpus/templates/corpus/text-detail.html:232
-#: corpus/templates/corpus/text-list.html:156
+#: corpus/templates/corpus/text-list.html:158
 msgid "Transcription"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:131
 #: corpus/templates/corpus/text-detail.html:248
-#: corpus/templates/corpus/text-list.html:157
+#: corpus/templates/corpus/text-list.html:159
 msgid "Translation"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:134
 #: corpus/templates/corpus/text-detail.html:216
-#: corpus/templates/corpus/text-list.html:158
+#: corpus/templates/corpus/text-list.html:160
 msgid "Transliteration"
 msgstr ""
 
@@ -189,7 +193,7 @@ msgid "Seal"
 msgstr ""
 
 #: corpus/templates/corpus/text-detail.html:304
-#: corpus/templates/corpus/text-list.html:140
+#: corpus/templates/corpus/text-list.html:142
 msgid "Type"
 msgstr ""
 
@@ -329,7 +333,7 @@ msgid "Includes"
 msgstr ""
 
 #: corpus/templates/corpus/text-list.html:65
-#: corpus/templates/corpus/text-list.html:142
+#: corpus/templates/corpus/text-list.html:144
 msgid "Dates (CE)"
 msgstr ""
 
@@ -357,49 +361,49 @@ msgstr ""
 msgid "Sort by"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:129
+#: corpus/templates/corpus/text-list.html:131
 msgid "In IEDC since"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:139
+#: corpus/templates/corpus/text-list.html:141
 msgid "Primary Language"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:139
-#: corpus/templates/corpus/text-list.html:140
 #: corpus/templates/corpus/text-list.html:141
 #: corpus/templates/corpus/text-list.html:142
+#: corpus/templates/corpus/text-list.html:143
+#: corpus/templates/corpus/text-list.html:144
 msgid "Unknown"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:141
+#: corpus/templates/corpus/text-list.html:143
 msgid "Writing Support"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:163
+#: corpus/templates/corpus/text-list.html:165
 msgid "Not yet approved"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:190
+#: corpus/templates/corpus/text-list.html:192
 msgid "First"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:196
+#: corpus/templates/corpus/text-list.html:198
 msgid "Previous"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:204
+#: corpus/templates/corpus/text-list.html:206
 msgid "Page"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:206
+#: corpus/templates/corpus/text-list.html:208
 msgid "of"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:216
+#: corpus/templates/corpus/text-list.html:218
 msgid "Next"
 msgstr ""
 
-#: corpus/templates/corpus/text-list.html:222
+#: corpus/templates/corpus/text-list.html:224
 msgid "Last"
 msgstr ""
