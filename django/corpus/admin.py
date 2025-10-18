@@ -390,6 +390,7 @@ class TextAdminView(GenericAdminView):
             'fields': (
                 'admin_classification',
                 'admin_principal_editor',
+                'admin_principal_editor_details',
                 'admin_principal_data_entry_person',
                 'admin_contributors',
                 'admin_source_of_data',
