@@ -131,7 +131,9 @@
                         {% translate 'In IEDC since' %} {{ object.meta_created_datetime | date:"d M o" }} (IEDCID{{ object.id }})
                     </div>
                     <div class="corpus-text-list-items-item-text-title">
-                        <span class="corpus-text-list-items-item-text-title-count">{{ forloop.counter0|add:start_count }}</span> {{ object.title }}
+                        <span class="corpus-text-list-items-item-text-title-count">{{ forloop.counter0|add:start_count }}</span>
+                        <span class="corpus-text-list-items-item-text-title-collection">{{ object.collection }}:</span>
+                        <span class="corpus-text-list-items-item-text-title-shelfmark">{{ object.shelfmark }}</span>
                     </div>
                     <div class="corpus-text-list-items-item-text-details">
                         {% if object.summary_of_content %}

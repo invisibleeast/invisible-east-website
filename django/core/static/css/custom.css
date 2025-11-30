@@ -1163,6 +1163,15 @@ main section {
     color: #606060;
 }
 
+.corpus-text-list-items-item-text-title-collection {
+    color: black;
+}
+
+.corpus-text-list-items-item-text-title-shelfmark {
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
 .corpus-text-list-items-item-text-details {
     font-size: 0.9em;
     padding-top: 0.2em;
