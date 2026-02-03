@@ -527,6 +527,7 @@ class Text(models.Model):
     gregorian_date_range_start = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     gregorian_date_range_end = models.CharField(max_length=1000, blank=True, null=True, help_text=date_help_text)
     gregorian_date_century = models.ForeignKey(SlTextGregorianCentury, on_delete=models.SET_NULL, blank=True, null=True, help_text='This century data is only used to filter and sort results in the list of Corpus Texts in the public interface. If the exact century is not known but an approximate date range is available then insert your best estimate (e.g. the middle of the date range) or leave blank if no estimate is available.')
+    gregorian_date_sort = models.CharField(max_length=1000, blank=True, null=True, help_text='Used for sorting results by date on public website')
 
     # Commentary
     commentary = RichTextUploadingField(blank=True, null=True, help_text='<br>Commentary will not be displayed on the public website. It is for internal project team purposes only.')
@@ -725,6 +726,22 @@ class Text(models.Model):
             return self.gregorian_date_range_start
         elif self.gregorian_date_range_end:
             return self.gregorian_date_range_end
+
+    def set_gregorian_date_sort(self):
+        """ Set the value of this object's gregorian_date_sort field """
+
+        date = None
+        if self.gregorian_date:
+            date = self.gregorian_date
+        elif self.gregorian_date_range_start:
+            date = self.gregorian_date_range_start
+        elif self.gregorian_date_range_end:
+            date = self.gregorian_date_range_end
+        elif self.gregorian_date_century:
+            century = self.gregorian_date_century.century_number * 100
+            date = f"{century:04d}"
+        # Set the sort date field and save obj
+        self.gregorian_date_sort = date
 
     @property
     def admin_contributors_list(self):

@@ -299,6 +299,11 @@ li {
     display: none;
 }
 
+.highlight {
+    background: pink;
+    color: black;
+}
+
 /* ---------- Direction: rtl (right to left) e.g. for Persian */
 
 .rtl {

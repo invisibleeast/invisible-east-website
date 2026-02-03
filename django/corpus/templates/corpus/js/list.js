@@ -48,6 +48,15 @@ function showFilterResetButton(filter){
     else clearButton.hide();
 }
 
+// Append search to detail page links so search terms can be highlighted
+var listSearchTerms = new URLSearchParams(window.location.search).get('search');
+if (listSearchTerms){
+    $('a.corpus-text-list-items-item').attr('href', function(i, href){
+        // encodeURIComponent ensures special chars (like " [ ] &) don't break the link.
+        return href + '?search=' + encodeURIComponent(listSearchTerms);
+    });
+}
+
 // Set search type (i.e. general or regex)
 $('.corpus-text-list-options-search-type-button').on('click', function(){
     // Active status
@@ -121,8 +130,8 @@ $('.{{ filter_pre_gt }}, .{{ filter_pre_lt }}').on('change', function(){
 
 // Use Page Selector to go to specific page
 $('#corpus-text-list-pagination-current-pageselector').on('change', function(){
-    let newPage = $(this).val();
-    let maxPage = $(this).attr('max');
+    let newPage = parseInt($(this).val());
+    let maxPage = parseInt($(this).attr('max'));
     if (newPage > maxPage) newPage = maxPage;
     let url = new URL(window.location.href);
     url.searchParams.set('page', newPage);
@@ -212,9 +221,12 @@ new URL(window.location.href).searchParams.forEach(function(value, key){
     // If key starts with the 'filter_pre' (as defined in Django view get_context_data() method) then it's a filter
     if (key.startsWith('{{ filter_pre }}')) setFieldValueFromUrl(key, key);
 });
-// Search Type (i.e. regex or not)
-if (new URL(window.location.href).searchParams.get('search_type') == 'regex'){
+// Search Type (i.e. regex or general or exact)
+let searchType = new URL(window.location.href).searchParams.get('search_type');
+if (searchType == 'regex'){
     $('#corpus-text-list-options-search-type-regex').trigger('click');
+} else if (searchType == 'exact'){
+    $('#corpus-text-list-options-search-type-exact').trigger('click');
 } else {
     $('#corpus-text-list-options-search-type-general').trigger('click');
 }

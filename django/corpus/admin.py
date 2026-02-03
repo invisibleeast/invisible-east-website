@@ -609,6 +609,9 @@ class TextAdminView(GenericAdminView):
         if obj.codex_images_location and len(obj.codex_images_location):
             obj.codex_images_location = obj.codex_images_location.strip()
 
+        # Automatically set the set_gregorian_date_sort field
+        obj.set_gregorian_date_sort()
+
         # Set meta created data (if adding a new object)
         if obj.id is None:
             obj.meta_created_by = request.user
