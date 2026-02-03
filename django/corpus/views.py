@@ -595,12 +595,16 @@ class TextListView(ListView):
         ]
         # Set list of search options
         if searches not in [[''], []]:
-            search_type = 'iregex' if self.request.GET.get('search_type', '') == 'regex' else 'icontains'
+            search_type = self.request.GET.get('search_type', '')
+            search_lookup = 'iregex' if search_type in ['regex', 'exact'] else 'icontains'
             operator = or_ if self.request.GET.get('search_operator', '') == 'or' else and_
             queries = []
             for search in searches:
+                # Exact search will force full word matching, e.g. search 'hen' won't return 'when'
+                if search_type == 'exact':
+                    search = r'\y{}\y'.format(re.escape(search))
                 # Uses 'or_' as the search term could appear in any field, so 'and_' wouldn't be suitable
-                queries.append(reduce(or_, (Q((f'{field_name}__{search_type}', search.strip())) for field_name in field_names_to_search)))
+                queries.append(reduce(or_, (Q((f'{field_name}__{search_lookup}', search.strip())) for field_name in field_names_to_search)))
             # Connect the individual search queries via the user-defined operator (or_ / and_)
             queries = reduce(operator, queries)
             # Filter the queryset using the completed search query
@@ -712,12 +716,12 @@ class TextListView(ListView):
                 'label_fa': 'شماره قفسه (الفبایی)'
             },
             {
-                'value': 'gregorian_date_century__century_number',
+                'value': 'gregorian_date_sort',
                 'label': 'Converted date (CE) ↑',
                 'label_fa': 'تاریخ میلادی ↑'
             },
             {
-                'value': '-gregorian_date_century__century_number',
+                'value': '-gregorian_date_sort',
                 'label': 'Converted date (CE) ↓',
                 'label_fa': 'تاریخ میلادی ↓'
             },

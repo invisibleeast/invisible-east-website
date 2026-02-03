@@ -36,6 +36,7 @@
                     <strong>{% translate 'Search type' %}:</strong>
                     <!-- Buttons -->
                     <div id="corpus-text-list-options-search-type-general" class="corpus-text-list-options-search-type-button{% if LANGUAGE_CODE == 'fa' %} rtl{% endif %}" title="{% translate 'Search using keywords' %}" data-type="">{% translate 'General' %}</div><!--
+                    --><div id="corpus-text-list-options-search-type-exact" class="corpus-text-list-options-search-type-button{% if LANGUAGE_CODE == 'fa' %} rtl{% endif %}" title="{% translate 'Search using exact word matching' %}" data-type="exact">{% translate 'Exact' %}</div><!--
                     --><div id="corpus-text-list-options-search-type-regex" class="corpus-text-list-options-search-type-button{% if LANGUAGE_CODE == 'fa' %} rtl{% endif %}" title="{% translate 'Search using regular expressions' %}" data-type="regex">{% translate 'RegEx' %}</div>
                     <!-- Info link -->
                     <a href="{% url 'general:about-search' %}#about-search-type"><i class="fas fa-info-circle"></i></a>
@@ -238,6 +239,7 @@
 <script>
     $(document).ready(function(){
         {% include "corpus/js/list.js" %}
+        {% include "corpus/js/highlight.js" %}
     });
 </script>
 
