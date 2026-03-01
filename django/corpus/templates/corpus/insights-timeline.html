@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<div class="container">
+    <h2>Visualise Texts in a Timeline</h2>
+
+    <div id="insights-timeline">
+        {% for century in data.centuries %}
+            <div class="insights-timeline-century">
+                <div class="insights-timeline-century-point"></div>
+                <div class="insights-timeline-century-info">
+                    <div class="insights-timeline-century-info-name">{{ century.name }}</div>
+                    <div class="insights-timeline-century-info-count">{{ century.count }} text{% if century.count != 1 %}s{% endif %}</div>
+                </div>
+                <div class="insights-timeline-century-barcontainer">
+                    <div class="insights-timeline-century-barcontainer-bar" style="width: {{ century.percentage }}%;">&nbsp;</div>
+                </div>
+
+                <div class="insights-timeline-century-decades">
+                    {% for decade in century.decades %}
+                        <div class="insights-timeline-century-decades-decade">
+                            <div class="insights-timeline-century-decades-decade-info">
+                                <div class="insights-timeline-century-decades-decade-info-name">{{ decade.name }}0s</div>
+                                <div class="insights-timeline-century-decades-decade-info-count">{{ decade.count }} text{% if decade.count != 1 %}s{% endif %}</div>
+                            </div>
+                            <div class="insights-timeline-century-decades-decade-barcontainer">
+                                <div class="insights-timeline-century-decades-decade-barcontainer-bar" style="width: {{ decade.percentage }}%;">&nbsp;</div>
+                            </div>
+
+                            <ul class="insights-timeline-century-decades-decade-texts">
+                                {% for text in decade.texts %}
+                                    <li class="insights-timeline-century-decades-decade-texts-text">
+                                        <!-- <div class="insights-timeline-century-decades-decade-texts-text-point"></div> -->
+                                        <a href="{% url 'corpus:text-detail' text.id %}" class="insights-timeline-century-decades-decade-texts-text-link" target="_blank">{{ text }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    
+    // Show/hide all Types data
+    $('input[name="control-view"]').on('change', function(){
+        let view = $(this).val();
+        console.log(view)
+
+        // Show Languages
+        if (view == 'languages'){
+            $('.insights-languagetypesubtype-languages').slideDown();
+            $('.insights-languagetypesubtype-types, .insights-languagetypesubtype-subtypes').slideUp();
+        }
+        // Show Types
+        else if (view == 'types'){
+            $('.insights-languagetypesubtype-languages, .insights-languagetypesubtype-types').slideDown();
+            $('.insights-languagetypesubtype-subtypes').slideUp();
+        }
+        // Show Sub-types
+        else if (view == 'subtypes'){
+            $('.insights-languagetypesubtype-languages, .insights-languagetypesubtype-types, .insights-languagetypesubtype-subtypes').slideDown();
+        }
+    }).first().prop('checked', true);
+
+    // Show/hide child Decade of parent Century
+    $('.insights-timeline-century-barcontainer').on('click', function(){
+        $(this).parent().find('.insights-timeline-century-decades').slideToggle();
+    });
+
+    // Show/hide child Texts of parent Decade
+    $('.insights-timeline-century-decades-decade-barcontainer').on('click', function(){
+        $(this).parent().find('.insights-timeline-century-decades-decade-texts').slideToggle();
+    });
+
+});
+</script>
+
+{% endblock %}

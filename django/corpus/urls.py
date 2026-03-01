@@ -26,6 +26,7 @@ urlpatterns = [
     path('map/find-spots/', views.MapFindSpotTemplateView.as_view(), name='map-findspots'),
 
     # Corpus Insights (data visualisations)
-    path('insights/languages/', views.InsightsLanguagesTemplateView.as_view(), name='insights-languages'),
+    path('insights/languagestypessubtypes/', views.InsightsLanguagesTypesSubtypesTemplateView.as_view(), name='insights-languagestypessubtypes'),
+    path('insights/timeline/', views.InsightsTimelineTemplateView.as_view(), name='insights-timeline'),
 
 ]

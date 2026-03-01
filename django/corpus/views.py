@@ -1047,17 +1047,126 @@ class MapFindSpotTemplateView(TemplateView):
 #
 
 
-class InsightsLanguagesTemplateView(TemplateView):
+class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
     """
-    Class based view to show a 'corpus insights - languages' template
+    Class based view to show a 'corpus insights - languages, types, and sub-types' template
     """
 
-    template_name = 'corpus/insights-languages.html'
+    template_name = 'corpus/insights-languagestypessubtypes.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['data'] = 1
+        data = []
+        count_all = models.Text.objects.all().count()
+
+        for l in models.SlTextLanguage.objects.all():
+            count_language = models.Text.objects.filter(primary_language=l).count()
+            if count_language:
+
+                object = {}
+
+                # Add language data to object
+                object['id'] = l.id
+                object['name'] = l.name
+                object['count'] = count_language
+                object['percentage'] = (count_language / count_all) * 100
+                object['types'] = []
+
+                # Add types data
+                for t in models.SlTextType.objects.all():
+                    count_type = models.Text.objects.filter(
+                        primary_language=l,
+                        type=t
+                    ).count()
+
+                    if count_type:
+                        object_type = {}
+                        object_type['id'] = t.id
+                        object_type['name'] = t.name
+                        object_type['count'] = count_type
+                        object_type['percentage'] = (count_type / count_all) * 100
+                        object_type['subtypes'] = []
+
+                        # Add subtypes data
+                        for s in models.SlTextDocumentSubtype.objects.all():
+                            count_subtype = models.Text.objects.filter(
+                                primary_language=l,
+                                type=t,
+                                document_subtype=s
+                            ).count()
+
+                            if count_subtype:
+                                object_subtype = {}
+                                object_subtype['name'] = s.name
+                                object_subtype['count'] = count_subtype
+                                object_subtype['percentage'] = (count_subtype / count_all) * 100
+                                object_type['subtypes'].append(object_subtype)
+
+                        object_type['subtypes'] = sorted(object_type['subtypes'], key=lambda d: d['count'], reverse=True)
+                        object['types'].append(object_type)
+
+                    object['types'] = sorted(object['types'], key=lambda d: d['count'], reverse=True)
+
+                # Add the completed object (containing language, type, and subtype data) to data list
+                data.append(object)
+
+        # Pass sorted data to context
+        context['data'] = sorted(data, key=lambda d: d['count'], reverse=True)
+        context['data_count_points'] = [
+            int(count_all * 0.25),
+            int(count_all * 0.5),
+            int(count_all * 0.75),
+            count_all
+        ]
+
+        return context
+
+
+class InsightsTimelineTemplateView(TemplateView):
+    """
+    Class based view to show a 'corpus insights - timeline' template
+    """
+
+    template_name = 'corpus/insights-timeline.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        texts = models.Text.objects.filter(gregorian_date_sort__isnull=False).order_by('gregorian_date_sort')
+        count_all = texts.count()
+        years = list(dict.fromkeys(text.gregorian_date_sort[:4] for text in texts))
+        decades = list(dict.fromkeys(year[:3] for year in years))
+        centuries = list(dict.fromkeys(decade[:2] for decade in decades))
+
+        data = {'count_all': count_all, 'centuries': [], 'decades': []}
+        
+        # Add century data
+        for century in centuries:
+            count = models.Text.objects.filter(gregorian_date_sort__startswith=century).count()
+            century_data = {
+                'name': f'{int(century) + 1}th century',
+                'count': count,
+                'percentage': (count / (count_all / 2)) * 100,
+                'decades': []
+            }
+
+            # Add decade data
+            for decade in decades:
+                if decade.startswith(century):
+                    texts_in_decade = models.Text.objects.filter(gregorian_date_sort__startswith=decade).select_related('collection')
+                    count = texts_in_decade.count()
+                    century_data['decades'].append({
+                        'name': decade,
+                        'count': count,
+                        'percentage': (count / (count_all / 2)) * 100,
+                        'texts': texts_in_decade
+                    })
+
+            # Add completed century data dict to list of centuries in main data dict
+            data['centuries'].append(century_data)
+
+        context['data'] = data
 
         return context
 
