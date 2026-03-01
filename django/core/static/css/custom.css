@@ -2087,6 +2087,260 @@ div.folio-lines-line.active {
     display: block;
 }
 
+/* ---------- Corpus Insights ---------- */
+
+/* Language, Type, Subtype */
+
+#insights-languagetypesubtype-controls {
+    text-align: right;
+    user-select: none;
+}
+
+#insights-languagetypesubtype-controls label {
+    margin-left: 1em;
+    color: white;
+    padding: 0.2em 0.4em;
+    border-radius: 0.3em;
+    cursor: pointer;
+}
+
+#insights-languagetypesubtype-controls input {
+    cursor: pointer;
+}
+
+#insights-languagetypesubtype-controls-languages {
+    background: var(--color-primary);
+}
+
+#insights-languagetypesubtype-controls-types {
+    background: var(--color-secondary);
+}
+
+#insights-languagetypesubtype-controls-subtypes {
+    background: #696969;
+}
+
+#insights-languagetypesubtype-axis {
+    margin: 1.5em 0 0.5em 0;
+    color: #707070;
+}
+
+.insights-languagetypesubtype-axis-point {
+    display: inline-block;
+    width: 25%;
+    padding-right: 0.4em;
+    border-right: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+    text-align: right;
+}
+
+.insights-languagetypesubtype-languages {
+    border-left: 0.27em solid var(--color-primary);
+}
+
+.insights-languagetypesubtype-types {
+    border-left: 0.27em solid var(--color-secondary);
+    margin-left: 0.3em;
+    display: none;
+}
+
+.insights-languagetypesubtype-subtypes {
+    border-left: 0.27em solid #696969;
+    margin-left: 0.3em;
+    display: none;
+}
+
+.insights-languagetypesubtype-language,
+.insights-languagetypesubtype-type,
+.insights-languagetypesubtype-subtype {
+    white-space: nowrap;
+    margin: 0.1em 0;
+}
+
+.insights-languagetypesubtype-language-container,
+.insights-languagetypesubtype-type-container,
+.insights-languagetypesubtype-subtype-container {
+    background: #EEE;
+}
+
+.insights-languagetypesubtype-language-bar,
+.insights-languagetypesubtype-type-bar,
+.insights-languagetypesubtype-subtype-bar {
+    padding: 0.4em;
+    display: inline-block;
+    user-select: none;
+}
+
+.insights-languagetypesubtype-language-bar {
+    background: var(--color-primary);
+}
+
+.insights-languagetypesubtype-type-bar {
+    background: var(--color-secondary);
+}
+
+.insights-languagetypesubtype-subtype-bar {
+    background: #696969;
+}
+
+.insights-languagetypesubtype-language-label,
+.insights-languagetypesubtype-type-label,
+.insights-languagetypesubtype-subtype-label {
+    display: inline-block;
+}
+
+.insights-languagetypesubtype-language-label {
+    color: var(--color-primary);
+}
+
+.insights-languagetypesubtype-language-toggletypes,
+.insights-languagetypesubtype-type-togglesubtypes {
+    display: inline-block;
+    background: #CCC;
+    font-size: 0.9em;
+    color: #606060;
+    padding-top: 0.2em;
+    text-align: center;
+    width: 1.8em;
+    border-radius: 0.3em;
+    cursor: pointer;
+    margin-left: 1em;
+}
+
+.insights-languagetypesubtype-language-toggletypes:hover,
+.insights-languagetypesubtype-type-togglesubtypes:hover {
+    color: #202020;
+    background: #AAA;
+}
+
+.insights-languagetypesubtype-type-label {
+    color: var(--color-secondary);
+}
+
+.insights-languagetypesubtype-subtype-label {
+    color: #696969;
+}
+
+/* Timeline */
+
+#insights-timeline {
+    border-left: 4pt solid var(--color-primary);
+    margin: 1em 0 5em 0;
+    user-select: none;
+}
+
+.insights-timeline-century {
+    padding: 2em 0;
+}
+
+.insights-timeline-century-point {
+    width: 12pt;
+    height: 12pt;
+    border-radius: 100%;
+    background: var(--color-primary);
+    margin-left: -8pt;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.insights-timeline-century-info-name {
+    font-weight: bold;
+    color: var(--color-primary);
+    font-size: 1.1em;
+}
+
+.insights-timeline-century-decades {
+    display: none;
+    margin: 1em 0 0 0.5em;
+}
+
+.insights-timeline-century-info {
+    display: inline-block;
+    vertical-align: middle;
+    width: 7rem;
+}
+
+.insights-timeline-century-barcontainer,
+.insights-timeline-century-decades-decade-barcontainer {
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 0.3em;
+    overflow: hidden;
+}
+
+.insights-timeline-century-barcontainer {
+    width: calc(100% - 8.5em);
+    background: #DDD;
+    cursor: pointer;
+}
+
+.insights-timeline-century-barcontainer:hover {
+    outline: 1.5pt solid var(--color-primary);
+}
+
+.insights-timeline-century-barcontainer-bar {
+    background: var(--color-primary);
+    height: 1.5em;
+}
+
+.insights-timeline-century-decades-decade {
+    margin-top: 0.3em;
+}
+
+.insights-timeline-century-decades-decade-info {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 0.95em;
+    width: 7rem;
+    text-align: right;
+}
+
+.insights-timeline-century-decades-decade-info-name {
+    font-weight: bold;
+    color: var(--color-primary-dark);
+}
+
+.insights-timeline-century-decades-decade-barcontainer {
+    width: calc(100% - 8em);
+    background: #EEE;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.insights-timeline-century-decades-decade-barcontainer:hover {
+    outline: 1.5pt solid var(--color-primary-dark);
+}
+
+.insights-timeline-century-decades-decade-barcontainer-bar {
+    background: var(--color-primary-dark);
+    height: 1.2em;
+}
+
+.insights-timeline-century-decades-decade-texts {
+    display: none;
+    margin-bottom: 1.5em;
+}
+
+.insights-timeline-century-decades-decade-texts-text-point {
+    width: 6pt;
+    height: 6pt;
+    border-radius: 100%;
+    background: #707070;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.insights-timeline-century-decades-decade-texts-text-link {
+    margin-left: 0.5rem;
+    color: var(--color-primary);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.insights-timeline-century-decades-decade-texts-text-link:hover {
+    color: var(--color-primary-dark);
+}
+
 /* ---------- Maps ---------- */
 
 .corpus-map-iframe {

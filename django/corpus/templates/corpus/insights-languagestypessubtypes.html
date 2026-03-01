@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<div class="container">
+    <h2>Visualise Texts by Language, Type, and Sub-type</h2>
+
+    <div id="insights-languagetypesubtype-controls">
+        <div>
+            <span>View level:</span>
+            <label id="insights-languagetypesubtype-controls-languages"><input type="radio" name="control-view" value="languages" checked="checked"> Languages</label>
+            <label id="insights-languagetypesubtype-controls-types"><input type="radio" name="control-view" value="types"> Types</label>
+            <label id="insights-languagetypesubtype-controls-subtypes"><input type="radio" name="control-view" value="subtypes"> Sub-types</label>
+        </div>
+    </div>
+
+    <div id="insights-languagetypesubtype-axis">
+        {% for dcp in data_count_points %}<div class="insights-languagetypesubtype-axis-point">{{ dcp }}</div>{% endfor %}
+    </div>
+
+    <div class="insights-languagetypesubtype-languages">
+    {% for language in data %}
+        {% if language.count %}
+            <div class="insights-languagetypesubtype-language">
+                <div class="insights-languagetypesubtype-language-container">
+                    <a class="insights-languagetypesubtype-language-bar" href="{% url 'corpus:text-list' %}?filter_fk_primary_language={{ language.id }}" title="View these texts" target="_blank" style="width: {{ language.percentage }}%;">&nbsp;</a>
+                    <div class="insights-languagetypesubtype-language-label">{{ language.name }} <strong>{{ language.count }}</strong></div>
+                    {% if language.types %}
+                        <div class="insights-languagetypesubtype-language-toggletypes" title="Show types">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="insights-languagetypesubtype-types">
+                    {% for type in language.types %}
+                        {% if type.count %}
+                            <div class="insights-languagetypesubtype-type">
+                                <div class="insights-languagetypesubtype-type-container">
+                                    <a class="insights-languagetypesubtype-type-bar" href="{% url 'corpus:text-list' %}?filter_fk_primary_language={{ language.id }}&filter_fk_type={{ type.id }}" title="View these texts" target="_blank" style="width: {{ type.percentage }}%;">&nbsp;</a>
+                                    <div class="insights-languagetypesubtype-type-label">{{ type.name }} <strong>{{ type.count }}</strong></div>
+                                    {% if type.subtypes %}
+                                        <div class="insights-languagetypesubtype-type-togglesubtypes" title="Show sub-types">
+                                            <i class="fas fa-angle-down"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="insights-languagetypesubtype-subtypes">
+                                    {% for subtype in type.subtypes %}
+                                        {% if subtype.count %}
+                                            <div class="insights-languagetypesubtype-subtype">
+                                                <div class="insights-languagetypesubtype-subtype-container">
+                                                    <div class="insights-languagetypesubtype-subtype-bar" style="width: {{ subtype.percentage }}%;">&nbsp;</div>
+                                                    <div class="insights-languagetypesubtype-subtype-label">{{ subtype.name }} <strong>{{ subtype.count }}</strong></div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    
+    // Show/hide all Types data
+    $('input[name="control-view"]').on('change', function(){
+        let view = $(this).val();
+        console.log(view)
+
+        // Show Languages
+        if (view == 'languages'){
+            $('.insights-languagetypesubtype-languages').slideDown();
+            $('.insights-languagetypesubtype-types, .insights-languagetypesubtype-subtypes').slideUp();
+        }
+        // Show Types
+        else if (view == 'types'){
+            $('.insights-languagetypesubtype-languages, .insights-languagetypesubtype-types').slideDown();
+            $('.insights-languagetypesubtype-subtypes').slideUp();
+        }
+        // Show Sub-types
+        else if (view == 'subtypes'){
+            $('.insights-languagetypesubtype-languages, .insights-languagetypesubtype-types, .insights-languagetypesubtype-subtypes').slideDown();
+        }
+    }).first().prop('checked', true);
+
+    // Show/hide child Types of parent Language
+    $('.insights-languagetypesubtype-language-toggletypes').on('click', function(){
+        $(this).parent().parent().find('.insights-languagetypesubtype-types').slideToggle();
+    });
+
+    // Show/hide child Sub-types of parent Type
+    $('.insights-languagetypesubtype-type-togglesubtypes').on('click', function(){
+        $(this).parent().parent().find('.insights-languagetypesubtype-subtypes').slideToggle();
+    });
+
+});
+</script>
+
+{% endblock %}

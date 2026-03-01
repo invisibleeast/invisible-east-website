@@ -87,17 +87,22 @@
                             {% translate 'Search' %}
                         </a>
                     </li>
-                    <!-- Corpus Insights (section to be added soon) -->
-                    <!-- <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle{% if "/corpus/insights/" in request.path %} active{% endif %}" href="#" id="navbarDropdownMenuLinkAbout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {% translate 'Corpus Insights' %}
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkAbout">
-                            <a class="dropdown-item" href="{% url 'corpus:insights-languages' %}">
-                                {% translate 'Languages' %}
+                    <!-- Corpus Insights -->
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle{% if "/corpus/insights/" in request.path %} active{% endif %}" href="#" id="navbarDropdownMenuLinkAbout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% translate 'Corpus Insights' %}
                             </a>
-                        </div>
-                    </li> -->
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkAbout">
+                                <a class="dropdown-item" href="{% url 'corpus:insights-languagestypessubtypes' %}">
+                                    {% translate 'Languages, Types, and Sub-types' %}
+                                </a>
+                                <a class="dropdown-item" href="{% url 'corpus:insights-timeline' %}">
+                                    {% translate 'Timeline' %}
+                                </a>
+                            </div>
+                        </li>
+                    {% endif %}
                     <!-- Map -->
                     <li class="nav-item">
                         <a class="nav-link{% if "/corpus/map/" in request.path %} active{% endif %}" href="{% url 'corpus:map-iedctoponyms' %}">
