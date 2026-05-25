@@ -23,7 +23,7 @@
             <ul id="downloaddata-popup-content-links">
                 <li data-url="{% url 'corpus:downloaddata-word' %}?text_ids={{ downloaddata_text_ids }}">Microsoft Word (.docx)</li>
                 <li data-url="{% url 'corpus:downloaddata-json' %}{% if downloaddata_text_ids %}?text_ids={{ downloaddata_text_ids }}{% endif %}">JSON</li>
-                <!-- <li data-url="TODO">XML</li> -->
+                <li data-url="{% url 'corpus:downloaddata-xml' %}{% if downloaddata_text_ids %}?text_ids={{ downloaddata_text_ids }}{% endif %}">XML</li>
             </ul>
             <div id="downloaddata-popup-content-downloadstarted">
                 <i class="fas fa-check"></i> Download started
