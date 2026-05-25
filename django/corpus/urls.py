@@ -8,6 +8,7 @@ urlpatterns = [
     # Download Data
     path('downloaddata/word/', views.downloaddata_word, name='downloaddata-word'),
     path('downloaddata/json/', views.downloaddata_json, name='downloaddata-json'),
+    path('downloaddata/xml/', views.downloaddata_xml, name='downloaddata-xml'),
 
     # Text
     path('', views.TextListView.as_view(), name='text-list'),

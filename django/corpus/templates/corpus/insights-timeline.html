@@ -7,46 +7,72 @@
     <h2>Visualise Texts in a Timeline</h2>
 
     <div id="insights-timeline">
-        {% for century in data.centuries %}
-            <div class="insights-timeline-century">
-                <div class="insights-timeline-century-point"></div>
-                <div class="insights-timeline-century-info">
-                    <div class="insights-timeline-century-info-name">{{ century.name }}</div>
-                    <div class="insights-timeline-century-info-count">{{ century.count }} text{% if century.count != 1 %}s{% endif %}</div>
-                </div>
-                <div class="insights-timeline-century-barcontainer">
-                    <div class="insights-timeline-century-barcontainer-bar" style="width: {{ century.percentage }}%;">&nbsp;</div>
-                </div>
 
-                <div class="insights-timeline-century-decades">
-                    {% for decade in century.decades %}
-                        <div class="insights-timeline-century-decades-decade">
-                            <div class="insights-timeline-century-decades-decade-info">
-                                <div class="insights-timeline-century-decades-decade-info-name">{{ decade.name }}0s</div>
-                                <div class="insights-timeline-century-decades-decade-info-count">{{ decade.count }} text{% if decade.count != 1 %}s{% endif %}</div>
-                            </div>
-                            <div class="insights-timeline-century-decades-decade-barcontainer">
-                                <div class="insights-timeline-century-decades-decade-barcontainer-bar" style="width: {{ decade.percentage }}%;">&nbsp;</div>
-                            </div>
+        <div id="insights-timeline-views">
+            <span data-view="centuries" class="active">Estimated Date</span><!--
+            --><span data-view="decades">Dated</span>
+        </div>
 
-                            <ul class="insights-timeline-century-decades-decade-texts">
-                                {% for text in decade.texts %}
-                                    <li class="insights-timeline-century-decades-decade-texts-text">
-                                        <!-- <div class="insights-timeline-century-decades-decade-texts-text-point"></div> -->
-                                        <a href="{% url 'corpus:text-detail' text.id %}" class="insights-timeline-century-decades-decade-texts-text-link" target="_blank">{{ text }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endfor %}
+        <div id="insights-timeline-centuries" class="insights-timeline-section" data-view="centuries">
+            {% for century in data.centuries %}
+                <div class="insights-timeline-centuries-century">
+                    <div class="insights-timeline-centuries-century-point"></div>
+                    <div class="insights-timeline-centuries-century-info">
+                        <div class="insights-timeline-centuries-century-info-name">{{ century.name }}</div>
+                        <div class="insights-timeline-centuries-century-info-count">{{ century.count }} text{% if century.count != 1 %}s{% endif %}</div>
+                    </div>
+                    <div class="insights-timeline-centuries-century-barcontainer">
+                        <div class="insights-timeline-centuries-century-barcontainer-bar" style="width: {{ century.percentage }}%;">&nbsp;</div>
+                    </div>
+
+                    <ul class="insights-timeline-centuries-century-texts">
+                        {% for text in century.texts %}
+                            <li class="insights-timeline-centuries-century-texts-text">
+                                <a href="{% url 'corpus:text-detail' text.id %}" class="insights-timeline-centuries-century-texts-text-link" target="_blank">{{ text }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+
+        <div id="insights-timeline-decades" class="insights-timeline-section" data-view="decades">
+            {% for decade in data.decades %}
+                <div class="insights-timeline-decades-decade">
+                    <div class="insights-timeline-decades-decade-point"></div>
+                    <div class="insights-timeline-decades-decade-info">
+                        <div class="insights-timeline-decades-decade-info-name">{{ decade.name }}0s</div>
+                        <div class="insights-timeline-decades-decade-info-count">{{ decade.count }} text{% if decade.count != 1 %}s{% endif %}</div>
+                    </div>
+                    <div class="insights-timeline-decades-decade-barcontainer">
+                        <div class="insights-timeline-decades-decade-barcontainer-bar" style="width: {{ decade.percentage }}%;">&nbsp;</div>
+                    </div>
+                    <ul class="insights-timeline-decades-decade-texts">
+                        {% for text in decade.texts %}
+                            <li class="insights-timeline-decades-decade-texts-text">
+                                <a href="{% url 'corpus:text-detail' text.id %}" class="insights-timeline-decades-decade-texts-text-link" target="_blank">{{ text }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
 <script>
 $(document).ready(function(){
+
+    // Show/hide views
+    $('#insights-timeline-views span').on('click', function(){
+        // Change buttons
+        $('#insights-timeline-views span').removeClass('active');
+        $(this).addClass('active');
+        // Show/hide the views
+        $('.insights-timeline-section').hide();
+        let view = $(this).attr('data-view');
+        $(`.insights-timeline-section[data-view=${view}]`).show();
+    }).first().trigger('click');
     
     // Show/hide all Types data
     $('input[name="control-view"]').on('change', function(){
@@ -69,14 +95,14 @@ $(document).ready(function(){
         }
     }).first().prop('checked', true);
 
-    // Show/hide child Decade of parent Century
-    $('.insights-timeline-century-barcontainer').on('click', function(){
-        $(this).parent().find('.insights-timeline-century-decades').slideToggle();
+    // Show/hide child Texts of parent Century
+    $('.insights-timeline-centuries-century-barcontainer').on('click', function(){
+        $(this).parent().find('.insights-timeline-centuries-century-texts').slideToggle();
     });
 
     // Show/hide child Texts of parent Decade
-    $('.insights-timeline-century-decades-decade-barcontainer').on('click', function(){
-        $(this).parent().find('.insights-timeline-century-decades-decade-texts').slideToggle();
+    $('.insights-timeline-decades-decade-barcontainer').on('click', function(){
+        $(this).parent().find('.insights-timeline-decades-decade-texts').slideToggle();
     });
 
 });

@@ -2,6 +2,7 @@ from django.views.generic import (DetailView, ListView, TemplateView, View)
 from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField, Prefetch)
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from dicttoxml import dicttoxml
 from django.urls import reverse
 from django.conf import settings
 from functools import reduce
@@ -191,6 +192,109 @@ def downloaddata_text_queryset(view_request):
         texts = texts.filter(id__in=text_ids.split(','))
 
     return texts
+
+
+def downloaddata_text_json(view_request):
+    """
+    Generates a JSON object of Text data for use in downloaddata views
+    """
+    texts = downloaddata_text_queryset(view_request)
+    data = []
+    for text in texts:
+        permalink = f"{view_request.build_absolute_uri('/')[:-1]}{reverse('corpus:text-detail', args=[text.id])}"
+
+        data.append({
+            # General
+            'uri': json_str(text.uri),
+            'shelfmark': json_str(text.shelfmark),
+            'collection': json_str(text.collection),
+            'group': json_str(text.corpus),
+            'classification': text.admin_classification.name_full if text.admin_classification else None,
+            'primaryLanguage': json_str(text.primary_language),
+            'additionalLanguages': [str(lng) for lng in text.additional_languages.all()],
+            'documentType': text.type.name if text.type else None,
+            'documentSubtype': json_str(text.document_subtype),
+            'toponyms': [
+                {
+                    'name': t.name,
+                    'alternativeReadings': t.alternative_readings,
+                    'otherAttestedForms': t.other_attested_forms,
+                    'latitude': t.latitude,
+                    'longitude': t.longitude,
+                    'urls': t.urls
+                } for t in text.toponyms.all()
+            ],
+
+            # Physical Description
+            'writingSupport': json_str(text.writing_support),
+            'writingSupportDetails': [str(w) for w in text.writing_support_details.all()],
+            'writingSupportNotes': text.writing_support_details_additional,
+            'height': json_str(text.dimensions_height),
+            'width': json_str(text.dimensions_width),
+            'foldLinesCount': json_str(text.fold_lines_count),
+            'foldLinesAlignment': json_str(text.fold_lines_alignment),
+            'foldLines': json_str(text.fold_lines_details),
+
+            # Content
+            'contentSummary': text.summary_of_content,
+
+            # Dates (Gregorian and Original)
+            'dates': text.gregorian_date_full,
+
+            # Folios
+            'folios': [
+                {
+                    'side': json_str(f.side),
+                    'openState': json_str(f.open_state),
+                    'image': f.image.url if f.image else None,
+                    'transliteration': f.transliteration,
+                    'transcription': f.transcription,
+                    'translation': f.translation,
+                    'palaeography': f.palaeography
+                } for f in text.text_folios.all()
+            ],
+
+            # People
+            'personsInText': [
+                {
+                    'person': json_str(p.person),
+                    'personNameInText': p.person_name_in_text,
+                    'personRoleInText': json_str(p.person_role_in_text)
+                } for p in text.persons_in_texts.all()
+            ],
+
+            # Publications
+            'publications': [
+                {
+                    'publication': json_str(p.publication),
+                    'pages': p.pages,
+                    'catalogueNumber': p.catalogue_number,
+                    'details': p.details
+                } for p in text.text_related_publications.all()
+            ],
+
+            # Related Shelfmarks
+            'relatedShelfmarks': [
+                {
+                    'id': t.id,
+                    'title': json_str(t),
+                } for t in text.texts.all()
+            ],
+
+            # IEDC Data
+            'iedcId': text.id,
+            'dateAdded': clean_date_from_datetime(text.meta_created_datetime),
+            'dateLastUpdated': clean_date_from_datetime(text.meta_lastupdated_datetime),
+
+            # Citations
+            'principalEditor': json_str(text.admin_principal_editor),
+            'contributors': json_str(text.admin_contributors_list),
+            'sourceOfData': json_str(text.admin_source_of_data),
+            'permalink': permalink,
+            'imagePermissionStatement': clean_html(text.image_permission_statement),
+        })
+
+    return data
 
 
 def json_str(value):
@@ -1058,10 +1162,11 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         data = []
-        count_all = models.Text.objects.all().count()
+        texts = models.Text.objects.filter(text_folios__transcription__isnull=False).distinct()
+        count_all = texts.count()
 
         for l in models.SlTextLanguage.objects.all():
-            count_language = models.Text.objects.filter(primary_language=l).count()
+            count_language = texts.filter(primary_language=l).count()
             if count_language:
 
                 object = {}
@@ -1075,7 +1180,7 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
 
                 # Add types data
                 for t in models.SlTextType.objects.all():
-                    count_type = models.Text.objects.filter(
+                    count_type = texts.filter(
                         primary_language=l,
                         type=t
                     ).count()
@@ -1090,7 +1195,7 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
 
                         # Add subtypes data
                         for s in models.SlTextDocumentSubtype.objects.all():
-                            count_subtype = models.Text.objects.filter(
+                            count_subtype = texts.filter(
                                 primary_language=l,
                                 type=t,
                                 document_subtype=s
@@ -1137,34 +1242,32 @@ class InsightsTimelineTemplateView(TemplateView):
         count_all = texts.count()
         years = list(dict.fromkeys(text.gregorian_date_sort[:4] for text in texts))
         decades = list(dict.fromkeys(year[:3] for year in years))
-        centuries = list(dict.fromkeys(decade[:2] for decade in decades))
 
         data = {'count_all': count_all, 'centuries': [], 'decades': []}
         
         # Add century data
-        for century in centuries:
-            count = models.Text.objects.filter(gregorian_date_sort__startswith=century).count()
-            century_data = {
-                'name': f'{int(century) + 1}th century',
-                'count': count,
-                'percentage': (count / (count_all / 2)) * 100,
-                'decades': []
-            }
+        for century in models.SlTextGregorianCentury.objects.all():
+            texts_in_century = models.Text.objects.filter(gregorian_date_century=century).select_related('collection')
+            count = texts_in_century.count()
+            if count:
+                data['centuries'].append({
+                    'name': century.name,
+                    'count': count,
+                    'percentage': (count / (count_all / 2)) * 100,
+                    'texts': texts_in_century
+                })
 
-            # Add decade data
-            for decade in decades:
-                if decade.startswith(century):
-                    texts_in_decade = models.Text.objects.filter(gregorian_date_sort__startswith=decade).select_related('collection')
-                    count = texts_in_decade.count()
-                    century_data['decades'].append({
-                        'name': decade,
-                        'count': count,
-                        'percentage': (count / (count_all / 2)) * 100,
-                        'texts': texts_in_decade
-                    })
-
-            # Add completed century data dict to list of centuries in main data dict
-            data['centuries'].append(century_data)
+        # Add decade data
+        for decade in decades:
+            texts_in_decade = models.Text.objects.filter(gregorian_date_sort__startswith=decade).select_related('collection')
+            count = texts_in_decade.count()
+            if count:
+                data['decades'].append({
+                    'name': decade,
+                    'count': count,
+                    'percentage': (count / (count_all / 2)) * 100,
+                    'texts': texts_in_decade
+                })
 
         context['data'] = data
 
@@ -1344,100 +1447,16 @@ def downloaddata_json(request):
     Returns a JSON object containing all Text and related data
     """
 
-    texts = downloaddata_text_queryset(request)
-    data = []
-    for text in texts:
-        permalink = f"{request.build_absolute_uri('/')[:-1]}{reverse('corpus:text-detail', args=[text.id])}"
+    return JsonResponse(downloaddata_text_json(request), safe=False)
 
-        data.append({
-            # General
-            'uri': json_str(text.uri),
-            'shelfmark': json_str(text.shelfmark),
-            'collection': json_str(text.collection),
-            'group': json_str(text.corpus),
-            'classification': text.admin_classification.name_full if text.admin_classification else None,
-            'primaryLanguage': json_str(text.primary_language),
-            'additionalLanguages': [str(lng) for lng in text.additional_languages.all()],
-            'documentType': text.type.name if text.type else None,
-            'documentSubtype': json_str(text.document_subtype),
-            'toponyms': [
-                {
-                    'name': t.name,
-                    'alternativeReadings': t.alternative_readings,
-                    'otherAttestedForms': t.other_attested_forms,
-                    'latitude': t.latitude,
-                    'longitude': t.longitude,
-                    'urls': t.urls
-                } for t in text.toponyms.all()
-            ],
 
-            # Physical Description
-            'writingSupport': json_str(text.writing_support),
-            'writingSupportDetails': [str(w) for w in text.writing_support_details.all()],
-            'writingSupportNotes': text.writing_support_details_additional,
-            'height': json_str(text.dimensions_height),
-            'width': json_str(text.dimensions_width),
-            'foldLinesCount': json_str(text.fold_lines_count),
-            'foldLinesAlignment': json_str(text.fold_lines_alignment),
-            'foldLines': json_str(text.fold_lines_details),
+def downloaddata_xml(request):
+    """
+    Returns an XML file containing all Text and related data
+    """
 
-            # Content
-            'contentSummary': text.summary_of_content,
-
-            # Dates (Gregorian and Original)
-            'dates': text.gregorian_date_full,
-
-            # Folios
-            'folios': [
-                {
-                    'side': json_str(f.side),
-                    'openState': json_str(f.open_state),
-                    'image': f.image.url if f.image else None,
-                    'transliteration': f.transliteration,
-                    'transcription': f.transcription,
-                    'translation': f.translation,
-                    'palaeography': f.palaeography
-                } for f in text.text_folios.all()
-            ],
-
-            # People
-            'personsInText': [
-                {
-                    'person': json_str(p.person),
-                    'personNameInText': p.person_name_in_text,
-                    'personRoleInText': json_str(p.person_role_in_text)
-                } for p in text.persons_in_texts.all()
-            ],
-
-            # Publications
-            'publications': [
-                {
-                    'publication': json_str(p.publication),
-                    'pages': p.pages,
-                    'catalogueNumber': p.catalogue_number,
-                    'details': p.details
-                } for p in text.text_related_publications.all()
-            ],
-
-            # Related Shelfmarks
-            'relatedShelfmarks': [
-                {
-                    'id': t.id,
-                    'title': json_str(t),
-                } for t in text.texts.all()
-            ],
-
-            # IEDC Data
-            'iedcId': text.id,
-            'dateAdded': clean_date_from_datetime(text.meta_created_datetime),
-            'dateLastUpdated': clean_date_from_datetime(text.meta_lastupdated_datetime),
-
-            # Citations
-            'principalEditor': json_str(text.admin_principal_editor),
-            'contributors': json_str(text.admin_contributors_list),
-            'sourceOfData': json_str(text.admin_source_of_data),
-            'permalink': permalink,
-            'imagePermissionStatement': clean_html(text.image_permission_statement),
-        })
-
-    return JsonResponse(data, safe=False)
+    data = dicttoxml(downloaddata_text_json(request))
+    response = HttpResponse(data, content_type="application/xml")
+    file_name = f'iedc_{time.strftime("%Y-%m-%d_%H-%M")}.xml'
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    return response

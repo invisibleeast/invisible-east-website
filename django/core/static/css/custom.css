@@ -2223,17 +2223,49 @@ div.folio-lines-line.active {
 
 /* Timeline */
 
-#insights-timeline {
+#insights-timeline-views {
+    text-align: right;
+}
+
+#insights-timeline-views span {
+    background: #CCC;
+    color: #202020;
+    padding: 0.3em 1em;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#insights-timeline-views span:hover {
+    opacity: 0.9em;;
+}
+
+#insights-timeline-views span:first-of-type {
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+#insights-timeline-views span:last-of-type {
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+#insights-timeline-views span.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+#insights-timeline-centuries,
+#insights-timeline-decades {
+    display: none;
     border-left: 4pt solid var(--color-primary);
     margin: 1em 0 5em 0;
     user-select: none;
 }
 
-.insights-timeline-century {
-    padding: 2em 0;
+.insights-timeline-centuries-century {
+    padding: 1.3em 0;
 }
 
-.insights-timeline-century-point {
+.insights-timeline-centuries-century-point,
+.insights-timeline-decades-decade-point {
     width: 12pt;
     height: 12pt;
     border-radius: 100%;
@@ -2243,85 +2275,79 @@ div.folio-lines-line.active {
     vertical-align: middle;
 }
 
-.insights-timeline-century-info-name {
+.insights-timeline-centuries-century-info-name {
     font-weight: bold;
     color: var(--color-primary);
     font-size: 1.1em;
 }
 
-.insights-timeline-century-decades {
-    display: none;
-    margin: 1em 0 0 0.5em;
-}
-
-.insights-timeline-century-info {
+.insights-timeline-centuries-century-info {
     display: inline-block;
     vertical-align: middle;
     width: 7rem;
 }
 
-.insights-timeline-century-barcontainer,
-.insights-timeline-century-decades-decade-barcontainer {
+.insights-timeline-centuries-century-barcontainer,
+.insights-timeline-decades-decade-barcontainer {
     display: inline-block;
     vertical-align: middle;
     border-radius: 0.3em;
     overflow: hidden;
 }
 
-.insights-timeline-century-barcontainer {
+.insights-timeline-centuries-century-barcontainer {
     width: calc(100% - 8.5em);
     background: #DDD;
     cursor: pointer;
 }
 
-.insights-timeline-century-barcontainer:hover {
+.insights-timeline-centuries-century-barcontainer:hover {
     outline: 1.5pt solid var(--color-primary);
 }
 
-.insights-timeline-century-barcontainer-bar {
+.insights-timeline-centuries-century-barcontainer-bar {
     background: var(--color-primary);
     height: 1.5em;
 }
 
-.insights-timeline-century-decades-decade {
-    margin-top: 0.3em;
+.insights-timeline-centuries-century-texts,
+.insights-timeline-decades-decade-texts {
+    display: none;
+    margin: 0.7rem 0 0.7rem 1.3rem;
 }
 
-.insights-timeline-century-decades-decade-info {
+.insights-timeline-decades-decade {
+    margin-top: 1em;
+}
+
+.insights-timeline-decades-decade-info {
     display: inline-block;
     vertical-align: top;
-    font-size: 0.95em;
-    width: 7rem;
-    text-align: right;
+    width: 4rem;
 }
 
-.insights-timeline-century-decades-decade-info-name {
+.insights-timeline-decades-decade-info-name {
     font-weight: bold;
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
 }
 
-.insights-timeline-century-decades-decade-barcontainer {
+.insights-timeline-decades-decade-barcontainer {
     width: calc(100% - 8em);
     background: #EEE;
     vertical-align: top;
     cursor: pointer;
 }
 
-.insights-timeline-century-decades-decade-barcontainer:hover {
-    outline: 1.5pt solid var(--color-primary-dark);
+.insights-timeline-decades-decade-barcontainer:hover {
+    outline: 1.5pt solid var(--color-primary);
 }
 
-.insights-timeline-century-decades-decade-barcontainer-bar {
-    background: var(--color-primary-dark);
+.insights-timeline-decades-decade-barcontainer-bar {
+    background: var(--color-primary);
     height: 1.2em;
 }
 
-.insights-timeline-century-decades-decade-texts {
-    display: none;
-    margin-bottom: 1.5em;
-}
-
-.insights-timeline-century-decades-decade-texts-text-point {
+.insights-timeline-decades-decade-texts-text-point {
     width: 6pt;
     height: 6pt;
     border-radius: 100%;
@@ -2330,14 +2356,14 @@ div.folio-lines-line.active {
     vertical-align: middle;
 }
 
-.insights-timeline-century-decades-decade-texts-text-link {
+.insights-timeline-decades-decade-texts-text-link {
     margin-left: 0.5rem;
     color: var(--color-primary);
     display: inline-block;
     vertical-align: middle;
 }
 
-.insights-timeline-century-decades-decade-texts-text-link:hover {
+.insights-timeline-decades-decade-texts-text-link:hover {
     color: var(--color-primary-dark);
 }
 
