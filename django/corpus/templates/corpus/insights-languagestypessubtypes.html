@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block main %}
 
-<div class="container">
-    <h2>Visualise Texts by Language, Type, and Sub-type</h2>
+<div class="container corpusinsights lang-{{ LANGUAGE_CODE }}">
+    <h2><span class="corpusinsights-titlelive">{% translate 'Live' %}</span> {% translate 'Corpus Explorer' %}</h2>
 
     <div id="insights-languagetypesubtype-controls">
         <div>
@@ -13,6 +13,10 @@
             <label id="insights-languagetypesubtype-controls-types"><input type="radio" name="control-view" value="types"> Types</label>
             <label id="insights-languagetypesubtype-controls-subtypes"><input type="radio" name="control-view" value="subtypes"> Sub-types</label>
         </div>
+    </div>
+
+    <div id="insights-languagetypesubtype-total">
+        {% translate 'Total texts:' %} {{ total_texts }}*
     </div>
 
     <div id="insights-languagetypesubtype-axis">
@@ -64,6 +68,10 @@
             </div>
         {% endif %}
     {% endfor %}
+    </div>
+
+    <div id="insights-languagetypesubtype-notes">
+        * {% translate 'Only texts with a transcription or a translation are included in this dataset' %}
     </div>
 </div>
 

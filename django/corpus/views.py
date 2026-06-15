@@ -1164,6 +1164,7 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
         data = []
         texts = models.Text.objects.filter(text_folios__transcription__isnull=False).distinct()
         count_all = texts.count()
+        context['total_texts'] = count_all
 
         for l in models.SlTextLanguage.objects.all():
             count_language = texts.filter(primary_language=l).count()
@@ -1244,11 +1245,14 @@ class InsightsTimelineTemplateView(TemplateView):
         decades = list(dict.fromkeys(year[:3] for year in years))
 
         data = {'count_all': count_all, 'centuries': [], 'decades': []}
+        total_texts_centuries = 0
+        total_texts_decades = 0
         
         # Add century data
         for century in models.SlTextGregorianCentury.objects.all():
             texts_in_century = models.Text.objects.filter(gregorian_date_century=century).select_related('collection')
             count = texts_in_century.count()
+            total_texts_centuries += count
             if count:
                 data['centuries'].append({
                     'name': century.name,
@@ -1261,6 +1265,7 @@ class InsightsTimelineTemplateView(TemplateView):
         for decade in decades:
             texts_in_decade = models.Text.objects.filter(gregorian_date_sort__startswith=decade).select_related('collection')
             count = texts_in_decade.count()
+            total_texts_decades += count
             if count:
                 data['decades'].append({
                     'name': decade,
@@ -1268,6 +1273,9 @@ class InsightsTimelineTemplateView(TemplateView):
                     'percentage': (count / (count_all / 2)) * 100,
                     'texts': texts_in_decade
                 })
+
+        context['total_texts_centuries'] = total_texts_centuries
+        context['total_texts_decades'] = total_texts_decades
 
         context['data'] = data
 

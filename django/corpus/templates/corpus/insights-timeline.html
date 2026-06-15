@@ -1,16 +1,24 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block main %}
 
-<div class="container">
-    <h2>Visualise Texts in a Timeline</h2>
+<div class="container corpusinsights lang-{{ LANGUAGE_CODE }}">
+    <h2><span class="corpusinsights-titlelive">{% translate 'Live' %}</span> {% translate 'Corpus Timeline' %}</h2>
 
     <div id="insights-timeline">
 
         <div id="insights-timeline-views">
             <span data-view="centuries" class="active">Estimated Date</span><!--
             --><span data-view="decades">Dated</span>
+        </div>
+
+        <div id="insights-timeline-total">
+            {% translate 'Total texts:' %}
+            <span data-view="centuries">{{ total_texts_centuries }}</span>
+            <span data-view="decades">{{ total_texts_decades }}</span>
         </div>
 
         <div id="insights-timeline-centuries" class="insights-timeline-section" data-view="centuries">
@@ -69,9 +77,10 @@ $(document).ready(function(){
         $('#insights-timeline-views span').removeClass('active');
         $(this).addClass('active');
         // Show/hide the views
-        $('.insights-timeline-section').hide();
+        $('.insights-timeline-section, #insights-timeline-total span').hide();
         let view = $(this).attr('data-view');
         $(`.insights-timeline-section[data-view=${view}]`).show();
+        $(`#insights-timeline-total span[data-view=${view}]`).show();
     }).first().trigger('click');
     
     // Show/hide all Types data

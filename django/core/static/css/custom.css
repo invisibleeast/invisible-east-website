@@ -12,7 +12,7 @@ html, body {
     /* Variables */
     --color-primary: #007688;
     --color-primary-dark: #005f6e;
-    --color-primary-light: #cce3e7;
+    --color-primary-light: #acd0d7;
     --color-secondary: #c1b98a;
     --color-secondary-dark: #4b4626;
     --color-secondary-light: #e6e3d0;
@@ -2087,7 +2087,52 @@ div.folio-lines-line.active {
     display: block;
 }
 
-/* ---------- Corpus Insights ---------- */
+/* ---------- Corpus Insights / Live Data ---------- */
+
+.corpusinsights-titlelive {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white;
+  margin-top: -0.2em;
+  margin-right: 0.5em;
+  padding: 0.3em 0.8em;
+  border-radius: 0.5em;
+  background-color: var(--color-secondary);
+  animation: bg-pulse 2s ease-in-out infinite;
+  text-transform: uppercase;
+}
+
+.corpusinsights.lang-en .corpusinsights-titlelive {
+    padding-left: 0.3em;
+}
+
+.corpusinsights.lang-fa .corpusinsights-titlelive {
+    padding-right: 0.2em;
+}
+
+/* Creates the white dot */
+.corpusinsights-titlelive::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  margin: 0 0.4em;
+}
+
+/* Fades the background in and out */
+@keyframes bg-pulse {
+    0%, 100% {
+        background-color: var(--color-secondary);
+    }
+    50% {
+        background-color: var(--color-secondary-light);
+    }
+}
 
 /* Language, Type, Subtype */
 
@@ -2118,6 +2163,13 @@ div.folio-lines-line.active {
 
 #insights-languagetypesubtype-controls-subtypes {
     background: #696969;
+}
+
+#insights-languagetypesubtype-total,
+#insights-timeline-total {
+    margin-top: 0.5em;
+    font-weight: 500;
+    color: var(--color-primary);
 }
 
 #insights-languagetypesubtype-axis {
@@ -2172,15 +2224,15 @@ div.folio-lines-line.active {
 }
 
 .insights-languagetypesubtype-language-bar {
-    background: var(--color-primary);
+    background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
 }
 
 .insights-languagetypesubtype-type-bar {
-    background: var(--color-secondary);
+    background: linear-gradient(to right, var(--color-secondary), var(--color-secondary-light));
 }
 
 .insights-languagetypesubtype-subtype-bar {
-    background: #696969;
+    background: linear-gradient(to right, #696969, #BBB);
 }
 
 .insights-languagetypesubtype-language-label,
@@ -2219,6 +2271,12 @@ div.folio-lines-line.active {
 
 .insights-languagetypesubtype-subtype-label {
     color: #696969;
+}
+
+#insights-languagetypesubtype-notes {
+    color: #646464;
+    font-size: 0.92em;
+    margin-top: 2em;
 }
 
 /* Timeline */
@@ -2260,6 +2318,12 @@ div.folio-lines-line.active {
     user-select: none;
 }
 
+.corpusinsights.lang-fa #insights-timeline-centuries,
+.corpusinsights.lang-fa #insights-timeline-decades {
+    border-left: none;
+    border-right: 4pt solid var(--color-primary);
+}
+
 .insights-timeline-centuries-century {
     padding: 1.3em 0;
 }
@@ -2273,6 +2337,12 @@ div.folio-lines-line.active {
     margin-left: -8pt;
     display: inline-block;
     vertical-align: middle;
+}
+
+.corpusinsights.lang-fa .insights-timeline-centuries-century-point,
+.corpusinsights.lang-fa .insights-timeline-decades-decade-point {
+    margin-left: 0;
+    margin-right: -8pt;
 }
 
 .insights-timeline-centuries-century-info-name {
@@ -2297,7 +2367,7 @@ div.folio-lines-line.active {
 
 .insights-timeline-centuries-century-barcontainer {
     width: calc(100% - 8.5em);
-    background: #DDD;
+    background: #EEE;
     cursor: pointer;
 }
 
@@ -2306,7 +2376,7 @@ div.folio-lines-line.active {
 }
 
 .insights-timeline-centuries-century-barcontainer-bar {
-    background: var(--color-primary);
+    background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
     height: 1.5em;
 }
 
@@ -2343,7 +2413,7 @@ div.folio-lines-line.active {
 }
 
 .insights-timeline-decades-decade-barcontainer-bar {
-    background: var(--color-primary);
+    background: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
     height: 1.2em;
 }
 

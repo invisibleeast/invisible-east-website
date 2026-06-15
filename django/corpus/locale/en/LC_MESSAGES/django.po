@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-01 18:28+0000\n"
+"POT-Creation-Date: 2026-06-15 11:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,29 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: corpus/templates/corpus/insights-languagestypessubtypes.html:7
+#: corpus/templates/corpus/insights-timeline.html:9
+msgid "Live"
+msgstr ""
+
+#: corpus/templates/corpus/insights-languagestypessubtypes.html:7
+msgid "Corpus Explorer"
+msgstr ""
+
+#: corpus/templates/corpus/insights-languagestypessubtypes.html:19
+#: corpus/templates/corpus/insights-timeline.html:19
+msgid "Total texts:"
+msgstr ""
+
+#: corpus/templates/corpus/insights-languagestypessubtypes.html:74
+msgid ""
+"Only texts with a transcription or a translation are included in this dataset"
+msgstr ""
+
+#: corpus/templates/corpus/insights-timeline.html:9
+msgid "Corpus Timeline"
+msgstr ""
 
 #: corpus/templates/corpus/map-iedctoponyms.html:7
 msgid "Toponyms in the Invisible East Digital Corpus"
