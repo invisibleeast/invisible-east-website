@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-02 08:46+0100\n"
+"POT-Creation-Date: 2026-06-15 11:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,54 +43,58 @@ msgid "Search"
 msgstr ""
 
 #: core/templates/base.html:93
-msgid "Corpus Insights"
+msgid "Live Data"
 msgstr ""
 
 #: core/templates/base.html:97
-msgid "Languages"
+msgid "Live Corpus Explorer"
 msgstr ""
 
-#: core/templates/base.html:104
+#: core/templates/base.html:100
+msgid "Live Corpus Timeline"
+msgstr ""
+
+#: core/templates/base.html:107
 msgid "Map"
 msgstr ""
 
-#: core/templates/base.html:110
+#: core/templates/base.html:113
 msgid "About"
 msgstr ""
 
-#: core/templates/base.html:114
+#: core/templates/base.html:117
 msgid "How to Search"
 msgstr ""
 
-#: core/templates/base.html:117
+#: core/templates/base.html:120
 msgid "How to Cite"
 msgstr ""
 
-#: core/templates/base.html:120
+#: core/templates/base.html:123
 msgid "FAQs"
 msgstr ""
 
-#: core/templates/base.html:123
+#: core/templates/base.html:126
 msgid "Glossary"
 msgstr ""
 
-#: core/templates/base.html:126
+#: core/templates/base.html:129
 msgid "Typology"
 msgstr ""
 
-#: core/templates/base.html:129
+#: core/templates/base.html:132
 msgid "Technical/Software"
 msgstr ""
 
-#: core/templates/base.html:132
+#: core/templates/base.html:135
 msgid "Credits"
 msgstr ""
 
-#: core/templates/base.html:149
+#: core/templates/base.html:152
 msgid "Project"
 msgstr ""
 
-#: core/templates/base.html:156
+#: core/templates/base.html:159
 msgid "Admin"
 msgstr ""
 

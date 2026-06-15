@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-02 08:46+0100\n"
+"POT-Creation-Date: 2026-06-15 11:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,54 +43,58 @@ msgid "Search"
 msgstr "جستجو"
 
 #: core/templates/base.html:93
-msgid "Corpus Insights"
-msgstr "نگاه تحلیلی به مجموعه اسناد"
+msgid "Live Data"
+msgstr "داده‌های زنده"
 
 #: core/templates/base.html:97
-msgid "Languages"
-msgstr ""
+msgid "Live Corpus Explorer"
+msgstr "زنده کاوشگر پیکره"
 
-#: core/templates/base.html:104
+#: core/templates/base.html:100
+msgid "Live Corpus Timeline"
+msgstr "الجدول الزمني المباشر للمدونة"
+
+#: core/templates/base.html:107
 msgid "Map"
 msgstr "نقشه‌ها"
 
-#: core/templates/base.html:110
+#: core/templates/base.html:113
 msgid "About"
 msgstr "درباره ما"
 
-#: core/templates/base.html:114
+#: core/templates/base.html:117
 msgid "How to Search"
 msgstr "نحوه جستجو"
 
-#: core/templates/base.html:117
+#: core/templates/base.html:120
 msgid "How to Cite"
 msgstr "راهنمای استناد (رفرنس‌دهی)"
 
-#: core/templates/base.html:120
+#: core/templates/base.html:123
 msgid "FAQs"
 msgstr "پرسش‌های متداول"
 
-#: core/templates/base.html:123
+#: core/templates/base.html:126
 msgid "Glossary"
 msgstr "واژه‌نامه"
 
-#: core/templates/base.html:126
+#: core/templates/base.html:129
 msgid "Typology"
 msgstr "نوع شناسی"
 
-#: core/templates/base.html:129
+#: core/templates/base.html:132
 msgid "Technical/Software"
 msgstr "فنی/نرم‌افزار"
 
-#: core/templates/base.html:132
+#: core/templates/base.html:135
 msgid "Credits"
 msgstr "مشارکت‌کنندگان"
 
-#: core/templates/base.html:149
+#: core/templates/base.html:152
 msgid "Project"
 msgstr "پروژه"
 
-#: core/templates/base.html:156
+#: core/templates/base.html:159
 msgid "Admin"
 msgstr "مدیریت"
 
@@ -162,6 +166,9 @@ msgstr "ورود"
 #: core/templates/snippets/footer.html:53
 msgid "© University of Oxford"
 msgstr "© دانشگاه آکسفورد"
+
+#~ msgid "Corpus Insights"
+#~ msgstr "نگاه تحلیلی به مجموعه اسناد"
 
 #~ msgid "IEDC Toponyms"
 #~ msgstr "نام‌های جغرافیایی پایگاه"
