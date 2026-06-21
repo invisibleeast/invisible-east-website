@@ -179,4 +179,15 @@
         margin: 0.1em 0.7em;
     }
 
+    #corpus-text-detail-images-container {
+        overflow: auto;
+        height: calc(100vh - 9.7em);
+    }
+
+    #corpus-text-detail-images-controls {
+        height: 2.5em;
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
+
 }
