@@ -1918,7 +1918,6 @@ div.folio-lines-line.active {
 
 #corpus-text-detail-images-container {
     overflow: auto;
-    height: calc(100vh - 9.7em);
     background: #EEE;
 }
 
