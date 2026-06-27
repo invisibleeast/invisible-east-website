@@ -9,7 +9,7 @@ var langUrlPrefix = (langIsFa ? '/fa' : '');
 // Create a map object
 var map = L.map(
     '{{ map_id }}', {scrollWheelZoom: false, attributionControl: false}
-).setView(['33.54778917059949', '65.21297408494867'], 6);
+).setView(['37.509', '66.013'], 5);
 
 // Set tile layer style
 L.tileLayer(
