@@ -17,6 +17,9 @@ SECRET_KEY = ''
 RECAPTCHA_PUBLIC_KEY = ''
 RECAPTCHA_PRIVATE_KEY = ''
 
+# Mapbox API Key
+MAPBOX_API_KEY = ''
+
 # Set to True if in development, or False is in production
 DEBUG = True/False
 

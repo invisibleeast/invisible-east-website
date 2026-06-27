@@ -9,11 +9,11 @@ var langUrlPrefix = (langIsFa ? '/fa' : '');
 // Create a map object
 var map = L.map(
     '{{ map_id }}', {scrollWheelZoom: false, attributionControl: false}
-).setView(['33.54778917059949', '65.21297408494867'], 6);
+).setView(['37.509', '66.013'], 5);
 
 // Set tile layer style
 L.tileLayer(
-    `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoibmlja255ciIsImEiOiJjajduNGptZWQxZml2MndvNjk4eGtwbDRkIn0.L0aWwfHlFJVGa-WOj7EHaA`,
+    `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}`,
     {
         maxZoom: 12,
         minZoom: 4,
