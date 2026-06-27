@@ -1137,13 +1137,10 @@ class MapTextsListView(ListView):
 
         return queryset
 
-
-class MapFindSpotTemplateView(TemplateView):
-    """
-    Class based view to show a map (of find spots) template
-    """
-
-    template_name = 'corpus/map-findspots.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['MAPBOX_API_KEY'] = settings.MAPBOX_API_KEY
+        return context
 
 
 #

@@ -15,6 +15,9 @@ SECRET_KEY = '!km=w2#26v=qbqjw@6$6xut*3&3jlfu&r-r-kns=uo(r1ae)md'
 RECAPTCHA_PUBLIC_KEY = 'xxxxx'
 RECAPTCHA_PRIVATE_KEY = 'xxxxx'
 
+# Mapbox API Key
+MAPBOX_API_KEY = 'xxxxx'
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']

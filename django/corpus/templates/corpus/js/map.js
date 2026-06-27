@@ -13,7 +13,7 @@ var map = L.map(
 
 // Set tile layer style
 L.tileLayer(
-    `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoibmlja255ciIsImEiOiJjajduNGptZWQxZml2MndvNjk4eGtwbDRkIn0.L0aWwfHlFJVGa-WOj7EHaA`,
+    `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}`,
     {
         maxZoom: 12,
         minZoom: 4,
