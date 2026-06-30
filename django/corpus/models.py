@@ -713,6 +713,9 @@ class Text(models.Model):
             str += f' ({self.gregorian_date})'
         if len(self.gregorian_date_range_str):
             str += f' ({self.gregorian_date_range_str})'
+        # If specific date isn't provided but a century exists, include the century
+        if len(str) == 0 and self.gregorian_date_century:
+            str += self.gregorian_date_century.name
         # Return a full string of date or None, if no data exists
         return f'The Gregorian calendar: {str}' if len(str) else None
 
