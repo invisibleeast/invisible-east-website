@@ -1245,7 +1245,7 @@ class InsightsTimelineTemplateView(TemplateView):
         total_texts_centuries = 0
         total_texts_decades = 0
         
-        # Add century data
+        # Add century data (aka 'estimated date')
         for century in models.SlTextGregorianCentury.objects.all():
             texts_in_century = models.Text.objects.filter(gregorian_date_century=century).select_related('collection')
             count = texts_in_century.count()
@@ -1258,9 +1258,15 @@ class InsightsTimelineTemplateView(TemplateView):
                     'texts': texts_in_century
                 })
 
-        # Add decade data
+        # Add decade data (aka 'dated')
         for decade in decades:
-            texts_in_decade = models.Text.objects.filter(gregorian_date_sort__startswith=decade).select_related('collection')
+            texts_in_decade = models.Text.objects.filter(
+                gregorian_date_sort__startswith=decade
+            ).exclude(
+                gregorian_date__isnull=True,
+                gregorian_date_range_start__isnull=True,
+                gregorian_date_range_end__isnull=True
+            ).select_related('collection')
             count = texts_in_decade.count()
             total_texts_decades += count
             if count:
