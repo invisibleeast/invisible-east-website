@@ -181,13 +181,19 @@
 
     #corpus-text-detail-images-container {
         overflow: auto;
-        height: calc(100vh - 9.7em);
+        height: calc(100vh - 12em);
     }
 
-    #corpus-text-detail-images-controls {
-        height: 2.5em;
-        overflow-x: scroll;
-        white-space: nowrap;
+}
+
+@media (min-width: 1356px) {
+
+    /*
+    When row of image controls is only one line tall, make the image container taller
+    Note: if image controls change, the above min-width must be adjusted accordingly
+    */
+    #corpus-text-detail-images-container {
+        height: calc(100vh - 9.7em);
     }
 
 }
