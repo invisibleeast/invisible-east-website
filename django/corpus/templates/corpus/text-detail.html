@@ -9,7 +9,7 @@
 <div id="corpus-text-detail">
 
     <!-- Content -->
-    <section id="corpus-text-detail-content"{% if not object.has_image and not object.is_codex %} class="full"{% endif %}>
+    <section id="corpus-text-detail-content"{% if not object.has_image %} class="full"{% endif %}>
 
         {% if not object.public_review_approved %}
             <div id="corpus-text-detail-content-notyetapproved">
@@ -30,8 +30,7 @@
 
         <ul id="corpus-text-detail-content-tabs">
             <li id="details"><i class="fas fa-align-left"></i> {% translate 'Details' %}</li>
-            {% if object.count_text_folios > 1 %}<li id="folios"><i class="fas fa-scroll"></i> {% translate 'Folios' %}</li>{% endif %}
-            {% if object.is_codex %}<li id="codex"><i class="fas fa-th"></i> {% translate 'Codex' %}</li>{% endif %}
+            {% if object.count_text_folios > 1 %}<li id="folios"><i class="fas fa-scroll"></i> {% if object.source_format.is_book %}{% translate 'Pages' %}{% else %}{% translate 'Folios' %}{% endif %}</li>{% endif %}
             {% if object.has_textfoliotag %}<li id="tags"><i class="fas fa-hashtag"></i> {% translate 'Tags' %}</li>{% endif %}
             {% if object.has_transliteration %}<li id="transliteration"><i class="fas fa-font"></i> {% translate 'Transliterations' %}</li>{% endif %}
             {% if object.has_transcription %}<li id="transcription"><i class="fas fa-pen-fancy"></i> {% translate 'Transcriptions' %}</li>{% endif %}
@@ -39,13 +38,15 @@
             {% if object.has_palaeography %}<li id="palaeography"><i class="fas fa-pen-nib"></i> {% translate 'Palaeography' %}</li>{% endif %}
             {% if object.has_toponym_coordinates %}<li id="map"><i class="fas fa-map"></i> {% translate 'Map' %}</li>{% endif %}
             {% if object.seals.all %}<li id="seals"><i class="fas fa-stamp"></i> {% translate 'Seals' %}</li>{% endif %}
+            {% if user.is_admin and object.source_format.is_book or object.source_format.is_codex %}<li id="importfolios"><i class="fas fa-file-import"></i> {% translate 'Import' %}</li>{% endif %}
         </ul>
 
         <article class="tabbed" id="corpus-text-detail-content-details">
             <div class="tabbed-title">{% translate 'Details' %}</div>
 
-            <!-- Download Data -->
+            <!-- Links -->
             <div style="float: {% if LANGUAGE_CODE == 'en' %}right{% else %}left{% endif %};">
+                <!-- Download Data -->
                 {% include 'corpus/snippets/downloaddata.html' with downloaddata_text_ids=object.id data_description='the current text' %}
             </div>
 
@@ -83,59 +84,52 @@
             {% endfor %}
         </article>
 
-        {% if object.is_codex %}
-            <article class="tabbed" id="corpus-text-detail-content-codex">
-                <div class="tabbed-title">{% translate 'Codex' %}</div>
-                {% if codex_pagination_options %}
-                    <div id="codex-pagination">
-                        <form action="" method="get">
-                            <input type="hidden" name="tab" value="codex">
-                            <label for="codex-pagination-select">View pages:</label>
-                            <select id="codex-pagination-select" name="codex_pagination">
-                                {% for option in codex_pagination_options %}
-                                    <option value="{{ option.value }}">{{ option.label }}</option>
-                                {% endfor %}
-                            </select>
-                        </form>
-                    </div>
-                {% endif %}
-                <div class="codex-thumbnails">
-                    {% for image in codex_images %}
-                        <div class="codex-thumbnails-item" data-src="{% if object.is_codex_iiif %}{{ image.image_large }}{% else %}{{ object.codex_images_url }}{{ image }}{% endif %}" data-index="{{ forloop.counter }}">
-                            <div class="codex-thumbnails-item-name">{{  codex_pagination_pagecountstart|add:forloop.counter }}</div>
-                            <img src="{% if object.is_codex_iiif %}{{ image.image_thumbnail }}{% else %}{{ object.codex_images_thumbnails_url }}{{ image }}{% endif %}" alt="Manuscript page">
-                        </div>
-                    {% endfor %}
-                </div>
-            </article>
-        {% endif %}
-
         <article class="tabbed" id="corpus-text-detail-content-folios">
-            <div class="tabbed-title">{% translate 'Folios' %}</div>
-            {% for text_folio in text_folios %}
-                <div class="corpus-text-detail-content-folios-folio" data-folio="{{ text_folio.id }}">
-                    <!-- Title -->
-                    <div class="corpus-text-detail-content-folios-folio-title">
-                        {{ forloop.counter }}. {{ text_folio.name_short }}
+            <div class="tabbed-title">{% if object.source_format.is_book %}{% translate 'Pages' %}{% else %}{% translate 'Folios' %}{% endif %}</div>
+
+            <!-- Options -->
+            <div class="corpus-text-detail-content-options">
+                Show {% if object.source_format.is_book %}{% translate 'pages' %}{% else %}{% translate 'folios' %}{% endif %}:
+                <select id="corpus-text-detail-content-folios-options-show">
+                    <option value=''>-- all --</option>
+                    <option value='data-tab="tags"'>with tags</option>
+                    <option value='data-tab="transcription"'>with transcriptions</option>
+                    <option value='data-tab="translation"'>with translations</option>
+                    <option value='data-tab="transliteration"'>with transliterations</option>
+                </select>
+            </div>
+
+            <div id="corpus-text-detail-content-folios-list">
+                {% for text_folio in text_folios %}
+                    <div class="corpus-text-detail-content-folios-list-folio" data-folio="{{ text_folio.id }}">
+                        <!-- Image -->
+                        <div class="corpus-text-detail-content-folios-list-folio-imagecontainer" style="background-image: url({% if text_folio.image_small %}{{ text_folio.image_small.url }}); cursor: pointer;{% else %}{% static 'images/noimagefound.jpg' %});{% endif %} background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
+                        </div>
+                        <!-- Info -->
+                        <div class="corpus-text-detail-content-folios-list-folio-info">
+                            <!-- Title -->
+                            <div class="corpus-text-detail-content-folios-list-folio-info-title">
+                                {{ text_folio.name_short }}
+                            </div>
+                            <!-- Links -->
+                            <div class="corpus-text-detail-content-folios-list-folio-info-links">
+                                {% if text_folio.has_tag %}
+                                    <div data-tab="tags"><i class="fas fa-hashtag"></i> {% translate 'Tags' %}</div>
+                                {% endif %}
+                                {% if text_folio.has_transcription %}
+                                    <div data-tab="transcription"><i class="fas fa-pen-fancy"></i> {% translate 'Transcription' %}</div>
+                                {% endif %}
+                                {% if text_folio.has_translation %}
+                                    <div data-tab="translation"><i class="fas fa-globe-europe"></i>{% translate 'Translation' %}</div>
+                                {% endif %}
+                                {% if text_folio.has_transliteration %}
+                                    <div data-tab="transliteration"><i class="fas fa-font"></i>{% translate 'Transliteration' %}</div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                    <!-- Image -->
-                    <div class="corpus-text-detail-content-folios-folio-imagecontainer" style="background-image: url({% if text_folio.image_small %}{{ text_folio.image_small.url }}); cursor: pointer;{% else %}{% static 'images/noimagefound.jpg' %});{% endif %} background-color: #CCC; background-position: center; background-repeat: no-repeat; background-size: cover;">
-                    </div>
-                    <!-- Links -->
-                    <div class="corpus-text-detail-content-folios-folio-links">
-                        <div data-tab="tags"><i class="fas fa-hashtag"></i> {% translate 'Tags' %}</div>
-                        {% if text_folio.transcription %}
-                            <div data-tab="transcription"><i class="fas fa-pen-fancy"></i> {% translate 'Transcription' %}</div>
-                        {% endif %}
-                        {% if text_folio.translation %}
-                            <div data-tab="translation"><i class="fas fa-globe-europe"></i>{% translate 'Translation' %}</div>
-                        {% endif %}
-                        {% if text_folio.transliteration %}
-                            <div data-tab="transliteration"><i class="fas fa-font"></i>{% translate 'Transliteration' %}</div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </article>
 
         {% if object.has_textfoliotag %}
@@ -144,7 +138,7 @@
 
                 <!-- Options -->
                 <div class="corpus-text-detail-content-options">
-                    {% include "corpus/snippets/folio-select.html" %}
+                    {% include "corpus/snippets/folio-select.html" with current_tab='tag' %}
                 </div>
 
                 {% if user.is_admin %}
@@ -224,6 +218,8 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+
+                {% include "corpus/snippets/folio-trans-nav.html" %}
             </article>
         {% endif %}
 
@@ -240,6 +236,8 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+
+                {% include "corpus/snippets/folio-trans-nav.html" %}
             </article>
         {% endif %}
 
@@ -256,6 +254,8 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+
+                {% include "corpus/snippets/folio-trans-nav.html" %}
             </article>
         {% endif %}
 
@@ -327,44 +327,81 @@
             </article>
         {% endif %}
 
+        {% if user.is_admin and object.source_format.is_book or object.source_format.is_codex %}
+            <article class="tabbed" id="corpus-text-detail-content-importfolios">
+                <div class="tabbed-title">{% translate 'Import' %} {% if object.source_format.is_book %}{% translate 'Pages' %}{% else %}{% translate 'Folios' %}{% endif %}</div>
+                <div id="corpus-text-detail-content-importfolios-input">
+                    <div id="corpus-text-detail-content-importfolios-input-options">
+                        <p>
+                            Choose the source of the {% if object.source_format.is_book %}{% translate 'pages' %}{% else %}{% translate 'folios' %}{% endif %} you wish to import:
+                        </p>
+                        <div>
+                            <input type="radio" id="corpus-text-detail-content-importfolios-input-options-iiif" name="image_source" value="iiif">
+                            <label for="corpus-text-detail-content-importfolios-input-options-iiif">IIIF</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="corpus-text-detail-content-importfolios-input-options-upload" name="image_source" value="upload">
+                            <label for="corpus-text-detail-content-importfolios-input-options-upload">Upload images directly</label>
+                        </div>
+                    </div>
+                    <div id="corpus-text-detail-content-importfolios-input-sources">
+                        <!-- IIIF -->
+                        <div id="corpus-text-detail-content-importfolios-input-sources-iiif">
+                            <label for="corpus-text-detail-content-importfolios-input-sources-iiif-input">IIIF manifest URL</label>
+                            <input type="url" id="corpus-text-detail-content-importfolios-input-sources-iiif-input" name="import_from" placeholder="">
+                            <span class="helptext">e.g. https://data.idp.bl.uk/iiif/3/manifest/2ADF431FBFC30F41B63AD6B2DC5A01D5</span>
+                        </div>
+                        <!-- Upload images directly -->
+                        <div id="corpus-text-detail-content-importfolios-input-sources-upload">
+                            <label for="corpus-text-detail-content-importfolios-input-sources-upload-input">Upload images</label>
+                            <input type="file" id="corpus-text-detail-content-importfolios-input-sources-upload-input" name="images" accept="image/*" multiple>
+                        </div>
+                    </div>
+                </div>
+                <div id="corpus-text-detail-content-importfolios-output">
+                    <div id="corpus-text-detail-content-importfolios-output-submit-preview">
+                        <i class="fas fa-file-import"></i> Preview Import
+                    </div>
+                </div>
+            </article>
+        {% endif %}
+
     </section><!--
 
     Image
-    -->{% if object.has_image or object.is_codex %}<section id="corpus-text-detail-images">
+    -->{% if object.has_image %}<section id="corpus-text-detail-images">
         <!-- Image Controls -->
         <div id="corpus-text-detail-images-controls">
-            {% if object.is_codex %}
-                <!-- Previous Image -->
-                <div id="corpus-text-detail-images-controls-codeximagenav-previous" class="corpus-text-detail-images-controls-item" title="{% translate 'Previous Image' %}"><i class="fas fa-arrow-left"></i></div>
-                <!-- Next Image -->
-                <div id="corpus-text-detail-images-controls-codeximagenav-next" class="corpus-text-detail-images-controls-item" title="{% translate 'Next Image' %}"><i class="fas fa-arrow-right"></i></div>
-            {% elif object.has_image %}
-                <!-- Choose Folio/Image -->
-                <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
-                    <label>{% translate 'Folio' %}:</label>
-                    <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
-                        {% for text_folio in text_folios %}
-                            <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
+            <!-- Previous Image -->
+            <div id="corpus-text-detail-images-controls-chooseimageprev" class="corpus-text-detail-images-controls-item" title="{% translate 'Previous Image' %}"><i class="fas fa-arrow-up"></i></div>
+            <!-- Next Image -->
+            <div id="corpus-text-detail-images-controls-chooseimagenext" class="corpus-text-detail-images-controls-item" title="{% translate 'Next Image' %}"><i class="fas fa-arrow-down"></i></div>
+            <!-- Choose Image (Folio/Page) -->
+            <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
+                <label>{% if object.source_format.is_book %}{% translate 'Page' %}{% else %}{% translate 'Folio' %}{% endif %}:</label>
+                <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
+                    {% for text_folio in text_folios %}
+                        <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Only Show Certain Image Parts -->
+            <div id="corpus-text-detail-images-controls-onlyshowcertainimageparts" class="corpus-text-detail-images-controls-item">
+                <label>{% translate 'Only show' %}:</label>
+                <select>
+                    <option value="">-- {% translate 'Please select' %} --</option>
+                    <optgroup label="Lines of Text">
+                        <option value="lines-transcription">Transcription</option>
+                    </optgroup>
+                    <optgroup label="Tags">
+                        <option value="tags-all">All tags</option>
+                        {% for category in text_folio_tag_categories %}
+                            <option value="tags-{{ category.id }}">{{ category.name }}</option>
                         {% endfor %}
-                    </select>
-                </div>
-                <!-- Only Show Certain Image Parts -->
-                <div id="corpus-text-detail-images-controls-onlyshowcertainimageparts" class="corpus-text-detail-images-controls-item">
-                    <label>{% translate 'Only show' %}:</label>
-                    <select>
-                        <option value="">-- {% translate 'Please select' %} --</option>
-                        <optgroup label="Lines of Text">
-                            <option value="lines-transcription">Transcription</option>
-                        </optgroup>
-                        <optgroup label="Tags">
-                            <option value="tags-all">All tags</option>
-                            {% for category in text_folio_tag_categories %}
-                                <option value="tags-{{ category.id }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </optgroup>
-                    </select>
-                </div>
-            {% endif %}
+                    </optgroup>
+                </select>
+            </div>
             <!-- Reset Viewer -->
             <div id="corpus-text-detail-images-controls-reset" class="corpus-text-detail-images-controls-item" title="{% translate 'Reset Image' %}"><i class="fas fa-sync-alt"></i></div>
             <!-- Download Image -->
@@ -382,52 +419,41 @@
             <!-- Fullscreen Image -->
             <div id="corpus-text-detail-images-controls-rotate-fullscreen" class="corpus-text-detail-images-controls-item" title="{% translate 'Fullscreen' %}"><i class="fas fa-expand"></i></div>
         </div>
-        <!-- Images (either Codex images or Text Folio images, can't be both) -->
+        <!-- TextFolio Images -->
         <div id="corpus-text-detail-images-container" dir="ltr">
-            {% if object.is_codex %}
-                <!-- Codex images -->
-                <div id="corpus-text-detail-images-image-codex" class="corpus-text-detail-images-image active">
-                    <div class="corpus-text-detail-images-image-rotatelayer">
-                        <!-- img src set dynamically via JS -->
-                        <img id="corpus-text-detail-images-image-codex-img" alt="Codex image">
-                    </div>
-                </div>
-            {% else %}
-                <!-- Text Folio Images -->
-                {% for text_folio in text_folios %}
-                    {% if text_folio.image %}
-                        <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
-                            {% if text_folio.image_hide %}
-                                <div class="corpus-text-detail-images-image-hidden">
-                                    <p>
-                                        We are currently unable to share this image publicly.
-                                    </p>
-                                    <p>
-                                        Please contact us if you require access to this image and we can advise further.
-                                    </p>
-                                </div>
-                            {% else %}
-                                <div class="corpus-text-detail-images-image-rotatelayer">
-                                    <div class="corpus-text-detail-images-image-drawlayer">
-                                        <img src="{{ text_folio.image_medium.url }}" alt="{{ text_folio }}">
-                                        <div class="corpus-text-detail-images-image-parts">
-                                            <!--
-                                                Add TextFolioTag image parts
-                                                Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
-                                            -->
-                                            {% for tag in text_folio.text_folio_tags.all %}
-                                                {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
-                                                    <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
+            {% for text_folio in text_folios %}
+                {% if text_folio.image %}
+                    <div id="corpus-text-detail-images-image-{{ text_folio.id }}" class="corpus-text-detail-images-image">
+                        {% if text_folio.image_hide %}
+                            <div class="corpus-text-detail-images-image-hidden">
+                                <p>
+                                    We are currently unable to share this image publicly.
+                                </p>
+                                <p>
+                                    Please contact us if you require access to this image and we can advise further.
+                                </p>
+                            </div>
+                        {% else %}
+                            <div class="corpus-text-detail-images-image-rotatelayer">
+                                <div class="corpus-text-detail-images-image-drawlayer">
+                                    <img data-src="{% if text_folio.image_medium %}{{ text_folio.image_medium.url }}{% endif %}" alt="{{ text_folio }}">
+                                    <div class="corpus-text-detail-images-image-parts">
+                                        <!--
+                                            Add TextFolioTag image parts
+                                            Note: Lines of Text image parts are added via JS using data in .folio-lines-line elements
+                                        -->
+                                        {% for tag in text_folio.text_folio_tags.all %}
+                                            {% if tag.image_part_left and tag.image_part_top and tag.image_part_width and tag.image_part_height %}
+                                                <div class="corpus-text-detail-images-image-parts-part" data-textfoliotag="{{ tag.id }}" data-category="{{ tag.tag.category.id }}" style="left: {{ tag.image_part_left }}px; top: {{ tag.image_part_top }}px; width: {{ tag.image_part_width }}px; height: {{ tag.image_part_height }}px;"></div>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                 </div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
         {% if object.image_credit %}
             <div id="corpus-text-detail-images-credit">
@@ -491,7 +517,7 @@
                 <!-- Tag (existing) -->
                 <div>
                     <label>{% translate 'Tag' %} <a href="{% url 'admin:corpus_sltextfoliotag_changelist' %}" title="View Tags in the admin dashboard" target="_blank"><i class="fas fa-cog"></i></a></label>
-                    <select name="tag_existing">
+                    <select name="tag_existing" required>
                         <option value="">-- {% translate 'Please select' %} --</option>
                         {% for tag in text_folio_tags %}
                             <option value="{{ tag.id }}" data-tagcategory="{{ tag.category.id }}">{{ tag.name }}</option>

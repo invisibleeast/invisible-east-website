@@ -6,6 +6,7 @@ app_name = 'general'
 urlpatterns = [
     path('', views.WelcomeTemplateView.as_view(), name='welcome'),
 
+    path('about/booksandcodices/', views.AboutBooksAndCodicesTemplateView.as_view(), name='about-booksandcodices'),
     path('about/cite/', views.AboutCiteTemplateView.as_view(), name='about-cite'),
     path('about/credits/', views.AboutCreditsTemplateView.as_view(), name='about-credits'),
     path('about/faqs/', views.AboutFaqsTemplateView.as_view(), name='about-faqs'),

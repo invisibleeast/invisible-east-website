@@ -31,3 +31,7 @@ td.original p {
 fieldset.module h2 {
     text-transform: uppercase;
 }
+
+#content {
+    padding-bottom: 60px;
+}

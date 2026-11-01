@@ -17,9 +17,7 @@ $(document).ready(function(){
     }
 
     // After 1 second (enough time for ckeditor iframes to load)
-    setTimeout(function(){
-        setCKEditorContentDirAuto();
-    }, 1000);
+    setTimeout(function(){ setCKEditorContentDirAuto(); }, 1000);
 
     // Warn users when they're leaving the page if there are any unsaved changes to the data
     var formHasSubmitted = false;

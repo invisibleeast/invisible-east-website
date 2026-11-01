@@ -1429,100 +1429,71 @@ main section {
     font-size: 0.95em;
 }
 
-#codex-pagination {
-    margin-bottom: 2em;
-    text-align: center;
-}
-
-#codex-pagination form label,
-#codex-pagination form select {
-    display: inline-block;
+#corpus-text-detail-content-folios-options-show {
     width: fit-content;
-    font-weight: 600;
-}
-
-.codex-thumbnails-item {
     display: inline-block;
-    margin: 0.2em;
-    width: 140px;
-    height: 140px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 0.2em solid #DDD;
-    position: relative;
 }
 
-.codex-thumbnails-item img {
-    height: 140px;
+.corpus-text-detail-content-folios-list-folio {
     display: block;
-    margin: 0 auto;
-}
-
-.codex-thumbnails-item:hover {
-    border: 0.2em solid var(--color-primary);
-}
-
-.codex-thumbnails-item.active {
-    border: 0.2em solid var(--color-primary);
-    outline: 0.2em solid var(--color-primary);
-}
-
-.codex-thumbnails-item-name {
-    position: absolute;
-    bottom: 0.3em;
-    left: calc(50% - 2em);
-    width: 4em;
-    background: white;
-    padding: 0.1em 0.4em;
-    font-size: 0.75em;
-    font-weight: bold;
-    text-align: center;
-    text-overflow: ellipsis;
-}
-
-.corpus-text-detail-content-folios-folio {
-    display: inline-block;
     border: 1px solid #DDD;
-    margin: 0.5em;
-    padding: 0.8em;
-    width: 15em;
+    margin: 1.5em auto;
+    width: 38em;
     max-width: 100%;
+}
+
+.corpus-text-detail-content-folios-list-folio.active {
+    outline: 3px solid var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+.corpus-text-detail-content-folios-list-folio-imagecontainer {
+    background: #DDD;
+    height: 10em;
+    width: 10em;
+    display: inline-block;
     vertical-align: top;
 }
 
-.corpus-text-detail-content-folios-folio-title {
+.corpus-text-detail-content-folios-list-folio-info {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 11em);
+    padding: 0.5em;
+}
+
+.corpus-text-detail-content-folios-list-folio-info-title {
     font-weight: bold;
-    font-size: 1.2em;
-    text-align: center;
-}
-
-.corpus-text-detail-content-folios-folio-imagecontainer {
+    font-size: 1.1em;
     background: #DDD;
-    height: 15em;
-    margin: 1em auto;
-}
-
-.corpus-text-detail-content-folios-folio-imagecontainer:hover {
-    outline: 3px solid var(--color-primary);
-}
-
-.corpus-text-detail-content-folios-folio-links div {
-    font-size: 0.9em;
-    text-align: center;
-    padding: 0.5em 1em 0.3em 1em;
-    margin: 1em 0;
-    width: 100%;
-    background: #EEE;
-    color: var(--color-primary);
     cursor: pointer;
+    padding: 0.3em;
+    margin-bottom: 1em;
 }
 
-.corpus-text-detail-content-folios-folio-links div:hover {
+.corpus-text-detail-content-folios-list-folio.active .corpus-text-detail-content-folios-list-folio-info-title {
     background: var(--color-primary);
     color: white;
 }
 
-.corpus-text-detail-content-folios-folio-links i {
+.corpus-text-detail-content-folios-list-folio-info-links div {
+    font-size: 0.9em;
+    text-align: center;
+    padding: 0.4em 1.3em;
+    margin: 0.5em 0.5em 0.5em 0;
+    background: #EEE;
+    border-radius: 0.3em;
+    color: var(--color-primary);
+    cursor: pointer;
+    display: inline-block;
+}
+
+.corpus-text-detail-content-folios-list-folio-info-links div:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+.corpus-text-detail-content-folios-list-folio-info-links i {
     margin-right: 0.3em;
 }
 
@@ -1737,6 +1708,28 @@ main section {
     margin: 1em 0 0.3em 0;
 }
 
+.corpus-text-detail-content-trans-nav {
+    text-align: center;
+}
+
+.corpus-text-detail-content-trans-nav-prev,
+.corpus-text-detail-content-trans-nav-next {
+    display: inline-block;
+    font-weight: 500;
+    width: fit-content;
+    padding: 0.4em 0.8em;
+    margin: 0.5em;
+    background: var(--color-secondary);
+    color: var(--color-secondary-dark);
+    border-radius: 0.3em;
+    cursor: pointer;
+}
+
+.corpus-text-detail-content-trans-nav-prev:hover,
+.corpus-text-detail-content-trans-nav-next:hover {
+    opacity: 0.9;
+}
+
 .corpus-text-detail-trans-linktranstexttotag {
     display: none;
 }
@@ -1907,6 +1900,114 @@ div.folio-lines-line.active {
 
 .corpus-text-detail-content-palaeography-folio {
     padding: 1em 1.5em;
+}
+
+#corpus-text-detail-content-importfolios {
+    text-align: center;
+}
+
+#corpus-text-detail-content-importfolios-input {
+    text-align: left;
+}
+
+#corpus-text-detail-content-importfolios-input-sources {
+    margin: 2em auto;
+}
+
+#corpus-text-detail-content-importfolios-input-sources .helptext {
+    color: #505050;
+    font-size: 0.85em;
+    font-style: italic;
+    margin: 0.2em;
+    display: block;
+}
+
+#corpus-text-detail-content-importfolios-input-sources div {
+    display: none;
+}
+
+#corpus-text-detail-content-importfolios-input-sources label {
+    font-weight: 500;
+    display: block;
+    width: fit-content;
+}
+
+#corpus-text-detail-content-importfolios-input-sources-iiif-input {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    padding: 0.2em 0.4em;
+}
+
+#corpus-text-detail-content-importfolios-output-changeall {
+    text-align: left;
+    width: 90%;
+    margin: 0 auto;
+    color: var(--color-secondary-dark);
+}
+
+#corpus-text-detail-content-importfolios-output-changeall span {
+    display: inline-block;
+    font-size: 0.9em;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
+#corpus-text-detail-content-importfolios-output-changeall span:hover {
+    text-decoration: underline;
+}
+
+#corpus-text-detail-content-importfolios-output-imagelist {
+    display: block;
+    width: 90%;
+    height: 15em;
+    overflow-y: auto;
+    margin: 0.5em auto;
+    background: var(--color-secondary-light);
+    text-align: left;
+    padding: 0.3em;
+}
+
+.corpus-text-detail-content-importfolios-output-imagelist-item {
+    padding: 0.2em;
+    border-bottom: 1px solid var(--color-secondary-dark);
+}
+
+.corpus-text-detail-content-importfolios-output-imagelist-item:hover {
+    background: var(--color-secondary);
+    text-decoration: none;
+}
+
+.corpus-text-detail-content-importfolios-output-imagelist-item input {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.4em
+}
+
+.corpus-text-detail-content-importfolios-output-imagelist-item a {
+    display: inline-block;
+    vertical-align: middle;
+    color: var(--color-secondary-dark);
+    cursor: pointer;
+    margin-left: 1em;
+    font-size: 0.8em;
+}
+
+#corpus-text-detail-content-importfolios-output-submit-preview,
+#corpus-text-detail-content-importfolios-output-submit-confirm {
+    display: block;
+    margin: 1em auto;
+    width: fit-content;
+    background: var(--color-secondary);
+    color: var(--color-secondary-dark);
+    cursor: pointer;
+    border-radius: 0.3em;
+    padding: 0.5em 1em;
+}
+
+#corpus-text-detail-content-importfolios-output-submit-preview:hover,
+#corpus-text-detail-content-importfolios-output-submit-confirm:hover {
+    opacity: 0.9;
 }
 
 /* Text Image */
