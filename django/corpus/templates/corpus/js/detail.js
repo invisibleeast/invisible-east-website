@@ -80,92 +80,58 @@ $('.corpus-text-detail-content-details-datagroup').each(function(){
 
 
 //
-// Codex
+// Folios (aka Pages for books)
 //
 
-// Pagination:
-
-// Selecting a page
-$('#codex-pagination select').on('change', function(){
-    $(this).closest('form').submit();
+// Show certain folios (i.e. with translations, transcriptions, etc.)
+$('#corpus-text-detail-content-folios-options-show').on('change', function(){
+    const val = $(this).val();
+    $('.corpus-text-detail-content-folios-list-folio').show();
+    if (val){
+        $('.corpus-text-detail-content-folios-list-folio').filter(function(){
+            return val && !$(this).html().includes(val);
+        }).hide();
+    }
 });
-
-// Setting current page value in select list
-if (getUrlParameter('codex_pagination')) $('#codex-pagination-select').val(getUrlParameter('codex_pagination'));
-
-// Click a thumbnail to make that image active in the image viewer
-$('body').on('click', '.codex-thumbnails-item', function(){
-    // Get the url of the main, high-res image
-    let imageUrl = $(this).attr('data-src');
-    // Show image loading
-    $('#corpus-text-detail-images-loading').remove();
-    $('#corpus-text-detail-images-container').append('<div id="corpus-text-detail-images-loading">Loading...</div>');
-    // Load the image in the viewer (hidden whilst loading, is shown in image on load event)
-    $('#corpus-text-detail-images-image-codex').show();
-    $('#corpus-text-detail-images-image-codex-img').hide().attr('src', imageUrl);
-    // Set the 'Download image' link location
-    $('#corpus-text-detail-images-controls-downloadimage a').attr('href', imageUrl);
-    // Set active state of thumbnails
-    $('.codex-thumbnails-item').removeClass('active');
-    $(this).addClass('active');
-    // Set URL parameter
-    setUrlParameter('codex', $(this).attr('data-index'));
-});
-
-// Function to get the the active image index
-function getActiveCodexImageByIndex(){
-    return Number($('.codex-thumbnails-item.active').attr('data-index'));
-}
-
-// Function to set the the active image using its index
-function setActiveCodexImageByIndex(index){
-    $(`.codex-thumbnails-item[data-index="${index}"]`).trigger('click');
-}
-
-// Use left arrow button to go to previous active codex image
-$('body').on('click', '#corpus-text-detail-images-controls-codeximagenav-previous', function(){
-    setActiveCodexImageByIndex(getActiveCodexImageByIndex() - 1);
-});
-
-// Use right arrow button to go to next active codex image
-$('body').on('click', '#corpus-text-detail-images-controls-codeximagenav-next', function(){
-    setActiveCodexImageByIndex(getActiveCodexImageByIndex() + 1);
-});
-
-// Once codex image is loaded (on page load and each time user clicks on thumbnail)
-$('#corpus-text-detail-images-image-codex-img').on("load", function(){
-    // Hide loading
-    $('#corpus-text-detail-images-loading').remove();
-    // Show image
-    $('#corpus-text-detail-images-image-codex-img').show();
-    // Reset panzoom
-    setPanzoomStartScale();
-    setPanzoomOnImage();
-});
-
-
-//
-// Folios
-//
 
 // Load folio when clicking on it
-$('.corpus-text-detail-content-folios-folio-imagecontainer').on('click', function(){
-    let folioId = $(this).closest('.corpus-text-detail-content-folios-folio').attr('data-folio');
+$('.corpus-text-detail-content-folios-list-folio-imagecontainer, .corpus-text-detail-content-folios-list-folio-info-title').on('click', function(){
+    let folioId = $(this).closest('.corpus-text-detail-content-folios-list-folio').attr('data-folio');
     $('#corpus-text-detail-images-controls-chooseimage select').val(folioId).trigger('change');
 });
 
 // Load folio in another tab
-$('.corpus-text-detail-content-folios-folio-links div').on('click', function(){
-    let folioId = $(this).closest('.corpus-text-detail-content-folios-folio').attr('data-folio');
+$('.corpus-text-detail-content-folios-list-folio-info-links div').on('click', function(){
+    let folioId = $(this).closest('.corpus-text-detail-content-folios-list-folio').attr('data-folio');
     let tab = $(this).attr('data-tab');
     // Select this folio in the specified trans tab
     $(`#corpus-text-detail-content-tabs #${tab}`).trigger('click');
     $(`article#corpus-text-detail-content-${tab}`).find('.corpus-text-detail-folio-select').val(folioId).trigger('change');
 });
 
+// Helper function to load a specific folio's image if not already loaded
+function loadFolioImage($el) {
+    var $img = $el.find('img[data-src]');
+    if ($img.length && !$img.attr('src')) {
+        $img.attr('src', $img.attr('data-src'));
+    }
+    return $img;
+}
+
+// Function to update the active view and manage preloading for neighbors
+function showFolio(folioId) {
+    var $current = $('#corpus-text-detail-images-image-' + folioId);
+    loadFolioImage($current.prev('.corpus-text-detail-images-image'));
+    loadFolioImage($current.next('.corpus-text-detail-images-image'));
+    return loadFolioImage($current);
+}
+
 // Select folio (this appears in other tabs, e.g. tags, transcription, etc)
 $('.corpus-text-detail-folio-select').on('change', function(){
     let folioId = $(this).val();
+    // Mark folio active in folios tab
+    $('.corpus-text-detail-content-folios-list-folio').removeClass('active');
+    $(`.corpus-text-detail-content-folios-list-folio[data-folio="${folioId}"]`).addClass('active');
     // Show only this folio in the tags tab
     $('.corpus-text-detail-content-tags-folio').hide();
     $(`.corpus-text-detail-content-tags-folio[data-folio="${folioId}"`).show();
@@ -181,8 +147,235 @@ $('.corpus-text-detail-folio-select').on('change', function(){
     if (imageSelect.val() != folioId) imageSelect.val(folioId).trigger('change');
     // Show this folio in palaeography
     $('.corpus-text-detail-content-palaeography-folio').hide();
-    $(`.corpus-text-detail-content-palaeography-folio[data-folio="${folioId}"`).show();
+    $(`.corpus-text-detail-content-palaeography-folio[data-folio="${folioId}"]`).show();
 }).trigger('change');
+
+// Navigate to the previous or next folio
+function navFolio(direction){
+    let option = $('#corpus-text-detail-images-controls-chooseimage select option:selected');
+    // Get prev or next option
+    if (direction === 'prev') option = option.prev('option');
+    else if (direction === 'next') option = option.next('option');
+    // Select desired option
+    option.prop('selected', true).trigger('change');
+}
+
+// Image prev
+$('body').on('click', '#corpus-text-detail-images-controls-chooseimageprev', function(){
+    navFolio('prev');
+});
+
+// Image next
+$('body').on('click', '#corpus-text-detail-images-controls-chooseimagenext', function(){
+    navFolio('next');
+});
+
+// Trans prev
+$('body').on('click', '.corpus-text-detail-content-trans-nav-prev', function(){
+    navFolio('prev');
+});
+
+// Trans next
+$('body').on('click', '.corpus-text-detail-content-trans-nav-next', function(){
+    navFolio('next');
+});
+
+// Keyboard arrow keys (prev & next)
+$('body').on('keydown', function(e){
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') navFolio('prev');
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') navFolio('next');
+});
+
+
+//
+// Import Text Folios/Pages
+//
+
+let imagesToImport = [];
+
+// Choose the import source (e.g. IIIF or direct upload of images)
+$('input[name="image_source"]').on('change', function(){
+    let source = $(this).val();
+    $('#corpus-text-detail-content-importfolios-input-sources div').hide();
+    $('#corpus-text-detail-content-importfolios-input-sources-' + source).show();
+})
+
+// Load first option by default
+$('input[name="image_source"]').first().prop('checked', true).trigger('change');
+
+// Submit the request to preview the data to be imported
+$('#corpus-text-detail-content-importfolios-output-submit-preview').click(function(e){
+    e.preventDefault();
+    $('#corpus-text-detail-content-importfolios-input input').prop('disabled', true);
+    const output = $('#corpus-text-detail-content-importfolios-output');
+    output.html('<p>Please wait...</p>');
+    let importSource = $('input[name="image_source"]:checked').val();
+    const htmlConfirmBtn = `<div id="corpus-text-detail-content-importfolios-output-submit-confirm"><i class="fas fa-check"></i> Confirm Import</div>`;
+    let html = '';
+
+    // IIIF import preview
+    if (importSource === 'iiif'){
+        $.ajax({
+            url: '/corpus/import/textfolios/preview/',
+            type: 'GET',
+            data: {'import_from': $('#corpus-text-detail-content-importfolios-input-sources-iiif-input').val()},
+            dataType: 'json',
+            success: function(response){
+                if (response.status === 'success'){
+                    // Save image data
+                    imagesToImport = response.images;
+
+                    // Build HTML
+                    html += `
+                    <p>Successfully found ${response.image_count} images:</p>
+                    <div id="corpus-text-detail-content-importfolios-output-changeall">
+                        <span id="corpus-text-detail-content-importfolios-output-changeall-select">Select all</span>
+                        <span id="corpus-text-detail-content-importfolios-output-changeall-deselect">Deselect all</span>
+                    </div>
+                    <div id="corpus-text-detail-content-importfolios-output-imagelist">
+                    `;
+                    imagesToImport.forEach(function(image, index){
+                        // Add 'include' property, to determine if item will be included in import (true by default)
+                        image.include = true;
+                        // Build HTML
+                        html += `<div class="corpus-text-detail-content-importfolios-output-imagelist-item">
+                        <label><input type="checkbox" value="${index}" checked> ${image.name}</label>
+                        <a href="${image.url}" target="_blank">Open <i class="fas fa-external-link-square-alt"></i></a>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                    // Inject HTML
+                    output.html(html + htmlConfirmBtn);
+                }
+            },
+            error: function(xhr){
+                html += "Import preview failed: "
+                html += xhr.responseJSON ? xhr.responseJSON.error : 'An unknown error occurred.';
+                output.html(html);
+            }
+        });
+    }
+
+    // Upload images directly preview
+    else if (importSource === 'upload'){
+        let files = $('#corpus-text-detail-content-importfolios-input-sources-upload-input').prop('files');
+        if (files.length > 0){
+            imagesToImport = files;
+            $.each(files, function(index, file){
+                let sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                html += `<div>${file.name} (${sizeMB} MB)</div>`;
+            });
+            html += htmlConfirmBtn;
+        } else {
+            html += '(No images found)'
+        }
+        // Inject HTML
+        output.html(html);
+    }
+});
+
+// Set the 'include' property of each item, based on if it's checked/unchecked
+$('body').on('change', '.corpus-text-detail-content-importfolios-output-imagelist-item input[type="checkbox"]', function(){
+    const index = parseInt($(this).val(), 10);
+    const isChecked = $(this).prop('checked');
+    if (!isNaN(index) && imagesToImport[index]) imagesToImport[index].include = isChecked;
+});
+
+// Select all image items in preview list
+$('body').on('click', '#corpus-text-detail-content-importfolios-output-changeall-select', function(){
+    $('.corpus-text-detail-content-importfolios-output-imagelist-item input[type="checkbox"]').prop('checked', true).trigger('change');
+});
+
+// Deselect all image items in preview list
+$('body').on('click', '#corpus-text-detail-content-importfolios-output-changeall-deselect', function(){
+    $('.corpus-text-detail-content-importfolios-output-imagelist-item input[type="checkbox"]').prop('checked', false).trigger('change');
+});
+
+// Submit the confirmed data import
+$('body').on('click', '#corpus-text-detail-content-importfolios-output-submit-confirm', function(e){
+    e.preventDefault();
+
+    let confirmMsg = "Are you sure you want to import these folios/pages into the IEDC for this Corpus Text? This will permanently delete all existing folios/pages that belong to this Corpus Text (if exists)";
+
+    if (confirm(confirmMsg) === true){
+
+        let importSource = $('input[name="image_source"]:checked').val();
+
+        // Remove images from IIIF if they have been deselected (i.e. have 'include' to false)
+        if (importSource === 'iiif'){
+            imagesToImport = imagesToImport.filter(image => image.include !== false);
+        }
+
+        const output = $('#corpus-text-detail-content-importfolios-output');
+        const importFrom = $('#corpus-text-detail-content-importfolios-input-sources-iiif-input').val();
+
+        const totalImages = imagesToImport.length;
+
+        if (totalImages === 0){
+            output.html('<p>No images found to import.</p>');
+            return;
+        }
+
+        output.html('<p>Starting import... (0%)</p>');
+
+        // Recursive function to process one image (URL or File) at a time
+        function importNextImage(index) {
+
+            // All images have been imported
+            if (index >= totalImages) {
+                location = location.pathname;
+                return;
+            }
+
+            const currentImage = imagesToImport[index];
+
+            // Build the data to pass in the form
+            const formData = new FormData();
+            formData.append('import_type', importSource);
+            formData.append('text_id', '{{ object.id }}');
+            formData.append('image_index', index);
+            formData.append('import_from', importFrom);
+            formData.append('image_name', currentImage.name);
+
+            // Branch payload based on whether it's a direct File upload or a URL object
+            if (currentImage instanceof File) {
+                formData.append('image_file', currentImage);
+            } else {
+                formData.append('image_url', currentImage.url);
+            }
+
+            $.ajax({
+                url: '/corpus/import/textfolios/confirmed/',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        const completedCount = index + 1;
+                        const percent = Math.round((completedCount / totalImages) * 100);
+                        // Update progress on the page
+                        output.html(`<p>Imported ${completedCount} of ${totalImages} (${percent}%)</p><p>Please wait...</p>`);
+                        // Trigger the next image import
+                        importNextImage(index + 1);
+                    } else {
+                        const errorMsg = response.error || 'Server returned an unsuccessful status.';
+                        alert(`Error importing image ${index + 1} (${currentImage.name}): ${errorMsg}`);
+                    }
+                },
+                error: function(xhr){
+                    const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 'An unknown error occurred.';
+                    alert(`Error importing image ${index + 1} (${currentImage.name}): ${errorMsg}`);
+                }
+            });
+        }
+
+        // Kick off the chain starting at index 0
+        importNextImage(0);
+    }
+});
 
 
 //
@@ -627,21 +820,33 @@ $('#corpus-text-detail-images-controls div').attr('data-placement', 'bottom').to
 // Choose image select list (set default value, change event, trigger on load)
 $('#corpus-text-detail-images-controls-chooseimage select').on('change', function(){
     var imageId = $(this).find(":selected").val();
+    var $img = showFolio(imageId);
     panzoomImageId = imageId;
+
     // Remove 'active' from existing image
     $('.corpus-text-detail-images-image.active').removeClass('active');
     // Mark this image as 'active'
     $('#corpus-text-detail-images-image-' + imageId).addClass('active');
     // Update folio select lists in trans tabs
     $('.corpus-text-detail-folio-select').val(imageId).trigger('change');
-    // Set the 'Download image' link location
-    var imageUrl = $('#corpus-text-detail-images-image-' + imageId).find('img').attr('src');
-    $('#corpus-text-detail-images-controls-downloadimage a').attr('href', imageUrl);
-    // Set Panzoom
-    setPanzoomStartScale();
-    setPanzoomOnImage();
+    // Set this as the folio in the tag create form
+    $('#corpus-text-detail-content-tags-textfoliotag-form input[name="textfolio"]').val(imageId);
     // Set URL parameter
     setUrlParameter('textfolio', imageId);
+
+    // Wait for image to load before setting up Download link & Panzoom
+    function initPanzoom() {
+        var imageUrl = $('#corpus-text-detail-images-image-' + imageId).find('img').attr('src');
+        $('#corpus-text-detail-images-controls-downloadimage a').attr('href', imageUrl);
+        setPanzoomStartScale();
+        setPanzoomOnImage();
+    }
+
+    if (!$img.length || $img[0].complete) {
+        initPanzoom();
+    } else {
+        $img.one('load', initPanzoom);
+    }
 });
 
 // Only Show Certain Image Parts
@@ -888,25 +1093,9 @@ $('body').on('click', '.corpus-text-detail-images-image-parts-part.active', func
     }
 });
 
-// Apply the select list image controls once page is loaded, for either Text Folio images or Codex images
-// Text Folio Images
+// Apply the select list image controls once page is loaded
 if ($('#corpus-text-detail-images-controls-chooseimage').length){
     if (getUrlParameter('textfolio')) $('#corpus-text-detail-images-controls-chooseimage select').val(getUrlParameter('textfolio'));
     $('#corpus-text-detail-images-controls-chooseimage select').trigger('change');
     $('#corpus-text-detail-images-controls-onlyshowcertainimageparts select').trigger('change');
-}
-// Codex Images
-else {
-    // Activate panzoom on image
-    panzoomImageId = 'codex';
-    // Set default image (try to get from URL, if not in URL then use first)
-    if (getUrlParameter('codex')) defaultCodexImage = getUrlParameter('codex');
-    else defaultCodexImage = 1;
-    setActiveCodexImageByIndex(defaultCodexImage);
-    // Use left/right keyboard arrow keys to navigate previous/next manuscript images
-    $('body').on('keydown', function(e){
-        if (e.keyCode === 37) $('#corpus-text-detail-images-controls-codeximagenav-previous').trigger('click');
-        else if (e.keyCode === 39) $('#corpus-text-detail-images-controls-codeximagenav-next').trigger('click');
-    });
-    
 }

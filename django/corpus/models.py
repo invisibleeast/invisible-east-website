@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.html import mark_safe
@@ -16,8 +15,6 @@ from unidecode import unidecode
 import os
 import textwrap
 import re
-import json
-import requests
 
 
 # Three main sections:
@@ -154,6 +151,25 @@ def queryset_to_strlist(queryset, linebreaks=False):
 #
 # 2. Select List models (all inherit from above SlAbstract class, with some extending with additional fields, etc.)
 #
+
+
+class SlTextSourceFormat(SlAbstract):
+    """
+    A format of the source of a text
+    E.g. 'Document', 'Manuscript codex', 'Published book'
+    """
+
+    @property
+    def is_book(self):
+        return 'book' in self.name.lower()
+
+    @property
+    def is_codex(self):
+        return 'codex' in self.name.lower()
+
+    @property
+    def is_document(self):
+        return 'document' in self.name.lower()
 
 
 class SlTextTypeCategory(SlAbstract):
@@ -490,6 +506,7 @@ class Text(models.Model):
     shelfmark = models.CharField(max_length=1000, help_text="If this Corpus Text doesn't have a shelfmark then insert another value here to use as a title, such as a catalogue number or a brief description. If this Corpus Text is part of reused sheet that shares a shelfmark with another Corpus Text then append 'recto' or 'verso' to this shelfmark.", verbose_name="Shelfmark / Title")
     collection = models.ForeignKey('SlTextCollection', on_delete=models.RESTRICT, related_name=related_name)
     corpus = models.ForeignKey('SlTextCorpus', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name, verbose_name='Groups')
+    source_format = models.ForeignKey('SlTextSourceFormat', on_delete=models.RESTRICT, blank=True, null=True, related_name=related_name)
     primary_language = models.ForeignKey('SlTextLanguage', on_delete=models.RESTRICT, related_name=f'{related_name}_primary')
     additional_languages = models.ManyToManyField('SlTextLanguage', blank=True, related_name=related_name, db_index=True, help_text="Don't include the primary language. Only include additional languages/scripts that also appear in the text.")
     type = models.ForeignKey('SlTextType', blank=True, null=True, on_delete=models.RESTRICT, related_name=related_name)
@@ -511,15 +528,10 @@ class Text(models.Model):
     # Content
     summary_of_content = RichTextUploadingField(blank=True, null=True)
 
-    # Codex
-    codex_images_location = models.TextField(
-        blank=True, null=True,
-        help_text="""
-        Include either a link to a IIIF manifest (if using IIIF images) OR the name of the directory on the server (if using local images).
-        <br>A IIIF manifest URL must start with 'https://' and include '/iiif/' in it.
-        <br>Examples of valid IIIF manifest URLs include:
-        <br>- https://iiif.bodleian.ox.ac.uk/iiif/manifest/8287e6c8-8b65-4a55-8ad0-e22dff4eccc2.json
-        <br>- https://cudl.lib.cam.ac.uk//iiif/MS-BROWNE-K-00001""")
+    # Import Folios/Pages
+    imported_folios_from = models.TextField(blank=True, null=True, verbose_name='imported folios/pages from', help_text='The above location (if provided) is where the folios/pages associated with this Text originated from. This is used for codices and books, e.g. a IIIF manifest URL. See the "Import Folios/Pages" section for this Corpus Text on the public website for more information.')
+    imported_folios_datetime = models.DateTimeField(blank=True, null=True, verbose_name='imported folios/pages date and time')
+    imported_folios_by = models.ForeignKey(User, related_name='text_imported_folios_by', on_delete=models.PROTECT, blank=True, null=True, verbose_name='imported folios/pages by')
 
     # Converted Gregorian Date (see child TextDate model for original dates)
     gregorian_date_text = models.CharField(max_length=1000, blank=True, null=True, help_text='Format date as free text - e.g. "11 February 1198" or "January-February 1162".<br>For help converting original dates to the Gregorian calendar please see <a href="https://www.muqawwim.com" target="_blank">www.muqawwim.com</a>')
@@ -694,6 +706,11 @@ class Text(models.Model):
         return self.text_folios.count()
 
     @property
+    def imported_folios_from_url(self):
+        if self.imported_folios_from and self.imported_folios_from.startswith('http'):
+            return self.imported_folios_from
+
+    @property
     def gregorian_date_range_str(self):
         if self.gregorian_date_range_start and self.gregorian_date_range_end:
             return f'{self.gregorian_date_range_start} - {self.gregorian_date_range_end}'
@@ -762,7 +779,7 @@ class Text(models.Model):
 
     @property
     def image_credit(self):
-        if (self.has_image or self.is_codex) and (self.collection or self.image_credit_custom):
+        if self.has_image and (self.collection or self.image_credit_custom):
             return self.image_credit_custom if self.image_credit_custom else self.collection
 
     @property
@@ -777,14 +794,9 @@ class Text(models.Model):
 
     @property
     def list_image_url(self):
-        if self.is_codex:
-            # If text is codex, return the first thumbnail image
-            return self.codex_default_image_thumbnail_url
-        else:
-            # If text has folios, return the first image
-            for folio in self.text_folios.all():
-                if folio.image and not folio.image_hide:
-                    return folio.image_small.url
+        for folio in self.text_folios.all():
+            if folio.image and not folio.image_hide:
+                return folio.image_small.url
 
     @property
     def details_html_dates(self):
@@ -902,69 +914,6 @@ class Text(models.Model):
         return "\n".join([f.translation for f in self.text_folios.all()])
 
     @property
-    def is_codex(self):
-        # Returns True if is text is a codex, or False for standard Texts
-        return self.codex_images_location and len(self.codex_images_location.strip())
-
-    @property
-    def is_codex_iiif(self):
-        # Returns True if is manuscript images are from an external source via IIIF
-        return self.is_codex and self.codex_images_location.startswith('https://') and 'iiif' in self.codex_images_location
-
-    @property
-    def codex_images_dir(self):
-        if self.is_codex and not self.is_codex_iiif:
-            return os.path.join(settings.MEDIA_ROOT, 'corpus', 'codex', self.codex_images_location)
-
-    @property
-    def codex_images_url(self):
-        if self.is_codex and not self.is_codex_iiif:
-            return f"{settings.MEDIA_URL}corpus/codex/{self.codex_images_location}/"
-
-    @property
-    def codex_images_thumbnails_url(self):
-        if self.codex_images_url:
-            return f"{self.codex_images_url}thumbnails/"
-
-    @property
-    def codex_images(self):
-        if self.is_codex:
-            if self.is_codex_iiif:
-                try:
-                    response = requests.get(self.codex_images_location)
-                    # Raise an HTTPError for bad responses (4xx or 5xx)
-                    response.raise_for_status()
-                    images = []
-                    for canvas in response.json()['sequences'][0]['canvases']:
-                        image_url = canvas['images'][0]['resource']['@id']
-                        image_full_url = f"{image_url}/full/max/0/default.jpg"
-                        images.append({
-                            'image_thumbnail': image_full_url.replace('max', '60,'),
-                            'image_large': image_full_url.replace('max', '1500,'),
-                            'image_full': image_full_url
-                        })
-                    return images
-                except requests.exceptions.RequestException as e:
-                    print(f"Error fetching data: {e}")
-                    return None
-                except json.JSONDecodeError as e:
-                    print(f"Error decoding JSON: {e}")
-                    return None
-            else:
-                codex_images_files = [file for file in os.listdir(self.codex_images_dir) if file.lower().endswith(".jpg") and '_thumbnail.' not in file.lower()]
-                codex_images_files.sort()
-                return codex_images_files
-
-    @property
-    def codex_default_image_thumbnail_url(self):
-        # Default image thumbnail from IIIF
-        if self.is_codex_iiif:
-            return self.codex_images[0]['image_thumbnail']
-        # Default image thumbnail from locally stored images
-        elif self.codex_images_thumbnails_url and self.codex_images:
-            return self.codex_images_thumbnails_url + self.codex_images[0]
-
-    @property
     def title(self):
         return f"{self.collection}: {self.shelfmark}"
 
@@ -1060,6 +1009,9 @@ class TextRelatedPublication(models.Model):
 class TextFolio(models.Model):
     """
     A folio (e.g. a side of paper) within a Text
+
+    If the parent Text of this TextFolio has a source_format of "Published book"
+    then 'Folio' is renamed to 'Page' where suitable (e.g. web interface, but not in code)
     """
 
     related_name = 'text_folios'
@@ -1096,8 +1048,10 @@ Please note that the heading text must appear outside of a list and not as a num
 """
 
     text = models.ForeignKey('Text', on_delete=models.CASCADE, related_name=related_name)
-    side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT)
+    order_in_text = models.IntegerField(default=1, validators=[MinValueValidator(1)], help_text="E.g. the folio number or page number within the text")
+    side = models.ForeignKey('SlTextFolioSide', on_delete=models.RESTRICT, blank=True, null=True)
     open_state = models.ForeignKey('SlTextFolioOpen', on_delete=models.RESTRICT, blank=True, null=True, help_text='Optional. Only relevant to some Bactrian texts.')
+    custom_name = models.CharField(max_length=1000, blank=True, null=True, help_text="Optional. Set a custom name to override the default, if the default name isn't suitable. The default name is suitable for most texts.")
 
     image = models.ImageField(upload_to='corpus/text_folios__original', blank=True, null=True)
     image_small = models.ImageField(upload_to='corpus/text_folios__small', blank=True, null=True)
@@ -1106,7 +1060,7 @@ Please note that the heading text must appear outside of a list and not as a num
     image_hide = models.BooleanField(default=False, verbose_name='Hide image on public website', help_text="e.g. if you don't have permission to share the image publicly")
 
     transcription = RichTextUploadingField(blank=True, null=True, help_text=text_folio_trans_help_text)
-    translation = RichTextUploadingField(blank=True, null=True, help_text=text_folio_trans_help_text)
+    translation = RichTextUploadingField(blank=True, null=True)
     transliteration = RichTextUploadingField(blank=True, null=True, help_text='<br>Optional. Only relevant to some Middle Persian texts.')
 
     palaeography = RichTextUploadingField(blank=True, null=True, help_text='<br>Optional. Only relevant to some texts.')
@@ -1124,7 +1078,7 @@ Please note that the heading text must appear outside of a list and not as a num
         """
 
         # Ensure the text field includes a HTML ordered list with items or a table
-        if (('<ol' in text_field and '</li>' in text_field) or '<table' in text_field or '<h1' in text_field) and field_name in ['transcription', 'translation', 'transliteration']:
+        if text_field and (('<ol' in text_field and '</li>' in text_field) or '<table' in text_field or '<h1' in text_field) and field_name in ['transcription', 'translation', 'transliteration']:
             lines_data = []
             soup = BeautifulSoup(text_field, features="html.parser")
             lines = soup.find_all(['li', 'table', 'h1'])
@@ -1280,6 +1234,22 @@ Please note that the heading text must appear outside of a list and not as a num
         return self.trans_text_lines_str(self.translation_text_lines)
 
     @property
+    def has_tag(self):
+        return self.text_folio_tags.exists()
+
+    @property
+    def has_transcription(self):
+        return self.transcription and len(self.transcription)
+
+    @property
+    def has_translation(self):
+        return self.translation and len(self.translation)
+
+    @property
+    def has_transliteration(self):
+        return self.transliteration and len(self.transliteration)
+
+    @property
     def strlist_value(self):
         value = self.name_short
         value += f' - Image: https://www.invisible-east.org{self.image.url}' if self.image else ''
@@ -1291,14 +1261,29 @@ Please note that the heading text must appear outside of a list and not as a num
 
     @property
     def image_preview(self):
-        return mark_safe(f'<img src="{self.image_small.url}" alt="image of this folio" />')
+        if self.text.source_format.name.lower() == 'document':
+            return mark_safe(f'<img src="{self.image_small.url}" alt="image of this folio" />')
+        else:
+            return '(Only available for Documents)'
 
     @property
     def name_short(self):
-        return ", ".join([str(field) for field in [self.open_state, self.side] if field is not None])
+        if self.custom_name:
+            return self.custom_name
+        name = str(self.order_in_text)
+        if self.side:
+            name += str(self.side)[0]  # e.g. 'r' in 'recto'
+        if self.open_state:
+            name += f" ({self.open_state})"
+        return name
+
+    @property
+    def name(self):
+        label = 'Page' if self.text.source_format.is_book else 'Folio'
+        return f'{label} {self.name_short}'
 
     def __str__(self):
-        return f'{self.text}: Folio ({self.name_short})'
+        return f'{self.text}: {self.name}'
 
     def save(self, *args, **kwargs):
         # Must save now, so image is saved before working with it
@@ -1308,7 +1293,7 @@ Please note that the heading text must appear outside of a list and not as a num
         # Update the object (must use update() not save() to avoid unique ID error)
         try:
             TextFolio.objects.filter(id=self.id).update(
-                image_small=image_compress(self.image, self.image_small, 640),
+                image_small=image_compress(self.image, self.image_small, 400),
                 image_medium=image_compress(self.image, self.image_medium, 1920),
                 image_large=image_compress(self.image, self.image_large, 5000)
             )
@@ -1317,8 +1302,8 @@ Please note that the heading text must appear outside of a list and not as a num
 
     class Meta:
         ordering = ['text', 'open_state', 'side', 'id']
-        verbose_name = 'Folio'
-        verbose_name_plural = 'Folios (including Transcription, Translation, Images, etc.)'
+        verbose_name = 'Folio/Page'
+        verbose_name_plural = 'Folios/Pages (inc. Transcription, Translation, Images, etc.)'
 
 
 class TextFolioTag(models.Model):

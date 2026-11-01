@@ -2,7 +2,7 @@
 
 <div class="corpus-text-detail-content-options">
 
-    {% include "corpus/snippets/folio-select.html" %}
+    {% include "corpus/snippets/folio-select.html" with current_tab=current_tab %}
 
     {% if current_tab != 'transcription' and object.has_transcription %}
         <div>

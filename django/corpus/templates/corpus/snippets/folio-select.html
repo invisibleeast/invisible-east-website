@@ -1,8 +1,11 @@
+{% load i18n %}
 <div>
-    <span>Folio:</span>
+    <span>{% if object.source_format.is_book %}{% translate 'Page' %}{% else %}{% translate 'Folio' %}{% endif %}:</span>
     <select class="corpus-text-detail-folio-select" title="Select a folio"{% if object.count_text_folios < 2 %} disabled{% endif %}>
         {% for folio in text_folios %}
-            <option value="{{ folio.id }}">{{ folio.name_short }}</option>
+            <option value="{{ folio.id }}"{% if current_tab == 'tag' and not folio.has_tag or current_tab == 'transcription' and not folio.has_transcription or current_tab == 'translation' and not folio.has_translation or current_tab == 'transliteration' and not folio.has_transliteration %} hidden{% endif %}>
+                {{ folio.name_short }}
+            </option>
         {% endfor %}
     </select>
 </div>

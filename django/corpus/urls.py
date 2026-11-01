@@ -29,4 +29,8 @@ urlpatterns = [
     path('insights/languagestypessubtypes/', views.InsightsLanguagesTypesSubtypesTemplateView.as_view(), name='insights-languagestypessubtypes'),
     path('insights/timeline/', views.InsightsTimelineTemplateView.as_view(), name='insights-timeline'),
 
+    # Import Text Folios (aka Pages)
+    path('import/textfolios/preview/', views.import_textfolios_preview, name='import-textfolios-preview'),
+    path('import/textfolios/confirmed/', views.import_textfolios_confirmed, name='import-textfolios-confirmed'),
+
 ]

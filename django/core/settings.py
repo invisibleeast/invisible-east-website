@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'account',
     'general',
     'corpus',
-    'help'
+    'help',
+    # 3rd party (but must appear a bottom of list)
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 MIDDLEWARE = [
@@ -145,6 +147,11 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# Allow objects in admin dashboard to have lots of child objects
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
+
 # CKEditor configuration options
 # Image File uploads via CKEditor
 CKEDITOR_UPLOAD_PATH = 'cke_uploads/'  # will be based within MEDIA dir
@@ -179,7 +186,7 @@ CKEDITOR_CONFIGS = {
         'enterMode': 2,
         'forcePasteAsPlainText': True,
         'tabSpaces': 4,
-        'height': '27em',
+        'height': '18em',
         'width': '100%',
         'allowedContent': True,
         'entities_greek': False,

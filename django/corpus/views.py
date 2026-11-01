@@ -2,6 +2,10 @@ from django.views.generic import (DetailView, ListView, TemplateView, View)
 from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField, Prefetch)
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.views.decorators.http import require_GET, require_POST
+from django.contrib.auth.decorators import login_required
+from django.core.files.base import ContentFile
+from django.utils import timezone
 from dicttoxml import dicttoxml
 from django.urls import reverse
 from django.conf import settings
@@ -12,7 +16,7 @@ from docx import Document
 from docx.shared import Cm
 from . import models
 import json
-import math
+import requests
 import re
 import os
 import glob
@@ -25,6 +29,7 @@ import time
 # 3. Maps Views
 # 4. Corpus Insights (data visualisations) Views
 # 5. Download Data Views
+# 6. Import Data Views
 
 
 #
@@ -305,6 +310,119 @@ def json_str(value):
     return str(value) if value else None
 
 
+def get_images_iiif(manifest_url):
+    """
+    Provide a URL for a IIIF manifest
+    e.g. https://data.idp.bl.uk/iiif/3/manifest/2ADF431FBFC30F41B63AD6B2DC5A01D5
+    and https://iiif.bodleian.ox.ac.uk/iiif/manifest/75699dc5-d5bb-4b55-ae56-c6e092fc473a.json
+
+    Supports both v2 and v3 of IIIF manifest
+
+    Returns a dict containing either:
+    1. error: if unsuccessful, an error message as string
+    2. data: if successful, a list of dictionaries containing the name and URL for each image
+    """
+
+    try:
+        # Fetch the manifest
+        response = requests.get(manifest_url, timeout=15)
+        response.raise_for_status()
+        manifest = response.json()
+    except requests.exceptions.RequestException as e:
+        return {'error': f'Failed to fetch manifest: {str(e)}'}
+    except ValueError:
+        return {'error': 'URL did not return valid JSON.'}
+
+    data = []
+    MAX_DIM = 1920
+
+    # IIIF (Version 3)
+    if 'items' in manifest:
+        for canvas in manifest.get('items', []):
+            raw_label = canvas.get('label', {'none': ['Untitled']})
+            if isinstance(raw_label, dict):
+                first_lang = next(iter(raw_label.values()), ['Untitled'])
+                label = first_lang[0] if isinstance(first_lang, list) else first_lang
+            else:
+                label = str(raw_label)
+
+            for anno_page in canvas.get('items', []):
+                for annotation in anno_page.get('items', []):
+                    body = annotation.get('body', {})
+                    if isinstance(body, dict) and body.get('type') == 'Image':
+                        image_url = None
+
+                        # Get original dimensions from body (fallback to canvas dimensions)
+                        orig_w = body.get('width') or canvas.get('width') or 0
+                        orig_h = body.get('height') or canvas.get('height') or 0
+
+                        service = body.get('service')
+                        if isinstance(service, list) and len(service) > 0:
+                            service = service[0]
+
+                        if isinstance(service, dict):
+                            base_url = (service.get('id') or service.get('@id', '')).rstrip('/')
+                            if base_url:
+                                # Determine if the service is Image API v2 or v3
+                                service_type = service.get('type') or service.get('@type', '')
+                                is_v2_service = 'ImageService2' in service_type or '/2/' in base_url
+                                full_kw = "full" if is_v2_service else "max"
+
+                                # Only apply !2000,2000 if at least one edge exceeds MAX_DIM
+                                if orig_w > MAX_DIM or orig_h > MAX_DIM:
+                                    size_param = f"!{MAX_DIM},{MAX_DIM}"
+                                else:
+                                    size_param = full_kw
+
+                                image_url = f"{base_url}/full/{size_param}/0/default.jpg"
+
+                        if not image_url:
+                            image_url = body.get('id')
+
+                        if image_url:
+                            data.append({'name': label, 'url': image_url})
+
+    # IIIF (Version 2)
+    elif 'sequences' in manifest:
+        for sequence in manifest.get('sequences', []):
+            for canvas in sequence.get('canvases', []):
+                label = canvas.get('label', 'Untitled')
+                if isinstance(label, list):
+                    label = label[0].get('@value', str(label)) if isinstance(label[0], dict) else label[0]
+
+                for image in canvas.get('images', []):
+                    resource = image.get('resource', {})
+                    if resource.get('@type') == 'dctypes:Image':
+                        orig_w = resource.get('width') or canvas.get('width') or 0
+                        orig_h = resource.get('height') or canvas.get('height') or 0
+
+                        # Only downscale if the original image exceeds MAX_DIM
+                        if orig_w > MAX_DIM or orig_h > MAX_DIM:
+                            size_param = f"!{MAX_DIM},{MAX_DIM}"
+                        else:
+                            size_param = "full"
+
+                        service = resource.get('service')
+                        image_url = None
+
+                        if isinstance(service, dict) and '@id' in service:
+                            base_url = service.get('@id').rstrip('/')
+                            image_url = f"{base_url}/full/{size_param}/0/default.jpg"
+                        elif isinstance(service, list) and len(service) > 0 and '@id' in service[0]:
+                            base_url = service[0].get('@id').rstrip('/')
+                            image_url = f"{base_url}/full/{size_param}/0/default.jpg"
+
+                        if not image_url:
+                            image_url = resource.get('@id')
+
+                        if image_url:
+                            data.append({'name': label, 'url': image_url})
+    else:
+        data = 'Unsupported or invalid IIIF manifest structure.'
+
+    return {'data': data}
+
+
 #
 # 2. Main Views
 #
@@ -350,27 +468,6 @@ class TextDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Codex pagination
-        if self.object.is_codex:
-            codex_pagination = int(self.request.GET.get('codex_pagination', 0))
-            codex_perpage = 25
-            codex_images = self.object.codex_images
-            context['codex_images'] = codex_images[
-                codex_pagination:codex_pagination + codex_perpage
-            ]
-            context['codex_pagination_pagecountstart'] = codex_pagination
-            # Codex pagination options (if there are multiple pages)
-            if len(codex_images) > codex_perpage:
-                codex_pages = range(0, math.ceil(len(codex_images) / codex_perpage))
-                codex_pagination_options = []
-                for p in codex_pages:
-                    p_start = p * codex_perpage
-                    p_end = min(p_start + codex_perpage, len(codex_images))
-                    codex_pagination_options.append(
-                        {'value': p_start, 'label': f'{p_start + 1} - {p_end}'}
-                    )
-                context['codex_pagination_options'] = codex_pagination_options
 
         # TextFolio and TextFolioTag
         context['text_folios'] = self.object.text_folios.all().select_related(
@@ -616,6 +713,11 @@ class TextDetailView(DetailView):
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
             {
+                'label': 'Images Imported From',
+                'label_fa': 'پیوند سند',
+                'value': f'<a href="{self.object.imported_folios_from_url}" target="_blank">{self.object.imported_folios_from_url}</a>' if self.object.imported_folios_from_url else None
+            },
+            {
                 'label': 'Image Permission Statement',
                 'label_fa': 'بیانیه‌ی اجازه استفاده از تصویر',
                 'value': self.object.image_permission_statement
@@ -685,6 +787,7 @@ class TextListView(ListView):
             searches = []
 
         field_names_to_search = [
+            'id',
             'shelfmark',
             'collection__name',
             'corpus__name',
@@ -878,11 +981,6 @@ class TextListView(ListView):
                 'filter_name': 'Seal',
                 'filter_name_fa': 'مهر'
             },
-            {
-                'filter_id': f'{filter_pre_bl}codex_images_location',
-                'filter_name': 'Codex',
-                'filter_name_fa': 'کتاب خطی',
-            }
         ]
 
         # Gregorian Dates
@@ -910,6 +1008,14 @@ class TextListView(ListView):
                 'filter_name': 'Tag',
                 'filter_options': models.SlTextFolioTag.objects.all(),
                 'filter_hidden': True  # this filter is not visible as its set by user clicking tags in list items
+            },
+            {
+                'filter_id': f'{filter_pre_fk}source_format',
+                'filter_name': 'Source Format',
+                'filter_name_fa': 'XXXXX',
+                'filter_options': models.SlTextSourceFormat.objects.all(),
+                'info_alert': '"Published books" and "Manuscript codices" are multi-page texts intended to be read sequentially. "Documents" are individual documents and shorter fragments.',
+                'info_alert_fa': 'XXXXX'
             },
             {
                 'filter_id': f'{filter_pre_fk}primary_language',
@@ -1163,15 +1269,15 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
         count_all = texts.count()
         context['total_texts'] = count_all
 
-        for l in models.SlTextLanguage.objects.all():
-            count_language = texts.filter(primary_language=l).count()
+        for lng in models.SlTextLanguage.objects.all():
+            count_language = texts.filter(primary_language=lng).count()
             if count_language:
 
                 object = {}
 
                 # Add language data to object
-                object['id'] = l.id
-                object['name'] = l.name
+                object['id'] = lng.id
+                object['name'] = lng.name
                 object['count'] = count_language
                 object['percentage'] = (count_language / count_all) * 100
                 object['types'] = []
@@ -1179,7 +1285,7 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
                 # Add types data
                 for t in models.SlTextType.objects.all():
                     count_type = texts.filter(
-                        primary_language=l,
+                        primary_language=lng,
                         type=t
                     ).count()
 
@@ -1194,7 +1300,7 @@ class InsightsLanguagesTypesSubtypesTemplateView(TemplateView):
                         # Add subtypes data
                         for s in models.SlTextDocumentSubtype.objects.all():
                             count_subtype = texts.filter(
-                                primary_language=l,
+                                primary_language=lng,
                                 type=t,
                                 document_subtype=s
                             ).count()
@@ -1244,7 +1350,7 @@ class InsightsTimelineTemplateView(TemplateView):
         data = {'count_all': count_all, 'centuries': [], 'decades': []}
         total_texts_centuries = 0
         total_texts_decades = 0
-        
+
         # Add century data (aka 'estimated date')
         for century in models.SlTextGregorianCentury.objects.all():
             texts_in_century = models.Text.objects.filter(gregorian_date_century=century).select_related('collection')
@@ -1471,3 +1577,121 @@ def downloaddata_xml(request):
     file_name = f'iedc_{time.strftime("%Y-%m-%d_%H-%M")}.xml'
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response
+
+
+#
+# 5. Import Data Views
+#
+
+
+@require_GET
+@login_required
+def import_textfolios_preview(request):
+    """
+    Functional view that gets image data from either IIIF manifest or filepath on IEDC server
+    Returns a preview of this data to the user, so they can see it's loaded properly before confirming
+    """
+
+    # Get location (i.e. IIIF manifest URL)
+    import_from = request.GET.get('import_from')
+    if not import_from:
+        return JsonResponse({'error': 'Missing "import_from" parameter.'}, status=400)
+
+    # Get the image data from either IIIF
+    if import_from.startswith(('http://', 'https://')):
+        images = get_images_iiif(import_from)
+
+    # Report error, if found
+    if 'error' in images:
+        return JsonResponse({'error': images['error']}, status=400)
+    # Return the extracted data as JSON
+    elif 'data' in images:
+        return JsonResponse({
+            'status': 'success',
+            'import_from': import_from,
+            'image_count': len(images['data']),
+            'images': images['data']
+        })
+
+
+@require_POST
+@login_required
+def import_textfolios_confirmed(request):
+    """
+    Functional view that creates a single TextFolio object from passed image data
+    """
+
+    # Get parameters from request
+    text_id = request.POST.get('text_id')
+    import_type = request.POST.get('import_type')
+    import_from = request.POST.get('import_from')
+    image_name = request.POST.get('image_name')
+    image_url = request.POST.get('image_url')
+    image_index = request.POST.get('image_index')
+
+    # Ensure required parameters are set (depending on type of import - e.g. IIIF or image upload)
+    if not import_type:
+        return JsonResponse({'error': 'Missing required parameters.'}, status=400)
+    elif import_type == 'iiif':
+        if not all([text_id, import_from, image_name, image_url, image_index is not None]):
+            return JsonResponse({'error': 'Missing required parameters.'}, status=400)
+    elif import_type == 'upload':
+        if not all([text_id, image_name, image_index is not None]):
+            return JsonResponse({'error': 'Missing required parameters.'}, status=400)
+
+    try:
+        index = int(image_index)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid "image_index" parameter.'}, status=400)
+
+    # For the first image only
+    if index == 0:
+        # Delete existing TextFolios
+        models.TextFolio.objects.filter(text_id=text_id).delete()
+        # Set the import meta data for the parent Text object
+        models.Text.objects.filter(id=text_id).update(
+            imported_folios_from=import_from,
+            imported_folios_datetime=timezone.now(),
+            imported_folios_by=request.user
+        )
+
+    # Create TextFolio
+    folio = models.TextFolio(text_id=text_id, order_in_text=index + 1)
+
+    # Set the custom name, if suitable (i.e. isn't just a digit)
+    if not image_name.isdigit():
+        image_name = os.path.splitext(image_name)[0]  # remove file ext if exists
+        folio.custom_name = image_name
+
+    # Saving image from IIIF URL
+    if import_type == 'iiif':
+        # Download and save the image (with retry and resolution fallback)
+        headers = {'User-Agent': 'IEDC/1.0 (Mozilla/5.0)'}
+        response = None
+        for attempt in range(3):
+            try:
+                target_url = image_url if attempt == 0 else image_url.replace('/full/full/', '/full/2500,/')
+                response = requests.get(target_url, headers=headers, timeout=60)
+                if response.status_code in [400, 403] and '/full/full/' in target_url:
+                    response = requests.get(target_url.replace('/full/full/', '/full/max/'), headers=headers, timeout=60)
+                response.raise_for_status()
+                break
+            except requests.RequestException as e:
+                if attempt == 2:
+                    return JsonResponse({'error': f'Failed to download image for {image_name}: {str(e)}'}, status=400)
+
+        ext = os.path.splitext(image_url.split('?')[0])[1] or '.jpg'
+        filename = f"folio_{text_id}_{index + 1}{ext}"
+        folio.image.save(filename, ContentFile(response.content), save=False)
+
+    # Saving image directly uploaded from client in this request
+    elif import_type == 'upload':
+        uploaded_file = request.FILES.get('image_file')
+        ext = os.path.splitext(uploaded_file.name)[1] or '.jpg'
+        filename = f"folio_{text_id}_{index + 1}{ext}"
+        folio.image.save(filename, uploaded_file, save=False)
+
+    # Save the new TextFolio instance to db
+    folio.save()
+
+    return JsonResponse({'status': 'success'})

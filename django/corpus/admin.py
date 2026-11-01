@@ -173,14 +173,14 @@ class TextFolioStackedInline(admin.StackedInline):
     classes = ['collapse']
     show_change_link = True
     fields = (
+        'order_in_text',
         'side',
         'open_state',
+        'custom_name',
         'image',
-        'image_small',
-        'image_medium',
-        'image_large',
-        'image_hide',
+        ('image_small', 'image_medium', 'image_large'),
         'image_preview',
+        'image_hide',
         ('transcription', 'translation'),
         'transliteration',
         'palaeography'
@@ -276,6 +276,7 @@ class M2MTextToText2Inline(admin.TabularInline):
 #
 
 # Register Select List models (most use GenericSlAdminView)
+admin.site.register(models.SlTextSourceFormat, GenericSlAdminView)
 admin.site.register(models.SlTextTypeCategory, GenericSlAdminView)
 admin.site.register(models.SlTextType, GenericSlAdminView)
 admin.site.register(models.SlTextDocumentSubtypeCategory, GenericSlAdminView)
@@ -407,6 +408,7 @@ class TextAdminView(GenericAdminView):
                 'corpus',
                 'primary_language',
                 'additional_languages',
+                'source_format',
                 'type',
                 'document_subtype',
                 'toponyms',
@@ -429,12 +431,6 @@ class TextAdminView(GenericAdminView):
         ('Content', {
             'fields': (
                 'summary_of_content',
-            ),
-            'classes': ['collapse']
-        }),
-        ('Codex', {
-            'fields': (
-                'codex_images_location',
             ),
             'classes': ['collapse']
         }),
@@ -464,6 +460,14 @@ class TextAdminView(GenericAdminView):
             ),
             'classes': ['collapse']
         }),
+        ('Imported folios/pages', {
+            'fields': (
+                'imported_folios_from',
+                'imported_folios_datetime',
+                'imported_folios_by'
+            ),
+            'classes': ['collapse']
+        }),
     )
     inlines = (
         TextDateStackedInline,
@@ -477,6 +481,9 @@ class TextAdminView(GenericAdminView):
 
     def get_readonly_fields(self, request, obj):
         readonly_fields = [
+            'imported_folios_from',
+            'imported_folios_datetime',
+            'imported_folios_by',
             'public_review_reviewer',
             'public_review_notes',
             'public_review_approved',
@@ -605,10 +612,6 @@ class TextAdminView(GenericAdminView):
         if obj_old and obj_old.admin_principal_data_entry_person is None:
             obj.admin_principal_data_entry_person = request.user
 
-        # Ensure codex text has no whitespace at start/end when user copies and pastes URL
-        if obj.codex_images_location and len(obj.codex_images_location):
-            obj.codex_images_location = obj.codex_images_location.strip()
-
         # Automatically set the set_gregorian_date_sort field
         obj.set_gregorian_date_sort()
 
@@ -656,6 +659,7 @@ class TextFolioAdminView(GenericAdminView):
         'translation'
     )
     fields = (
+        'order_in_text',
         'side',
         'open_state',
         'image',

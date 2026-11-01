@@ -8,6 +8,13 @@ class WelcomeTemplateView(TemplateView):
     template_name = 'general/welcome.html'
 
 
+class AboutBooksAndCodicesTemplateView(TemplateView):
+    """
+    Class-based view to show the about-booksandcodices template
+    """
+    template_name = 'general/about-booksandcodices.html'
+
+
 class AboutCiteTemplateView(TemplateView):
     """
     Class-based view to show the about-cite template
