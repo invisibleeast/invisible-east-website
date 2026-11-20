@@ -304,6 +304,72 @@ li {
     color: black;
 }
 
+/* Multiselect (custom select list, where you can select multiple options) */
+
+.multiselect {
+    position: relative;
+    display: block;
+    margin: 10pt 0;
+    user-select: none;
+}
+
+.multiselect-display {
+    display: inline-block;
+    vertical-align: middle;
+    width: calc(100% - 3.5em);
+    border: 1px solid #ccc;
+    padding: 3pt 13pt 3pt 3pt;
+    background: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    border-radius: 4pt;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: black;
+    font-size: 0.95em;
+    font-weight: 400;
+}
+
+.multiselect-display::after {
+    content: '▼';
+    position: absolute;
+    right: 5pt;
+    font-size: 10pt;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.multiselect-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-top: 0;
+    background: #fff;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    color: black;
+}
+
+.multiselect-options label {
+    display: block;
+    padding: 4pt 6pt;
+    cursor: pointer;
+}
+
+.multiselect-options label:hover {
+    background: #f4f4f4;
+}
+
+.multiselect-options input {
+    margin-right: 8px;
+}
+
 /* ---------- Direction: rtl (right to left) e.g. for Persian */
 
 .rtl {
@@ -599,8 +665,20 @@ main section {
     display: block;
 }
 
-#welcome {
-    padding-top: 5em;
+#announcements {
+    padding-top: 3em;
+}
+
+#announcements p {
+    background: var(--color-secondary);
+    color: var(--color-secondary-dark);
+    text-align: center;
+    width: fit-content;
+    padding: 0.4em 1em;
+    font-weight: 500;
+    display: block;
+    margin: 2em auto;
+    font-size: 1.1em;
 }
 
 /* ---------- About ---------- */
@@ -673,13 +751,18 @@ main section {
     width: calc(100% - 2em);
 }
 
-#corpus-text-list-options-extlink {
+#corpus-text-list-options-extlink a,
+#corpus-text-list-options-extlink span {
     text-align: right;
     font-size: 0.9em;
     display: block;
     float: right;
-    margin: 0.2em 0 0.2em 2em;
+    margin: 0.2em 0 0.2em 1.3em;
     color: white;
+}
+
+#corpus-text-list-options-extlink-how {
+    width: 100%;
 }
 
 .corpus-text-list-options-section {
@@ -717,10 +800,6 @@ main section {
     float: left;
 }
 
-#corpus-text-list-options-filters {
-    /* display: none; */
-}
-
 .corpus-text-list-options-filters-filter-container a {
     color: white;
 }
@@ -749,6 +828,16 @@ main section {
     margin: 1em 0 0 0;
     display: inline-block;
     width: calc(100% - 1.7em);
+}
+
+#corpus-text-list-options .multiselect-options label {
+    margin: 0;
+    display: block;
+    width: 100%;
+}
+
+#corpus-text-list-options .multiselect-options input[type='checkbox'] {
+    transform: scale(1);
 }
 
 #corpus-text-list-options .input-clear {
@@ -993,14 +1082,34 @@ main section {
     color: black;
     font-size: 1.5em;
     display: inline-block;
+    margin-right: 0.4em;
 }
 
 #corpus-text-list-header-count {
     padding: 0;
-    margin: 0 2em;
+    margin: 0 1.3em;
     color: #707070;
     font-size: 1rem;
     display: inline-block;
+}
+
+.corpus-text-list-header-details-table {
+    margin-top: 2em;
+    text-align: center;
+}
+
+.corpus-text-list-header-details-table th,
+.corpus-text-list-header-details-table td {
+    text-align: center;
+}
+
+.corpus-text-list-header-details-table th {
+    font-weight: 500;
+}
+
+.corpus-text-list-header-details-table tr.novalue {
+    opacity: 0.4;
+    font-style: italic;
 }
 
 #corpus-text-list-header-sort,
@@ -1012,6 +1121,7 @@ main section {
 
 #corpus-text-list-header-sort label {
     font-weight: bold;
+    margin-left: 0.5em;
 }
 
 #corpus-text-list-header-sort-select {
@@ -1025,22 +1135,25 @@ main section {
     border-radius: 0.3em;
 }
 
-#downloaddata-trigger {
+/* Popup */
+
+.popuptrigger {
     display: inline-block;
-    margin-left: 2em;
+    margin: 0 1em;
     cursor: pointer;
     border-radius: 0.3em;
     background: #EEE;
     padding: 0.3em 0.8em;
     font-weight: 500;
+    user-select: none;
 }
 
-#downloaddata-trigger:hover {
+.popuptrigger:hover {
     color: white;
     background: var(--color-primary);
 }
 
-#downloaddata-popup {
+.popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -1051,18 +1164,20 @@ main section {
     display: none;
 }
 
-#downloaddata-popup-content {
+.popup-content {
     margin: 10vh auto 0 auto;
     width: 40em;
     min-height: 10em;
+    max-height: 80vh;
     text-align: center;
     max-width: 90%;
     background: white;
     padding: 2em;
     position: relative;
+    overflow-x: auto;
 }
 
-#downloaddata-popup-content-close {
+.popup-content-close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -1071,17 +1186,20 @@ main section {
     cursor: pointer;
 }
 
-#downloaddata-popup-content h4 {
+.popup-content h4 {
     padding-top: 0;
+    text-align: center;
 }
 
-#downloaddata-popup-content-links {
+/* Popup: Download data */
+
+#downloaddata-links {
     width: fit-content;
     margin: 2em auto;
     padding: 0;
 }
 
-#downloaddata-popup-content-links li {
+#downloaddata-links li {
     width: 100%;    
     list-style: none;
     background: var(--color-primary);
@@ -1096,11 +1214,11 @@ main section {
     font-size: 0.95em;
 }
 
-#downloaddata-popup-content-links li:hover {
+#downloaddata-links li:hover {
     background: var(--color-primary-dark);
 }
 
-#downloaddata-popup-content-downloadstarted {
+#downloaddata-started {
     font-weight: 500;
     color: var(--color-green);
     margin-top: 2em;
@@ -2599,6 +2717,145 @@ div.folio-lines-line.active {
 
 #corpus-text-detail-content-map {
     margin-top: 0;
+}
+
+/* ---------- Tags ---------- */
+
+#corpus-textfoliotag-list-search {
+    background: var(--color-primary);
+    width: 17em;
+    height: calc(100vh - 14em);
+    overflow: auto;
+    padding: 0.4em;
+    display: inline-block;
+    vertical-align: top;
+    border-top: 1px solid var(--color-primary);
+    border-bottom: 1px solid var(--color-primary);
+}
+
+#corpus-textfoliotag-list-search-text {
+    width: 100%;
+    padding: 0.1em 0.5em;
+    border: none;
+    outline: none;
+    border-radius: 0.3em;
+    margin-bottom: 0.5em;
+}
+
+#corpus-textfoliotag-list-search-categories {
+    background: var(--color-primary);
+    color: white;
+}
+
+.corpus-textfoliotag-list-search-categories-category {
+    padding: 0.8em;
+    cursor: pointer;
+}
+
+.corpus-textfoliotag-list-search-categories-category:hover {
+    background: var(--color-primary-dark);
+}
+
+.corpus-textfoliotag-list-search-categories-category .name {
+    font-weight: 500;
+}
+
+.corpus-textfoliotag-list-search-categories-category .count {
+    display: inline-block;
+    margin-left: 0.5em;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+#corpus-textfoliotag-list-tags {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 34.5em);
+    height: calc(100vh - 14em);
+    padding: 0 1em;
+    overflow: auto;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+}
+
+.corpus-textfoliotag-list-tags-tag {
+    margin: 1em 0;
+    user-select: none;
+}
+
+.corpus-textfoliotag-list-tags-tag.inactive {
+    display: none;
+}
+
+.corpus-textfoliotag-list-tags-tag.selected .name {
+    color: var(--color-secondary);
+    background: var(--color-secondary-dark);
+}
+
+.corpus-textfoliotag-list-tags-tag .name {
+    background: var(--color-secondary);
+    color: var(--color-secondary-dark);
+    border-radius: 0.3em;
+    padding: 0.2em 0.7em;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.corpus-textfoliotag-list-tags-tag .name:hover {
+    opacity: 0.9;
+}
+
+.corpus-textfoliotag-list-tags-tag .count {
+    display: inline-block;
+    vertical-align: top;
+    font-style: italic;
+    color: #696969;
+    margin-left: 0.5em;
+}
+
+#corpus-textfoliotag-list-selected {
+    width: 17em;
+    display: inline-block;
+    vertical-align: top;
+    height: calc(100vh - 14em);
+    overflow: auto;
+    background: #EEE;
+    border: 1px solid #CCC;
+    padding-top: 3em;
+    text-align: center;
+    color: #404040;
+    font-style: italic;
+}
+
+.corpus-textfoliotag-list-selected-tag {
+    display: block;
+    width: fit-content;
+    padding: 0.3em 0.5em;
+    margin: 0.5em auto;
+    font-style: normal;
+    font-weight: 500;
+    border-radius: 0.2em;
+    background: var(--color-secondary);
+    cursor: pointer;
+}
+
+#corpus-textfoliotag-list-selected-submit {
+    border-radius: 0.3em;
+    display: block;
+    width: fit-content;
+    margin: 3em auto 1em auto;
+    padding: 0.5em 0.8em 0.4em 0.8em;
+    background: var(--color-primary);
+    color: white;
+    font-style: normal;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#corpus-textfoliotag-list-selected-submit:hover {
+    opacity: 0.9;
 }
 
 /* ---------- Help ---------- */

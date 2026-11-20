@@ -83,7 +83,7 @@
                     </li>
                     <!-- Corpus / Search -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/corpus/" in request.path and '/corpus/map' not in request.path and '/corpus/insights/' not in request.path %} active{% endif %}" href="{% url 'corpus:text-list' %}">
+                        <a class="nav-link{% if "/corpus/" in request.path and '/corpus/map' not in request.path and '/corpus/insights/' not in request.path and '/corpus/tags/' not in request.path %} active{% endif %}" href="{% url 'corpus:text-list' %}">
                             {% translate 'Search' %}
                         </a>
                     </li>
@@ -105,6 +105,12 @@
                     <li class="nav-item">
                         <a class="nav-link{% if "/corpus/map/" in request.path %} active{% endif %}" href="{% url 'corpus:map-iedctoponyms' %}">
                             {% translate 'Map' %}
+                        </a>
+                    </li>
+                    <!-- Map -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/corpus/tags/" in request.path %} active{% endif %}" href="{% url 'corpus:sltextfoliotag-list' %}">
+                            {% translate 'Tags' %}
                         </a>
                     </li>
                     <!-- About -->

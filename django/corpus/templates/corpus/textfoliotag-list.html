@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main %}
+
+<div class="container">
+    <h2>{% translate "Tags in the Invisible East Digital Corpus" %}</h2>
+    <p>
+        {% translate "Browse the list of tags below. Click on one or more tags to search for related texts in the IEDC." %}
+    </p>
+
+    <div id="corpus-textfoliotag-list">
+        <!-- Search -->
+        <div id="corpus-textfoliotag-list-search">
+            <!-- Search by text -->
+            <input id="corpus-textfoliotag-list-search-text" type="text" placeholder="{% translate 'Search for tags' %}" title="{% translate 'Search for tags' %}">
+            <!-- Search by categories -->
+            <div id="corpus-textfoliotag-list-search-categories">
+                <div class="corpus-textfoliotag-list-search-categories-category">
+                    <span class="name">(All tags)</span>
+                    <span class="count"></span>
+                </div>
+                {% for category in categories %}
+                    <div class="corpus-textfoliotag-list-search-categories-category" data-id="{{ category.id }}">
+                        <span class="name">{{ category }}</span>
+                        <span class="count"></span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div><!--
+
+        Tags
+        --><div id="corpus-textfoliotag-list-tags">
+            {% for tag in object_list %}
+                <div class="corpus-textfoliotag-list-tags-tag" data-id="{{ tag.id }}" data-category="{{ tag.category.id }}">
+                    <span class="name">{{ tag }}</span>
+                    <span class="count">{{ tag.text_folio_tags.count }} texts</span>
+                </div>
+            {% endfor %}
+        </div><!--
+
+        Selected Tags
+        --><div id="corpus-textfoliotag-list-selected"></div>
+    </div>
+
+</div>
+
+
+<!-- JS -->
+<script>
+$(document).ready(function(){
+
+    // Set the counts for tags in categories
+    function setCountsOfTagsInCategories(){
+        $('.corpus-textfoliotag-list-search-categories-category').each(function(){
+            let categoryId = $(this).data('id');
+            let tagCount = 0;
+            if (categoryId === undefined){
+                tagCount = $(`.corpus-textfoliotag-list-tags-tag:not(.inactive)`).length;
+            }
+            else {
+                tagCount = $(`.corpus-textfoliotag-list-tags-tag[data-category="${categoryId}"]:not(.inactive)`).length;
+            }
+            $(this).find('.count').text(`${tagCount} {% translate 'tags' %}`);
+        });
+    }
+
+    setCountsOfTagsInCategories();
+
+    // Search for tags
+    $('#corpus-textfoliotag-list-search-text').on('input', function(){
+        $('.corpus-textfoliotag-list-tags-tag').removeClass('inactive');
+        let search = $(this).val();
+        $(`.corpus-textfoliotag-list-tags-tag:not(:has(span.name:contains("${search}")))`).addClass('inactive');
+        setCountsOfTagsInCategories();
+    });
+
+    // Show tags belonging to the clicked on category
+    $('.corpus-textfoliotag-list-search-categories-category').on('click', function(){
+        let categoryId = $(this).data('id');
+        if (categoryId === undefined){
+            $('.corpus-textfoliotag-list-tags-tag').show();
+        }
+        else {
+            $('.corpus-textfoliotag-list-tags-tag').hide();
+            $(`.corpus-textfoliotag-list-tags-tag[data-category=${categoryId}]`).show();
+        }
+    });
+
+    let selectedTags = []
+
+    // Set the 'selected tags' content
+    function setSelectedTagsContent(){
+        let content = '';
+        if (selectedTags.length < 1) content = '{% translate "No tags selected" %}';
+        else {
+            content += 'Selected tags:<br>'
+            $.each(selectedTags, function(index, tagId){
+                let tagText = $('.corpus-textfoliotag-list-tags-tag[data-id="' + tagId + '"] .name').text();
+                content += `<span class="corpus-textfoliotag-list-selected-tag" data-tagid="${tagId}">${tagText}</span>`;
+            });
+            if (selectedTags.length > 1){
+                content += '';
+            }
+            content += '<div id="corpus-textfoliotag-list-selected-submit"><i class="fas fa-search"></i> {% translate "Find matching texts" %}</div>'
+        }
+        $('#corpus-textfoliotag-list-selected').html(content);
+    }
+
+    setSelectedTagsContent();
+
+    // Clicking on a tag to select it
+    $('.corpus-textfoliotag-list-tags-tag').on('click', function(){
+        let tagId = $(this).data('id');
+        if (!$(this).hasClass('selected')){
+            $(this).addClass('selected');
+            selectedTags.push(tagId);
+            setSelectedTagsContent();
+        }
+        else {
+            $(`.corpus-textfoliotag-list-selected-tag[data-tagid="${tagId}"]`).trigger('click');
+        }
+    });
+
+    // Click on a selected tag to deselect it
+    $('body').on('click', '.corpus-textfoliotag-list-selected-tag', function(){
+        let tagId = $(this).data('tagid');
+        selectedTags = selectedTags.filter(item => item !== tagId);
+        setSelectedTagsContent();
+        $(`.corpus-textfoliotag-list-tags-tag[data-id="${tagId}"]`).removeClass('selected');
+    });
+
+    // Perform the search
+    $('body').on('click', '#corpus-textfoliotag-list-selected-submit', function(){
+        window.location.href = `{% url 'corpus:text-list' %}?filter_fk_text_folios__text_folio_tags__tag=${selectedTags.join(',')}`;
+    });
+
+});
+</script>
+
+{% endblock %}

@@ -22,8 +22,13 @@
         </div>
 
         <form method="GET" id="corpus-text-list-options">
-            <a id="corpus-text-list-options-extlink" href="{% url 'general:about-search' %}">{% translate 'How to Search' %} <i class="fas fa-question-circle"></i></a>
-            <a id="corpus-text-list-options-extlink" href="{% url 'corpus:map-iedctoponyms' %}">{% translate 'Search by Map' %} <i class="fas fa-map-marker-alt"></i></a>
+            <!-- External page links -->
+            <div id="corpus-text-list-options-extlink">
+                <a id="corpus-text-list-options-extlink-how" href="{% url 'general:about-search' %}">{% translate 'How to Search' %} <i class="fas fa-question-circle"></i></a>
+                <a id="corpus-text-list-options-extlink-map" href="{% url 'corpus:map-iedctoponyms' %}">{% translate 'Map' %} <i class="fas fa-map-marker-alt"></i></a>
+                <a id="corpus-text-list-options-extlink-tags" href="{% url 'corpus:sltextfoliotag-list' %}">{% translate 'Tags' %} <i class="fas fa-tag"></i></a>
+                <span>{% translate 'Search by' %}</span>
+            </div>
 
             <!-- Search (allows for multiple search criteria) -->
             <div id="corpus-text-list-options-search">
@@ -67,7 +72,7 @@
                     {% include 'corpus/snippets/options-section-title-toggle.html' %}
                 </div>
                 <div id="corpus-text-list-options-datefilters">
-                    {% include 'corpus/snippets/list-filters.html' with filters=options_datefilters %}
+                    {% include 'corpus/snippets/list-filters.html' with filters=options_datefilters multiselect=False %}
                 </div>
             </div>
 
@@ -78,7 +83,7 @@
                     {% include 'corpus/snippets/options-section-title-toggle.html' %}
                 </div>
                 <div id="corpus-text-list-options-filters">
-                    {% include 'corpus/snippets/list-filters.html' with filters=options_filters %}
+                    {% include 'corpus/snippets/list-filters.html' with filters=options_filters multiselect=True %}
                 </div>
             </div>
 
@@ -96,6 +101,47 @@
         <div id="corpus-text-list-header-count">
             {{ page_obj.paginator.count }} {% translate 'results found' %} {% if page_obj.paginator.count != count_all_texts %}<a class="reset-form" href="#">{% translate 'of all' %} {{ count_all_texts }} {% translate 'Corpus Texts' %}</a>{% endif %}
         </div>
+        <!-- Results Details -->
+        <div class="popuptrigger" data-id="resultsdetails"><i class="fas fa-info-circle"></i> {% translate 'Details' %}</div>
+        <div id="corpus-text-list-header-details" class="popup" data-id="resultsdetails">
+            <div class="popup-content">
+                <div class="popup-content-close">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h4>{% translate 'Results Details' %}</h4>
+                <p>
+                    There are <strong>{{ count_all_texts }} texts</strong> in total in the IEDC
+                </p>
+                {% if page_obj.paginator.count != count_all_texts %}
+                    <p>
+                        Your search has found <strong>{{ page_obj.paginator.count }} texts</strong>
+                    </p>
+                {% endif %}
+                <p>
+                    The details below show how many texts in the results relate to the different search criteria
+                </p>
+                {% for title, items in results_details.items %}
+                    <table class="corpus-text-list-header-details-table">
+                        <thead>
+                            <tr>
+                                <th>{{ title }}</th>
+                                <th>{% translate 'Texts' %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in items.items %}
+                                <tr{% if not value %} class="novalue"{% endif %}>
+                                    <td>{{ key|title }}</td>
+                                    <td width="64pt">{{ value }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Download Data -->
+        {% include 'corpus/snippets/downloaddata.html' with data_description='all texts in the search results' %}
         <!-- Sort -->
         <div id="corpus-text-list-header-sort">
             <label for="corpus-text-list-header-sort-select">{% translate 'Sort by' %}:</label>
@@ -109,8 +155,6 @@
                 {% endif %}
             </select>
         </div>
-        <!-- Download Data -->
-        {% include 'corpus/snippets/downloaddata.html' with data_description='all texts in the search results' %}
     </section>
 
     <section id="corpus-text-list-searchcriteria">
@@ -240,6 +284,7 @@
     $(document).ready(function(){
         {% include "corpus/js/list.js" %}
         {% include "corpus/js/highlight.js" %}
+        {% include "corpus/js/popup.js" %}
     });
 </script>
 

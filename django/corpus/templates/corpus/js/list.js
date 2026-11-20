@@ -38,13 +38,17 @@ $('.reset-form').on('click', function(e){
 
 // Reset individual filter
 $('#corpus-text-list-options .input-clear').on('click', function(){
+    // Select
     $(this).prev('.corpus-text-list-options-filters-filter').val('').trigger('change');
+    // Multi select
+    $(this).nextAll('.multiselect-options').first().find(':checkbox').prop('checked', false).first().trigger('change');
 });
 
 // Show reset individual filter button
 function showFilterResetButton(filter){
-    let clearButton = filter.next('.input-clear');
-    if (filter.val() !== '') clearButton.show();
+    let clearButton = filter.parent().find('.input-clear');
+    let multiselectVal = filter.parent().find('input').val();
+    if (filter.val() !== '' || (multiselectVal !== undefined && multiselectVal !== '')) clearButton.show();
     else clearButton.hide();
 }
 
@@ -185,6 +189,7 @@ $('body').on('keydown', 'form#corpus-text-list-options input', function(e){
     if (e.keyCode == 13) $('#corpus-text-list-options-submit').trigger('click');
 });
 
+
 //
 // Set form field values on page load from URL parameters
 //
@@ -196,7 +201,15 @@ function setFieldValueFromUrl(formItemID, urlParameter, triggerChange=false){
         // Checkboxes (check the box)
         if (urlParameter.startsWith('{{ filter_pre_bl }}')) $('#' + formItemID).prop('checked', 'checked')
         // Select List (set correct option)
-        else $('#' + formItemID).val(value);
+        else {
+            // Single select
+            $('#' + formItemID).val(value);
+            // Multiselect
+            let values = value.split(',');
+            $('#' + formItemID + ' :checkbox').val(values);
+            $('#' + formItemID).prevAll('input[type="hidden"]').first().val(value);
+            setMultiselectDisplayText($('#' + formItemID).parent());
+        }
     }
     if (triggerChange) $('#' + formItemID).trigger('change');
 }
@@ -238,8 +251,15 @@ if (searchType == 'regex'){
 
 $('.corpus-text-list-items-item-text-tags-tag').on('click', function(e){
     e.preventDefault();  // Prevent the link to the Text from working
+
     let tagId = $(this).attr('data-tagid');
-    $('#filter_fk_text_folios__text_folio_tags__tag').val(tagId).trigger('change');
+    let $filterInput = $('#filter_fk_text_folios__text_folio_tags__tag');
+    let currentVal = $filterInput.val();
+
+    // If there's already a value, append the new one with a comma
+    if (currentVal) $filterInput.val(currentVal + ',' + tagId).trigger('change');
+    // If it's empty, just set the value
+    else $filterInput.val(tagId).trigger('change');
 });
 
 $('.corpus-text-list-items-item-text-tags').each(function(){
@@ -256,6 +276,48 @@ $('.corpus-text-list-items-item-text-tags-extrashow').on('click', function(e){
 });
 
 
+//
+// Multiselect
+//
+
+// Toggle dropdown & close others
+$('.multiselect-display').on('click', function(e){
+    e.stopPropagation();
+    let $options = $(this).siblings('.multiselect-options');
+    $('.multiselect-options').not($options).hide();
+    $options.toggle();
+});
+
+// Function to set the display text of a multiselect list
+function setMultiselectDisplayText(multiselect){
+    let $checked = multiselect.find(':checkbox:checked');
+    let vals = $checked.map((_, el) => el.value).get();
+
+    multiselect.find('.multiselect-display').text(
+        vals.length === 0 ? multiselect.data('label') :
+        vals.length === 1 ? $checked.parent().text().trim() :
+        `(${vals.length} selected)`
+    );
+}
+
+// Update hidden input and display text on change
+$('.multiselect :checkbox').on('change', function(){
+    let $wrap = $(this).closest('.multiselect');
+    let $checked = $wrap.find(':checkbox:checked');
+    let vals = $checked.map((_, el) => el.value).get();
+    let $input = $wrap.find('input[type="hidden"]');
+
+    $input.val(vals.join(','));
+    setMultiselectDisplayText($wrap);
+    $input.trigger('change');
+});
+
+// Close when clicking outside
+$(document).on('click', function(e){
+    if (!$(e.target).closest('.multiselect').length){
+        $('.multiselect-options').hide();
+    }
+});
 
 
 //
@@ -277,13 +339,15 @@ function htmlSearchCriteria(){
             if (input.is('input') && input.attr('type') == 'checkbox') inputType = 'checkbox';
             else if (input.is('input') && input.attr('type') == 'hidden') inputType = 'hidden';
             else if (input.is('select')) inputType = 'select';
+            else if (input.is('div.multiselect-options')) inputType = 'multiselect';
             // Value to display
             var valueDisplay;
             if (inputType == 'hidden'){
-                if (key === "filter_fk_text_folios__text_folio_tags__tag") valueDisplay = '{{ filter_active_tag }}'
+                if (key === "filter_fk_text_folios__text_folio_tags__tag") valueDisplay = '{{ filter_active_tags }}'
             }
             else if (inputType == 'checkbox') valueDisplay = 'Yes';
             else if (inputType == 'select') valueDisplay = $(`#${key} option:selected`).text();
+            else if (inputType == 'multiselect') valueDisplay = $(`#${key}`).prevAll('div.multiselect-display').first().text();
             // Append item
             html += htmlSearchCriteriaItem(key, inputType, label, valueDisplay);
         }
@@ -304,6 +368,9 @@ $('body').on('click', '.corpus-text-list-searchcriteria-content-item', function(
     let inputText = $(this).attr('data-input-value');
     if (inputType == 'checkbox') $(`#${inputId}`).prop('checked', false).trigger('change');
     else if (inputType == 'select' || inputType == 'hidden') $(`#${inputId}`).val('').trigger('change');
+    else if (inputType == 'multiselect'){
+        $(`#${inputId} input`).prop('checked', false).first().trigger('change');
+    }
     else if (inputType == 'search'){
         $(`.corpus-text-list-options-search-fields-instance input[data-value="${inputText}"]`).val('');
         $('#corpus-text-list-options-submit').trigger('click');

@@ -92,7 +92,7 @@
     #corpus-text-list-header-title,
     #corpus-text-list-header-count,
     #corpus-text-list-header-sort,
-    #downloaddata-trigger {
+    #popuptrigger {
         display: block;
         margin: 0 0 1rem 0;
         width: fit-content;
@@ -200,6 +200,20 @@
     .corpus-text-detail-content-options div {
         display: block;
         margin: 0.7em 0;
+    }
+
+    /* ---------- Tags ---------- */
+
+    #corpus-textfoliotag-list-search,
+    #corpus-textfoliotag-list-tags,
+    #corpus-textfoliotag-list-selected {
+        display: block;
+        width: 100%;
+        height: 50vh;
+    }
+
+    #corpus-textfoliotag-list-selected {
+        margin-bottom: 3em;
     }
 
 }

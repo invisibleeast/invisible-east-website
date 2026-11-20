@@ -562,6 +562,7 @@
     $(document).ready(function(){
         {% include "corpus/js/detail.js" %}
         {% include "corpus/js/highlight.js" %}
+        {% include "corpus/js/popup.js" %}
 
         {% if object.has_toponym_coordinates %}
             {% include "corpus/js/map.js" with map_id='corpus-text-detail-content-map-iedctoponyms' toponyms_list=object.toponyms.all %}
