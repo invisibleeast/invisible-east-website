@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 11:03+0100\n"
+"POT-Creation-Date: 2026-11-17 07:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: core/settings.py:111
+#: core/settings.py:113
 msgid "English"
 msgstr "انگلیسی"
 
-#: core/settings.py:112
+#: core/settings.py:114
 msgid "Persian"
 msgstr "فارسی"
 
@@ -59,42 +59,46 @@ msgid "Map"
 msgstr "نقشه‌ها"
 
 #: core/templates/base.html:113
+msgid "Tags"
+msgstr "برچسبها"
+
+#: core/templates/base.html:119
 msgid "About"
 msgstr "درباره ما"
 
-#: core/templates/base.html:117
+#: core/templates/base.html:123
 msgid "How to Search"
 msgstr "نحوه جستجو"
 
-#: core/templates/base.html:120
+#: core/templates/base.html:126
 msgid "How to Cite"
 msgstr "راهنمای استناد (رفرنس‌دهی)"
 
-#: core/templates/base.html:123
+#: core/templates/base.html:129
 msgid "FAQs"
 msgstr "پرسش‌های متداول"
 
-#: core/templates/base.html:126
+#: core/templates/base.html:132
 msgid "Glossary"
 msgstr "واژه‌نامه"
 
-#: core/templates/base.html:129
+#: core/templates/base.html:135
 msgid "Typology"
 msgstr "نوع شناسی"
 
-#: core/templates/base.html:132
+#: core/templates/base.html:144
 msgid "Technical/Software"
 msgstr "فنی/نرم‌افزار"
 
-#: core/templates/base.html:135
+#: core/templates/base.html:147
 msgid "Credits"
 msgstr "مشارکت‌کنندگان"
 
-#: core/templates/base.html:152
+#: core/templates/base.html:164
 msgid "Project"
 msgstr "پروژه"
 
-#: core/templates/base.html:159
+#: core/templates/base.html:171
 msgid "Admin"
 msgstr "مدیریت"
 

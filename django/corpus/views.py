@@ -6,6 +6,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from dicttoxml import dicttoxml
 from django.urls import reverse
 from django.conf import settings
@@ -777,7 +778,10 @@ class TextListView(ListView):
             'collection',
         ).prefetch_related(
             'text_folios',
-            'text_folios__text_folio_tags'
+            Prefetch(
+                'text_folios__text_folio_tags',
+                queryset=models.TextFolioTag.objects.select_related('tag')
+            )
         )
 
         # Search
@@ -803,33 +807,39 @@ class TextListView(ListView):
         # Set list of search options
         if searches not in [[''], []]:
             search_type = self.request.GET.get('search_type', '')
-            search_lookup = 'iregex' if search_type in ['regex', 'exact'] else 'icontains'
             operator = or_ if self.request.GET.get('search_operator', '') == 'or' else and_
             queries = []
             for search in searches:
-                # Exact search will force full word matching, e.g. search 'hen' won't return 'when'
+                search = search.strip()
+                if search_type != 'regex':
+                    search = re.escape(search)
                 if search_type == 'exact':
-                    search = r'\y{}\y'.format(re.escape(search))
-                # Uses 'or_' as the search term could appear in any field, so 'and_' wouldn't be suitable
-                queries.append(reduce(or_, (Q((f'{field_name}__{search_lookup}', search.strip())) for field_name in field_names_to_search)))
-            # Connect the individual search queries via the user-defined operator (or_ / and_)
+                    search = rf'\y{search}\y'
+
+                # Make Arabic/Persian variants interchangeable
+                search = re.sub(r'[یئي]', '[یئي]', search)
+                search = re.sub(r'[گکك]', '[گکك]', search)
+
+                queries.append(reduce(or_, (Q((f'{field_name}__iregex', search)) for field_name in field_names_to_search)))
             queries = reduce(operator, queries)
-            # Filter the queryset using the completed search query
             queryset = queryset.filter(queries)
 
         # Filter
-        for filter_key in [k for k in list(self.request.GET.keys()) if k.startswith(filter_pre)]:
+        for filter_key in [k for k in self.request.GET.keys() if k.startswith(filter_pre)]:
             filter_value = self.request.GET.get(filter_key, '')
+
             # Perform the filter based on the type
             if filter_value != '':
-                # Many to Many relationship (uses __in comparison and filter_value is a list)
+                filter_values = filter_value.split(',')
+
+                # Many to Many relationship
                 if filter_key.startswith(filter_pre_mm):
                     filter_field = filter_key.replace(filter_pre_mm, '')
-                    queryset = queryset.filter(**{f'{filter_field}__in': [filter_value]})
+                    queryset = queryset.filter(**{f'{filter_field}__in': filter_values}).distinct()
                 # Foreign Key relationship
                 elif filter_key.startswith(filter_pre_fk):
                     filter_field = filter_key.replace(filter_pre_fk, '')
-                    queryset = queryset.filter(**{filter_field: filter_value})
+                    queryset = queryset.filter(**{f'{filter_field}__in': filter_values})
                 # Greater than or equal to
                 elif filter_key.startswith(filter_pre_gt):
                     filter_field = filter_key.replace(filter_pre_gt, '')
@@ -843,11 +853,9 @@ class TextListView(ListView):
                     filter_field = filter_key.replace(filter_pre_bl, '')
                     if filter_value == 'on':
                         try:
-                            queryset = queryset.exclude(**{f'{filter_field}__isnull': True})  # remove null values
-                        except Exception:
-                            pass
-                        try:
-                            queryset = queryset.exclude(**{f'{filter_field}__exact': ''})  # remove empty strings
+                            queryset = queryset.filter(
+                                Q(**{f'{filter_field}__isnull': False}) & ~Q(**{filter_field: ''})
+                            )
                         except Exception:
                             pass
 
@@ -893,6 +901,34 @@ class TextListView(ListView):
         context['filter_pre_lt'] = filter_pre_lt
         context['filter_pre_bl'] = filter_pre_bl
 
+        def results_details_includes_count(queryset, field):
+            # Return a single count of an 'Include' (e.g. texts that include a transcription, etc.)
+            return queryset.filter(
+                Q(**{f'{field}__isnull': False}) & ~Q(**{field: ''})
+            ).distinct().count()
+
+        def results_details_fk_counts(queryset, fk_model, field_name=None):
+            # Return all names and counts of a FK field for a text as a dict
+            field = field_name or next(f.name for f in queryset.model._meta.fields if f.related_model == fk_model)
+            fk_fields = [f.name for f in fk_model._meta.fields if f.is_relation]
+            return {
+                str(obj): queryset.filter(**{field: obj}).distinct().count()
+                for obj in fk_model.objects.select_related(*fk_fields)
+            }
+
+        # Results Details
+        context['results_details'] = {
+            _('Includes'): {
+                'transliteration': results_details_includes_count(self.object_list, 'text_folios__transliteration'),
+                'transcription': results_details_includes_count(self.object_list, 'text_folios__transcription'),
+                'translation': results_details_includes_count(self.object_list, 'text_folios__translation'),
+                'image': results_details_includes_count(self.object_list, 'text_folios__image'),
+            },
+            _('Source Format'): results_details_fk_counts(self.object_list, models.SlTextSourceFormat),
+            _('Primary Language'): results_details_fk_counts(self.object_list, models.SlTextLanguage, 'primary_language'),
+            _('Type of Text'): results_details_fk_counts(self.object_list, models.SlTextType)
+        }
+
         # Download Data
         if self.request.GET:
             context['downloaddata_text_ids'] = ','.join([str(i) for i in self.object_list.values_list('id', flat=True)])
@@ -906,9 +942,9 @@ class TextListView(ListView):
             context['start_count'] = 1
 
         # Tag
-        tag_id = self.request.GET.get(f'{filter_pre_fk}text_folios__text_folio_tags__tag', None)
-        if tag_id:
-            context['filter_active_tag'] = models.SlTextFolioTag.objects.get(id=tag_id).name
+        tag_ids = self.request.GET.get(f'{filter_pre_fk}text_folios__text_folio_tags__tag', None)
+        if tag_ids:
+            context['filter_active_tags'] = ', '.join([tag.name for tag in models.SlTextFolioTag.objects.filter(id__in=tag_ids.split(','))])
 
         # Options: Sort
         context['options_sort'] = [
@@ -1005,7 +1041,8 @@ class TextListView(ListView):
         context['options_filters'] = [
             {
                 'filter_id': f'{filter_pre_fk}text_folios__text_folio_tags__tag',
-                'filter_name': 'Tag',
+                'filter_name': 'Tags',
+                'filter_name_fa': 'برچسبها',
                 'filter_options': models.SlTextFolioTag.objects.all(),
                 'filter_hidden': True  # this filter is not visible as its set by user clicking tags in list items
             },
@@ -1058,6 +1095,26 @@ class TextListView(ListView):
             },
         ]
 
+        return context
+
+
+class SlTextFolioTagListView(ListView):
+    """
+    Class-based view for SlTextFolioTag list template
+    """
+    template_name = 'corpus/textfoliotag-list.html'
+    model = models.SlTextFolioTag
+
+    def get_queryset(self):
+        queryset = self.model.objects.all()\
+            .select_related('category')\
+            .prefetch_related('text_folio_tags')\
+            .order_by('name')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = models.SlTextFolioTagCategory.objects.all()
         return context
 
 

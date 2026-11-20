@@ -12,7 +12,10 @@ urlpatterns = [
 
     # Text
     path('', views.TextListView.as_view(), name='text-list'),
-    path('<pk>/', views.TextDetailView.as_view(), name='text-detail'),
+    path('<int:pk>/', views.TextDetailView.as_view(), name='text-detail'),
+
+    # SlTextFolioTag
+    path('tags/', views.SlTextFolioTagListView.as_view(), name='sltextfoliotag-list'),
 
     # TextFolioTag
     path('textfoliotag/create/', views.TextFolioTagCreateView.as_view(), name='textfoliotag-create'),

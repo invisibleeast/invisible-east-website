@@ -2,7 +2,7 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 {% for f in filters %}
-    <div class="corpus-text-list-options-filters-filter-container">
+    <div class="{% if multiselect %}multiselect {%endif%}corpus-text-list-options-filters-filter-container" data-label="--- {% if LANGUAGE_CODE == 'en' %}{{ f.filter_name }}{% else %}{{ f.filter_name_fa }}{% endif %} ---">
         {% if f.filter_hidden %}
             <input 
                 type="hidden"
@@ -11,6 +11,27 @@
                 title="{{ f.filter_name }}"
                 name="{{ f.filter_id }}"
             >
+        {% elif multiselect %}
+            <input class="corpus-text-list-options-filters-filter" type="hidden" name="{{ f.filter_id }}">
+
+            <!-- Display -->
+            <div class="multiselect-display">--- {% if LANGUAGE_CODE == 'en' %}{{ f.filter_name }}{% else %}{{ f.filter_name_fa }}{% endif %} ---</div>
+
+            <!-- Clear input -->
+            <span class="input-clear"><i class="fas fa-times-circle"></i></span>
+            {% if f.info_link %}<a href="{{ f.info_link }}"><i class="fas fa-info-circle"></i></a>{% endif %}
+
+            <!-- Info Alert -->
+            {% if f.info_alert %}
+                <span class="info-alert" data-alert="{{ f.info_alert }}" data-alert-fa="{{ f.info_alert_fa }}"><i class="fas fa-info-circle"></i></span>
+            {% endif %}
+
+            <!-- Options -->
+            <div id="{{ f.filter_id }}" class="multiselect-options{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}" title="{% if LANGUAGE_CODE == 'en' %}{{ f.filter_name }}{% else %}{{ f.filter_name_fa }}{% endif %}">
+                {% for o in f.filter_options %}
+                    <label><input type="checkbox" value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}> {{ o }}</label>
+                {% endfor %}
+            </div>
         {% else %}
             <select 
                 id="{{ f.filter_id }}"

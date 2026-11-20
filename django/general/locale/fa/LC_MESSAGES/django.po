@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-02 08:55+0100\n"
+"POT-Creation-Date: 2026-11-17 07:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: general/templates/general/about-booksandcodices.html:8
+msgid "Books & Codices"
+msgstr ""
 
 #: general/templates/general/about-cite.html:7
 msgid "How to Cite"
@@ -90,42 +94,42 @@ msgid "PI (Research Lead)"
 msgstr "مدیر پژوهشی"
 
 #: general/templates/general/about-credits.html:13
-msgid "Project Manager (Technical Lead, TEI-XML)"
-msgstr "مدیر پروژه (مدیر فنی، TEI-XML)"
-
-#: general/templates/general/about-credits.html:16
 msgid "Software Developers"
 msgstr "برنامه‌نویسان"
 
-#: general/templates/general/about-credits.html:20
+#: general/templates/general/about-credits.html:17
 msgid "Assistant Database Manager"
 msgstr "دستیار مدیر پایگاه داده‌ها"
 
-#: general/templates/general/about-credits.html:23
+#: general/templates/general/about-credits.html:20
 msgid "Senior Research Assistants"
 msgstr "دستیاران ارشد پژوهشی"
 
-#: general/templates/general/about-credits.html:29
+#: general/templates/general/about-credits.html:26
 msgid "Visiting Researchers"
 msgstr "پژوهشگران مهمان"
 
-#: general/templates/general/about-credits.html:32
+#: general/templates/general/about-credits.html:29
 msgid "Student Researchers"
 msgstr "پژوهشگران دانشجو"
 
-#: general/templates/general/about-credits.html:36
+#: general/templates/general/about-credits.html:33
 msgid "Special Thanks"
 msgstr "با سپاس ویژه از"
 
-#: general/templates/general/about-credits.html:39
+#: general/templates/general/about-credits.html:37
 msgid "Invisible East Programme"
 msgstr "برنامه شرق مکنون"
 
-#: general/templates/general/about-credits.html:43
+#: general/templates/general/about-credits.html:42
+msgid "Project Manager (Technical Lead, TEI-XML)"
+msgstr "مدیر پروژه (مدیر فنی، TEI-XML)"
+
+#: general/templates/general/about-credits.html:45
 msgid "Other Institutions"
 msgstr "سایر نهادها"
 
-#: general/templates/general/about-credits.html:49
+#: general/templates/general/about-credits.html:50
 msgid "Website Translators into Persian"
 msgstr "مترجمان وبسایت به فارسی"
 
@@ -255,7 +259,7 @@ msgstr "برای اطلاعات بیشتر، به "
 #: general/templates/general/about-faqs.html:36
 #: general/templates/general/about-faqs.html:103
 #: general/templates/general/about-faqs.html:126
-#: general/templates/general/welcome.html:67
+#: general/templates/general/welcome.html:71
 msgid "Research Tools"
 msgstr "ابزارهای پژوهشی"
 
@@ -264,7 +268,7 @@ msgid "afterlink-researchtools"
 msgstr "مراجعه کنید."
 
 #: general/templates/general/about-faqs.html:40
-#: general/templates/general/welcome.html:73
+#: general/templates/general/welcome.html:77
 msgid "The Invisible East Digital Corpus"
 msgstr "پایگاه دیجیتال شرق مکنون"
 
@@ -1157,15 +1161,11 @@ msgstr "پالئوگرافی"
 msgid "Seal"
 msgstr "مهر"
 
-#: general/templates/general/about-search.html:43
-msgid "Codex"
-msgstr "کتاب خطی"
-
-#: general/templates/general/about-search.html:47
+#: general/templates/general/about-search.html:46
 msgid "Dates (CE)"
 msgstr "تاریخها (میلادی)"
 
-#: general/templates/general/about-search.html:49
+#: general/templates/general/about-search.html:48
 msgid ""
 "You can filter results to show only texts after a chosen century and/or "
 "before another chosen century."
@@ -1173,11 +1173,11 @@ msgstr ""
 "می‌توانید نتایج را طوری فیلتر کنید که فقط متون پس از یک قرن انتخاب‌شده و/یا "
 "پیش از قرنی دیگر نمایش داده شوند."
 
-#: general/templates/general/about-search.html:52
+#: general/templates/general/about-search.html:51
 msgid "Filters"
 msgstr "فیلترها"
 
-#: general/templates/general/about-search.html:54
+#: general/templates/general/about-search.html:53
 msgid ""
 "There are numerous filters which can be used to help refine searches and "
 "navigate the IEDC's extensive corpus. If you were only interested in "
@@ -1190,56 +1190,56 @@ msgstr ""
 "می‌توانید از منوی کشویی «زبان اصلی» گزینه «فارسی (خط عربی)» را انتخاب کنید. "
 "فیلترها عبارتند از:"
 
-#: general/templates/general/about-search.html:57
+#: general/templates/general/about-search.html:56
 msgid "Primary Language"
 msgstr "زبان اصلی"
 
-#: general/templates/general/about-search.html:58
+#: general/templates/general/about-search.html:57
 msgid "Additional Languages"
 msgstr "زبان‌های دیگر"
 
-#: general/templates/general/about-search.html:59
+#: general/templates/general/about-search.html:58
 msgid "Collection"
 msgstr "مجموعه"
 
-#: general/templates/general/about-search.html:60
+#: general/templates/general/about-search.html:59
 msgid "Corpus"
 msgstr "ایگاه"
 
-#: general/templates/general/about-search.html:61
+#: general/templates/general/about-search.html:60
 msgid "Type of Text"
 msgstr "نوع متن"
 
-#: general/templates/general/about-search.html:62
+#: general/templates/general/about-search.html:61
 msgid "Writing Support"
 msgstr "سطح نوشتار"
 
-#: general/templates/general/about-search.html:65
+#: general/templates/general/about-search.html:64
 msgid "Sort By"
 msgstr "مرتب کردن بر اساس"
 
-#: general/templates/general/about-search.html:67
+#: general/templates/general/about-search.html:66
 msgid "Choose how to sort your results by:"
 msgstr "می‌توانید نتایج جستجوی خود را با استفاده از یکی از روش‌ها مرتب کنید:"
 
-#: general/templates/general/about-search.html:71
+#: general/templates/general/about-search.html:70
 msgid ""
 "Shelfmark: Organised alphanumerically by the holding institution or library."
 msgstr ""
 "شماره قفسه: سازمان‌دهی به ‌صورت الفبایی و عددی بر اساس موسسه یا کتابخانه "
 "نگهدارنده."
 
-#: general/templates/general/about-search.html:72
+#: general/templates/general/about-search.html:71
 msgid ""
 "Converted Gregorian Date: The document's production date in the Gregorian "
 "calendar."
 msgstr "تاریخ میلادی: تاریخ تولید سند در تقویم میلادی."
 
-#: general/templates/general/about-search.html:73
+#: general/templates/general/about-search.html:72
 msgid "IEDC Input Date: Date of upload onto the Invisible East Digital Corpus."
 msgstr "تاریخ ورودی به پایگاه: تاریخ آپلود سند در پایگاه دیجیتال شرق مکنون."
 
-#: general/templates/general/about-search.html:74
+#: general/templates/general/about-search.html:73
 msgid "Number of folios: The number of folios in a given text."
 msgstr "تعداد برگ‌ها: تعداد برگ‌های موجود در یک متن خاص."
 
@@ -1943,32 +1943,37 @@ msgid "Read more about Invisible East"
 msgstr "در مورد شرق مکنون بییشتر بخوانید"
 
 #: general/templates/general/welcome.html:35
+msgid ""
+"The IEDC has been highly commended by the Oxford Open Research 2026 Prize"
+msgstr "تقدیر از IEDC در جایزهٔ پژوهش باز آکسفورد ۲۰۲۶"
+
+#: general/templates/general/welcome.html:39
 msgid "Welcome"
 msgstr "خوش‌آمدید"
 
-#: general/templates/general/welcome.html:37
+#: general/templates/general/welcome.html:41
 msgid "Ever wonder what people like you and me did 800 years ago?"
 msgstr ""
 "آیا تا به حال به این که مردمی مثل ما ۸۰۰ سال پیش چگونه زندگی می‌کرده‌اند فکر "
 "کرده‌اید؟"
 
-#: general/templates/general/welcome.html:40
+#: general/templates/general/welcome.html:44
 msgid "How did they communicate with one another?"
 msgstr "چطور با هم ارتباط برقرار می‌کردند؟"
 
-#: general/templates/general/welcome.html:43
+#: general/templates/general/welcome.html:47
 msgid "What language did they use?"
 msgstr "از چه زبانی استفاده می‌کردند؟"
 
-#: general/templates/general/welcome.html:46
+#: general/templates/general/welcome.html:50
 msgid "Was life very different?"
 msgstr "آیا زندگیشان خیلی متفاوت بود؟"
 
-#: general/templates/general/welcome.html:49
+#: general/templates/general/welcome.html:53
 msgid "What did people eat?"
 msgstr "چه می‌خوردند؟"
 
-#: general/templates/general/welcome.html:52
+#: general/templates/general/welcome.html:56
 msgid ""
 "Well, documents give insight into these day-to-day matters. The digital tool "
 "contained in this website provides searchable meta-data, tags, and images on "
@@ -1984,12 +1989,12 @@ msgstr ""
 "اسلام هنوز پدیده‌ای نسبتاً نو در این مناطق بود و جوامع چندفرهنگی در کنار هم "
 "زندگی می‌کردند."
 
-#: general/templates/general/welcome.html:54
-#: general/templates/general/welcome.html:80
+#: general/templates/general/welcome.html:58
+#: general/templates/general/welcome.html:84
 msgid "Read more..."
 msgstr "بيشتر بخوانيد..."
 
-#: general/templates/general/welcome.html:57
+#: general/templates/general/welcome.html:61
 msgid ""
 "Our corpus website is aimed at making publicly available academic research "
 "on the documents to academics in any country of the world, as well as to "
@@ -2000,36 +2005,36 @@ msgstr ""
 "این اسناد برای پژوهشگران سراسر جهان و همچنین برای مخاطبان دیگری است که به "
 "تاریخ و فرهنگ‌ این منطقه شگفت‌انگیز و کمتر شناخته‌شده، علاقه‌مندند."
 
-#: general/templates/general/welcome.html:60
+#: general/templates/general/welcome.html:64
 msgid ""
 "If you'd like to find out more about the Invisible East project please visit"
 msgstr "اگر مایلید بیشتر درباره پروژه شرق مکنون بدانید، لطفاً به "
 
-#: general/templates/general/welcome.html:60
+#: general/templates/general/welcome.html:64
 msgid "our project website"
 msgstr "وب‌سایت پروژه ما"
 
-#: general/templates/general/welcome.html:60
+#: general/templates/general/welcome.html:64
 msgid "where you can read more about"
 msgstr "مراجعه کنید. در آنجا اطلاعات بیشتری در مورد موارد زیر یافت می شود"
 
-#: general/templates/general/welcome.html:63
+#: general/templates/general/welcome.html:67
 msgid "Our Team"
 msgstr "تیم ما"
 
-#: general/templates/general/welcome.html:64
+#: general/templates/general/welcome.html:68
 msgid "Publications, Blogs, and News"
 msgstr "کتاب‌ها و مقالات، بلاگ‌ها و اخبار"
 
-#: general/templates/general/welcome.html:65
+#: general/templates/general/welcome.html:69
 msgid "Events"
 msgstr "رویدادها"
 
-#: general/templates/general/welcome.html:66
+#: general/templates/general/welcome.html:70
 msgid "Outreach"
 msgstr "فعالیت‌های ارتباطی"
 
-#: general/templates/general/welcome.html:75
+#: general/templates/general/welcome.html:79
 msgid ""
 "At Invisible East our mission is to digitise an expansive corpus of texts "
 "which have long been overlooked. The corpus is a combination of various "
@@ -2040,7 +2045,7 @@ msgstr ""
 "نادیده گرفته شده‌اند. این پایگاه ترکیبی از مجموعه‌های متنی گوناگون از قرون ۸ "
 "تا ۱۳ میلادی است که منشأ آن‌ها افغانستان، ایران و آسیای مرکزی است."
 
-#: general/templates/general/welcome.html:78
+#: general/templates/general/welcome.html:82
 msgid ""
 "Together these texts present a new and exciting history of the region. A "
 "history which is not told through kings and courts, but rather through the "
@@ -2059,7 +2064,7 @@ msgstr ""
 "اسناد خرید و فروش، روندهای قانونی، احکام و دادخواست‌ها تا عقدنامه‌ها و نامه‌های "
 "شخصی."
 
-#: general/templates/general/welcome.html:83
+#: general/templates/general/welcome.html:87
 msgid ""
 "Our goal is to unite this vast range of texts in a single, publicly "
 "accessible database. By doing so, we hope to shed new light on a region, era "
@@ -2069,7 +2074,7 @@ msgstr ""
 "قابل‌دسترسی است. با این کار، امیدواریم نوری تازه بر منطقه، زمانه و مردمانی "
 "بیندازیم که برای مدت‌ها «مکنون» و ناپیدا بوده‌اند."
 
-#: general/templates/general/welcome.html:86
+#: general/templates/general/welcome.html:90
 msgid ""
 "Some of the texts digitised here, sadly have unclear provenances, which are "
 "a symptom of the challenges in heritage management that especially people in "
@@ -2097,11 +2102,11 @@ msgstr ""
 "برنامه‌ها و اولویت‌های ملی در کشورهای آسیب‌دیده، حمایت می‌کنیم و در حد توان خود "
 "پشتیبانی خواهیم کرد."
 
-#: general/templates/general/welcome.html:94
+#: general/templates/general/welcome.html:98
 msgid "A Message from the Programme Director"
 msgstr "پیامی از مدیر برنامه"
 
-#: general/templates/general/welcome.html:100
+#: general/templates/general/welcome.html:104
 msgid ""
 "Hi, I'm Arezou Azad, Senior Research Fellow at the University of Oxford and "
 "Invisible East programme lead. I'm a historian and former UN civilian "
@@ -2112,7 +2117,7 @@ msgstr ""
 "مکنون. من مورخ و حافظ صلح غیر نظامی سابق سازمان ملل متحد هستم. افتخار همکاری "
 "با تیمی فوق‌العاده در این پروژه دیجیتالی داشته‌ام."
 
-#: general/templates/general/welcome.html:103
+#: general/templates/general/welcome.html:107
 msgid ""
 "This is the first multilingual database that contains documents from the "
 "medieval Islamicate East - Iranian-language documents, in particular, have "
@@ -2125,7 +2130,7 @@ msgstr ""
 "بودند، در حالی که اسناد به زبان‌های دیگر مانند عربی و عبری طی دهه‌های گذشته از "
 "حمایت‌های فراوانی برای دیجیتالی‌سازی برخوردار بوده‌اند"
 
-#: general/templates/general/welcome.html:106
+#: general/templates/general/welcome.html:110
 msgid ""
 "Ultimately, the sharing of pre-modern Iranian-language and data and data in "
 "other languages enrich our knowledge of the layered history of humanity at a "
@@ -2136,11 +2141,11 @@ msgstr ""
 "ما را از تاریخ چندلایه بشریت، در سطحی دقیق و انسانی، غنا می‌بخشد. این نوع "
 "دانش باعث اتحاد مردم می‌شود و من به نقش خود در تولید آن افتخار می‌کنم."
 
-#: general/templates/general/welcome.html:113
+#: general/templates/general/welcome.html:117
 msgid "A Message from the Assistant Database Manager"
 msgstr "پیامی از دستیار مدیر پایگاه"
 
-#: general/templates/general/welcome.html:119
+#: general/templates/general/welcome.html:123
 msgid ""
 "Hi, I'm Edward Shawe-Taylor, Assistant Database Manager for the Invisible "
 "East programme. I oversee the uploading of data onto our digital corpus, "
@@ -2153,7 +2158,7 @@ msgstr ""
 "اسناد تاریخی و کاربرپسند بودنشان است.<br>در کنار این، دانشجوی دکترای مطالعات "
 "آسیایی و خاورمیانه‌ای در دانشگاه آکسفورد نیز هستم."
 
-#: general/templates/general/welcome.html:122
+#: general/templates/general/welcome.html:126
 msgid ""
 "I’d like to extend my deepest thanks to my fellow data entry team members—"
 "Catherine McNally, Eloise Stevens, and Mateen Arghandehpour—without whom "
@@ -2165,11 +2170,11 @@ msgstr ""
 "پایگاه داده ممکن نبود. تعهد و دقت مثال‌زدنی آن‌ها نقش اساسی در به ثمر رسیدن "
 "این پروژه داشته است"
 
-#: general/templates/general/welcome.html:125
+#: general/templates/general/welcome.html:129
 msgid "An enormous thank you also goes to our software developer,"
 msgstr "با تشکر فراوان از توسعه‌دهنده نرم‌افزار ما، شرکت "
 
-#: general/templates/general/welcome.html:125
+#: general/templates/general/welcome.html:129
 msgid ""
 "whose incredible expertise transformed our vision into a reality. They not "
 "only brought our ideas to life but also introduced incredible interactive "
@@ -2182,17 +2187,20 @@ msgstr ""
 "اضافه کردند که حتی تصورشان را هم نمی‌کردیم. به لطف خلاقیت و تلاش بی‌وقفه‌شان "
 "موفق شدیم وب‌سایتی بسازیم که از به اشتراک‌گذاری آن با شما افتخار می‌کنیم!"
 
-#: general/templates/general/welcome.html:128
+#: general/templates/general/welcome.html:132
 msgid "You can read more about the work the Data Entry Team does in the"
 msgstr "می‌توانید درباره فعالیت‌های تیم داده‌ها در "
 
-#: general/templates/general/welcome.html:128
+#: general/templates/general/welcome.html:132
 msgid "Invisible East Blog"
 msgstr "وبلاگ شرق مکنون "
 
-#: general/templates/general/welcome.html:128
+#: general/templates/general/welcome.html:132
 msgid "afterlink-ieblog"
 msgstr "بیشتر بخوانید!"
+
+#~ msgid "Codex"
+#~ msgstr "کتاب خطی"
 
 #~ msgid "Glossary"
 #~ msgstr "واژه‌نامه"
