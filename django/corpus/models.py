@@ -438,6 +438,15 @@ class SlTextFolioTag(SlAbstract):
     """
     category = models.ForeignKey('SlTextFolioTagCategory', on_delete=models.RESTRICT, related_name='tags')
 
+    @property
+    def related_text_ids(self):
+        ids = {
+            item.text_folio.text_id
+            for item in self.text_folio_tags.all()
+            if item.text_folio and item.text_folio.text_id
+        }
+        return ",".join(map(str, sorted(ids)))
+
     class Meta:
         ordering = [Upper('category__name'), Upper('name'), 'id']
 

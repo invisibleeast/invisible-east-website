@@ -714,9 +714,9 @@ class TextDetailView(DetailView):
                 'value': f'<a href="{context["permalink"]}">{context["permalink"]}</a>'
             },
             {
-                'label': 'Images Imported From',
+                'label': 'IIIF Manifest',
                 'label_fa': 'پیوند سند',
-                'value': f'<a href="{self.object.imported_folios_from_url}" target="_blank">{self.object.imported_folios_from_url}</a>' if self.object.imported_folios_from_url else None
+                'value': f'<span id="corpus-text-detail-content-details-iiifmanifesturlcopy" data-url="{self.object.imported_folios_from_url}">Click to copy</span>' if self.object.imported_folios_from_url else None
             },
             {
                 'label': 'Image Permission Statement',
@@ -944,7 +944,7 @@ class TextListView(ListView):
         # Tag
         tag_ids = self.request.GET.get(f'{filter_pre_fk}text_folios__text_folio_tags__tag', None)
         if tag_ids:
-            context['filter_active_tags'] = ', '.join([tag.name for tag in models.SlTextFolioTag.objects.filter(id__in=tag_ids.split(','))])
+            context['filter_active_tags'] = '||'.join([tag.name for tag in models.SlTextFolioTag.objects.filter(id__in=tag_ids.split(','))])
 
         # Options: Sort
         context['options_sort'] = [
@@ -1108,7 +1108,12 @@ class SlTextFolioTagListView(ListView):
     def get_queryset(self):
         queryset = self.model.objects.all()\
             .select_related('category')\
-            .prefetch_related('text_folio_tags')\
+            .prefetch_related(
+                Prefetch(
+                    'text_folio_tags',
+                    queryset=models.TextFolioTag.objects.select_related('text_folio')
+                )
+            )\
             .order_by('name')
         return queryset
 
@@ -1717,7 +1722,10 @@ def import_textfolios_confirmed(request):
 
     # Set the custom name, if suitable (i.e. isn't just a digit)
     if not image_name.isdigit():
-        image_name = os.path.splitext(image_name)[0]  # remove file ext if exists
+        extensions = ['jpg', 'jpeg', 'png', 'tiff', 'tif', 'webp']
+        for ext in extensions:
+            if ext in image_name.lower():
+                image_name = image_name.replace(f'.{ext}', '').replace(f'.{ext.upper()}', '')
         folio.custom_name = image_name
 
     # Saving image from IIIF URL

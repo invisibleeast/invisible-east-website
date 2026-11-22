@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 12:55+0000\n"
+"POT-Creation-Date: 2026-11-22 13:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -289,74 +289,74 @@ msgstr ""
 msgid "Next Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:391
+#: corpus/templates/corpus/text-detail.html:390
 msgid "Only show"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:393
-#: corpus/templates/corpus/text-detail.html:503
-#: corpus/templates/corpus/text-detail.html:521
+#: corpus/templates/corpus/text-detail.html:392
+#: corpus/templates/corpus/text-detail.html:502
+#: corpus/templates/corpus/text-detail.html:520
 msgid "Please select"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:406
+#: corpus/templates/corpus/text-detail.html:405
 msgid "Reset Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:408
+#: corpus/templates/corpus/text-detail.html:407
 msgid "Download Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:413
+#: corpus/templates/corpus/text-detail.html:412
 msgid "Reveal Parts on Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:416
+#: corpus/templates/corpus/text-detail.html:415
 msgid "Rotate Image Anticlockwise"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:418
+#: corpus/templates/corpus/text-detail.html:417
 msgid "Rotate Image Clockwise"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:420
+#: corpus/templates/corpus/text-detail.html:419
 msgid "Fullscreen"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:460
+#: corpus/templates/corpus/text-detail.html:459
 msgid "Images courtesy of"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:470
-#: corpus/templates/corpus/text-detail.html:495
+#: corpus/templates/corpus/text-detail.html:469
+#: corpus/templates/corpus/text-detail.html:494
 msgid "Tag Manager"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:501
+#: corpus/templates/corpus/text-detail.html:500
 msgid "Tag Category"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:511
+#: corpus/templates/corpus/text-detail.html:510
 msgid "Tag Search"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:519
+#: corpus/templates/corpus/text-detail.html:518
 msgid "Tag"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:529
+#: corpus/templates/corpus/text-detail.html:528
 msgid "Create a new tag"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:536
+#: corpus/templates/corpus/text-detail.html:535
 msgid "Tag Details"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:542
+#: corpus/templates/corpus/text-detail.html:541
 msgid "Draw on Image"
 msgstr ""
 
-#: corpus/templates/corpus/text-detail.html:547
+#: corpus/templates/corpus/text-detail.html:546
 msgid "Save Tag"
 msgstr ""
 
@@ -478,24 +478,32 @@ msgstr ""
 
 #: corpus/templates/corpus/textfoliotag-list.html:9
 msgid ""
-"Browse the list of tags below. Click on one or more tags to search for "
-"related texts in the IEDC."
+"Please find and select tags and click on search to enjoy a deeper "
+"exploration of our corpus."
 msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:16
-msgid "Search for tags"
+#: corpus/templates/corpus/textfoliotag-list.html:13
+msgid "Read more to learn about our tags..."
 msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:64
+#: corpus/templates/corpus/textfoliotag-list.html:26
+msgid "Search tags by tag name"
+msgstr ""
+
+#: corpus/templates/corpus/textfoliotag-list.html:85
 msgid "tags"
 msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:95
+#: corpus/templates/corpus/textfoliotag-list.html:116
 msgid "No tags selected"
 msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:105
-msgid "Find matching texts"
+#: corpus/templates/corpus/textfoliotag-list.html:125
+msgid "Search related texts"
+msgstr ""
+
+#: corpus/templates/corpus/textfoliotag-list.html:137
+msgid "Related texts found"
 msgstr ""
 
 #: corpus/views.py:927

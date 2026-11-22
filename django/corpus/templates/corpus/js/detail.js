@@ -191,6 +191,14 @@ $('body').on('keydown', function(e){
 // Import Text Folios/Pages
 //
 
+// Click on IIIF manifest link to copy URL
+$('#corpus-text-detail-content-details-iiifmanifesturlcopy').on('click', function(){
+    let url = $(this).data('url');
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Copied IIIF manifest URL to clipboard');
+    });
+});
+
 let imagesToImport = [];
 
 // Choose the import source (e.g. IIIF or direct upload of images)
