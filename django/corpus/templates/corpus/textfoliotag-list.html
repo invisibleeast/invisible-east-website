@@ -6,14 +6,24 @@
 <div class="container">
     <h2>{% translate "Tags in the Invisible East Digital Corpus" %}</h2>
     <p>
-        {% translate "Browse the list of tags below. Click on one or more tags to search for related texts in the IEDC." %}
+        {% translate "Please find and select tags and click on search to enjoy a deeper exploration of our corpus." %}
     </p>
+    <div class="readmore-link">
+        <p>
+            {% translate 'Read more to learn about our tags...' %}
+        </p>
+    </div>
+    <div class="readmore-content">
+        <p>
+            A tag is a descriptive label or keyword assigned by us to a document to identify themes, subjects or characteristics that may not be explicitly mentioned in the text and would therefore not appear in an untagged word search. For example, a document mentioning a woman by name, without using the word “woman”, has been tagged by us so that users can find it through a search.
+        </p>
+    </div>
 
     <div id="corpus-textfoliotag-list">
         <!-- Search -->
         <div id="corpus-textfoliotag-list-search">
             <!-- Search by text -->
-            <input id="corpus-textfoliotag-list-search-text" type="text" placeholder="{% translate 'Search for tags' %}" title="{% translate 'Search for tags' %}">
+            <input id="corpus-textfoliotag-list-search-text" class="highlightsearchterm" type="text" placeholder="{% translate 'Search tags by tag name' %}" title="{% translate 'Search tags by tag name' %}">
             <!-- Search by categories -->
             <div id="corpus-textfoliotag-list-search-categories">
                 <div class="corpus-textfoliotag-list-search-categories-category">
@@ -32,9 +42,9 @@
         Tags
         --><div id="corpus-textfoliotag-list-tags">
             {% for tag in object_list %}
-                <div class="corpus-textfoliotag-list-tags-tag" data-id="{{ tag.id }}" data-category="{{ tag.category.id }}">
+                <div class="corpus-textfoliotag-list-tags-tag" data-id="{{ tag.id }}" data-category="{{ tag.category.id }}" data-relatedtexts="{{ tag.related_text_ids }}">
                     <span class="name">{{ tag }}</span>
-                    <span class="count">{{ tag.text_folio_tags.count }} texts</span>
+                    <span class="count"></span>
                 </div>
             {% endfor %}
         </div><!--
@@ -49,6 +59,23 @@
 <!-- JS -->
 <script>
 $(document).ready(function(){
+
+    {% include "corpus/js/highlight.js" %}
+
+    // Clear search input on page load
+    $('#corpus-textfoliotag-list-search-text').val('');
+
+    // "Read more"
+    $('.readmore-link').on('click', function(){
+        $(this).next('.readmore-content').show();
+        $(this).remove();
+    });
+
+    // Set the count for texts of each tag
+    $('.corpus-textfoliotag-list-tags-tag').each(function(){
+        let count = new Set($(this).map((_, el) => $(el).attr('data-relatedtexts')?.split(',') || []).get().filter(Boolean)).size;
+        $(this).find('.count').text(`${count} texts`);
+    });
 
     // Set the counts for tags in categories
     function setCountsOfTagsInCategories(){
@@ -96,15 +123,25 @@ $(document).ready(function(){
         else {
             content += 'Selected tags:<br>'
             $.each(selectedTags, function(index, tagId){
-                let tagText = $('.corpus-textfoliotag-list-tags-tag[data-id="' + tagId + '"] .name').text();
-                content += `<span class="corpus-textfoliotag-list-selected-tag" data-tagid="${tagId}">${tagText}</span>`;
+                let tag = $('.corpus-textfoliotag-list-tags-tag[data-id="' + tagId + '"]');
+                let tagText = tag.find('.name').first().text();
+                let tagRelatedTextIds = tag.data('relatedtexts');
+                content += `<span class="corpus-textfoliotag-list-selected-tag" data-tagid="${tagId}" data-relatedtexts="${tagRelatedTextIds}">${tagText}</span>`;
             });
-            if (selectedTags.length > 1){
-                content += '';
-            }
-            content += '<div id="corpus-textfoliotag-list-selected-submit"><i class="fas fa-search"></i> {% translate "Find matching texts" %}</div>'
+            content += `<div id="corpus-textfoliotag-list-selected-relatedtextscount"></div><div id="corpus-textfoliotag-list-selected-submit"><i class="fas fa-search"></i> {% translate "Search related texts" %}</div>`;
         }
         $('#corpus-textfoliotag-list-selected').html(content);
+
+        // Append a count of related texts
+        let relatedTextsUniqueCount = new Set(
+            $('.corpus-textfoliotag-list-selected-tag')
+                .map((_, el) => $(el).attr('data-relatedtexts')?.split(',') || [])
+                .get()
+                .filter(Boolean)
+        ).size;
+        $('#corpus-textfoliotag-list-selected-relatedtextscount').text(
+            `{% translate "Related texts found" %}: ${relatedTextsUniqueCount}`
+        );
     }
 
     setSelectedTagsContent();

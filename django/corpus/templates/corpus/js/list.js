@@ -253,7 +253,7 @@ $('.corpus-text-list-items-item-text-tags-tag').on('click', function(e){
     e.preventDefault();  // Prevent the link to the Text from working
 
     let tagId = $(this).attr('data-tagid');
-    let $filterInput = $('#filter_fk_text_folios__text_folio_tags__tag');
+    let $filterInput = $('#filter_fk_text_folios__text_folio_tags__tag').parent().find('input[type="hidden"]');
     let currentVal = $filterInput.val();
 
     // If there's already a value, append the new one with a comma
@@ -309,23 +309,40 @@ $('.multiselect :checkbox').on('change', function(){
 
     $input.val(vals.join(','));
     setMultiselectDisplayText($wrap);
-    $input.trigger('change');
+
+    // Trigger change if the options aren't visible
+    if ($(this).closest('.multiselect-options').is(':hidden')) $input.trigger('change');
 });
 
-// Close when clicking outside
-$(document).on('click', function(e){
-    if (!$(e.target).closest('.multiselect').length){
-        $('.multiselect-options').hide();
+// Flag the dropdown as changed when any checkbox inside it is toggled
+$(document).on('change', '.multiselect-options input[type="checkbox"]', function () {
+  $(this).closest('.multiselect-options').data('changed', true);
+});
+
+// Close when clicking outside, and only trigger change if modified
+$(document).on('click', function (e) {
+    if (!$(e.target).closest('.multiselect-options').length){
+        let $open = $('.multiselect-options:visible');
+        if ($open.length){
+            $open.hide();
+            if ($open.data('changed')){
+                $open.data('changed', false);
+                $open.parent().find('input[type="hidden"]').trigger('change');
+            }
+        }
     }
 });
-
 
 //
 // Set search criteria details if no results found
 //
 
-function htmlSearchCriteriaItem(inputId, inputType, label, value){
-    return `<div class="corpus-text-list-searchcriteria-content-item" data-input-id="${inputId}" data-input-type="${inputType}" data-input-value="${value}" title="Remove this search criteria"><i class="fas fa-times-circle"></i><strong>${label}:</strong> ${value} </div>`;
+function htmlSearchCriteriaItem(inputId, inputType, label, valueDisplay){
+    html = '';
+    $.each(valueDisplay.split('||'), function(index, value){
+        html += `<div class="corpus-text-list-searchcriteria-content-item" data-input-id="${inputId}" data-input-type="${inputType}" data-input-value="${value}" title="Remove this search criteria"><i class="fas fa-times-circle"></i><strong>${label}:</strong> ${value}</div>`;
+    });
+    return html;
 }
 
 function htmlSearchCriteria(){
@@ -342,12 +359,19 @@ function htmlSearchCriteria(){
             else if (input.is('div.multiselect-options')) inputType = 'multiselect';
             // Value to display
             var valueDisplay;
-            if (inputType == 'hidden'){
-                if (key === "filter_fk_text_folios__text_folio_tags__tag") valueDisplay = '{{ filter_active_tags }}'
-            }
-            else if (inputType == 'checkbox') valueDisplay = 'Yes';
+            if (inputType == 'checkbox') valueDisplay = 'Yes';
             else if (inputType == 'select') valueDisplay = $(`#${key} option:selected`).text();
-            else if (inputType == 'multiselect') valueDisplay = $(`#${key}`).prevAll('div.multiselect-display').first().text();
+            else if (inputType == 'multiselect'){
+
+                valueDisplay = $(`#${key} input[type="checkbox"]:checked`)
+                    .map(function(){
+                        return $(this).parent().text().trim();
+                    })
+                    .get()
+                    .join('||');
+
+                // valueDisplay = $(`#${key}`).prevAll('div.multiselect-display').first().text();
+            }
             // Append item
             html += htmlSearchCriteriaItem(key, inputType, label, valueDisplay);
         }
@@ -369,7 +393,13 @@ $('body').on('click', '.corpus-text-list-searchcriteria-content-item', function(
     if (inputType == 'checkbox') $(`#${inputId}`).prop('checked', false).trigger('change');
     else if (inputType == 'select' || inputType == 'hidden') $(`#${inputId}`).val('').trigger('change');
     else if (inputType == 'multiselect'){
-        $(`#${inputId} input`).prop('checked', false).first().trigger('change');
+        // $(`#${inputId} input`).prop('checked', false).first().trigger('change');
+        $(`#${inputId} input`)
+            .filter(function(){
+                return $(this).next('span').text().trim() === inputText;
+            })
+            .prop('checked', false)
+            .trigger('change');
     }
     else if (inputType == 'search'){
         $(`.corpus-text-list-options-search-fields-instance input[data-value="${inputText}"]`).val('');

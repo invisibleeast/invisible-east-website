@@ -257,6 +257,7 @@ li {
     color: var(--color-primary);
     cursor: pointer;
     font-weight: 500;
+    width: fit-content;
 }
 
 .readmore-content {
@@ -311,6 +312,10 @@ li {
     display: block;
     margin: 10pt 0;
     user-select: none;
+}
+
+.multiselect.hidden {
+    display: none;
 }
 
 .multiselect-display {
@@ -1547,6 +1552,15 @@ main section {
     font-size: 0.95em;
 }
 
+#corpus-text-detail-content-details-iiifmanifesturlcopy {
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+#corpus-text-detail-content-details-iiifmanifesturlcopy:hover {
+    text-decoration: underline;
+}
+
 #corpus-text-detail-content-folios-options-show {
     width: fit-content;
     display: inline-block;
@@ -2721,10 +2735,14 @@ div.folio-lines-line.active {
 
 /* ---------- Tags ---------- */
 
+#corpus-textfoliotag-list {
+    margin: 1em 0 5em 0;
+}
+
 #corpus-textfoliotag-list-search {
     background: var(--color-primary);
     width: 17em;
-    height: calc(100vh - 14em);
+    height: calc(100vh - 16em);
     overflow: auto;
     padding: 0.4em;
     display: inline-block;
@@ -2771,7 +2789,7 @@ div.folio-lines-line.active {
     display: inline-block;
     vertical-align: top;
     width: calc(100% - 34.5em);
-    height: calc(100vh - 14em);
+    height: calc(100vh - 16em);
     padding: 0 1em;
     overflow: auto;
     border-top: 1px solid #CCC;
@@ -2819,7 +2837,7 @@ div.folio-lines-line.active {
     width: 17em;
     display: inline-block;
     vertical-align: top;
-    height: calc(100vh - 14em);
+    height: calc(100vh - 16em);
     overflow: auto;
     background: #EEE;
     border: 1px solid #CCC;
@@ -2827,6 +2845,10 @@ div.folio-lines-line.active {
     text-align: center;
     color: #404040;
     font-style: italic;
+}
+
+#corpus-textfoliotag-list-selected-relatedtextscount {
+    margin-top: 3em;
 }
 
 .corpus-textfoliotag-list-selected-tag {
@@ -2845,7 +2867,7 @@ div.folio-lines-line.active {
     border-radius: 0.3em;
     display: block;
     width: fit-content;
-    margin: 3em auto 1em auto;
+    margin: 1.5em auto 1em auto;
     padding: 0.5em 0.8em 0.4em 0.8em;
     background: var(--color-primary);
     color: white;

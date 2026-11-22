@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 12:55+0000\n"
+"POT-Creation-Date: 2026-11-22 13:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -308,74 +308,74 @@ msgstr "عکس قبلی"
 msgid "Next Image"
 msgstr "عکس بعدی"
 
-#: corpus/templates/corpus/text-detail.html:391
+#: corpus/templates/corpus/text-detail.html:390
 msgid "Only show"
 msgstr "فقط نشان دادن"
 
-#: corpus/templates/corpus/text-detail.html:393
-#: corpus/templates/corpus/text-detail.html:503
-#: corpus/templates/corpus/text-detail.html:521
+#: corpus/templates/corpus/text-detail.html:392
+#: corpus/templates/corpus/text-detail.html:502
+#: corpus/templates/corpus/text-detail.html:520
 msgid "Please select"
 msgstr "لطفاً انتخاب کنید"
 
-#: corpus/templates/corpus/text-detail.html:406
+#: corpus/templates/corpus/text-detail.html:405
 msgid "Reset Image"
 msgstr "بازتنظیم تصویر"
 
-#: corpus/templates/corpus/text-detail.html:408
+#: corpus/templates/corpus/text-detail.html:407
 msgid "Download Image"
 msgstr "دانلود تصویر"
 
-#: corpus/templates/corpus/text-detail.html:413
+#: corpus/templates/corpus/text-detail.html:412
 msgid "Reveal Parts on Image"
 msgstr "نمایش قسمت‌هایی بر روی تصویر"
 
-#: corpus/templates/corpus/text-detail.html:416
+#: corpus/templates/corpus/text-detail.html:415
 msgid "Rotate Image Anticlockwise"
 msgstr "گرداندن پادساعت‌وار تصویر"
 
-#: corpus/templates/corpus/text-detail.html:418
+#: corpus/templates/corpus/text-detail.html:417
 msgid "Rotate Image Clockwise"
 msgstr "گرداندن ساعت‌وار تصویر"
 
-#: corpus/templates/corpus/text-detail.html:420
+#: corpus/templates/corpus/text-detail.html:419
 msgid "Fullscreen"
 msgstr "تمام صفحه"
 
-#: corpus/templates/corpus/text-detail.html:460
+#: corpus/templates/corpus/text-detail.html:459
 msgid "Images courtesy of"
 msgstr "نمایش عکس به لطف"
 
-#: corpus/templates/corpus/text-detail.html:470
-#: corpus/templates/corpus/text-detail.html:495
+#: corpus/templates/corpus/text-detail.html:469
+#: corpus/templates/corpus/text-detail.html:494
 msgid "Tag Manager"
 msgstr "مدیریت برچسب‌ها"
 
-#: corpus/templates/corpus/text-detail.html:501
+#: corpus/templates/corpus/text-detail.html:500
 msgid "Tag Category"
 msgstr "دسته‌بندی برچسب‌ها"
 
-#: corpus/templates/corpus/text-detail.html:511
+#: corpus/templates/corpus/text-detail.html:510
 msgid "Tag Search"
 msgstr "جستجوی برچسب‌ها"
 
-#: corpus/templates/corpus/text-detail.html:519
+#: corpus/templates/corpus/text-detail.html:518
 msgid "Tag"
 msgstr "برچسب"
 
-#: corpus/templates/corpus/text-detail.html:529
+#: corpus/templates/corpus/text-detail.html:528
 msgid "Create a new tag"
 msgstr "ساختن برچسب جدید"
 
-#: corpus/templates/corpus/text-detail.html:536
+#: corpus/templates/corpus/text-detail.html:535
 msgid "Tag Details"
 msgstr "جزئیات برچسب"
 
-#: corpus/templates/corpus/text-detail.html:542
+#: corpus/templates/corpus/text-detail.html:541
 msgid "Draw on Image"
 msgstr "کشیدن روی صفحه"
 
-#: corpus/templates/corpus/text-detail.html:547
+#: corpus/templates/corpus/text-detail.html:546
 msgid "Save Tag"
 msgstr "ذخیره کردن برچسب"
 
@@ -503,29 +503,39 @@ msgstr "نام‌های جغرافیایی در پایگاه شرق مکنون"
 
 #: corpus/templates/corpus/textfoliotag-list.html:9
 msgid ""
-"Browse the list of tags below. Click on one or more tags to search for "
-"related texts in the IEDC."
+"Please find and select tags and click on search to enjoy a deeper "
+"exploration of our corpus."
 msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:16
-#, fuzzy
-#| msgid "Search by Map"
-msgid "Search for tags"
-msgstr "جستجو در نقشه"
+#: corpus/templates/corpus/textfoliotag-list.html:13
+msgid "Read more to learn about our tags..."
+msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:64
+#: corpus/templates/corpus/textfoliotag-list.html:26
+msgid "Search tags by tag name"
+msgstr ""
+
+#: corpus/templates/corpus/textfoliotag-list.html:85
 msgid "tags"
 msgstr ""
 
-#: corpus/templates/corpus/textfoliotag-list.html:95
+#: corpus/templates/corpus/textfoliotag-list.html:116
 #, fuzzy
 #| msgid "Please select"
 msgid "No tags selected"
 msgstr "لطفاً انتخاب کنید"
 
-#: corpus/templates/corpus/textfoliotag-list.html:105
-msgid "Find matching texts"
-msgstr ""
+#: corpus/templates/corpus/textfoliotag-list.html:125
+#, fuzzy
+#| msgid "Search type"
+msgid "Search related texts"
+msgstr "نوع البحث"
+
+#: corpus/templates/corpus/textfoliotag-list.html:137
+#, fuzzy
+#| msgid "results found"
+msgid "Related texts found"
+msgstr "افته‌ها"
 
 #: corpus/views.py:927
 msgid "Source Format"
@@ -534,6 +544,11 @@ msgstr ""
 #: corpus/views.py:929
 msgid "Type of Text"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Search by Map"
+#~ msgid "Search for tags"
+#~ msgstr "جستجو در نقشه"
 
 #~ msgid "Codex"
 #~ msgstr "کتاب خطی"

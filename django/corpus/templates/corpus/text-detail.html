@@ -379,8 +379,7 @@
             <div id="corpus-text-detail-images-controls-chooseimagenext" class="corpus-text-detail-images-controls-item" title="{% translate 'Next Image' %}"><i class="fas fa-arrow-down"></i></div>
             <!-- Choose Image (Folio/Page) -->
             <div id="corpus-text-detail-images-controls-chooseimage" class="corpus-text-detail-images-controls-item">
-                <label>{% if object.source_format.is_book %}{% translate 'Page' %}{% else %}{% translate 'Folio' %}{% endif %}:</label>
-                <select {% if object.count_text_folios < 2 %} disabled{% endif %}>
+                <select {% if object.count_text_folios < 2 %} disabled{% endif %} title="{% if object.source_format.is_book %}{% translate 'Page' %}{% else %}{% translate 'Folio' %}{% endif %}">
                     {% for text_folio in text_folios %}
                         <option value="{{ text_folio.id }}">{{ text_folio.name_short }}</option>
                     {% endfor %}
